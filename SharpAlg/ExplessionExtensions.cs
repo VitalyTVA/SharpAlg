@@ -4,9 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SharpAlg
-{
-    public class Class1
-    {
+namespace SharpAlg {
+    public class ExplessionExtensions {
     }
 }
