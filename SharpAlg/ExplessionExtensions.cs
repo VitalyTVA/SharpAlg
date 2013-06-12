@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace SharpAlg {
-    public class ExplessionExtensions {
+    public static class ExplessionExtensions {
+        public static Expression<Func<T, T>> Diff<T>(this Expression<Func<T, T>> expression) {
+            return expression;
+            
+        }
     }
 }
