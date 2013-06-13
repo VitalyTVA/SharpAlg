@@ -12,23 +12,23 @@ namespace SharpAlg.Tests {
         [Test]
         public void DiffConst() {
             Expression<Func<double, double>> expr = x => 13;
-            expr.Diff().Compile().Map(0, 1, 2).Equal(0, 0, 0).IsTrue();
+            expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(0, 0, 0);
         }
         [Test]
         public void DiffX() {
             Expression<Func<double, double>> expr = x => x;
-            expr.Diff().Compile().Map(0, 1, 2).Equal(1, 1, 1).IsTrue();
+            expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(1, 1, 1);
         }
         [Test]
         public void DiffSum() {
             Expression<Func<double, double>> expr = x => x + x;
-            expr.Diff().Compile().Map(0, 1, 2).Equal(2, 2, 2).IsTrue();
+            expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(2, 2, 2);
 
             expr = x => x + 1;
-            expr.Diff().Compile().Map(0, 1, 2).Equal(1, 1, 1).IsTrue();
+            expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(1, 1, 1);
 
             expr = x => x + 1 + x;
-            expr.Diff().Compile().Map(0, 1, 2).Equal(2, 2, 2).IsTrue();
+            expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(2, 2, 2);
         }
 
         //[Test]
