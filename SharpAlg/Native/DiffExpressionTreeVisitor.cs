@@ -18,6 +18,8 @@ namespace SharpAlg.Native {
                     return VisitConstant((ConstantExpression)expression);
                 case ExpressionType.Parameter:
                     return VisitParameter((ParameterExpression)expression);
+                case ExpressionType.Add:
+                    return VisitSum((BinaryExpression)expression);
                 default:
                     throw new NotImplementedException(expression.NodeType + " ExpressionType is not supported");//TODO test
             }
@@ -30,8 +32,11 @@ namespace SharpAlg.Native {
         Expression VisitConstant(ConstantExpression expression) {
             return Expression.Constant(0d);    
         }
-        private Expression VisitParameter(ParameterExpression expression) {
+        Expression VisitParameter(ParameterExpression expression) {
             return Expression.Constant(1d);
+        }
+        Expression VisitSum(BinaryExpression expression) {
+            return Expression.Add(VisitCore(expression.Left), VisitCore(expression.Right));
         }
     }
 }

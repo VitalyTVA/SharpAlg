@@ -24,6 +24,24 @@ namespace SharpAlg.Tests {
                 .AreEqual(x => x(1), 1)
                 .AreEqual(x => x(2), 1);
         }
+        [Test]
+        public void DiffSum() {
+            Expression<Func<double, double>> expr = x => x + x;
+            expr.Diff().Compile()
+                .AreEqual(x => x(0), 2)
+                .AreEqual(x => x(1), 2)
+                .AreEqual(x => x(2), 2);
+            expr = x => x + 1;
+            expr.Diff().Compile()
+                .AreEqual(x => x(0), 1)
+                .AreEqual(x => x(1), 1)
+                .AreEqual(x => x(2), 1);
+            expr = x => x + 1 + x;
+            expr.Diff().Compile()
+                .AreEqual(x => x(0), 2)
+                .AreEqual(x => x(1), 2)
+                .AreEqual(x => x(2), 2);
+        }
 
         //[Test]
         //public void Diff1() {
