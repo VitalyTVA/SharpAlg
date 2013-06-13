@@ -16,6 +16,8 @@ namespace SharpAlg.Native {
                     return VisitLambda((LambdaExpression)expression);
                 case ExpressionType.Constant:
                     return VisitConstant((ConstantExpression)expression);
+                case ExpressionType.Parameter:
+                    return VisitParameter((ParameterExpression)expression);
                 default:
                     throw new NotImplementedException(expression.NodeType + " ExpressionType is not supported");//TODO test
             }
@@ -27,6 +29,9 @@ namespace SharpAlg.Native {
         }
         Expression VisitConstant(ConstantExpression expression) {
             return Expression.Constant(0d);    
+        }
+        private Expression VisitParameter(ParameterExpression expression) {
+            return Expression.Constant(1d);
         }
     }
 }

@@ -9,12 +9,20 @@ namespace SharpAlg.Tests {
     [TestFixture]
     public class DiffTests {
         [Test]
-        public void Diff1() {
+        public void DiffConst() {
             Expression<Func<double, double>> expr = x => 13;
             expr.Diff().Compile()
                 .AreEqual(x => x(0), 0)
                 .AreEqual(x => x(1), 0)
                 .AreEqual(x => x(2), 0);
+        }
+        [Test]
+        public void DiffX() {
+            Expression<Func<double, double>> expr = x => x;
+            expr.Diff().Compile()
+                .AreEqual(x => x(0), 1)
+                .AreEqual(x => x(1), 1)
+                .AreEqual(x => x(2), 1);
         }
 
         //[Test]
