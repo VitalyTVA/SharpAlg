@@ -16,19 +16,19 @@ namespace SharpAlg.Tests {
             Assert.IsNotNull(GetActualValue(obj, valueEvaluator));
             return obj;
         }
-        public static TInput AreEqual<TInput>(this TInput obj, object expectedValue) {
+        public static TInput IsEqual<TInput>(this TInput obj, object expectedValue) {
             Assert.AreEqual(expectedValue, obj);
             return obj;
         }
-        public static TInput AreEqual<TInput>(this TInput obj, Func<TInput, object> valueEvaluator, object expectedValue) {
+        public static TInput IsEqual<TInput>(this TInput obj, Func<TInput, object> valueEvaluator, object expectedValue) {
             Assert.AreEqual(expectedValue, valueEvaluator(obj));
             return obj;
         }
-        public static TInput AreNotEqual<TInput>(this TInput obj, object expectedValue) {
+        public static TInput IsNotEqual<TInput>(this TInput obj, object expectedValue) {
             Assert.AreNotEqual(expectedValue, obj);
             return obj;
         }
-        public static TInput AreNotEqual<TInput>(this TInput obj, Func<TInput, object> valueEvaluator, object expectedValue) {
+        public static TInput IsNotEqual<TInput>(this TInput obj, Func<TInput, object> valueEvaluator, object expectedValue) {
             Assert.AreNotEqual(expectedValue, valueEvaluator(obj));
             return obj;
         }
@@ -58,6 +58,14 @@ namespace SharpAlg.Tests {
         //}
         static object GetActualValue<TInput>(TInput obj, Func<TInput, object> valueEvaluator) {
             return valueEvaluator == null ? obj : valueEvaluator(obj);
+        }
+
+        public static IEnumerable<T> IsSequenceEqual<T>(this IEnumerable<T> first, IEnumerable<T> second) {
+            first.SequenceEqual(second).IsTrue();
+            return first;
+        }
+        public static IEnumerable<T> IsSequenceEqual<T>(this IEnumerable<T> first, params T[] second) {
+            return IsSequenceEqual(first, (IEnumerable<T>)second);
         }
     }
 }
