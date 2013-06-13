@@ -20,6 +20,8 @@ namespace SharpAlg.Native {
                     return VisitParameter((ParameterExpression)expression);
                 case ExpressionType.Add:
                     return VisitSum((BinaryExpression)expression);
+                case ExpressionType.Multiply:
+                    return VisitMultiply((BinaryExpression)expression);
                 default:
                     throw new NotImplementedException(expression.NodeType + " ExpressionType is not supported");//TODO test
             }
@@ -37,6 +39,11 @@ namespace SharpAlg.Native {
         }
         Expression VisitSum(BinaryExpression expression) {
             return Expression.Add(VisitCore(expression.Left), VisitCore(expression.Right));
+        }
+        Expression VisitMultiply(BinaryExpression expression) {
+            var expression1 = Expression.Multiply(VisitCore(expression.Left), expression.Right);
+            var expression2 = Expression.Multiply(expression.Left, VisitCore(expression.Right));
+            return Expression.Add(expression1, expression2);
         }
     }
 }
