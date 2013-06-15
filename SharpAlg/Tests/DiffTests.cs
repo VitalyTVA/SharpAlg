@@ -20,7 +20,7 @@ namespace SharpAlg.Tests {
             expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(1, 1, 1);
         }
         [Test]
-        public void DiffSum() {
+        public void DiffSumSubs() {
             Expression<Func<double, double>> expr = x => x + x;
             expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(2, 2, 2);
 
@@ -29,6 +29,9 @@ namespace SharpAlg.Tests {
 
             expr = x => x + 1 + x;
             expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(2, 2, 2);
+
+            expr = x => x * x - x;
+            expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(-1, 1, 3);
         }
         [Test]
         public void DiffMult() {
@@ -51,6 +54,24 @@ namespace SharpAlg.Tests {
 
             expr = x => (x * x + 1) / (x * x * x + 1);
             expr.Diff().Compile().Map(1, 2).IsSequenceEqual(-1.0 / 2, -8.0 / 27);
+        }
+        [Test]
+        public void Simplify() {
+            Expression<Func<double, double>> expr = x => 1 + x;
+            expr.Diff().IsEqual(x => x.ToString(), "x => 1");
+
+            expr = x => x + 1;
+            expr.Diff().IsEqual(x => x.ToString(), "x => 1");
+
+            expr = x => x + x;
+            expr.Diff().IsEqual(x => x.ToString(), "x => 2");
+
+            expr = x => x + x + x;
+            expr.Diff().IsEqual(x => x.ToString(), "x => 3");
+
+
+            //expr = x => x * x + 1;
+            //expr.Diff().IsEqual(x => x.ToString(), "x => 2");
         }
     }
 }

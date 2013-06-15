@@ -20,6 +20,8 @@ namespace SharpAlg.Native {
                     return VisitParameter((ParameterExpression)expression);
                 case ExpressionType.Add:
                     return VisitSum((BinaryExpression)expression);
+                case ExpressionType.Subtract:
+                    return VisitSubs((BinaryExpression)expression);
                 case ExpressionType.Multiply:
                     return VisitMultiply((BinaryExpression)expression);
                 case ExpressionType.Divide:
@@ -40,7 +42,10 @@ namespace SharpAlg.Native {
             return Expression.Constant(1d);
         }
         Expression VisitSum(BinaryExpression expression) {
-            return Expression.Add(VisitCore(expression.Left), VisitCore(expression.Right));
+            return ExpressionFactory.Add(VisitCore(expression.Left), VisitCore(expression.Right));
+        }
+        Expression VisitSubs(BinaryExpression expression) {
+            return Expression.Subtract(VisitCore(expression.Left), VisitCore(expression.Right));
         }
         Expression VisitMultiply(BinaryExpression expression) {
             var expression1 = Expression.Multiply(VisitCore(expression.Left), expression.Right);

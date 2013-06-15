@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Native\DiffExpressionTreeVisitor.cs" />
     <Compile Include="ExplessionExtensions.cs" />
+    <Compile Include="Native\ExpressionFactory.cs" />
     <Compile Include="Native\FunctionalExtensions.cs" />
     <Compile Include="Native\MayBe.cs" />
     <Compile Include="Native\SR.cs" />
