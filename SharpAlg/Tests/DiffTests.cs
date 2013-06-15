@@ -69,9 +69,17 @@ namespace SharpAlg.Tests {
             expr = x => x + x + x;
             expr.Diff().IsEqual(x => x.ToString(), "x => 3");
 
+            expr = x => 2 * x;
+            expr.Diff().IsEqual(x => x.ToString(), "x => 2");
 
-            //expr = x => x * x + 1;
-            //expr.Diff().IsEqual(x => x.ToString(), "x => 2");
+            expr = x => x * 2;
+            expr.Diff().IsEqual(x => x.ToString(), "x => 2");
+
+            expr = x => x * x + 1;
+            expr.Diff().IsEqual(x => x.ToString(), "x => (x + x)");
+
+            expr = x => 1 + x * x + 1;
+            expr.Diff().IsEqual(x => x.ToString(), "x => (x + x)");
         }
     }
 }

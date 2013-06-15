@@ -48,9 +48,9 @@ namespace SharpAlg.Native {
             return Expression.Subtract(VisitCore(expression.Left), VisitCore(expression.Right));
         }
         Expression VisitMultiply(BinaryExpression expression) {
-            var expression1 = Expression.Multiply(VisitCore(expression.Left), expression.Right);
-            var expression2 = Expression.Multiply(expression.Left, VisitCore(expression.Right));
-            return Expression.Add(expression1, expression2);
+            var expression1 = ExpressionFactory.Mult(VisitCore(expression.Left), expression.Right);
+            var expression2 = ExpressionFactory.Mult(expression.Left, VisitCore(expression.Right));
+            return ExpressionFactory.Add(expression1, expression2);
         }
         Expression VisitDivide(BinaryExpression expression) {
             var expression1 = Expression.Multiply(VisitCore(expression.Left), expression.Right);
