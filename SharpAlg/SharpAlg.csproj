@@ -47,6 +47,8 @@
     <Compile Include="Native\DiffExpressionTreeVisitor.cs" />
     <Compile Include="ExplessionExtensions.cs" />
     <Compile Include="Native\FunctionalExtensions.cs" />
+    <Compile Include="Native\MayBe.cs" />
+    <Compile Include="Native\SR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\DiffTests.cs" />
     <Compile Include="Tests\Utils\FluentAssert.cs" />

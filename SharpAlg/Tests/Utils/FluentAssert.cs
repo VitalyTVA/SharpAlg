@@ -2,8 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using SharpAlg.Native;
 
 namespace SharpAlg.Tests {
     [System.Diagnostics.DebuggerNonUserCode]
@@ -61,7 +60,8 @@ namespace SharpAlg.Tests {
         }
 
         public static IEnumerable<T> IsSequenceEqual<T>(this IEnumerable<T> first, IEnumerable<T> second) {
-            first.SequenceEqual(second).IsTrue();
+            Action<T, T> assert = (x, y) => Assert.AreEqual(x, y);
+            assert.Map(first, second);
             return first;
         }
         public static IEnumerable<T> IsSequenceEqual<T>(this IEnumerable<T> first, params T[] second) {
