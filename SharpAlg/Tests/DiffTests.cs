@@ -37,15 +37,20 @@ namespace SharpAlg.Tests {
 
             expr = x => 2 * x * x * x + x;
             expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(1, 7, 25);
+
+            expr = x => (x + 1) * (x + 2);
+            expr.Diff().Compile().Map(0, 1, 2).IsSequenceEqual(3, 5, 7);
         }
+        [Test]
+        public void DiffDivide() {
+            Expression<Func<double, double>> expr = x => 1 / x;
+            expr.Diff().Compile().Map(1, 2, 3).IsSequenceEqual(-1, -1.0 / 4, -1.0 / 9);
 
-        //[Test]
-        //public void PolinomDiff2() {
-        //    Expression<Func<double, double>> expr = x => x * x + x + Math.PI;
-        //    var compiled = expr.Diff().Compile();
-        //    Assert.AreEqual(2, compiled(1));
-        //    Assert.AreEqual(4, compiled(2));
-        //}
+            expr = x => 1 / (x * x + x);
+            expr.Diff().Compile().Map(1, 2).IsSequenceEqual(-3.0 / 4, -5.0 / 36);
 
+            expr = x => (x * x + 1) / (x * x * x + 1);
+            expr.Diff().Compile().Map(1, 2).IsSequenceEqual(-1.0 / 2, -8.0 / 27);
+        }
     }
 }

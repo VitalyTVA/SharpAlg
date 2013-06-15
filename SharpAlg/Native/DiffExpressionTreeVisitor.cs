@@ -22,6 +22,8 @@ namespace SharpAlg.Native {
                     return VisitSum((BinaryExpression)expression);
                 case ExpressionType.Multiply:
                     return VisitMultiply((BinaryExpression)expression);
+                case ExpressionType.Divide:
+                    return VisitDivide((BinaryExpression)expression);
                 default:
                     throw new NotImplementedException(expression.NodeType + " ExpressionType is not supported");//TODO test
             }
@@ -44,6 +46,12 @@ namespace SharpAlg.Native {
             var expression1 = Expression.Multiply(VisitCore(expression.Left), expression.Right);
             var expression2 = Expression.Multiply(expression.Left, VisitCore(expression.Right));
             return Expression.Add(expression1, expression2);
+        }
+        Expression VisitDivide(BinaryExpression expression) {
+            var expression1 = Expression.Multiply(VisitCore(expression.Left), expression.Right);
+            var expression2 = Expression.Multiply(expression.Left, VisitCore(expression.Right));
+            var expression3 = Expression.Multiply(expression.Right, expression.Right);
+            return Expression.Divide(Expression.Subtract(expression1, expression2), expression3);
         }
     }
 }
