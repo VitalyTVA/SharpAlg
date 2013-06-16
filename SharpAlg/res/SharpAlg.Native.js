@@ -43,11 +43,11 @@ SharpAlg.Native.Expr.Parameter = function (parameterName)
 {
     return new SharpAlg.Native.ParameterExpr(parameterName);
 };
-SharpAlg.Native.ConstExpr = function (constant)
+SharpAlg.Native.ConstExpr = function (value)
 {
-    this.Constant = 0;
+    this.Value = 0;
     SharpAlg.Native.Expr.call(this);
-    this.Constant = constant;
+    this.Value = value;
 };
 $Inherit(SharpAlg.Native.ConstExpr, SharpAlg.Native.Expr);
 SharpAlg.Native.ParameterExpr = function (parameterName)

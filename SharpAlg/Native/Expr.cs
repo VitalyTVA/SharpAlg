@@ -15,14 +15,14 @@ namespace SharpAlg.Native {
     }
     [JsType(JsMode.Prototype, Filename = "../res/SharpAlg.Native.js")]
     public class ConstExpr : Expr {
-        public ConstExpr(double constant) {
-            Constant = constant;
+        internal ConstExpr(double value) {
+            Value = value;
         }
-        public double Constant { get; private set; }
+        public double Value { get; private set; }
     }
     [JsType(JsMode.Prototype, Filename = "../res/SharpAlg.Native.js")]
     public class ParameterExpr : Expr {
-        public ParameterExpr(string parameterName) {
+        internal ParameterExpr(string parameterName) {
             ParameterName = parameterName;
         }
         public string ParameterName { get; private set; }
