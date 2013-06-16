@@ -13,6 +13,19 @@ if (typeof($CreateException)=='undefined')
         return error;
     }
 }
+if (typeof ($CreateAnonymousDelegate) == 'undefined') {
+    var $CreateAnonymousDelegate = function (target, func) {
+        if (target == null || func == null)
+            return func;
+        var delegate = function () {
+            return func.apply(target, arguments);
+        };
+        delegate.func = func;
+        delegate.target = target;
+        delegate.isDelegate = true;
+        return delegate;
+    }
+}
 if (typeof(JsTypes) == "undefined")
     var JsTypes = [];
 var SharpAlg$Tests$ExprTests =
@@ -36,9 +49,120 @@ var SharpAlg$Tests$ExprTests =
         ParameterExprTest: function ()
         {
             var expr = SharpAlg.Native.Expr.Const(9);
-            if (expr.Value != 9)
-                throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ConstExpr, expr, $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.Value;
+            }), 9);
         }
     }
 };
 JsTypes.push(SharpAlg$Tests$ExprTests);
+var SharpAlg$Tests$FluentAssert =
+{
+    fullname: "SharpAlg.Tests.FluentAssert",
+    baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        IsNull$1: function (TInput, obj, valueEvaluator)
+        {
+            NUnit.Framework.Assert.IsNull$$Object(SharpAlg.Tests.FluentAssert.GetActualValue$1(TInput, obj, valueEvaluator));
+            return obj;
+        },
+        IsNotNull$1: function (TInput, obj, valueEvaluator)
+        {
+            NUnit.Framework.Assert.IsNotNull$$Object(SharpAlg.Tests.FluentAssert.GetActualValue$1(TInput, obj, valueEvaluator));
+            return obj;
+        },
+        IsEqual$1$$TInput$$Object: function (TInput, obj, expectedValue)
+        {
+            SharpAlg.Tests.FluentAssert.AreEqual(expectedValue, obj);
+            return obj;
+        },
+        IsEqual$1$$TInput$$Func$2$$Object: function (TInput, obj, valueEvaluator, expectedValue)
+        {
+            SharpAlg.Tests.FluentAssert.AreEqual(valueEvaluator(obj), expectedValue);
+            return obj;
+        },
+        IsNotEqual$1$$TInput$$Object: function (TInput, obj, expectedValue)
+        {
+            NUnit.Framework.Assert.AreNotEqual$$Object$$Object(expectedValue, obj);
+            return obj;
+        },
+        IsNotEqual$1$$TInput$$Func$2$$Object: function (TInput, obj, valueEvaluator, expectedValue)
+        {
+            NUnit.Framework.Assert.AreNotEqual$$Object$$Object(expectedValue, valueEvaluator(obj));
+            return obj;
+        },
+        IsTrue$1$$TInput$$Func$2: function (TInput, obj, valueEvaluator)
+        {
+            NUnit.Framework.Assert.IsTrue$$Boolean(valueEvaluator(obj));
+            return obj;
+        },
+        IsFalse$1$$TInput$$Func$2: function (TInput, obj, valueEvaluator)
+        {
+            NUnit.Framework.Assert.IsFalse$$Boolean(valueEvaluator(obj));
+            return obj;
+        },
+        IsTrue$$Boolean: function (val)
+        {
+            NUnit.Framework.Assert.IsTrue$$Boolean(val);
+            return val;
+        },
+        IsFalse$$Boolean: function (val)
+        {
+            NUnit.Framework.Assert.IsFalse$$Boolean(val);
+            return val;
+        },
+        GetActualValue$1: function (TInput, obj, valueEvaluator)
+        {
+            return valueEvaluator == null ? obj : valueEvaluator(obj);
+        },
+        IsSequenceEqual$1$$IEnumerable$1$$IEnumerable$1: function (T, first, second)
+        {
+            var assert = function (x, y)
+            {
+                NUnit.Framework.Assert.AreEqual$$Object$$Object(x, y);
+            };
+            SharpAlg.Native.FunctionalExtensions.Map$2$$Action$2$$IEnumerable$1$$IEnumerable$1(T, T, assert, first, second);
+            return first;
+        },
+        IsSequenceEqual$1$$IEnumerable$1$$T$Array: function (T, first, second)
+        {
+            return SharpAlg.Tests.FluentAssert.IsSequenceEqual$1$$IEnumerable$1$$IEnumerable$1(T, first, second);
+        },
+        AreEqual: function (expected, actual)
+        {
+            this.JsAreEqual(expected, actual);
+        },
+        JsAreEqual: function (expected, actual)
+        {
+            if (!System.Object.Equals$$Object$$Object(expected, actual))
+                throw $CreateException(new SharpAlg.Tests.FluentAssert.JsAssertionException.ctor("Expected: " + expected + " but was: " + actual), new Error());
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Object.ctor.call(this);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Tests$FluentAssert);
+var SharpAlg$Tests$FluentAssert$JsAssertionException =
+{
+    fullname: "SharpAlg.Tests.FluentAssert.JsAssertionException",
+    baseTypeName: "System.Exception",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (message)
+        {
+            System.Exception.ctor$$String.call(this, message);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Tests$FluentAssert$JsAssertionException);

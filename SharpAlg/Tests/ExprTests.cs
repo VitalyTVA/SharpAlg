@@ -20,8 +20,7 @@ namespace SharpAlg.Tests {
         [Test]
         public void ParameterExprTest() {
             var expr = Expr.Const(9);
-            if(expr.Value != 9)
-                throw new InvalidOperationException();
+            expr.IsEqual(x => x.Value, 9);//.IsEqual(x => x.Value, 29);
         }
     }
 }

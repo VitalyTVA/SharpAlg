@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SharpAlg.Native;
+using SharpKit.JavaScript;
 
 namespace SharpAlg.Tests {
     [System.Diagnostics.DebuggerNonUserCode]
+    [JsType(JsMode.Clr, Filename = "../res/SharpAlg.Tests.js")]
     public static class FluentAssert {
         public static TInput IsNull<TInput>(this TInput obj, Func<TInput, object> valueEvaluator = null) where TInput : class {
             Assert.IsNull(GetActualValue(obj, valueEvaluator));
@@ -16,11 +18,11 @@ namespace SharpAlg.Tests {
             return obj;
         }
         public static TInput IsEqual<TInput>(this TInput obj, object expectedValue) {
-            Assert.AreEqual(expectedValue, obj);
+            AreEqual(expectedValue, obj);
             return obj;
         }
         public static TInput IsEqual<TInput>(this TInput obj, Func<TInput, object> valueEvaluator, object expectedValue) {
-            Assert.AreEqual(expectedValue, valueEvaluator(obj));
+            AreEqual(valueEvaluator(obj), expectedValue);
             return obj;
         }
         public static TInput IsNotEqual<TInput>(this TInput obj, object expectedValue) {
@@ -67,5 +69,23 @@ namespace SharpAlg.Tests {
         public static IEnumerable<T> IsSequenceEqual<T>(this IEnumerable<T> first, params T[] second) {
             return IsSequenceEqual(first, (IEnumerable<T>)second);
         }
+
+        #region JS compatibility
+        [JsType(JsMode.Clr, Filename = "../res/SharpAlg.Tests.js")]
+        public class JsAssertionException : Exception {
+            public JsAssertionException(string message)
+                : base(message) {
+            }
+        }
+        [JsMethod(Code = "this.JsAreEqual(expected, actual);")]
+        static void AreEqual(object expected, object actual) {
+            Assert.AreEqual(expected, actual);
+        }
+        static void JsAreEqual(object expected, object actual) {
+            if(!object.Equals(expected, actual))
+                throw new JsAssertionException("Expected: " + expected + " but was: " + actual);
+
+        }
+        #endregion
     }
 }
