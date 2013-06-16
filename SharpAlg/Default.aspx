@@ -3,9 +3,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>SharpAlg</title>
-    <script src="res/jquery-1.8.2.min.js"></script>
-    <script src="res/Default.js"></script>
-    <script>$(DefaultClient_Load);</script>
+    <script type="text/javascript" src="res/jquery-1.8.2.min.js"></script>
+    <script type="text/javascript" src="res/SharpAlg.Native.js"></script>
+    <script type="text/javascript" src="res/Default.js"></script>
+    <script type="text/javascript">$(DefaultClient_Load);</script>
 </head>
 <body>
     <button onclick="btnTest_click(event);">Click me</button>
