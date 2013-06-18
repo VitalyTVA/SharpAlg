@@ -6,16 +6,19 @@ using System.Linq;
 namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = "../res/SharpAlg.Native.js")]
     public abstract class Expr {
-        public static ConstExpr Const(double constant) {
-            return new ConstExpr(constant);
+        public static ConstantExpr Constant(double constant) {
+            return new ConstantExpr(constant);
         }
         public static ParameterExpr Parameter(string parameterName) {
             return new ParameterExpr(parameterName);
         }
+        public static BinaryExpr Binary(Expr left, Expr right, BinaryOperation type) {
+            return new BinaryExpr(left, right, type);
+        }
     }
     [JsType(JsMode.Prototype, Filename = "../res/SharpAlg.Native.js")]
-    public class ConstExpr : Expr {
-        internal ConstExpr(double value) {
+    public class ConstantExpr : Expr {
+        internal ConstantExpr(double value) {
             Value = value;
         }
         public double Value { get; private set; }
@@ -26,5 +29,19 @@ namespace SharpAlg.Native {
             ParameterName = parameterName;
         }
         public string ParameterName { get; private set; }
+    }
+    public enum BinaryOperation {
+        Add, Subtract, Multiply, Divide
+    }
+    [JsType(JsMode.Prototype, Filename = "../res/SharpAlg.Native.js")]
+    public class BinaryExpr : Expr {
+        internal BinaryExpr(Expr left, Expr right, BinaryOperation operation) {
+            Operation = operation;
+            Right = right;
+            Left = left;
+        }
+        public Expr Left { get; private set; }
+        public Expr Right { get; private set; }
+        public BinaryOperation Operation { get; private set; }
     }
 }

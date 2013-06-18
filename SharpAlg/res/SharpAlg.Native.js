@@ -35,21 +35,25 @@ if (typeof(SharpAlg.Native) == "undefined")
 SharpAlg.Native.Expr = function ()
 {
 };
-SharpAlg.Native.Expr.Const = function (constant)
+SharpAlg.Native.Expr.Constant = function (constant)
 {
-    return new SharpAlg.Native.ConstExpr(constant);
+    return new SharpAlg.Native.ConstantExpr(constant);
 };
 SharpAlg.Native.Expr.Parameter = function (parameterName)
 {
     return new SharpAlg.Native.ParameterExpr(parameterName);
 };
-SharpAlg.Native.ConstExpr = function (value)
+SharpAlg.Native.Expr.Binary = function (left, right, type)
+{
+    return new SharpAlg.Native.BinaryExpr(left, right, type);
+};
+SharpAlg.Native.ConstantExpr = function (value)
 {
     this.Value = 0;
     SharpAlg.Native.Expr.call(this);
     this.Value = value;
 };
-$Inherit(SharpAlg.Native.ConstExpr, SharpAlg.Native.Expr);
+$Inherit(SharpAlg.Native.ConstantExpr, SharpAlg.Native.Expr);
 SharpAlg.Native.ParameterExpr = function (parameterName)
 {
     this.ParameterName = null;
@@ -57,3 +61,14 @@ SharpAlg.Native.ParameterExpr = function (parameterName)
     this.ParameterName = parameterName;
 };
 $Inherit(SharpAlg.Native.ParameterExpr, SharpAlg.Native.Expr);
+SharpAlg.Native.BinaryExpr = function (left, right, operation)
+{
+    this.Left = null;
+    this.Right = null;
+    this.Operation = 0;
+    SharpAlg.Native.Expr.call(this);
+    this.Operation = operation;
+    this.Right = right;
+    this.Left = left;
+};
+$Inherit(SharpAlg.Native.BinaryExpr, SharpAlg.Native.Expr);

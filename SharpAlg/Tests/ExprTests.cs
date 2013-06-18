@@ -12,15 +12,21 @@ namespace SharpAlg.Tests {
     [TestFixture]
     public class ExprTests {
         [Test]
-        public void ConstExprTest() {
+        public void ConstantExprTest() {
             var expr = Expr.Parameter("x");
-            if(!expr.ParameterName.StartsWith("x"))
-                throw new InvalidOperationException();
+            expr.IsEqual(x => x.ParameterName, "x");
         }
         [Test]
         public void ParameterExprTest() {
-            var expr = Expr.Const(9);
-            expr.IsEqual(x => x.Value, 9);//.IsEqual(x => x.Value, 29);
+            var expr = Expr.Constant(9);
+            expr.IsEqual(x => x.Value, 9);
+        }
+        [Test]
+        public void BinaryExprTest() {
+            var left = Expr.Constant(9);
+            var right = Expr.Parameter("x");
+            var expr = Expr.Binary(left, right, BinaryOperation.Divide);
+            expr.IsEqual(x => x.Left, left).IsEqual(x => x.Right, right).IsEqual(x => x.Operation, BinaryOperation.Divide);
         }
     }
 }
