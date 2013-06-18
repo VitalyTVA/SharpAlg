@@ -6,15 +6,15 @@ using System.Linq.Expressions;
 using SharpAlg;
 using SharpAlg.Native;
 using SharpKit.JavaScript;
-using Taste;
 using System.IO;
 using System.Text;
+using SharpAlg.Native.Parser;
 
 namespace SharpAlg.Tests {
     [TestFixture]
     public class ParserTests {
         const string program = @"
-// This is a test program which can be compiled by the Taste-compiler.
+// This is a test program
 // It reads a sequence of numbers and computes the sum of all integers 
 // up to these numbers.
 

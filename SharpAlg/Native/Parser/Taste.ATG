@@ -1,4 +1,4 @@
-COMPILER Taste
+COMPILER SharpAlg
 
 	const int // types
 	  undef = 0, integer = 1, boolean = 2;
@@ -137,7 +137,7 @@ Stat                     (. int type; string name; Obj obj;
 
 | '{' { Stat | VarDecl } '}' .
 /*------------------------------------------------------------------------*/
-Taste                    (. string name; .)
+SharpAlg                    (. string name; .)
 = "program"
   Ident<out name>        (. tab.OpenScope(); .)
   '{'
@@ -166,4 +166,4 @@ VarDecl                  (. string name; int type; .)
   { ',' Ident<out name>  (. tab.NewObj(name, var, type); .)
   } ';'.
 
-END Taste.
+END SharpAlg.

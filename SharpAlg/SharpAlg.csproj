@@ -106,7 +106,6 @@
       <DependentUpOn>Scanner.frame</DependentUpOn>
     </Compile>
     <Compile Include="Native\Parser\SymTab.cs" />
-    <Compile Include="Native\Parser\Taste.cs" />
     <None Include="Native\Parser\Copyright.frame">
       <DependentUpOn>Taste.ATG</DependentUpOn>
     </None>
@@ -162,7 +161,7 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)Native\Parser\coco $(ProjectDir)Native\Parser\Taste.ATG -namespace Taste</PreBuildEvent>
+    <PreBuildEvent>$(ProjectDir)Native\Parser\coco $(ProjectDir)Native\Parser\Taste.ATG -namespace SharpAlg.Native.Parser</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

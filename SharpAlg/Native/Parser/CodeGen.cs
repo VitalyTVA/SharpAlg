@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace Taste {
+namespace SharpAlg.Native.Parser {
 	
 public enum Op { // opcodes
 	ADD, SUB, MUL, DIV, EQU, LSS, GTR, NEG,
