@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Prototype, Filename = "../res/SharpAlg.Native.js")]
+    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public abstract class Expr {
         public static ConstantExpr Constant(double constant) {
             return new ConstantExpr(constant);
@@ -16,14 +16,14 @@ namespace SharpAlg.Native {
             return new BinaryExpr(left, right, type);
         }
     }
-    [JsType(JsMode.Prototype, Filename = "../res/SharpAlg.Native.js")]
+    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ConstantExpr : Expr {
         internal ConstantExpr(double value) {
             Value = value;
         }
         public double Value { get; private set; }
     }
-    [JsType(JsMode.Prototype, Filename = "../res/SharpAlg.Native.js")]
+    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ParameterExpr : Expr {
         internal ParameterExpr(string parameterName) {
             ParameterName = parameterName;
@@ -33,7 +33,7 @@ namespace SharpAlg.Native {
     public enum BinaryOperation {
         Add, Subtract, Multiply, Divide
     }
-    [JsType(JsMode.Prototype, Filename = "../res/SharpAlg.Native.js")]
+    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class BinaryExpr : Expr {
         internal BinaryExpr(Expr left, Expr right, BinaryOperation operation) {
             Operation = operation;

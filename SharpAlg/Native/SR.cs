@@ -8,5 +8,8 @@ using System.Threading.Tasks;
 namespace SharpAlg.Native {
     public static class SR {
         public const string STR_InputSequencesHaveDifferentLength = "Input sequences have different length.";
+
+        public const string JSNativeName = "../res/SharpAlg.Native.js";
+        public const string JSTestsName = "../res/SharpAlg.Tests.js";
     }
 }

@@ -7,7 +7,7 @@ using SharpKit.JavaScript;
 
 namespace SharpAlg.Tests {
     [System.Diagnostics.DebuggerNonUserCode]
-    [JsType(JsMode.Clr, Filename = "../res/SharpAlg.Tests.js")]
+    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class FluentAssert {
         public static TInput IsNull<TInput>(this TInput obj, Func<TInput, object> valueEvaluator = null) where TInput : class {
             Assert.IsNull(GetActualValue(obj, valueEvaluator));
@@ -71,7 +71,7 @@ namespace SharpAlg.Tests {
         }
 
         #region JS compatibility
-        [JsType(JsMode.Clr, Filename = "../res/SharpAlg.Tests.js")]
+        [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
         public class JsAssertionException : Exception {
             public JsAssertionException(string message)
                 : base(message) {

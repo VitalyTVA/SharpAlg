@@ -8,7 +8,7 @@ using SharpAlg.Native;
 using SharpKit.JavaScript;
 
 namespace SharpAlg.Tests {
-    [JsType(JsMode.Clr, Filename = "../res/SharpAlg.Tests.js")]
+    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     [TestFixture]
     public class ExprTests {
         [Test]
