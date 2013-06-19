@@ -38,28 +38,6 @@ namespace SharpAlg.Native.Parser {
             buf = new byte[(bufLen > 0) ? bufLen : MIN_BUFFER_LENGTH];
             if(fileLen > 0) Pos = 0; // setup buffer to position 0 (start)
             else bufPos = 0; // index 0 is already after the file, thus Pos = 0 is invalid
-            if(bufLen == fileLen && stream.CanSeek) Close();
-        }
-
-        protected Buffer(Buffer b) { // called in UTF8Buffer constructor
-            buf = b.buf;
-            bufStart = b.bufStart;
-            bufLen = b.bufLen;
-            fileLen = b.fileLen;
-            bufPos = b.bufPos;
-            stream = b.stream;
-            // keep destructor from closing the stream
-            b.stream = null;
-            isUserStream = b.isUserStream;
-        }
-
-        ~Buffer() { Close(); }
-
-        protected void Close() {
-            if(!isUserStream && stream != null) {
-                stream.Close();
-                stream = null;
-            }
         }
 
         public virtual int Read() {
@@ -82,17 +60,17 @@ namespace SharpAlg.Native.Parser {
             return ch;
         }
 
-        // beg .. begin, zero-based, inclusive, in byte
-        // end .. end, zero-based, exclusive, in byte
-        public string GetString(int beg, int end) {
-            int len = 0;
-            char[] buf = new char[end - beg];
-            int oldPos = Pos;
-            Pos = beg;
-            while(Pos < end) buf[len++] = (char)Read();
-            Pos = oldPos;
-            return new String(buf, 0, len);
-        }
+        //// beg .. begin, zero-based, inclusive, in byte
+        //// end .. end, zero-based, exclusive, in byte
+        //public string GetString(int beg, int end) {
+        //    int len = 0;
+        //    char[] buf = new char[end - beg];
+        //    int oldPos = Pos;
+        //    Pos = beg;
+        //    while(Pos < end) buf[len++] = (char)Read();
+        //    Pos = oldPos;
+        //    return new String(buf, 0, len);
+        //}
 
         public int Pos {
             get { return bufPos + bufStart; }
@@ -144,40 +122,6 @@ namespace SharpAlg.Native.Parser {
             }
             // end of stream reached
             return 0;
-        }
-    }
-    public class UTF8Buffer : Buffer {
-        public UTF8Buffer(Buffer b) : base(b) { }
-
-        public override int Read() {
-            int ch;
-            do {
-                ch = base.Read();
-                // until we find a utf8 start (0xxxxxxx or 11xxxxxx)
-            } while((ch >= 128) && ((ch & 0xC0) != 0xC0) && (ch != EOF));
-            if(ch < 128 || ch == EOF) {
-                // nothing to do, first 127 chars are the same in ascii and utf8
-                // 0xxxxxxx or end of file character
-            } else if((ch & 0xF0) == 0xF0) {
-                // 11110xxx 10xxxxxx 10xxxxxx 10xxxxxx
-                int c1 = ch & 0x07; ch = base.Read();
-                int c2 = ch & 0x3F; ch = base.Read();
-                int c3 = ch & 0x3F; ch = base.Read();
-                int c4 = ch & 0x3F;
-                ch = (((((c1 << 6) | c2) << 6) | c3) << 6) | c4;
-            } else if((ch & 0xE0) == 0xE0) {
-                // 1110xxxx 10xxxxxx 10xxxxxx
-                int c1 = ch & 0x0F; ch = base.Read();
-                int c2 = ch & 0x3F; ch = base.Read();
-                int c3 = ch & 0x3F;
-                ch = (((c1 << 6) | c2) << 6) | c3;
-            } else if((ch & 0xC0) == 0xC0) {
-                // 110xxxxx 10xxxxxx
-                int c1 = ch & 0x1F; ch = base.Read();
-                int c2 = ch & 0x3F;
-                ch = (c1 << 6) | c2;
-            }
-            return ch;
         }
     }
 }
