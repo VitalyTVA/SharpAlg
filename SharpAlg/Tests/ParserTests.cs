@@ -15,11 +15,19 @@ namespace SharpAlg.Tests {
     public class ParserTests {
         [Test]
         public void ParseNumeric() {
-            Parse("9 + 13").IsEqual(x => x.errors.count, 0);
-            Parse("9 + 13 + 117").IsEqual(x => x.errors.count, 0);
-            Parse("x").IsEqual(x => x.errors.count, 1);
-            Parse("+").IsEqual(x => x.errors.count, 1);
-            Parse("9 + ").IsEqual(x => x.errors.count, 1);
+            Parse("9 + 13")
+                .IsEqual(x => x.errors.Count, 0);
+            Parse("9 + 13 + 117")
+                .IsEqual(x => x.errors.Count, 0);
+            Parse("x")
+                .IsEqual(x => x.errors.Count, 1)
+                .IsEqual(x => x.errors.Errors, ErrorsBase.GetErrorText(1, 1, "number expected\r\n"));
+            Parse("+")
+                .IsEqual(x => x.errors.Count, 1)
+                .IsEqual(x => x.errors.Errors, ErrorsBase.GetErrorText(1, 1, "number expected\r\n"));
+            Parse("9 + ")
+                .IsEqual(x => x.errors.Count, 1)
+                .IsEqual(x => x.errors.Errors, ErrorsBase.GetErrorText(1, 5, "number expected\r\n"));
         }
         Parser Parse(string expression) {
             Scanner scanner = new Scanner(new MemoryStream(Encoding.ASCII.GetBytes(expression)));
