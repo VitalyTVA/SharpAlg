@@ -207,8 +207,8 @@ public class UTF8Buffer: Buffer {
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
-	const int maxT = 28;
-	const int noSym = 28;
+	const int maxT = 4;
+	const int noSym = 4;
 
 
 	public Buffer buffer; // scanner buffer
@@ -234,18 +234,6 @@ public class Scanner {
 		for (int i = 97; i <= 122; ++i) start[i] = 1;
 		for (int i = 48; i <= 57; ++i) start[i] = 2;
 		start[43] = 3; 
-		start[45] = 4; 
-		start[42] = 5; 
-		start[47] = 6; 
-		start[40] = 7; 
-		start[41] = 8; 
-		start[123] = 9; 
-		start[125] = 10; 
-		start[61] = 16; 
-		start[60] = 12; 
-		start[62] = 13; 
-		start[59] = 14; 
-		start[44] = 15; 
 		start[Buffer.EOF] = -1;
 
 	}
@@ -309,66 +297,9 @@ public class Scanner {
 
 
 
-	bool Comment0() {
-		int level = 1, pos0 = pos, line0 = line, col0 = col, charPos0 = charPos;
-		NextCh();
-		if (ch == '/') {
-			NextCh();
-			for(;;) {
-				if (ch == 10) {
-					level--;
-					if (level == 0) { oldEols = line - line0; NextCh(); return true; }
-					NextCh();
-				} else if (ch == Buffer.EOF) return false;
-				else NextCh();
-			}
-		} else {
-			buffer.Pos = pos0; NextCh(); line = line0; col = col0; charPos = charPos0;
-		}
-		return false;
-	}
-
-	bool Comment1() {
-		int level = 1, pos0 = pos, line0 = line, col0 = col, charPos0 = charPos;
-		NextCh();
-		if (ch == '*') {
-			NextCh();
-			for(;;) {
-				if (ch == '*') {
-					NextCh();
-					if (ch == '/') {
-						level--;
-						if (level == 0) { oldEols = line - line0; NextCh(); return true; }
-						NextCh();
-					}
-				} else if (ch == '/') {
-					NextCh();
-					if (ch == '*') {
-						level++; NextCh();
-					}
-				} else if (ch == Buffer.EOF) return false;
-				else NextCh();
-			}
-		} else {
-			buffer.Pos = pos0; NextCh(); line = line0; col = col0; charPos = charPos0;
-		}
-		return false;
-	}
-
 
 	void CheckLiteral() {
 		switch (t.val) {
-			case "true": t.kind = 5; break;
-			case "false": t.kind = 6; break;
-			case "void": t.kind = 9; break;
-			case "if": t.kind = 19; break;
-			case "else": t.kind = 20; break;
-			case "while": t.kind = 21; break;
-			case "read": t.kind = 22; break;
-			case "write": t.kind = 23; break;
-			case "program": t.kind = 24; break;
-			case "int": t.kind = 25; break;
-			case "bool": t.kind = 26; break;
 			default: break;
 		}
 	}
@@ -377,7 +308,7 @@ public class Scanner {
 		while (ch == ' ' ||
 			ch >= 9 && ch <= 10 || ch == 13
 		) NextCh();
-		if (ch == '/' && Comment0() ||ch == '/' && Comment1()) return NextToken();
+
 		int recKind = noSym;
 		int recEnd = pos;
 		t = new Token();
@@ -399,41 +330,13 @@ public class Scanner {
 			case 1:
 				recEnd = pos; recKind = 1;
 				if (ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') {AddCh(); goto case 1;}
-				else {t.kind = 1; t.val = new String(tval, 0, tlen); CheckLiteral(); return t;}
+				else {t.kind = 1; break;}
 			case 2:
 				recEnd = pos; recKind = 2;
 				if (ch >= '0' && ch <= '9') {AddCh(); goto case 2;}
 				else {t.kind = 2; break;}
 			case 3:
 				{t.kind = 3; break;}
-			case 4:
-				{t.kind = 4; break;}
-			case 5:
-				{t.kind = 7; break;}
-			case 6:
-				{t.kind = 8; break;}
-			case 7:
-				{t.kind = 10; break;}
-			case 8:
-				{t.kind = 11; break;}
-			case 9:
-				{t.kind = 12; break;}
-			case 10:
-				{t.kind = 13; break;}
-			case 11:
-				{t.kind = 14; break;}
-			case 12:
-				{t.kind = 15; break;}
-			case 13:
-				{t.kind = 16; break;}
-			case 14:
-				{t.kind = 18; break;}
-			case 15:
-				{t.kind = 27; break;}
-			case 16:
-				recEnd = pos; recKind = 17;
-				if (ch == '=') {AddCh(); goto case 11;}
-				else {t.kind = 17; break;}
 
 		}
 		t.val = new String(tval, 0, tlen);

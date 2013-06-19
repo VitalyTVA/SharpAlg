@@ -13,50 +13,19 @@ using SharpAlg.Native.Parser;
 namespace SharpAlg.Tests {
     [TestFixture]
     public class ParserTests {
-        const string program = @"
-// This is a test program
-// It reads a sequence of numbers and computes the sum of all integers 
-// up to these numbers.
-
-program Test {
-	int i;
-	
-	void Foo() {
-		int a, b, max;
-		read a; read b;
-        bool x;
-		if (a > b) max = a; else max = b;
-		write max;
-	}
-
-	void SumUp() {
-		int sum;
-		sum = 0;
-		while (i > 0) { sum = sum + i; i = i - 1; }
-		write sum;
-	}
-
-	void Main() {
-		read i;
-		while (i > 0) {
-			SumUp();
-			read i;
-		}
-	}
-}";
         [Test]
-        public void MainTest() {
-            Scanner scanner = new Scanner(new MemoryStream(Encoding.ASCII.GetBytes(program)));
-            Parser parser = new Parser(scanner);
-            parser.tab = new SymbolTable(parser);
-            parser.gen = new CodeGenerator();
-            parser.Parse();
-            Assert.AreEqual(0, parser.errors.count);
-            parser.gen.Decode();
-            string result = parser.gen.Interpret(new MemoryStream(Encoding.ASCII.GetBytes("13 5 120 0")));
-            Assert.AreEqual("91 15 7260 ", result);
-
+        public void ParseNumeric() {
+            Parse("9 + 13").IsEqual(x => x.errors.count, 0);
+            Parse("9 + 13 + 117").IsEqual(x => x.errors.count, 0);
+            Parse("x").IsEqual(x => x.errors.count, 1);
+            Parse("+").IsEqual(x => x.errors.count, 1);
+            Parse("9 + ").IsEqual(x => x.errors.count, 1);
         }
-
+        Parser Parse(string expression) {
+            Scanner scanner = new Scanner(new MemoryStream(Encoding.ASCII.GetBytes(expression)));
+            Parser parser = new Parser(scanner);
+            parser.Parse();
+            return parser;
+        }
     }
 }
