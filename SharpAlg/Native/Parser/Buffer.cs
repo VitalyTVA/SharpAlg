@@ -4,7 +4,7 @@ using System.Collections;
 using SharpKit.JavaScript;
 
 namespace SharpAlg.Native.Parser {
-    [JsType(JsMode.Clr, Filename = SR.JSParserName)]
+    [JsType(JsMode.Prototype, Filename = SR.JSParserName)]
     public class Buffer {
         public const int EOF = char.MaxValue + 1;
 

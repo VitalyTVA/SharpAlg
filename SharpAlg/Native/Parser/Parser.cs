@@ -8,7 +8,7 @@ using SharpKit.JavaScript;
 namespace SharpAlg.Native.Parser {
 
 
-[JsType(JsMode.Clr, Filename = SR.JSParserName)]
+[JsType(JsMode.Prototype, Filename = SR.JSParserName)]
 public class Parser {
 	public const int _EOF = 0;
 	public const int _ident = 1;
@@ -114,7 +114,7 @@ public class Parser {
 	};
 } // end Parser
 
-[JsType(JsMode.Clr, Filename = SR.JSParserName)]
+[JsType(JsMode.Prototype, Filename = SR.JSParserName)]
 public class Errors : ErrorsBase {
     protected override string GetErrorByCode(int n) {
         string s;

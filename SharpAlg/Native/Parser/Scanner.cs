@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace SharpAlg.Native.Parser {
 
-[JsType(JsMode.Clr, Filename = SR.JSParserName)]
+[JsType(JsMode.Clr, Filename = SR.JSParserName)]//TODO prototype
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
