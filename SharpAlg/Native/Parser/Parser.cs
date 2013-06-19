@@ -129,9 +129,4 @@ public class Errors : ErrorsBase {
         }
         return s;
     }
-}
-
-public class FatalError: Exception {
-	public FatalError(string m): base(m) {}
-}
-}
+}}

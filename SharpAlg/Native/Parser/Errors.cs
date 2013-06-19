@@ -13,31 +13,34 @@ namespace SharpAlg.Native.Parser {
         public string Errors { get { return errorsBuilder.ToString(); } }
         
 
-        public virtual void SynErr(int line, int column, int n) {
-            AppendLine(string.Format(errMsgFormat, line, column, GetErrorByCode(n)));
+        public void SynErr(int line, int column, int parserErrorCode) {
+            AppendLine(string.Format(errMsgFormat, line, column, GetErrorByCode(parserErrorCode)));
             Count++;
         }
 
-        public virtual void SemErr(int line, int column, string errorText) {
+        public void SemErr(int line, int column, string errorText) {
             AppendLine(GetErrorText(line, column, errorText));
             Count++;
         }
 
-        public virtual void SemErr(string s) {
+        public void SemErr(string s) {
             AppendLine(s);
             Count++;
         }
 
-        public virtual void Warning(int line, int column, string errorText) {
+        public void Warning(int line, int column, string errorText) {
             AppendLine(string.Format(errMsgFormat, line, column, errorText));
         }
 
-        public virtual void Warning(string warningText) {
+        public void Warning(string warningText) {
             AppendLine(warningText);
         }
         void AppendLine(string s) {
             errorsBuilder.AppendLine(s);
         }
         protected abstract string GetErrorByCode(int n);
+    }
+    public class FatalError : Exception {
+        public FatalError(string m) : base(m) { }
     }
 }

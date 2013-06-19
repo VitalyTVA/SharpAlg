@@ -1,6 +1,3 @@
-/*----------------------------------------------------------------------
-Compiler Generator Coco/R,
-----------------------------------------------------------------------*/
 -->begin
 using System;
 
@@ -102,8 +99,4 @@ public class Errors : ErrorsBase {
         }
         return s;
     }
-}
-
-public class FatalError: Exception {
-	public FatalError(string m): base(m) {}
 }
