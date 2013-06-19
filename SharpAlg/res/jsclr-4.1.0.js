@@ -3484,11 +3484,11 @@ JsTypes.push({ fullname: "System.String", baseTypeName: "System.Object", definit
 	FormatCache: [],
     Format: function (format, varargs)
     {
-        var format = arguments[0];
-        for (var i = 1; i < arguments.length; i++)
+        //var format = varargs[0];
+        for (var i = 0; i < varargs.length; i++)
         {
-            var str = '{' + (i - 1) + '}';
-            format = format.split(str).join(arguments[i]);
+            var str = '{' + i + '}';
+            format = format.split(str).join(varargs[i]);
         }
         return format;
     },

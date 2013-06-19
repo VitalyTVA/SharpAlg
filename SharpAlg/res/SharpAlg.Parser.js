@@ -13,204 +13,569 @@ if (typeof($CreateException)=='undefined')
         return error;
     }
 }
-if (typeof(SharpAlg) == "undefined")
-    var SharpAlg = {};
-if (typeof(SharpAlg.Native) == "undefined")
-    SharpAlg.Native = {};
-if (typeof(SharpAlg.Native.Parser) == "undefined")
-    SharpAlg.Native.Parser = {};
-SharpAlg.Native.Parser.Buffer = function (source)
+if (typeof(JsTypes) == "undefined")
+    var JsTypes = [];
+var SharpAlg$Native$Parser$Buffer =
 {
-    this.source = null;
-    this.position = 0;
-    this.source = source;
-};
-SharpAlg.Native.Parser.Buffer.EOF = 65536;
-SharpAlg.Native.Parser.Buffer.prototype.Read = function ()
-{
-    if (this.get_Position() < this.source.length)
-        return this.source.charAt(this.set_Position(this.get_Position() + 1));
-    return 65536;
-};
-SharpAlg.Native.Parser.Buffer.prototype.Peek = function ()
-{
-    var curPos = this.get_Position();
-    var ch = this.Read();
-    this.set_Position(curPos);
-    return ch;
-};
-SharpAlg.Native.Parser.Buffer.prototype.get_Position = function ()
-{
-    return this.position;
-};
-SharpAlg.Native.Parser.Buffer.prototype.set_Position = function (value)
-{
-    if (value < 0 || value > this.source.length)
+    fullname: "SharpAlg.Native.Parser.Buffer",
+    baseTypeName: "System.Object",
+    staticDefinition:
     {
-        throw $CreateException(new SharpAlg.Native.Parser.FatalError.ctor("Buffer out of bounds access, position: " + value), new Error());
-    }
-    this.position = value;
-};
-SharpAlg.Native.Parser.ErrorsBase = function ()
-{
-    this.errorsBuilder = new System.Text.StringBuilder.ctor();
-    this.Count = 0;
-};
-SharpAlg.Native.Parser.ErrorsBase.errMsgFormat = "Error at line {0} column {1}: {2}";
-SharpAlg.Native.Parser.ErrorsBase.GetErrorText = function (line, column, errorText)
-{
-    return System.String.Format$$String$$Object$$Object$$Object("Error at line {0} column {1}: {2}", line, column, errorText);
-};
-SharpAlg.Native.Parser.ErrorsBase.prototype.get_Errors = function ()
-{
-    return this.errorsBuilder.toString();
-};
-SharpAlg.Native.Parser.ErrorsBase.prototype.SynErr = function (line, column, parserErrorCode)
-{
-    this.AppendLine(System.String.Format$$String$$Object$$Object$$Object("Error at line {0} column {1}: {2}", line, column, this.GetErrorByCode(parserErrorCode)));
-    this.Count++;
-};
-SharpAlg.Native.Parser.ErrorsBase.prototype.SemErr = function (line, column, errorText)
-{
-    this.AppendLine(SharpAlg.Native.Parser.ErrorsBase.GetErrorText(line, column, errorText));
-    this.Count++;
-};
-SharpAlg.Native.Parser.ErrorsBase.prototype.SemErr = function (s)
-{
-    this.AppendLine(s);
-    this.Count++;
-};
-SharpAlg.Native.Parser.ErrorsBase.prototype.Warning = function (line, column, errorText)
-{
-    this.AppendLine(System.String.Format$$String$$Object$$Object$$Object("Error at line {0} column {1}: {2}", line, column, errorText));
-};
-SharpAlg.Native.Parser.ErrorsBase.prototype.Warning = function (warningText)
-{
-    this.AppendLine(warningText);
-};
-SharpAlg.Native.Parser.ErrorsBase.prototype.AppendLine = function (s)
-{
-    this.errorsBuilder.AppendLine$$String(s);
-};
-SharpAlg.Native.Parser.Token = function ()
-{
-    this.kind = 0;
-    this.pos = 0;
-    this.charPos = 0;
-    this.col = 0;
-    this.line = 0;
-    this.val = null;
-    this.next = null;
-};
-SharpAlg.Native.Parser.Parser = function (scanner)
-{
-    this.scanner = null;
-    this.errors = null;
-    this.t = null;
-    this.la = null;
-    this.errDist = 2;
-    this.scanner = scanner;
-    this.errors = new SharpAlg.Native.Parser.Errors.ctor();
-};
-SharpAlg.Native.Parser.Parser._EOF = 0;
-SharpAlg.Native.Parser.Parser._ident = 1;
-SharpAlg.Native.Parser.Parser._number = 2;
-SharpAlg.Native.Parser.Parser.maxT = 4;
-SharpAlg.Native.Parser.Parser.T = true;
-SharpAlg.Native.Parser.Parser.x = false;
-SharpAlg.Native.Parser.Parser.minErrDist = 2;
-SharpAlg.Native.Parser.Parser.set = [true, false, false, false, false, false];
-SharpAlg.Native.Parser.Parser.prototype.SynErr = function (n)
-{
-    if (this.errDist >= 2)
-        this.errors.SynErr(this.la.line, this.la.col, n);
-    this.errDist = 0;
-};
-SharpAlg.Native.Parser.Parser.prototype.SemErr = function (msg)
-{
-    if (this.errDist >= 2)
-        this.errors.SemErr(this.t.line, this.t.col, msg);
-    this.errDist = 0;
-};
-SharpAlg.Native.Parser.Parser.prototype.Get = function ()
-{
-    for (;;)
-    {
-        this.t = this.la;
-        this.la = this.scanner.Scan();
-        if (this.la.kind <= 4)
+        cctor: function ()
         {
-            ++this.errDist;
-            break;
+            SharpAlg.Native.Parser.Buffer.EOF = 65536;
+        },
+        GetIntFromChar: function (c)
+        {
+            return c.charCodeAt();
         }
-        this.la = this.t;
-    }
-};
-SharpAlg.Native.Parser.Parser.prototype.Expect = function (n)
-{
-    if (this.la.kind == n)
-        this.Get();
-    else
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
     {
-        this.SynErr(n);
-    }
-};
-SharpAlg.Native.Parser.Parser.prototype.StartOf = function (s)
-{
-    return SharpAlg.Native.Parser.Parser.set[s, this.la.kind];
-};
-SharpAlg.Native.Parser.Parser.prototype.ExpectWeak = function (n, follow)
-{
-    if (this.la.kind == n)
-        this.Get();
-    else
-    {
-        this.SynErr(n);
-        while (!this.StartOf(follow))
-        this.Get();
-    }
-};
-SharpAlg.Native.Parser.Parser.prototype.WeakSeparator = function (n, syFol, repFol)
-{
-    var kind = this.la.kind;
-    if (kind == n)
-    {
-        this.Get();
-        return true;
-    }
-    else if (this.StartOf(repFol))
-    {
-        return false;
-    }
-    else
-    {
-        this.SynErr(n);
-        while (!(SharpAlg.Native.Parser.Parser.set[syFol, kind] || SharpAlg.Native.Parser.Parser.set[repFol, kind] || SharpAlg.Native.Parser.Parser.set[0, kind]))
+        ctor: function (source)
         {
+            this.source = null;
+            this.position = 0;
+            System.Object.ctor.call(this);
+            this.source = source;
+        },
+        Read: function ()
+        {
+            if (this.get_Position() < this.source.length)
+            {
+                this.set_Position(this.get_Position() + 1);
+                return SharpAlg.Native.Parser.Buffer.GetIntFromChar(this.source.charAt(this.get_Position() - 1));
+            }
+            return 65536;
+        },
+        Peek: function ()
+        {
+            var curPos = this.get_Position();
+            var ch = this.Read();
+            this.set_Position(curPos);
+            return ch;
+        },
+        Position$$: "System.Int32",
+        get_Position: function ()
+        {
+            return this.position;
+        },
+        set_Position: function (value)
+        {
+            if (value < 0 || value > this.source.length)
+            {
+                throw $CreateException(new SharpAlg.Native.Parser.FatalError.ctor("Buffer out of bounds access, position: " + value), new Error());
+            }
+            this.position = value;
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$Parser$Buffer);
+var SharpAlg$Native$Parser$ErrorsBase =
+{
+    fullname: "SharpAlg.Native.Parser.ErrorsBase",
+    baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+            SharpAlg.Native.Parser.ErrorsBase.errMsgFormat = "Error at line {0} column {1}: {2}";
+        },
+        GetErrorText: function (line, column, errorText)
+        {
+            return System.String.Format$$String$$Object$$Object$$Object("Error at line {0} column {1}: {2}", line, column, errorText);
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            this.errorsBuilder = new System.Text.StringBuilder.ctor();
+            this._Count = 0;
+            System.Object.ctor.call(this);
+        },
+        Count$$: "System.Int32",
+        get_Count: function ()
+        {
+            return this._Count;
+        },
+        set_Count: function (value)
+        {
+            this._Count = value;
+        },
+        Errors$$: "System.String",
+        get_Errors: function ()
+        {
+            return this.errorsBuilder.toString();
+        },
+        SynErr: function (line, column, parserErrorCode)
+        {
+            this.AppendLine(System.String.Format$$String$$Object$$Object$$Object("Error at line {0} column {1}: {2}", line, column, this.GetErrorByCode(parserErrorCode)));
+            this.set_Count(this.get_Count() + 1);
+        },
+        SemErr$$Int32$$Int32$$String: function (line, column, errorText)
+        {
+            this.AppendLine(SharpAlg.Native.Parser.ErrorsBase.GetErrorText(line, column, errorText));
+            this.set_Count(this.get_Count() + 1);
+        },
+        SemErr$$String: function (s)
+        {
+            this.AppendLine(s);
+            this.set_Count(this.get_Count() + 1);
+        },
+        Warning$$Int32$$Int32$$String: function (line, column, errorText)
+        {
+            this.AppendLine(System.String.Format$$String$$Object$$Object$$Object("Error at line {0} column {1}: {2}", line, column, errorText));
+        },
+        Warning$$String: function (warningText)
+        {
+            this.AppendLine(warningText);
+        },
+        AppendLine: function (s)
+        {
+            this.errorsBuilder.Append$$String(s);
+            this.errorsBuilder.Append$$String("\r\n");
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$Parser$ErrorsBase);
+var SharpAlg$Native$Parser$Token =
+{
+    fullname: "SharpAlg.Native.Parser.Token",
+    baseTypeName: "System.Object",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            this.kind = 0;
+            this.pos = 0;
+            this.charPos = 0;
+            this.col = 0;
+            this.line = 0;
+            this.val = null;
+            this.next = null;
+            System.Object.ctor.call(this);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$Parser$Token);
+var SharpAlg$Native$Parser$Parser =
+{
+    fullname: "SharpAlg.Native.Parser.Parser",
+    baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+            SharpAlg.Native.Parser.Parser._EOF = 0;
+            SharpAlg.Native.Parser.Parser._ident = 1;
+            SharpAlg.Native.Parser.Parser._number = 2;
+            SharpAlg.Native.Parser.Parser.maxT = 4;
+            SharpAlg.Native.Parser.Parser.T = true;
+            SharpAlg.Native.Parser.Parser.x = false;
+            SharpAlg.Native.Parser.Parser.minErrDist = 2;
+            SharpAlg.Native.Parser.Parser.set = [true, false, false, false, false, false];
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (scanner)
+        {
+            this.scanner = null;
+            this.errors = null;
+            this.t = null;
+            this.la = null;
+            this.errDist = 2;
+            System.Object.ctor.call(this);
+            this.scanner = scanner;
+            this.errors = new SharpAlg.Native.Parser.Errors.ctor();
+        },
+        SynErr: function (n)
+        {
+            if (this.errDist >= 2)
+                this.errors.SynErr(this.la.line, this.la.col, n);
+            this.errDist = 0;
+        },
+        SemErr: function (msg)
+        {
+            if (this.errDist >= 2)
+                this.errors.SemErr$$Int32$$Int32$$String(this.t.line, this.t.col, msg);
+            this.errDist = 0;
+        },
+        Get: function ()
+        {
+            for (;;)
+            {
+                this.t = this.la;
+                this.la = this.scanner.Scan();
+                if (this.la.kind <= 4)
+                {
+                    ++this.errDist;
+                    break;
+                }
+                this.la = this.t;
+            }
+        },
+        Expect: function (n)
+        {
+            if (this.la.kind == n)
+                this.Get();
+            else
+            {
+                this.SynErr(n);
+            }
+        },
+        StartOf: function (s)
+        {
+            return SharpAlg.Native.Parser.Parser.set[s, this.la.kind];
+        },
+        ExpectWeak: function (n, follow)
+        {
+            if (this.la.kind == n)
+                this.Get();
+            else
+            {
+                this.SynErr(n);
+                while (!this.StartOf(follow))
+                this.Get();
+            }
+        },
+        WeakSeparator: function (n, syFol, repFol)
+        {
+            var kind = this.la.kind;
+            if (kind == n)
+            {
+                this.Get();
+                return true;
+            }
+            else if (this.StartOf(repFol))
+            {
+                return false;
+            }
+            else
+            {
+                this.SynErr(n);
+                while (!(SharpAlg.Native.Parser.Parser.set[syFol, kind] || SharpAlg.Native.Parser.Parser.set[repFol, kind] || SharpAlg.Native.Parser.Parser.set[0, kind]))
+                {
+                    this.Get();
+                    kind = this.la.kind;
+                }
+                return this.StartOf(syFol);
+            }
+        },
+        SharpAlg: function ()
+        {
+            this.Term();
+            while (this.la.kind == 3)
+            {
+                this.Get();
+                this.Term();
+            }
+        },
+        Term: function ()
+        {
+            this.Expect(2);
+        },
+        Parse: function ()
+        {
+            this.la = new SharpAlg.Native.Parser.Token.ctor();
+            this.la.val = "";
             this.Get();
-            kind = this.la.kind;
+            this.SharpAlg();
+            this.Expect(0);
         }
-        return this.StartOf(syFol);
     }
 };
-SharpAlg.Native.Parser.Parser.prototype.SharpAlg = function ()
+JsTypes.push(SharpAlg$Native$Parser$Parser);
+var SharpAlg$Native$Parser$Errors =
 {
-    this.Term();
-    while (this.la.kind == 3)
+    fullname: "SharpAlg.Native.Parser.Errors",
+    baseTypeName: "SharpAlg.Native.Parser.ErrorsBase",
+    staticDefinition:
     {
-        this.Get();
-        this.Term();
+        cctor: function ()
+        {
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            SharpAlg.Native.Parser.ErrorsBase.ctor.call(this);
+        },
+        GetErrorByCode: function (n)
+        {
+            var s;
+            switch (n)
+            {
+                case 0:
+                    s = "EOF expected";
+                    break;
+                case 1:
+                    s = "ident expected";
+                    break;
+                case 2:
+                    s = "number expected";
+                    break;
+                case 3:
+                    s = "\"+\" expected";
+                    break;
+                case 4:
+                    s = "??? expected";
+                    break;
+                default :
+                    s = "error " + n;
+                    break;
+            }
+            return s;
+        }
     }
 };
-SharpAlg.Native.Parser.Parser.prototype.Term = function ()
+JsTypes.push(SharpAlg$Native$Parser$Errors);
+var SharpAlg$Native$Parser$Scanner =
 {
-    this.Expect(2);
+    fullname: "SharpAlg.Native.Parser.Scanner",
+    baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+            SharpAlg.Native.Parser.Scanner.EOL = "\n";
+            SharpAlg.Native.Parser.Scanner.eofSym = 0;
+            SharpAlg.Native.Parser.Scanner.maxT = 4;
+            SharpAlg.Native.Parser.Scanner.noSym = 4;
+            SharpAlg.Native.Parser.Scanner.start = null;
+            SharpAlg.Native.Parser.Scanner.start = new System.Collections.Generic.Dictionary$2.ctor(System.Int32.ctor, System.Int32.ctor);
+            for (var i = 65; i <= 90; ++i)
+                SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(i, 1);
+            for (var i = 97; i <= 122; ++i)
+                SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(i, 1);
+            for (var i = 48; i <= 57; ++i)
+                SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(i, 2);
+            SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(43, 3);
+            SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(65536, -1);
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (source)
+        {
+            this.buffer = null;
+            this.t = null;
+            this.ch = 0;
+            this.pos = 0;
+            this.charPos = 0;
+            this.col = 0;
+            this.line = 0;
+            this.oldEols = 0;
+            this.tokens = null;
+            this.pt = null;
+            this.tval = [];
+            this.tlen = 0;
+            System.Object.ctor.call(this);
+            this.buffer = new SharpAlg.Native.Parser.Buffer.ctor(source);
+            this.Init();
+        },
+        Init: function ()
+        {
+            this.pos = -1;
+            this.line = 1;
+            this.col = 0;
+            this.charPos = -1;
+            this.oldEols = 0;
+            this.NextCh();
+            this.pt = this.tokens = new SharpAlg.Native.Parser.Token.ctor();
+        },
+        NextCh: function ()
+        {
+            if (this.oldEols > 0)
+            {
+                this.ch = 10;
+                this.oldEols--;
+            }
+            else
+            {
+                this.pos = this.buffer.get_Position();
+                this.ch = this.buffer.Read();
+                this.col++;
+                this.charPos++;
+                if (this.ch == 13 && this.buffer.Peek() != 10)
+                    this.ch = 10;
+                if (this.ch == 10)
+                {
+                    this.line++;
+                    this.col = 0;
+                }
+            }
+        },
+        AddCh: function ()
+        {
+            if (this.tlen >= this.tval.length)
+            {
+                var newBuf = [];
+                for (var i = 0; i < this.tval.length; i++)
+                {
+                    newBuf[i] = this.tval[i];
+                }
+                this.tval = newBuf;
+            }
+            if (this.ch != 65536)
+            {
+                this.tval[this.tlen++] = this.GetCurrentChar();
+                this.NextCh();
+            }
+        },
+        GetCurrentChar: function ()
+        {
+            return String.fromCharCode(this.ch);
+        },
+        CheckLiteral: function ()
+        {
+            switch (this.t.val)
+            {
+                default :
+                    break;
+            }
+        },
+        NextToken: function ()
+        {
+            while (this.ch == 32 || this.ch >= 9 && this.ch <= 10 || this.ch == 13)
+            this.NextCh();
+            var recKind = 4;
+            var recEnd = this.pos;
+            this.t = new SharpAlg.Native.Parser.Token.ctor();
+            this.t.pos = this.pos;
+            this.t.col = this.col;
+            this.t.line = this.line;
+            this.t.charPos = this.charPos;
+            var state;
+            if (SharpAlg.Native.Parser.Scanner.start.ContainsKey(this.ch))
+            {
+                state = SharpAlg.Native.Parser.Scanner.start.get_Item$$TKey(this.ch);
+            }
+            else
+            {
+                state = 0;
+            }
+            this.tlen = 0;
+            this.AddCh();
+            var done = false;
+            while (!done)
+            {
+                switch (state)
+                {
+                    case -1:
+                        {
+                            this.t.kind = 0;
+                            done = true;
+                            break;
+                        }
+                    case 0:
+                        {
+                            if (recKind != 4)
+                            {
+                                this.tlen = recEnd - this.t.pos;
+                                this.SetScannerBehindT();
+                            }
+                            this.t.kind = recKind;
+                            done = true;
+                            break;
+                        }
+                    case 1:
+                        recEnd = this.pos;
+                        recKind = 1;
+                        if (this.ch >= 48 && this.ch <= 57 || this.ch >= 65 && this.ch <= 90 || this.ch >= 97 && this.ch <= 122)
+                        {
+                            this.AddCh();
+                            state = 1;
+                            break;
+                        }
+                        else
+                        {
+                            this.t.kind = 1;
+                            done = true;
+                            break;
+                        }
+                    case 2:
+                        recEnd = this.pos;
+                        recKind = 2;
+                        if (this.ch >= 48 && this.ch <= 57)
+                        {
+                            this.AddCh();
+                            state = 2;
+                            break;
+                        }
+                        else
+                        {
+                            this.t.kind = 2;
+                            done = true;
+                            break;
+                        }
+                    case 3:
+                        {
+                            this.t.kind = 3;
+                            done = true;
+                            break;
+                        }
+                }
+            }
+            this.t.val = System.String.Empty;
+            for (var i = 0; i < this.tlen; i++)
+            {
+                this.t.val += this.tval[i];
+            }
+            return this.t;
+        },
+        SetScannerBehindT: function ()
+        {
+            this.buffer.set_Position(this.t.pos);
+            this.NextCh();
+            this.line = this.t.line;
+            this.col = this.t.col;
+            this.charPos = this.t.charPos;
+            for (var i = 0; i < this.tlen; i++)
+                this.NextCh();
+        },
+        Scan: function ()
+        {
+            if (this.tokens.next == null)
+            {
+                return this.NextToken();
+            }
+            else
+            {
+                this.pt = this.tokens = this.tokens.next;
+                return this.tokens;
+            }
+        },
+        Peek: function ()
+        {
+            do {
+                if (this.pt.next == null)
+                {
+                    this.pt.next = this.NextToken();
+                }
+                this.pt = this.pt.next;
+            }
+            while (this.pt.kind > 4)
+            return this.pt;
+        },
+        ResetPeek: function ()
+        {
+            this.pt = this.tokens;
+        }
+    }
 };
-SharpAlg.Native.Parser.Parser.prototype.Parse = function ()
-{
-    this.la = new SharpAlg.Native.Parser.Token();
-    this.la.val = "";
-    this.Get();
-    this.SharpAlg();
-    this.Expect(0);
-};
+JsTypes.push(SharpAlg$Native$Parser$Scanner);

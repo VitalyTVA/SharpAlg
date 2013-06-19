@@ -6,10 +6,11 @@ using System;
 using System.IO;
 using System.Collections;
 using SharpKit.JavaScript;
+using System.Collections.Generic;
 
 namespace SharpAlg.Native.Parser {
 
-//[JsType(JsMode.Prototype, Filename = SR.JSParserName)]
+[JsType(JsMode.Clr, Filename = SR.JSParserName)]
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
@@ -26,7 +27,7 @@ public class Scanner {
 	int col;          // column number of current character
 	int line;         // line number of current character
 	int oldEols;      // EOLs that appeared in a comment;
-	static readonly Hashtable start; // maps first token character to start state
+    static readonly Dictionary<int, int> start; // maps first token character to start state
 
 	Token tokens;     // list of tokens already peeked (first token is a dummy)
 	Token pt;         // current peek token
@@ -35,7 +36,7 @@ public class Scanner {
 	int tlen;         // length of current token
 	
 	static Scanner() {
-		start = new Hashtable(128);
+		start = new Dictionary<int, int>();
 		for (int i = 65; i <= 90; ++i) start[i] = 1;
 		for (int i = 97; i <= 122; ++i) start[i] = 1;
 		for (int i = 48; i <= 57; ++i) start[i] = 2;
@@ -72,20 +73,25 @@ public class Scanner {
 
 	void AddCh() {
 		if (tlen >= tval.Length) {
+            //TODO not tested, ugly
 			char[] newBuf = new char[2 * tval.Length];
-			Array.Copy(tval, 0, newBuf, 0, tval.Length);
+            for(int i = 0; i < tval.Length; i++) {
+                newBuf[i] = tval[i];
+            }
 			tval = newBuf;
 		}
 		if (ch != Buffer.EOF) {
-			tval[tlen++] = (char) ch;
+            tval[tlen++] = GetCurrentChar();
 			NextCh();
 		}
 	}
 
-
-
-
-	void CheckLiteral() {
+    //TODO move to compatibility layer
+    [JsMethod(Code = "return String.fromCharCode(this.ch);")]
+    char GetCurrentChar() { //TODO
+        return (char)ch;
+    }
+    void CheckLiteral() {
 		switch (t.val) {
 			default: break;
 		}
@@ -105,28 +111,32 @@ public class Scanner {
 		else { state = 0; }
 		tlen = 0; AddCh();
 		
-		switch (state) {
-			case -1: { t.kind = eofSym; break; } // NextCh already done
-			case 0: {
-				if (recKind != noSym) {
-					tlen = recEnd - t.pos;
-					SetScannerBehindT();
-				}
-				t.kind = recKind; break;
-			} // NextCh already done
-			case 1:
-				recEnd = pos; recKind = 1;
-				if (ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') {AddCh(); goto case 1;}
-				else {t.kind = 1; break;}
-			case 2:
-				recEnd = pos; recKind = 2;
-				if (ch >= '0' && ch <= '9') {AddCh(); goto case 2;}
-				else {t.kind = 2; break;}
-			case 3:
-				{t.kind = 3; break;}
+        bool done = false;
+        while(!done) {
+            switch(state) {
+                case -1: { t.kind = eofSym; done = true; break; } // NextCh already done
+                case 0: {
+                        if(recKind != noSym) {
+                            tlen = recEnd - t.pos;
+                            SetScannerBehindT();
+                        }
+                        t.kind = recKind; done = true; break;
+                    } // NextCh already done
+                case 1:
+                    recEnd = pos; recKind = 1;
+                    if(ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') { AddCh(); state = 1; break; } else { t.kind = 1; done = true; break; }
+                case 2:
+                    recEnd = pos; recKind = 2;
+                    if(ch >= '0' && ch <= '9') { AddCh(); state = 2; break; } else { t.kind = 2; done = true; break; }
+                case 3: { t.kind = 3; done = true; break; }
 
-		}
-		t.val = new String(tval, 0, tlen);
+            }
+        }
+        t.val = string.Empty;//TODO performance!!!
+        for(int i = 0; i < tlen; i++) {
+            t.val += tval[i];    
+        }
+		//t.val = new String(tval, 0, tlen);
 		return t;
 	}
 	

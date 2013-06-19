@@ -4,7 +4,7 @@ using System.Collections;
 using SharpKit.JavaScript;
 
 namespace SharpAlg.Native.Parser {
-    [JsType(JsMode.Prototype, Filename = SR.JSParserName)]
+    [JsType(JsMode.Clr, Filename = SR.JSParserName)]
     public class Buffer {
         public const int EOF = char.MaxValue + 1;
 
@@ -15,11 +15,17 @@ namespace SharpAlg.Native.Parser {
         }
 
         public virtual int Read() {
-            if(Position < source.Length)
-                return source[Position++];
+            if(Position < source.Length) {
+                Position++;
+                return GetIntFromChar(source[Position - 1]);
+            }
             return EOF;
         }
-
+        //TODO move to compatibility layer
+        [JsMethod(Code = "return c.charCodeAt();")]
+        static int GetIntFromChar(char c) {
+            return c;
+        }
         public int Peek() {
             int curPos = Position;
             int ch = Read();

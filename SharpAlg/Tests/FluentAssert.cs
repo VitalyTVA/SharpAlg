@@ -22,7 +22,7 @@ namespace SharpAlg.Tests {
             return obj;
         }
         public static TInput IsEqual<TInput>(this TInput obj, Func<TInput, object> valueEvaluator, object expectedValue) {
-            AreEqual(valueEvaluator(obj), expectedValue);
+            AreEqual(expectedValue, valueEvaluator(obj));
             return obj;
         }
         public static TInput IsNotEqual<TInput>(this TInput obj, object expectedValue) {

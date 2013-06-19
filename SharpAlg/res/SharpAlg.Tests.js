@@ -98,7 +98,7 @@ var SharpAlg$Tests$FluentAssert =
         },
         IsEqual$1$$TInput$$Func$2$$Object: function (TInput, obj, valueEvaluator, expectedValue)
         {
-            SharpAlg.Tests.FluentAssert.AreEqual(valueEvaluator(obj), expectedValue);
+            SharpAlg.Tests.FluentAssert.AreEqual(expectedValue, valueEvaluator(obj));
             return obj;
         },
         IsNotEqual$1$$TInput$$Object: function (TInput, obj, expectedValue)
@@ -184,3 +184,68 @@ var SharpAlg$Tests$FluentAssert$JsAssertionException =
     }
 };
 JsTypes.push(SharpAlg$Tests$FluentAssert$JsAssertionException);
+var SharpAlg$Tests$ParserTests =
+{
+    fullname: "SharpAlg.Tests.ParserTests",
+    baseTypeName: "System.Object",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Object.ctor.call(this);
+        },
+        ParseNumericTest: function ()
+        {
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, this.Parse("1"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Count();
+            }), 0);
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, this.Parse("9 + 13"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Count();
+            }), 0);
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, this.Parse("9 + 13 + 117"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Count();
+            }), 0);
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, this.Parse("x"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Count();
+            }), 1), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Errors();
+            }), SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, 1, "number expected\r\n"));
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, this.Parse("+"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Count();
+            }), 1), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Errors();
+            }), SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, 1, "number expected\r\n"));
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, this.Parse("9+"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Count();
+            }), 1), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Errors();
+            }), SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, 3, "number expected\r\n"));
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser.ctor, this.Parse("9 + "), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Count();
+            }), 1), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.errors.get_Errors();
+            }), SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, 5, "number expected\r\n"));
+        },
+        Parse: function (expression)
+        {
+            var scanner = new SharpAlg.Native.Parser.Scanner.ctor(expression);
+            var parser = new SharpAlg.Native.Parser.Parser.ctor(scanner);
+            parser.Parse();
+            return parser;
+        }
+    }
+};
+JsTypes.push(SharpAlg$Tests$ParserTests);

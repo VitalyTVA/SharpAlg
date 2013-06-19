@@ -3,7 +3,7 @@ using System;
 using SharpKit.JavaScript;
 
 -->namespace
-[JsType(JsMode.Prototype, Filename = SR.JSParserName)]
+[JsType(JsMode.Clr, Filename = SR.JSParserName)]
 public class Parser {
 -->constants
 	const bool T = true;
@@ -90,7 +90,7 @@ public class Parser {
 	};
 } // end Parser
 
-
+[JsType(JsMode.Clr, Filename = SR.JSParserName)]
 public class Errors : ErrorsBase {
     protected override string GetErrorByCode(int n) {
         string s;

@@ -3,7 +3,7 @@ using System;
 using System.Text;
 
 namespace SharpAlg.Native.Parser {
-    [JsType(JsMode.Prototype, Filename = SR.JSParserName)]
+    [JsType(JsMode.Clr, Filename = SR.JSParserName)]
     public abstract class ErrorsBase {
         const string errMsgFormat = "Error at line {0} column {1}: {2}";
         internal static string GetErrorText(int line, int column, string errorText) {
@@ -38,7 +38,8 @@ namespace SharpAlg.Native.Parser {
             AppendLine(warningText);
         }
         void AppendLine(string s) {
-            errorsBuilder.AppendLine(s);
+            errorsBuilder.Append(s);
+            errorsBuilder.Append("\r\n");
         }
         protected abstract string GetErrorByCode(int n);
     }

@@ -163,7 +163,7 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)Native\Parser\coco $(ProjectDir)Native\Parser\Taste.ATG -namespace SharpAlg.Native.Parser</PreBuildEvent>
+    <PreBuildEvent>rem $(ProjectDir)Native\Parser\coco $(ProjectDir)Native\Parser\Taste.ATG -namespace SharpAlg.Native.Parser</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
