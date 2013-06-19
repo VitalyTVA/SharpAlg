@@ -3,11 +3,12 @@ SharpAlg Parser
 -----------------------------------------------------------------------*/
 
 using System;
+using SharpKit.JavaScript;
 
 namespace SharpAlg.Native.Parser {
 
 
-
+[JsType(JsMode.Prototype, Filename = SR.JSParserName)]
 public class Parser {
 	public const int _EOF = 0;
 	public const int _ident = 1;

@@ -1,8 +1,9 @@
 -->begin
 using System;
+using SharpKit.JavaScript;
 
 -->namespace
-
+[JsType(JsMode.Prototype, Filename = SR.JSParserName)]
 public class Parser {
 -->constants
 	const bool T = true;

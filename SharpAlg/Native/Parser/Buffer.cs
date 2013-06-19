@@ -1,8 +1,10 @@
 using System;
 using System.IO;
 using System.Collections;
+using SharpKit.JavaScript;
 
 namespace SharpAlg.Native.Parser {
+    [JsType(JsMode.Prototype, Filename = SR.JSParserName)]
     public class Buffer {
         public const int EOF = char.MaxValue + 1;
 
@@ -35,7 +37,7 @@ namespace SharpAlg.Native.Parser {
             get { return position; }
             set {
                 if(value < 0 || value > source.Length) {
-                    throw new FatalError("buffer out of bounds access, position: " + value);
+                    throw new FatalError(SR.STR_Parser_BufferOutOfBoundsAccessPosition + value);
                 }
                 position = value;
             }
