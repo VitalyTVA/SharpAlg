@@ -83,6 +83,7 @@
     <Compile Include="Native\ExpressionFactory.cs" />
     <Compile Include="Native\FunctionalExtensions.cs" />
     <Compile Include="Native\MayBe.cs" />
+    <Compile Include="Native\Parser\Errors.cs" />
     <Compile Include="Native\SR.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -98,14 +99,12 @@
     <Compile Include="Tests\ParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Native\Parser\CodeGen.cs" />
     <Compile Include="Native\Parser\Parser.cs">
       <DependentUpOn>Parser.frame</DependentUpOn>
     </Compile>
     <Compile Include="Native\Parser\Scanner.cs">
       <DependentUpOn>Scanner.frame</DependentUpOn>
     </Compile>
-    <Compile Include="Native\Parser\SymTab.cs" />
     <None Include="Native\Parser\Copyright.frame">
       <DependentUpOn>Taste.ATG</DependentUpOn>
     </None>
