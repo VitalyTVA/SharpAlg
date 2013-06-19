@@ -46,18 +46,8 @@ public class Scanner {
 
 	}
 	
-	public Scanner (string fileName) {
-		try {
-			Stream stream = new FileStream(fileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-			buffer = new Buffer(stream, false);
-			Init();
-		} catch (IOException) {
-			throw new FatalError("Cannot open file " + fileName);
-		}
-	}
-	
-	public Scanner (Stream s) {
-		buffer = new Buffer(s, true);
+	public Scanner (string source) {
+		buffer = new Buffer(source);
 		Init();
 	}
 	
@@ -71,7 +61,7 @@ public class Scanner {
 	void NextCh() {
 		if (oldEols > 0) { ch = EOL; oldEols--; } 
 		else {
-			pos = buffer.Pos;
+			pos = buffer.Position;
 			// buffer reads unicode chars, if UTF8 has been detected
 			ch = buffer.Read(); col++; charPos++;
 			// replace isolated '\r' by '\n' in order to make
@@ -143,7 +133,7 @@ public class Scanner {
 	}
 	
 	private void SetScannerBehindT() {
-		buffer.Pos = t.pos;
+		buffer.Position = t.pos;
 		NextCh();
 		line = t.line; col = t.col; charPos = t.charPos;
 		for (int i = 0; i < tlen; i++) NextCh();

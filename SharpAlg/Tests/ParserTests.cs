@@ -30,7 +30,7 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.errors.Errors, ErrorsBase.GetErrorText(1, 5, "number expected\r\n"));
         }
         Parser Parse(string expression) {
-            Scanner scanner = new Scanner(new MemoryStream(Encoding.ASCII.GetBytes(expression)));
+            Scanner scanner = new Scanner(expression);
             Parser parser = new Parser(scanner);
             parser.Parse();
             return parser;
