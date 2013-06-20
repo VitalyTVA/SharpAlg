@@ -20,7 +20,13 @@ namespace SharpAlg.Preprocess {
             string patch2 = PatchScanner(patch);
             scanner = scanner.Replace(patch, patch2);
 
-            File.WriteAllText(scannerFileName, scanner);
+            string finalFileName = scannerFileName.Replace(".cs", "_.cs");
+            string oldText = null;
+            if(File.Exists(finalFileName))
+                oldText = File.ReadAllText(finalFileName);
+            if(oldText != scanner)
+                File.WriteAllText(finalFileName, scanner);
+            File.Delete(scannerFileName);
         }
         public static string PatchScanner(string s) {
             string regex = @"{AddCh\(\); goto case (\d+);}";

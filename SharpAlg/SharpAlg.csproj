@@ -105,7 +105,7 @@
     <Compile Include="Native\Parser\Parser.cs">
       <DependentUpOn>Parser.frame</DependentUpOn>
     </Compile>
-    <Compile Include="Native\Parser\Scanner.cs">
+    <Compile Include="Native\Parser\Scanner_.cs">
       <DependentUpOn>Scanner.frame</DependentUpOn>
     </Compile>
     <None Include="Native\Parser\Copyright.frame">
