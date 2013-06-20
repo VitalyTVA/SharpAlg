@@ -20,12 +20,19 @@ SharpAlg 						(. int result; .)
 = Expression<out result>		(. this.result = result; .)
 .
 
-Expression<out int result>		(. int right; .)			
+Expression<out int result>		(. int right; Operation operation; .)			
 = Term<out result>
 	{
-	'+' 
-	Term<out right>				(. result += right; .)
+	AddOp<out operation> 
+	Term<out right>				(. if(operation == Operation.Add) result += right; else result -= right; .)
 	}
+.
+
+AddOp<out Operation operation>
+=                        (. operation = Operation.Add; .)
+  ( '+'
+  | '-'                  (. operation = Operation.Subtract; .)
+  )
 .
 
 Term<out int number>

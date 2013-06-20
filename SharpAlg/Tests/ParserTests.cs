@@ -22,14 +22,23 @@ namespace SharpAlg.Tests {
                 .AssertValue(22);
             Parse("9 + 13 + 117")
                 .AssertValue(139);
-            Parse("x")
-                .AssertSingleSyntaxError(GetNumberExpectedMessage(1, 1));
+            //Parse("x")
+            //    .AssertSingleSyntaxError(GetNumberExpectedMessage(1));
             Parse("+")
-                .AssertSingleSyntaxError(GetNumberExpectedMessage(1, 1));
+                .AssertSingleSyntaxError(GetNumberExpectedMessage(1));
             Parse("9+")
-                .AssertSingleSyntaxError(GetNumberExpectedMessage(1, 3));
+                .AssertSingleSyntaxError(GetNumberExpectedMessage(3));
             Parse("9 + ")
-                .AssertSingleSyntaxError(GetNumberExpectedMessage(1, 5));
+                .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
+
+            Parse("13 - 9")
+                .AssertValue(4);
+            Parse("130 - 9 - 2")
+                .AssertValue(119);
+            Parse("130 - 9 + 12 - 4")
+                .AssertValue(129);
+            Parse("13 -")
+                .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
         }
         Parser Parse(string expression) {
             Scanner scanner = new Scanner(expression);
@@ -40,14 +49,14 @@ namespace SharpAlg.Tests {
         static int Evaluate(Parser x) {
             return x.result;
         }
-        static string GetNumberExpectedMessage(int row, int column) {
-            return ErrorsBase.GetErrorText(row, column, "number expected\r\n");
+        static string GetNumberExpectedMessage(int column) {
+            return ErrorsBase.GetErrorText(1, column, "number expected\r\n");
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ParserTestHelper {
         public static Parser AssertValue(this Parser parser, int value) {
-            return parser.IsEqual(x => x.errors.Count, 0).IsEqual(x => x.result, value);
+            return parser.IsEqual(x => x.errors.Errors, string.Empty).IsEqual(x => x.errors.Count, 0).IsEqual(x => x.result, value);
         }
         public static Parser AssertSingleSyntaxError(this Parser parser, string text) {
             return parser.IsEqual(x => x.errors.Count, 1).IsEqual(x => x.errors.Errors, text);

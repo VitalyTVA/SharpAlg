@@ -13,7 +13,7 @@ public class Parser {
 	public const int _EOF = 0;
 	public const int _ident = 1;
 	public const int _number = 2;
-	public const int maxT = 4;
+	public const int maxT = 5;
 
 	const bool T = true;
 	const bool x = false;
@@ -92,18 +92,28 @@ public class Parser {
 	}
 
 	void Expression(out int result) {
-		int right; 
+		int right; Operation operation; 
 		Term(out result);
-		while (la.kind == 3) {
-			Get();
+		while (la.kind == 3 || la.kind == 4) {
+			AddOp(out operation);
 			Term(out right);
-			result += right; 
+			if(operation == Operation.Add) result += right; else result -= right; 
 		}
 	}
 
 	void Term(out int number) {
 		Expect(2);
 		number = Int32.Parse(t.val); 
+	}
+
+	void AddOp(out Operation operation) {
+		operation = Operation.Add; 
+		if (la.kind == 3) {
+			Get();
+		} else if (la.kind == 4) {
+			Get();
+			operation = Operation.Subtract; 
+		} else SynErr(6);
 	}
 
 
@@ -122,7 +132,7 @@ public class Parser {
 	}
 	
 	static readonly bool[,] set = {
-		{T,x,x,x, x,x}
+		{T,x,x,x, x,x,x}
 
 	};
 } // end Parser
@@ -136,7 +146,9 @@ public class Errors : ErrorsBase {
 			case 1: s = "ident expected"; break;
 			case 2: s = "number expected"; break;
 			case 3: s = "\"+\" expected"; break;
-			case 4: s = "??? expected"; break;
+			case 4: s = "\"-\" expected"; break;
+			case 5: s = "??? expected"; break;
+			case 6: s = "invalid AddOp"; break;
 
             default: s = "error " + n; break;
         }

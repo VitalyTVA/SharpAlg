@@ -194,9 +194,9 @@ var SharpAlg$Tests$ParserTests =
         {
             return x.result;
         },
-        GetNumberExpectedMessage: function (row, column)
+        GetNumberExpectedMessage: function (column)
         {
-            return SharpAlg.Native.Parser.ErrorsBase.GetErrorText(row, column, "number expected\r\n");
+            return SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, column, "number expected\r\n");
         }
     },
     assemblyName: "SharpAlg",
@@ -212,10 +212,13 @@ var SharpAlg$Tests$ParserTests =
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1"), 1);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13"), 22);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13 + 117"), 139);
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("x"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1, 1));
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("+"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1, 1));
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9+"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1, 3));
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9 + "), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1, 5));
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("+"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1));
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9+"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(3));
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9 + "), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(5));
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("13 - 9"), 4);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 - 2"), 119);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 + 12 - 4"), 129);
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("13 -"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(5));
         },
         Parse: function (expression)
         {
@@ -235,7 +238,10 @@ var SharpAlg$Tests$ParserTestHelper =
     {
         AssertValue: function (parser, value)
         {
-            return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, parser, function (x)
+            return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, parser, function (x)
+            {
+                return x.errors.get_Errors();
+            }, System.String.Empty), function (x)
             {
                 return x.errors.Count;
             }, 0), function (x)
