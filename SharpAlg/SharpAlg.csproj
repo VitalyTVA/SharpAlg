@@ -109,15 +109,15 @@
       <DependentUpOn>Scanner.frame</DependentUpOn>
     </Compile>
     <None Include="Native\Parser\Copyright.frame">
-      <DependentUpOn>Taste.ATG</DependentUpOn>
+      <DependentUpOn>SharpAlg.ATG</DependentUpOn>
     </None>
     <None Include="Native\Parser\Parser.frame">
-      <DependentUpOn>Taste.ATG</DependentUpOn>
+      <DependentUpOn>SharpAlg.ATG</DependentUpOn>
     </None>
     <None Include="Native\Parser\Scanner.frame">
-      <DependentUpOn>Taste.ATG</DependentUpOn>
+      <DependentUpOn>SharpAlg.ATG</DependentUpOn>
     </None>
-    <None Include="Native\Parser\Taste.ATG" />
+    <None Include="Native\Parser\SharpAlg.ATG" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DefaultClient.cs" />
@@ -163,7 +163,7 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)Native\Parser\coco $(ProjectDir)Native\Parser\Taste.ATG -namespace SharpAlg.Native.Parser
+    <PreBuildEvent>$(ProjectDir)Native\Parser\coco $(ProjectDir)Native\Parser\SharpAlg.ATG -namespace SharpAlg.Native.Parser
 if ERRORLEVEL 1 goto END
 $(ProjectDir)bin\SharpAlg.Preprocess.exe
 :END</PreBuildEvent>
