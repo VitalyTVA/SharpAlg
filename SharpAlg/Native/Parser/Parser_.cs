@@ -92,12 +92,12 @@ public class Parser {
 	}
 
 	void Expression(out int result) {
-		int right; Operation operation; 
+		int right; BinaryOperation operation; 
 		Term(out result);
 		while (la.kind == 3 || la.kind == 4) {
 			AddOp(out operation);
 			Term(out right);
-			if(operation == Operation.Add) result += right; else result -= right; 
+			if(operation == BinaryOperation.Add) result += right; else result -= right; 
 		}
 	}
 
@@ -106,13 +106,13 @@ public class Parser {
 		number = Int32.Parse(t.val); 
 	}
 
-	void AddOp(out Operation operation) {
-		operation = Operation.Add; 
+	void AddOp(out BinaryOperation operation) {
+		operation = BinaryOperation.Add; 
 		if (la.kind == 3) {
 			Get();
 		} else if (la.kind == 4) {
 			Get();
-			operation = Operation.Subtract; 
+			operation = BinaryOperation.Subtract; 
 		} else SynErr(6);
 	}
 

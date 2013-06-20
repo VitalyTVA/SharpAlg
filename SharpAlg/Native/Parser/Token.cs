@@ -14,6 +14,4 @@ namespace SharpAlg.Native.Parser {
         public string val;  // token value
         public Token next;  // ML 2005-03-11 Tokens are kept in linked list
     }
-    [JsType(JsMode.Json, Filename = SR.JSParserName)]
-    public enum Operation { Add, Subtract }
 }
