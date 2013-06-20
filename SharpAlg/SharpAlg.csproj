@@ -163,7 +163,7 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>rem $(ProjectDir)Native\Parser\coco $(ProjectDir)Native\Parser\Taste.ATG -namespace SharpAlg.Native.Parser
+    <PreBuildEvent>$(ProjectDir)Native\Parser\coco $(ProjectDir)Native\Parser\Taste.ATG -namespace SharpAlg.Native.Parser
 if ERRORLEVEL 1 goto END
 $(ProjectDir)bin\SharpAlg.Preprocess.exe
 :END</PreBuildEvent>

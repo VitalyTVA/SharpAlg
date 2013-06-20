@@ -5,10 +5,29 @@ using System.Text;
 using System.Threading.Tasks;
 using NUnit.Framework;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace SharpAlg.Preprocess {
     class Program {
         static void Main(string[] args) {
+            string scannerFileName = @"..\..\Native\Parser\Scanner.cs";
+            string scanner = File.ReadAllText(scannerFileName);
+            scanner = scanner.Replace("tval[tlen++] = (char) ch;", "tval[tlen++] = GetCurrentChar();");
+
+            int startIndex = scanner.IndexOf("//new way begin");
+            int endIndex = scanner.IndexOf("//new way end");
+            string patch = scanner.Substring(startIndex, endIndex - startIndex);
+            string patch2 = PatchScanner(patch);
+            scanner = scanner.Replace(patch, patch2);
+
+            File.WriteAllText(scannerFileName, scanner);
+        }
+        public static string PatchScanner(string s) {
+            string regex = @"{AddCh\(\); goto case (\d+);}";
+            MatchCollection matches = Regex.Matches(s, regex);
+            string result = s.Replace("break;", "done = true; break;");
+            result = Regex.Replace(result, regex, "{ AddCh(); state = $1; break; }");
+            return result;
         }
     }
     [TestFixture]
@@ -59,11 +78,8 @@ case 3:
 { t.kind = 3; done = true; break; }
 }
 ";
-            string regex = @"{AddCh\(\); goto case (\d+);}";
-            MatchCollection matches = Regex.Matches(s, regex);
-            string result = s.Replace("break;", "done = true; break;");
-            result = Regex.Replace(result, regex, "{ AddCh(); state = $1; break; }");
-            Assert.AreEqual(expected, result);
+        string result = Program.PatchScanner(s);
+        Assert.AreEqual(expected, result);
         }
     }
 }

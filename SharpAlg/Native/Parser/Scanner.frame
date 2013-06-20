@@ -2,12 +2,12 @@
 using System;
 using System.IO;
 using System.Collections;
-using System.Collections.Generic;
 using SharpKit.JavaScript;
+using System.Collections.Generic;
 
 -->namespace
 
-//[JsType(JsMode.Clr, Filename = SR.JSParserName)]
+[JsType(JsMode.Clr, Filename = SR.JSParserName)]//TODO prototype
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
@@ -63,8 +63,11 @@ public class Scanner {
 
 	void AddCh() {
 		if (tlen >= tval.Length) {
+            //TODO not tested, ugly
 			char[] newBuf = new char[2 * tval.Length];
-			Array.Copy(tval, 0, newBuf, 0, tval.Length);
+            for(int i = 0; i < tval.Length; i++) {
+                newBuf[i] = tval[i];
+            }
 			tval = newBuf;
 		}
 		if (ch != Buffer.EOF) {
@@ -72,6 +75,12 @@ public class Scanner {
 			NextCh();
 		}
 	}
+
+    //TODO move to compatibility layer
+    [JsMethod(Code = "return String.fromCharCode(this.ch);")]
+    char GetCurrentChar() { //TODO
+        return (char)ch;
+    }
 
 
 -->comments
@@ -93,7 +102,22 @@ public class Scanner {
 		if (start.ContainsKey(ch)) { state = (int) start[ch]; }
 		else { state = 0; }
 		tlen = 0; AddCh();
-		
+/*old way		
+		switch (state) {
+			case -1: { t.kind = eofSym; break; } // NextCh already done
+			case 0: {
+				if (recKind != noSym) {
+					tlen = recEnd - t.pos;
+					SetScannerBehindT();
+				}
+				t.kind = recKind; break;
+			} // NextCh already done
+<--scan3
+		}
+old way*/
+//new way begin
+        bool done = false;
+        while(!done) {
 		switch (state) {
 			case -1: { t.kind = eofSym; break; } // NextCh already done
 			case 0: {
@@ -105,6 +129,8 @@ public class Scanner {
 			} // NextCh already done
 -->scan3
 		}
+        }
+//new way end
         t.val = string.Empty;//TODO performance!!!
         for(int i = 0; i < tlen; i++) {
             t.val += tval[i];    
