@@ -136,6 +136,7 @@ SharpAlg.Native.Parser.Parser = function (scanner)
     this.t = null;
     this.la = null;
     this.errDist = 2;
+    this.result = 0;
     this.scanner = scanner;
     this.errors = new SharpAlg.Native.Parser.Errors();
 };
@@ -222,16 +223,40 @@ SharpAlg.Native.Parser.Parser.prototype.WeakSeparator = function (n, syFol, repF
 };
 SharpAlg.Native.Parser.Parser.prototype.SharpAlg = function ()
 {
-    this.Term();
+    var result;
+    (function ()
+    {
+        result = {Value: result};
+        var $res = this.Expression(result);
+        result = result.Value;
+        return $res;
+    }).call(this);
+    this.result = result;
+};
+SharpAlg.Native.Parser.Parser.prototype.Expression = function (result)
+{
+    var right;
+    this.Term(result);
     while (this.la.kind == 3)
     {
         this.Get();
-        this.Term();
+        (function ()
+        {
+            right = {Value: right};
+            var $res = this.Term(right);
+            right = right.Value;
+            return $res;
+        }).call(this);
+        result.Value += right;
     }
 };
-SharpAlg.Native.Parser.Parser.prototype.Term = function ()
+SharpAlg.Native.Parser.Parser.prototype.Term = function (number)
 {
     this.Expect(2);
+    if (this.errors.Count == 0)
+        number.Value = System.Int32.Parse$$String(this.t.val);
+    else
+        number.Value = 0;
 };
 SharpAlg.Native.Parser.Parser.prototype.Parse = function ()
 {

@@ -27,7 +27,7 @@ public class Parser {
 	int errDist = minErrDist;
 
 
-
+	public int result;
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
 		errors = new Errors();
@@ -86,15 +86,24 @@ public class Parser {
 
 	
 	void SharpAlg() {
-		Term();
+		int result; 
+		Expression(out result);
+		this.result = result; 
+	}
+
+	void Expression(out int result) {
+		int right; 
+		Term(out result);
 		while (la.kind == 3) {
 			Get();
-			Term();
+			Term(out right);
+			result += right; 
 		}
 	}
 
-	void Term() {
+	void Term(out int number) {
 		Expect(2);
+		if(errors.Count == 0) number = Int32.Parse(t.val); else number = 0; 
 	}
 
 
