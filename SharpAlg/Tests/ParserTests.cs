@@ -17,26 +17,19 @@ namespace SharpAlg.Tests {
         [Test]
         public void ParseNumericTest() {
             Parse("1")
-                .IsEqual(x => x.errors.Count, 0)
-                .IsEqual(x => Evaluate(x), 1);
+                .AssertValue(1);
             Parse("9 + 13")
-                .IsEqual(x => x.errors.Count, 0)
-                .IsEqual(x => Evaluate(x), 22);
+                .AssertValue(22);
             Parse("9 + 13 + 117")
-                .IsEqual(x => x.errors.Count, 0)
-                .IsEqual(x => Evaluate(x), 139);
+                .AssertValue(139);
             Parse("x")
-                .IsEqual(x => x.errors.Count, 1)
-                .IsEqual(x => x.errors.Errors, ErrorsBase.GetErrorText(1, 1, "number expected\r\n"));
+                .AssertSingleSyntaxError(GetNumberExpectedMessage(1, 1));
             Parse("+")
-                .IsEqual(x => x.errors.Count, 1)
-                .IsEqual(x => x.errors.Errors, ErrorsBase.GetErrorText(1, 1, "number expected\r\n"));
+                .AssertSingleSyntaxError(GetNumberExpectedMessage(1, 1));
             Parse("9+")
-                .IsEqual(x => x.errors.Count, 1)
-                .IsEqual(x => x.errors.Errors, ErrorsBase.GetErrorText(1, 3, "number expected\r\n"));
+                .AssertSingleSyntaxError(GetNumberExpectedMessage(1, 3));
             Parse("9 + ")
-                .IsEqual(x => x.errors.Count, 1)
-                .IsEqual(x => x.errors.Errors, ErrorsBase.GetErrorText(1, 5, "number expected\r\n"));
+                .AssertSingleSyntaxError(GetNumberExpectedMessage(1, 5));
         }
         Parser Parse(string expression) {
             Scanner scanner = new Scanner(expression);
@@ -46,6 +39,18 @@ namespace SharpAlg.Tests {
         }
         static int Evaluate(Parser x) {
             return x.result;
+        }
+        static string GetNumberExpectedMessage(int row, int column) {
+            return ErrorsBase.GetErrorText(row, column, "number expected\r\n");
+        }
+    }
+    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    public static class ParserTestHelper {
+        public static Parser AssertValue(this Parser parser, int value) {
+            return parser.IsEqual(x => x.errors.Count, 0).IsEqual(x => x.result, value);
+        }
+        public static Parser AssertSingleSyntaxError(this Parser parser, string text) {
+            return parser.IsEqual(x => x.errors.Count, 1).IsEqual(x => x.errors.Errors, text);
         }
     }
 }
