@@ -102,7 +102,7 @@
     <Compile Include="Tests\ParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Native\Parser\Parser.cs">
+    <Compile Include="Native\Parser\Parser_.cs">
       <DependentUpOn>Parser.frame</DependentUpOn>
     </Compile>
     <Compile Include="Native\Parser\Scanner_.cs">
@@ -145,7 +145,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>50452</DevelopmentServerPort>
+          <DevelopmentServerPort>53535</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

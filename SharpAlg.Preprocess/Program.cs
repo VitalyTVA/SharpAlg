@@ -10,7 +10,8 @@ using System.IO;
 namespace SharpAlg.Preprocess {
     class Program {
         static void Main(string[] args) {
-            string scannerFileName = @"..\..\Native\Parser\Scanner.cs";
+            string path = @"..\..\Native\Parser";
+            string scannerFileName = Path.Combine(path, @"Scanner.cs");
             string scanner = File.ReadAllText(scannerFileName);
             scanner = scanner.Replace("tval[tlen++] = (char) ch;", "tval[tlen++] = GetCurrentChar();");
 
@@ -20,13 +21,19 @@ namespace SharpAlg.Preprocess {
             string patch2 = PatchScanner(patch);
             scanner = scanner.Replace(patch, patch2);
 
-            string finalFileName = scannerFileName.Replace(".cs", "_.cs");
+            RewriteFile(scannerFileName, scanner);
+
+            string parserFileName = Path.Combine(path, @"Parser.cs");
+            RewriteFile(parserFileName, File.ReadAllText(parserFileName));
+        }
+        static void RewriteFile(string fileName, string text) {
+            string finalFileName = fileName.Replace(".cs", "_.cs");
             string oldText = null;
             if(File.Exists(finalFileName))
                 oldText = File.ReadAllText(finalFileName);
-            if(oldText != scanner)
-                File.WriteAllText(finalFileName, scanner);
-            File.Delete(scannerFileName);
+            if(oldText != text)
+                File.WriteAllText(finalFileName, text);
+            File.Delete(fileName);
         }
         public static string PatchScanner(string s) {
             string regex = @"{AddCh\(\); goto case (\d+);}";
