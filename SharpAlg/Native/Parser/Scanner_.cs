@@ -60,7 +60,7 @@ public class Scanner {
 	void NextCh() {
 		if (oldEols > 0) { ch = EOL; oldEols--; } 
 		else {
-			pos = buffer.Position;
+			pos = buffer.Pos;
 			// buffer reads unicode chars, if UTF8 has been detected
 			ch = buffer.Read(); col++; charPos++;
 			// replace isolated '\r' by '\n' in order to make
@@ -162,7 +162,7 @@ old way*/
 	}
 	
 	private void SetScannerBehindT() {
-		buffer.Position = t.pos;
+		buffer.Pos = t.pos;
 		NextCh();
 		line = t.line; col = t.col; charPos = t.charPos;
 		for (int i = 0; i < tlen; i++) NextCh();

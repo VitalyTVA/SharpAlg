@@ -15,9 +15,9 @@ namespace SharpAlg.Native.Parser {
         }
 
         public virtual int Read() {
-            if(Position < source.Length) {
-                Position++;
-                return GetIntFromChar(source[Position - 1]);
+            if(Pos < source.Length) {
+                Pos++;
+                return GetIntFromChar(source[Pos - 1]);
             }
             return EOF;
         }
@@ -27,9 +27,9 @@ namespace SharpAlg.Native.Parser {
             return c;
         }
         public int Peek() {
-            int curPos = Position;
+            int curPos = Pos;
             int ch = Read();
-            Position = curPos;
+            Pos = curPos;
             return ch;
         }
 
@@ -38,14 +38,14 @@ namespace SharpAlg.Native.Parser {
         //public string GetString(int beg, int end) {
         //}
 
-        int position;
-        public int Position {
-            get { return position; }
+        int pos;
+        public int Pos {
+            get { return pos; }
             set {
                 if(value < 0 || value > source.Length) {
                     throw new FatalError(SR.STR_Parser_BufferOutOfBoundsAccessPosition + value);
                 }
-                position = value;
+                pos = value;
             }
         }
     }

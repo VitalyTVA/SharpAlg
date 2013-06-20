@@ -51,16 +51,16 @@ if (typeof(SharpAlg.Native.Parser) == "undefined")
 SharpAlg.Native.Parser.Buffer = function (source)
 {
     this.source = null;
-    this.position = 0;
+    this.pos = 0;
     this.source = source;
 };
 SharpAlg.Native.Parser.Buffer.EOF = 65536;
 SharpAlg.Native.Parser.Buffer.prototype.Read = function ()
 {
-    if (this.get_Position() < this.source.length)
+    if (this.get_Pos() < this.source.length)
     {
-        this.set_Position(this.get_Position() + 1);
-        return SharpAlg.Native.Parser.Buffer.GetIntFromChar(this.source.charAt(this.get_Position() - 1));
+        this.set_Pos(this.get_Pos() + 1);
+        return SharpAlg.Native.Parser.Buffer.GetIntFromChar(this.source.charAt(this.get_Pos() - 1));
     }
     return 65536;
 };
@@ -70,22 +70,22 @@ SharpAlg.Native.Parser.Buffer.GetIntFromChar = function (c)
 };
 SharpAlg.Native.Parser.Buffer.prototype.Peek = function ()
 {
-    var curPos = this.get_Position();
+    var curPos = this.get_Pos();
     var ch = this.Read();
-    this.set_Position(curPos);
+    this.set_Pos(curPos);
     return ch;
 };
-SharpAlg.Native.Parser.Buffer.prototype.get_Position = function ()
+SharpAlg.Native.Parser.Buffer.prototype.get_Pos = function ()
 {
-    return this.position;
+    return this.pos;
 };
-SharpAlg.Native.Parser.Buffer.prototype.set_Position = function (value)
+SharpAlg.Native.Parser.Buffer.prototype.set_Pos = function (value)
 {
     if (value < 0 || value > this.source.length)
     {
         throw $CreateException(new SharpAlg.Native.Parser.FatalError.ctor("Buffer out of bounds access, position: " + value), new Error());
     }
-    this.position = value;
+    this.pos = value;
 };
 SharpAlg.Native.Parser.ErrorsBase = function ()
 {
@@ -339,7 +339,7 @@ var SharpAlg$Native$Parser$Scanner =
             }
             else
             {
-                this.pos = this.buffer.get_Position();
+                this.pos = this.buffer.get_Pos();
                 this.ch = this.buffer.Read();
                 this.col++;
                 this.charPos++;
@@ -472,7 +472,7 @@ var SharpAlg$Native$Parser$Scanner =
         },
         SetScannerBehindT: function ()
         {
-            this.buffer.set_Position(this.t.pos);
+            this.buffer.set_Pos(this.t.pos);
             this.NextCh();
             this.line = this.t.line;
             this.col = this.t.col;
