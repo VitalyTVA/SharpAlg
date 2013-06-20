@@ -29,7 +29,7 @@ Expression<out int result>		(. int right; .)
 .
 
 Term<out int number>
-= number						(. if(errors.Count == 0) number = Int32.Parse(t.val); else number = 0; .)
+= number						(. number = Int32.Parse(t.val); .)
 .
 
 END SharpAlg.

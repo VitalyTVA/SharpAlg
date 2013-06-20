@@ -188,6 +188,13 @@ var SharpAlg$Tests$ParserTests =
 {
     fullname: "SharpAlg.Tests.ParserTests",
     baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        Evaluate: function (x)
+        {
+            return x.result;
+        }
+    },
     assemblyName: "SharpAlg",
     Kind: "Class",
     definition:
@@ -203,21 +210,21 @@ var SharpAlg$Tests$ParserTests =
                 return x.errors.Count;
             }), 0), $CreateAnonymousDelegate(this, function (x)
             {
-                return x.result;
+                return SharpAlg.Tests.ParserTests.Evaluate(x);
             }), 1);
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, this.Parse("9 + 13"), $CreateAnonymousDelegate(this, function (x)
             {
                 return x.errors.Count;
             }), 0), $CreateAnonymousDelegate(this, function (x)
             {
-                return x.result;
+                return SharpAlg.Tests.ParserTests.Evaluate(x);
             }), 22);
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, this.Parse("9 + 13 + 117"), $CreateAnonymousDelegate(this, function (x)
             {
                 return x.errors.Count;
             }), 0), $CreateAnonymousDelegate(this, function (x)
             {
-                return x.result;
+                return SharpAlg.Tests.ParserTests.Evaluate(x);
             }), 139);
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, this.Parse("x"), $CreateAnonymousDelegate(this, function (x)
             {

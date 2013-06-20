@@ -253,18 +253,22 @@ SharpAlg.Native.Parser.Parser.prototype.Expression = function (result)
 SharpAlg.Native.Parser.Parser.prototype.Term = function (number)
 {
     this.Expect(2);
-    if (this.errors.Count == 0)
-        number.Value = System.Int32.Parse$$String(this.t.val);
-    else
-        number.Value = 0;
+    number.Value = System.Int32.Parse$$String(this.t.val);
 };
 SharpAlg.Native.Parser.Parser.prototype.Parse = function ()
 {
     this.la = {};
     this.la.val = "";
     this.Get();
-    this.SharpAlg();
-    this.Expect(0);
+    try
+    {
+        this.SharpAlg();
+        this.Expect(0);
+    }
+    catch (e)
+    {
+        this.SemErr(e.toString());
+    }
 };
 SharpAlg.Native.Parser.Errors = function ()
 {

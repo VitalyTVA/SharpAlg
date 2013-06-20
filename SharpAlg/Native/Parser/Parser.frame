@@ -82,7 +82,11 @@ public class Parser {
 		la = new Token();
 		la.val = "";		
 		Get();
+		try {
 -->parseRoot
+		} catch(Exception e) {
+			SemErr(e.ToString());
+		}
 	}
 	
 	static readonly bool[,] set = {

@@ -18,13 +18,13 @@ namespace SharpAlg.Tests {
         public void ParseNumericTest() {
             Parse("1")
                 .IsEqual(x => x.errors.Count, 0)
-                .IsEqual(x => x.result, 1);
+                .IsEqual(x => Evaluate(x), 1);
             Parse("9 + 13")
                 .IsEqual(x => x.errors.Count, 0)
-                .IsEqual(x => x.result, 22);
+                .IsEqual(x => Evaluate(x), 22);
             Parse("9 + 13 + 117")
                 .IsEqual(x => x.errors.Count, 0)
-                .IsEqual(x => x.result, 139);
+                .IsEqual(x => Evaluate(x), 139);
             Parse("x")
                 .IsEqual(x => x.errors.Count, 1)
                 .IsEqual(x => x.errors.Errors, ErrorsBase.GetErrorText(1, 1, "number expected\r\n"));
@@ -43,6 +43,9 @@ namespace SharpAlg.Tests {
             Parser parser = new Parser(scanner);
             parser.Parse();
             return parser;
+        }
+        static int Evaluate(Parser x) {
+            return x.result;
         }
     }
 }

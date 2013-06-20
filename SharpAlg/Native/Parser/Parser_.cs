@@ -103,7 +103,7 @@ public class Parser {
 
 	void Term(out int number) {
 		Expect(2);
-		if(errors.Count == 0) number = Int32.Parse(t.val); else number = 0; 
+		number = Int32.Parse(t.val); 
 	}
 
 
@@ -112,9 +112,13 @@ public class Parser {
 		la = new Token();
 		la.val = "";		
 		Get();
+		try {
 		SharpAlg();
 		Expect(0);
 
+		} catch(Exception e) {
+			SemErr(e.ToString());
+		}
 	}
 	
 	static readonly bool[,] set = {
