@@ -2,6 +2,11 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg", "SharpAlg\SharpAlg.csproj", "{01DEE02A-1F6C-46A9-B945-65E9DE87498E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{CE855CA7-ECAE-445B-A33E-4D35702F66B3} = {CE855CA7-ECAE-445B-A33E-4D35702F66B3}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Preprocess", "SharpAlg.Preprocess\SharpAlg.Preprocess.csproj", "{CE855CA7-ECAE-445B-A33E-4D35702F66B3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,6 +18,10 @@ Global
 		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
