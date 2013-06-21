@@ -17,9 +17,9 @@ namespace SharpAlg.Tests {
         [Test]
         public void ParseNumericTest() {
             Parse("1")
-                .AssertValue(1);
+                .AssertValue(1, Expr.Constant(1));
             Parse("9 + 13")
-                .AssertValue(22);
+                .AssertValue(22, Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Add));
             Parse("9 + 13 + 117")
                 .AssertValue(139);
             //Parse("x")
@@ -55,8 +55,12 @@ namespace SharpAlg.Tests {
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ParserTestHelper {
-        public static Parser AssertValue(this Parser parser, int value) {
-            return parser.IsEqual(x => x.errors.Errors, string.Empty).IsEqual(x => x.errors.Count, 0).IsEqual(x => x.result, value);
+        public static Parser AssertValue(this Parser parser, int value, Expr expectedExpr = null) {
+            return parser
+                .IsEqual(x => x.errors.Errors, string.Empty)
+                .IsEqual(x => x.errors.Count, 0)
+                .IsEqual(x => x.result, value)
+                .IsTrue(x => expectedExpr == null || x.Expr.ExprEquals(expectedExpr));
         }
         public static Parser AssertSingleSyntaxError(this Parser parser, string text) {
             return parser.IsEqual(x => x.errors.Count, 1).IsEqual(x => x.errors.Errors, text);

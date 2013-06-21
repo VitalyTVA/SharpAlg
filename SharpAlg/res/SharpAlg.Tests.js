@@ -234,15 +234,15 @@ var SharpAlg$Tests$ParserTests =
         },
         ParseNumericTest: function ()
         {
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1"), 1);
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13"), 22);
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13 + 117"), 139);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1"), 1, SharpAlg.Native.Expr.Constant(1));
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13"), 22, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13), 0));
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13 + 117"), 139, null);
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("+"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1));
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9+"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(3));
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9 + "), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(5));
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("13 - 9"), 4);
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 - 2"), 119);
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 + 12 - 4"), 129);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("13 - 9"), 4, null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 - 2"), 119, null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 + 12 - 4"), 129, null);
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("13 -"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(5));
         },
         Parse: function (expression)
@@ -261,9 +261,9 @@ var SharpAlg$Tests$ParserTestHelper =
     baseTypeName: "System.Object",
     staticDefinition:
     {
-        AssertValue: function (parser, value)
+        AssertValue: function (parser, value, expectedExpr)
         {
-            return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, parser, function (x)
+            return SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, parser, function (x)
             {
                 return x.errors.get_Errors();
             }, System.String.Empty), function (x)
@@ -272,7 +272,10 @@ var SharpAlg$Tests$ParserTestHelper =
             }, 0), function (x)
             {
                 return x.result;
-            }, value);
+            }, value), function (x)
+            {
+                return expectedExpr == null || x.Expr.ExprEquals(expectedExpr);
+            });
         },
         AssertSingleSyntaxError: function (parser, text)
         {

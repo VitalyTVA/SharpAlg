@@ -16,27 +16,27 @@ IGNORE cr + lf + tab
 
 PRODUCTIONS
 
-SharpAlg 						(. int result; .)
-= Expression<out result>		(. this.result = result; .)
+SharpAlg 										(. int result; Expr expr; .)
+= Expression<out result, out expr>				(. this.result = result; this.Expr = expr; .)
 .
 
-Expression<out int result>		(. int right; BinaryOperation operation; .)			
-= Term<out result>
+Expression<out int result, out Expr expr>		(. int right; BinaryOperation operation; Expr rightExpr; .)			
+= Term<out result, out expr>
 	{
 	AddOp<out operation> 
-	Term<out right>				(. if(operation == BinaryOperation.Add) result += right; else result -= right; .)
+	Term<out right, out rightExpr>					(. expr = Expr.Binary(expr, rightExpr, operation); if(operation == BinaryOperation.Add) result += right; else result -= right; .)
 	}
 .
 
 AddOp<out BinaryOperation operation>
-=                        (. operation = BinaryOperation.Add; .)
+=												(. operation = BinaryOperation.Add; .)
   ( '+'
-  | '-'                  (. operation = BinaryOperation.Subtract; .)
+  | '-'											(. operation = BinaryOperation.Subtract; .)
   )
 .
 
-Term<out int number>
-= number						(. number = Int32.Parse(t.val); .)
+Term<out int number, out Expr expr>
+= number										(. number = Int32.Parse(t.val); expr = Expr.Constant(number); .)
 .
 
 END SharpAlg.

@@ -19,6 +19,7 @@ public class Parser {
 
 -->declarations
 	public int result;
+	public Expr Expr { get; private set; }
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
 		errors = new Errors();
