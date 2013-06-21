@@ -81,6 +81,7 @@
     <Compile Include="Native\DiffExpressionTreeVisitor.cs" />
     <Compile Include="ExplessionExtensions.cs" />
     <Compile Include="Native\Expr.cs" />
+    <Compile Include="Native\ExpressionExtensions.cs" />
     <Compile Include="Native\ExpressionFactory.cs" />
     <Compile Include="Native\FunctionalExtensions.cs" />
     <Compile Include="Native\MayBe.cs" />
@@ -145,7 +146,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>58162</DevelopmentServerPort>
+          <DevelopmentServerPort>58955</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

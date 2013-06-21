@@ -40,7 +40,7 @@ var SharpAlg$Tests$ExprTests =
         {
             System.Object.ctor.call(this);
         },
-        ConstantExprTest: function ()
+        ParameterExprTest: function ()
         {
             SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.ParameterExpr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.ParameterExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ParameterExpr.ctor, SharpAlg.Native.Expr.Parameter("x"), $CreateAnonymousDelegate(this, function (x)
             {
@@ -53,11 +53,14 @@ var SharpAlg$Tests$ExprTests =
                 return x.ExprEquals(SharpAlg.Native.Expr.Parameter("y"));
             }));
         },
-        ParameterExprTest: function ()
+        ConstantExprTest: function ()
         {
-            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Native.Expr.Constant(9), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Native.Expr.Constant(9), $CreateAnonymousDelegate(this, function (x)
             {
                 return x.get_Value();
+            }), 9), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x);
             }), 9), $CreateAnonymousDelegate(this, function (x)
             {
                 return x.ExprEquals(SharpAlg.Native.Expr.Constant(9));

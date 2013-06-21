@@ -12,16 +12,17 @@ namespace SharpAlg.Tests {
     [TestFixture]
     public class ExprTests {
         [Test]
-        public void ConstantExprTest() {
+        public void ParameterExprTest() {
             Expr.Parameter("x")
                 .IsEqual(x => x.ParameterName, "x")
                 .IsTrue(x => x.ExprEquals(Expr.Parameter("x")))
                 .IsFalse(x => x.ExprEquals(Expr.Parameter("y")));
         }
         [Test]
-        public void ParameterExprTest() {
+        public void ConstantExprTest() {
             Expr.Constant(9)
                 .IsEqual(x => x.Value, 9)
+                .IsEqual(x => x.Evaluate(), 9)
                 .IsTrue(x => x.ExprEquals(Expr.Constant(9)))
                 .IsFalse(x => x.ExprEquals(Expr.Constant(13)));
         }
