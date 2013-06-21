@@ -15,6 +15,7 @@ namespace SharpAlg.Tests {
         public void ParameterExprTest() {
             Expr.Parameter("x")
                 .IsEqual(x => x.ParameterName, "x")
+                .Fails(x => x.Evaluate())
                 .IsTrue(x => x.ExprEquals(Expr.Parameter("x")))
                 .IsFalse(x => x.ExprEquals(Expr.Parameter("y")));
         }

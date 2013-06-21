@@ -42,11 +42,11 @@ namespace SharpAlg.Tests {
             return obj;
         }
         public static bool IsTrue(this bool val) {
-            Assert.IsTrue(val);
+            AreEqual(true, val);
             return val;
         }
         public static bool IsFalse(this bool val) {
-            Assert.IsFalse(val);
+            AreEqual(false, val);
             return val;
         }
         //public static TInput IsInstanceOfType<TInput>(this TInput obj, Type expectedType) where TInput : class {
@@ -68,6 +68,17 @@ namespace SharpAlg.Tests {
         }
         public static IEnumerable<T> IsSequenceEqual<T>(this IEnumerable<T> first, params T[] second) {
             return IsSequenceEqual(first, (IEnumerable<T>)second);
+        }
+
+        public static TInput Fails<TInput>(this TInput obj, Action<TInput> action, Func<Exception, bool> exceptionCheck = null) {
+            try {
+                action(obj);
+            } catch(Exception e) {
+                if(exceptionCheck != null)
+                    exceptionCheck(e).IsTrue();
+                return obj;
+            }
+            throw new AssertionException("Exception expected");
         }
 
         #region JS compatibility
