@@ -48,7 +48,7 @@ var SharpAlg$Tests$ExprTests =
             }), "x"), $CreateAnonymousDelegate(this, function (x)
             {
                 SharpAlg.Native.ExpressionExtensions.Evaluate(x);
-            }), $CreateAnonymousDelegate(this, function (e)
+            }), Typeof(SharpAlg.Native.ExpressionEvaluationException.ctor), $CreateAnonymousDelegate(this, function (e)
             {
                 SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(System.Exception.ctor, e, $CreateAnonymousDelegate(this, function (x)
                 {
@@ -201,7 +201,7 @@ var SharpAlg$Tests$FluentAssert =
         {
             return SharpAlg.Tests.FluentAssert.IsSequenceEqual$1$$IEnumerable$1$$IEnumerable$1(T, first, second);
         },
-        Fails$1: function (TInput, obj, action, exceptionCheck)
+        Fails$1: function (TInput, obj, action, exceptionType, exceptionCheck)
         {
             try
             {
@@ -209,15 +209,16 @@ var SharpAlg$Tests$FluentAssert =
             }
             catch (e)
             {
-                SharpAlg.Tests.FluentAssert.DoExceptionCheck(exceptionCheck, e);
+                SharpAlg.Tests.FluentAssert.CheckExceptionType(exceptionType, e);
+                if (exceptionCheck != null)
+                    exceptionCheck(e);
                 return obj;
             }
             throw $CreateException(new NUnit.Framework.AssertionException.ctor$$String("Exception expected"), new Error());
         },
-        DoExceptionCheck: function (exceptionCheck, e)
+        CheckExceptionType: function (exceptionType, e)
         {
-            if (exceptionCheck != null)
-                exceptionCheck(e);
+            
         },
         AreEqual: function (expected, actual)
         {
