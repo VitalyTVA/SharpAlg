@@ -18,7 +18,6 @@ public class Parser {
 	int errDist = minErrDist;
 
 -->declarations
-	public int result;
 	public Expr Expr { get; private set; }
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;

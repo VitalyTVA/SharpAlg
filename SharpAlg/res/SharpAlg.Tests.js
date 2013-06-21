@@ -262,10 +262,6 @@ var SharpAlg$Tests$ParserTests =
     baseTypeName: "System.Object",
     staticDefinition:
     {
-        Evaluate: function (x)
-        {
-            return x.result;
-        },
         GetNumberExpectedMessage: function (column)
         {
             return SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, column, "number expected\r\n");
@@ -318,7 +314,7 @@ var SharpAlg$Tests$ParserTestHelper =
                 return x.errors.Count;
             }, 0), function (x)
             {
-                return x.result;
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x.Expr);
             }, value), function (x)
             {
                 return expectedExpr == null || x.Expr.ExprEquals(expectedExpr);

@@ -46,9 +46,6 @@ namespace SharpAlg.Tests {
             parser.Parse();
             return parser;
         }
-        static int Evaluate(Parser x) {
-            return x.result;
-        }
         static string GetNumberExpectedMessage(int column) {
             return ErrorsBase.GetErrorText(1, column, "number expected\r\n");
         }
@@ -59,7 +56,7 @@ namespace SharpAlg.Tests {
             return parser
                 .IsEqual(x => x.errors.Errors, string.Empty)
                 .IsEqual(x => x.errors.Count, 0)
-                .IsEqual(x => x.result, value)
+                .IsEqual(x => x.Expr.Evaluate(), value)
                 .IsTrue(x => expectedExpr == null || x.Expr.ExprEquals(expectedExpr));
         }
         public static Parser AssertSingleSyntaxError(this Parser parser, string text) {

@@ -136,7 +136,6 @@ SharpAlg.Native.Parser.Parser = function (scanner)
     this.t = null;
     this.la = null;
     this.errDist = 2;
-    this.result = 0;
     this.Expr = null;
     this.scanner = scanner;
     this.errors = new SharpAlg.Native.Parser.Errors();
@@ -224,26 +223,21 @@ SharpAlg.Native.Parser.Parser.prototype.WeakSeparator = function (n, syFol, repF
 };
 SharpAlg.Native.Parser.Parser.prototype.SharpAlg = function ()
 {
-    var result;
     var expr;
     (function ()
     {
-        result = {Value: result};
         expr = {Value: expr};
-        var $res = this.Expression(result, expr);
-        result = result.Value;
+        var $res = this.Expression(expr);
         expr = expr.Value;
         return $res;
     }).call(this);
-    this.result = result;
     this.Expr = expr;
 };
-SharpAlg.Native.Parser.Parser.prototype.Expression = function (result, expr)
+SharpAlg.Native.Parser.Parser.prototype.Expression = function (expr)
 {
-    var right;
     var operation;
     var rightExpr;
-    this.Term(result, expr);
+    this.Term(expr);
     while (this.la.kind == 3 || this.la.kind == 4)
     {
         (function ()
@@ -255,25 +249,18 @@ SharpAlg.Native.Parser.Parser.prototype.Expression = function (result, expr)
         }).call(this);
         (function ()
         {
-            right = {Value: right};
             rightExpr = {Value: rightExpr};
-            var $res = this.Term(right, rightExpr);
-            right = right.Value;
+            var $res = this.Term(rightExpr);
             rightExpr = rightExpr.Value;
             return $res;
         }).call(this);
         expr.Value = SharpAlg.Native.Expr.Binary(expr.Value, rightExpr, operation);
-        if (operation == 0)
-            result.Value += right;
-        else
-            result.Value -= right;
     }
 };
-SharpAlg.Native.Parser.Parser.prototype.Term = function (number, expr)
+SharpAlg.Native.Parser.Parser.prototype.Term = function (expr)
 {
     this.Expect(2);
-    number.Value = System.Int32.Parse$$String(this.t.val);
-    expr.Value = SharpAlg.Native.Expr.Constant(number.Value);
+    expr.Value = SharpAlg.Native.Expr.Constant(System.Int32.Parse$$String(this.t.val));
 };
 SharpAlg.Native.Parser.Parser.prototype.AddOp = function (operation)
 {

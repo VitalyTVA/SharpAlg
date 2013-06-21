@@ -27,7 +27,6 @@ public class Parser {
 	int errDist = minErrDist;
 
 
-	public int result;
 	public Expr Expr { get; private set; }
 	public Parser(Scanner scanner) {
 		this.scanner = scanner;
@@ -87,24 +86,24 @@ public class Parser {
 
 	
 	void SharpAlg() {
-		int result; Expr expr; 
-		Expression(out result, out expr);
-		this.result = result; this.Expr = expr; 
+		Expr expr; 
+		Expression(out expr);
+		this.Expr = expr; 
 	}
 
-	void Expression(out int result, out Expr expr) {
-		int right; BinaryOperation operation; Expr rightExpr; 
-		Term(out result, out expr);
+	void Expression(out Expr expr) {
+		BinaryOperation operation; Expr rightExpr; 
+		Term(out expr);
 		while (la.kind == 3 || la.kind == 4) {
 			AddOp(out operation);
-			Term(out right, out rightExpr);
-			expr = Expr.Binary(expr, rightExpr, operation); if(operation == BinaryOperation.Add) result += right; else result -= right; 
+			Term(out rightExpr);
+			expr = Expr.Binary(expr, rightExpr, operation); 
 		}
 	}
 
-	void Term(out int number, out Expr expr) {
+	void Term(out Expr expr) {
 		Expect(2);
-		number = Int32.Parse(t.val); expr = Expr.Constant(number); 
+		expr = Expr.Constant(Int32.Parse(t.val)); 
 	}
 
 	void AddOp(out BinaryOperation operation) {
