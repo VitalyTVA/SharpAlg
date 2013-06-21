@@ -236,13 +236,13 @@ var SharpAlg$Tests$ParserTests =
         {
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1"), 1, SharpAlg.Native.Expr.Constant(1));
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13"), 22, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13), 0));
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13 + 117"), 139, null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13 + 117"), 139, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13), 0), SharpAlg.Native.Expr.Constant(117), 0));
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("+"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1));
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9+"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(3));
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9 + "), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(5));
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("13 - 9"), 4, null);
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 - 2"), 119, null);
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 + 12 - 4"), 129, null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("13 - 9"), 4, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(13), SharpAlg.Native.Expr.Constant(9), 1));
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 - 2"), 119, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(130), SharpAlg.Native.Expr.Constant(9), 1), SharpAlg.Native.Expr.Constant(2), 1));
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 + 12 - 4"), 129, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(130), SharpAlg.Native.Expr.Constant(9), 1), SharpAlg.Native.Expr.Constant(12), 0), SharpAlg.Native.Expr.Constant(4), 1));
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("13 -"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(5));
         },
         Parse: function (expression)

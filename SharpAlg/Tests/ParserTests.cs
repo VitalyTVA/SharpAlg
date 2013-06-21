@@ -21,7 +21,7 @@ namespace SharpAlg.Tests {
             Parse("9 + 13")
                 .AssertValue(22, Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Add));
             Parse("9 + 13 + 117")
-                .AssertValue(139);
+                .AssertValue(139, Expr.Binary(Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Add), Expr.Constant(117), BinaryOperation.Add));
             //Parse("x")
             //    .AssertSingleSyntaxError(GetNumberExpectedMessage(1));
             Parse("+")
@@ -32,11 +32,11 @@ namespace SharpAlg.Tests {
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
 
             Parse("13 - 9")
-                .AssertValue(4);
+                .AssertValue(4, Expr.Binary(Expr.Constant(13), Expr.Constant(9), BinaryOperation.Subtract));
             Parse("130 - 9 - 2")
-                .AssertValue(119);
+                .AssertValue(119, Expr.Binary(Expr.Binary(Expr.Constant(130), Expr.Constant(9), BinaryOperation.Subtract), Expr.Constant(2), BinaryOperation.Subtract));
             Parse("130 - 9 + 12 - 4")
-                .AssertValue(129);
+                .AssertValue(129, Expr.Binary(Expr.Binary(Expr.Binary(Expr.Constant(130), Expr.Constant(9), BinaryOperation.Subtract), Expr.Constant(12), BinaryOperation.Add), Expr.Constant(4), BinaryOperation.Subtract));
             Parse("13 -")
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
         }
