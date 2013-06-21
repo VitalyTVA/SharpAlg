@@ -167,7 +167,15 @@ var SharpAlg$Native$BinaryExpr =
         },
         Visit$1: function (T, visitor)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            switch (this.get_Operation())
+            {
+                case 0:
+                    return visitor.Add(this.get_Left(), this.get_Right());
+                case 1:
+                    return visitor.Subtract(this.get_Left(), this.get_Right());
+                default :
+                    throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            }
         }
     }
 };
@@ -204,4 +212,12 @@ SharpAlg.Native.ExpressionEvaluator = function ()
 SharpAlg.Native.ExpressionEvaluator.prototype.Constant = function (constant)
 {
     return constant.get_Value();
+};
+SharpAlg.Native.ExpressionEvaluator.prototype.Add = function (left, right)
+{
+    return left.Visit$1(System.Double.ctor, this) + right.Visit$1(System.Double.ctor, this);
+};
+SharpAlg.Native.ExpressionEvaluator.prototype.Subtract = function (left, right)
+{
+    return left.Visit$1(System.Double.ctor, this) - right.Visit$1(System.Double.ctor, this);
 };

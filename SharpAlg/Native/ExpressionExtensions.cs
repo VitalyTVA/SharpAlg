@@ -15,9 +15,17 @@ namespace SharpAlg.Native {
         public double Constant(ConstantExpr constant) {
             return constant.Value;
         }
+        public double Add(Expr left, Expr right) {
+            return left.Visit(this) + right.Visit(this);
+        }
+        public double Subtract(Expr left, Expr right) {
+            return left.Visit(this) - right.Visit(this);
+        }
     }
     //[JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public interface IExpressionVisitor<T> {
         T Constant(ConstantExpr constant);
+        T Add(Expr left, Expr right);
+        T Subtract(Expr left, Expr right);
     }
 }

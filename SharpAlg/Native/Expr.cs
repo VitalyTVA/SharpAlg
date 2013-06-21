@@ -65,7 +65,14 @@ namespace SharpAlg.Native {
             return other != null && other.Left.ExprEquals(Left) && other.Right.ExprEquals(Right) && other.Operation == Operation;
         }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
-            throw new NotImplementedException();
+            switch(Operation) {
+                case BinaryOperation.Add:
+                    return visitor.Add(Left, Right);
+                case BinaryOperation.Subtract:
+                    return visitor.Subtract(Left, Right);
+                default:
+                    throw new NotImplementedException();
+            }
         }
     }
 }

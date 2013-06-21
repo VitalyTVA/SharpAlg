@@ -99,6 +99,14 @@ var SharpAlg$Tests$ExprTests =
             {
                 return x.ExprEquals(expr4);
             }));
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13), 0), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x);
+            }), 22);
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13), 1), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x);
+            }), -4);
         }
     }
 };

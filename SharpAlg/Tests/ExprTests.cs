@@ -44,6 +44,11 @@ namespace SharpAlg.Tests {
                 .IsTrue(x => x.ExprEquals(expr2))
                 .IsFalse(x => x.ExprEquals(expr3))
                 .IsFalse(x => x.ExprEquals(expr4));
+
+            Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Add)
+                .IsEqual(x => x.Evaluate(), 22);
+            Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Subtract)
+                .IsEqual(x => x.Evaluate(), -4);
         }
     }
 }
