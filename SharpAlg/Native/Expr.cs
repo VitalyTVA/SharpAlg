@@ -53,7 +53,8 @@ namespace SharpAlg.Native {
         public Expr Right { get; private set; }
         public BinaryOperation Operation { get; private set; }
         public override bool ExprEquals(Expr expr) {
-            throw new NotImplementedException();
+            var other = expr as BinaryExpr;
+            return other != null && other.Left.ExprEquals(Left) && other.Right.ExprEquals(Right) && other.Operation == Operation;
         }
     }
 }
