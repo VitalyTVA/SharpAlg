@@ -70,18 +70,21 @@ namespace SharpAlg.Tests {
             return IsSequenceEqual(first, (IEnumerable<T>)second);
         }
 
-        public static TInput Fails<TInput>(this TInput obj, Action<TInput> action, Func<Exception, bool> exceptionCheck = null) {
+        public static TInput Fails<TInput>(this TInput obj, Action<TInput> action, Action<Exception> exceptionCheck = null) {
             try {
                 action(obj);
             } catch(Exception e) {
-                if(exceptionCheck != null)
-                    exceptionCheck(e).IsTrue();
+                DoExceptionCheck(exceptionCheck, e);
                 return obj;
             }
             throw new AssertionException("Exception expected");
         }
-
         #region JS compatibility
+        //[JsMethod(Code = "")]
+        static void DoExceptionCheck(Action<Exception> exceptionCheck, Exception e) {
+            if(exceptionCheck != null)
+                exceptionCheck(e);
+        }
         [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
         public class JsAssertionException : Exception {
             public JsAssertionException(string message)

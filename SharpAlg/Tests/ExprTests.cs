@@ -15,7 +15,7 @@ namespace SharpAlg.Tests {
         public void ParameterExprTest() {
             Expr.Parameter("x")
                 .IsEqual(x => x.ParameterName, "x")
-                .Fails(x => x.Evaluate())
+                .Fails(x => x.Evaluate(), e => e.IsEqual(x => x.Message, "x value is undefined"))
                 .IsTrue(x => x.ExprEquals(Expr.Parameter("x")))
                 .IsFalse(x => x.ExprEquals(Expr.Parameter("y")));
         }

@@ -48,7 +48,13 @@ var SharpAlg$Tests$ExprTests =
             }), "x"), $CreateAnonymousDelegate(this, function (x)
             {
                 SharpAlg.Native.ExpressionExtensions.Evaluate(x);
-            }), null), $CreateAnonymousDelegate(this, function (x)
+            }), $CreateAnonymousDelegate(this, function (e)
+            {
+                SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(System.Exception.ctor, e, $CreateAnonymousDelegate(this, function (x)
+                {
+                    return x.get_Message();
+                }), "x value is undefined");
+            })), $CreateAnonymousDelegate(this, function (x)
             {
                 return x.ExprEquals(SharpAlg.Native.Expr.Parameter("x"));
             })), $CreateAnonymousDelegate(this, function (x)
@@ -203,11 +209,15 @@ var SharpAlg$Tests$FluentAssert =
             }
             catch (e)
             {
-                if (exceptionCheck != null)
-                    SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(exceptionCheck(e));
+                SharpAlg.Tests.FluentAssert.DoExceptionCheck(exceptionCheck, e);
                 return obj;
             }
             throw $CreateException(new NUnit.Framework.AssertionException.ctor$$String("Exception expected"), new Error());
+        },
+        DoExceptionCheck: function (exceptionCheck, e)
+        {
+            if (exceptionCheck != null)
+                exceptionCheck(e);
         },
         AreEqual: function (expected, actual)
         {

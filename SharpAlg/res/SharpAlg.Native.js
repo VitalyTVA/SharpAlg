@@ -110,7 +110,7 @@ var SharpAlg$Native$ParameterExpr =
         },
         Visit$1: function (T, visitor)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            return visitor.Parameter(this);
         }
     }
 };
@@ -233,3 +233,26 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Divide = function (left, right)
 {
     return left.Visit$1(System.Double.ctor, this) / right.Visit$1(System.Double.ctor, this);
 };
+SharpAlg.Native.ExpressionEvaluator.prototype.Parameter = function (parameter)
+{
+    throw $CreateException(new SharpAlg.Native.ExpressionEvaluationException.ctor$$String(System.String.Format$$String$$Object("{0} value is undefined", parameter.get_ParameterName())), new Error());
+};
+var SharpAlg$Native$ExpressionEvaluationException =
+{
+    fullname: "SharpAlg.Native.ExpressionEvaluationException",
+    baseTypeName: "System.Exception",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Exception.ctor.call(this);
+        },
+        ctor$$String: function (message)
+        {
+            System.Exception.ctor$$String.call(this, message);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$ExpressionEvaluationException);

@@ -44,7 +44,7 @@ namespace SharpAlg.Native {
             return other != null && other.ParameterName == ParameterName;
         }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
-            throw new NotImplementedException();
+            return visitor.Parameter(this);
         }
     }
     public enum BinaryOperation {
