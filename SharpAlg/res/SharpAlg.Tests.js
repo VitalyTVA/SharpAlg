@@ -43,33 +43,47 @@ var SharpAlg$Tests$ExprTests =
         ConstantExprTest: function ()
         {
             var expr = SharpAlg.Native.Expr.Parameter("x");
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ParameterExpr, expr, $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ParameterExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
             {
-                return x.ParameterName;
+                return x.get_ParameterName();
             }), "x");
+            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.ParameterExpr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.ParameterExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.ExprEquals(SharpAlg.Native.Expr.Parameter("x"));
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.ExprEquals(SharpAlg.Native.Expr.Parameter("y"));
+            }));
         },
         ParameterExprTest: function ()
         {
             var expr = SharpAlg.Native.Expr.Constant(9);
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ConstantExpr, expr, $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ConstantExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
             {
-                return x.Value;
+                return x.get_Value();
             }), 9);
+            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.ConstantExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.ExprEquals(SharpAlg.Native.Expr.Constant(9));
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.ExprEquals(SharpAlg.Native.Expr.Constant(13));
+            }));
         },
         BinaryExprTest: function ()
         {
             var left = SharpAlg.Native.Expr.Constant(9);
             var right = SharpAlg.Native.Expr.Parameter("x");
             var expr = SharpAlg.Native.Expr.Binary(left, right, 3);
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr, expr, $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
             {
-                return x.Left;
+                return x.get_Left();
             }), left), $CreateAnonymousDelegate(this, function (x)
             {
-                return x.Right;
+                return x.get_Right();
             }), right), $CreateAnonymousDelegate(this, function (x)
             {
-                return x.Operation;
+                return x.get_Operation();
             }), 3);
         }
     }
@@ -113,12 +127,12 @@ var SharpAlg$Tests$FluentAssert =
         },
         IsTrue$1$$TInput$$Func$2: function (TInput, obj, valueEvaluator)
         {
-            NUnit.Framework.Assert.IsTrue$$Boolean(valueEvaluator(obj));
+            SharpAlg.Tests.FluentAssert.AreEqual(true, valueEvaluator(obj));
             return obj;
         },
         IsFalse$1$$TInput$$Func$2: function (TInput, obj, valueEvaluator)
         {
-            NUnit.Framework.Assert.IsFalse$$Boolean(valueEvaluator(obj));
+            SharpAlg.Tests.FluentAssert.AreEqual(false, valueEvaluator(obj));
             return obj;
         },
         IsTrue$$Boolean: function (val)

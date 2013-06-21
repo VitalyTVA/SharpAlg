@@ -15,11 +15,17 @@ namespace SharpAlg.Tests {
         public void ConstantExprTest() {
             var expr = Expr.Parameter("x");
             expr.IsEqual(x => x.ParameterName, "x");
+            expr
+                .IsTrue(x => x.ExprEquals(Expr.Parameter("x")))
+                .IsFalse(x => x.ExprEquals(Expr.Parameter("y")));
         }
         [Test]
         public void ParameterExprTest() {
             var expr = Expr.Constant(9);
             expr.IsEqual(x => x.Value, 9);
+            expr
+                .IsTrue(x => x.ExprEquals(Expr.Constant(9)))
+                .IsFalse(x => x.ExprEquals(Expr.Constant(13)));
         }
         [Test]
         public void BinaryExprTest() {

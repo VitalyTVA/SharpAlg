@@ -34,11 +34,11 @@ namespace SharpAlg.Tests {
             return obj;
         }
         public static TInput IsTrue<TInput>(this TInput obj, Func<TInput, bool> valueEvaluator) {
-            Assert.IsTrue(valueEvaluator(obj));
+            AreEqual(true, valueEvaluator(obj));
             return obj;
         }
         public static TInput IsFalse<TInput>(this TInput obj, Func<TInput, bool> valueEvaluator) {
-            Assert.IsFalse(valueEvaluator(obj));
+            AreEqual(false, valueEvaluator(obj));
             return obj;
         }
         public static bool IsTrue(this bool val) {
@@ -81,10 +81,10 @@ namespace SharpAlg.Tests {
         static void AreEqual(object expected, object actual) {
             Assert.AreEqual(expected, actual);
         }
+
         static void JsAreEqual(object expected, object actual) {
             if(!object.Equals(expected, actual))
                 throw new JsAssertionException("Expected: " + expected + " but was: " + actual);
-
         }
         #endregion
     }
