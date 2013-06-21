@@ -49,6 +49,10 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.Evaluate(), 22);
             Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Subtract)
                 .IsEqual(x => x.Evaluate(), -4);
+            Expr.Binary(Expr.Constant(10), Expr.Constant(5), BinaryOperation.Divide)
+                .IsEqual(x => x.Evaluate(), 2);
+            Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Multiply)
+                .IsEqual(x => x.Evaluate(), 9 * 13);
         }
     }
 }

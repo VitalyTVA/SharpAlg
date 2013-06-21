@@ -70,6 +70,10 @@ namespace SharpAlg.Native {
                     return visitor.Add(Left, Right);
                 case BinaryOperation.Subtract:
                     return visitor.Subtract(Left, Right);
+                case BinaryOperation.Multiply:
+                    return visitor.Multiply(Left, Right);
+                case BinaryOperation.Divide:
+                    return visitor.Divide(Left, Right);
                 default:
                     throw new NotImplementedException();
             }

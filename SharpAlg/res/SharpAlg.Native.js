@@ -173,6 +173,10 @@ var SharpAlg$Native$BinaryExpr =
                     return visitor.Add(this.get_Left(), this.get_Right());
                 case 1:
                     return visitor.Subtract(this.get_Left(), this.get_Right());
+                case 2:
+                    return visitor.Multiply(this.get_Left(), this.get_Right());
+                case 3:
+                    return visitor.Divide(this.get_Left(), this.get_Right());
                 default :
                     throw $CreateException(new System.NotImplementedException.ctor(), new Error());
             }
@@ -220,4 +224,12 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Add = function (left, right)
 SharpAlg.Native.ExpressionEvaluator.prototype.Subtract = function (left, right)
 {
     return left.Visit$1(System.Double.ctor, this) - right.Visit$1(System.Double.ctor, this);
+};
+SharpAlg.Native.ExpressionEvaluator.prototype.Multiply = function (left, right)
+{
+    return left.Visit$1(System.Double.ctor, this) * right.Visit$1(System.Double.ctor, this);
+};
+SharpAlg.Native.ExpressionEvaluator.prototype.Divide = function (left, right)
+{
+    return left.Visit$1(System.Double.ctor, this) / right.Visit$1(System.Double.ctor, this);
 };
