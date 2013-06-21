@@ -87,26 +87,26 @@ public class Parser {
 	
 	void SharpAlg() {
 		Expr expr; 
-		Expression(out expr);
+		AdditiveExpression(out expr);
 		this.Expr = expr; 
 	}
 
-	void Expression(out Expr expr) {
+	void AdditiveExpression(out Expr expr) {
 		BinaryOperation operation; Expr rightExpr; 
-		Term(out expr);
+		Terminal(out expr);
 		while (la.kind == 3 || la.kind == 4) {
-			AddOp(out operation);
-			Term(out rightExpr);
+			AdditiveOperation(out operation);
+			Terminal(out rightExpr);
 			expr = Expr.Binary(expr, rightExpr, operation); 
 		}
 	}
 
-	void Term(out Expr expr) {
+	void Terminal(out Expr expr) {
 		Expect(2);
 		expr = Expr.Constant(Int32.Parse(t.val)); 
 	}
 
-	void AddOp(out BinaryOperation operation) {
+	void AdditiveOperation(out BinaryOperation operation) {
 		operation = BinaryOperation.Add; 
 		if (la.kind == 3) {
 			Get();
@@ -148,7 +148,7 @@ public class Errors : ErrorsBase {
 			case 3: s = "\"+\" expected"; break;
 			case 4: s = "\"-\" expected"; break;
 			case 5: s = "??? expected"; break;
-			case 6: s = "invalid AddOp"; break;
+			case 6: s = "invalid AdditiveOperation"; break;
 
             default: s = "error " + n; break;
         }

@@ -17,25 +17,27 @@ IGNORE cr + lf + tab
 PRODUCTIONS
 
 SharpAlg 										(. Expr expr; .)
-= Expression<out expr>							(. this.Expr = expr; .)
+= AdditiveExpression<out expr>							(. this.Expr = expr; .)
 .
 
-Expression<out Expr expr>						(. BinaryOperation operation; Expr rightExpr; .)			
-= Term<out expr>
+AdditiveExpression<out Expr expr>						(. BinaryOperation operation; Expr rightExpr; .)			
+= Terminal<out expr>
 	{
-	AddOp<out operation> 
-	Term<out rightExpr>							(. expr = Expr.Binary(expr, rightExpr, operation); .)
+	AdditiveOperation<out operation> 
+	Terminal<out rightExpr>							(. expr = Expr.Binary(expr, rightExpr, operation); .)
 	}
 .
 
-AddOp<out BinaryOperation operation>
+AdditiveOperation<out BinaryOperation operation>
 =												(. operation = BinaryOperation.Add; .)
   ( '+'
   | '-'											(. operation = BinaryOperation.Subtract; .)
+  /*| '*'											(. operation = BinaryOperation.Multiply; .)
+  | '/'											(. operation = BinaryOperation.Divide; .)*/
   )
 .
 
-Term<out Expr expr>
+Terminal<out Expr expr>
 = number										(. expr = Expr.Constant(Int32.Parse(t.val)); .)
 .
 

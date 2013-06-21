@@ -227,42 +227,42 @@ SharpAlg.Native.Parser.Parser.prototype.SharpAlg = function ()
     (function ()
     {
         expr = {Value: expr};
-        var $res = this.Expression(expr);
+        var $res = this.AdditiveExpression(expr);
         expr = expr.Value;
         return $res;
     }).call(this);
     this.Expr = expr;
 };
-SharpAlg.Native.Parser.Parser.prototype.Expression = function (expr)
+SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
 {
     var operation;
     var rightExpr;
-    this.Term(expr);
+    this.Terminal(expr);
     while (this.la.kind == 3 || this.la.kind == 4)
     {
         (function ()
         {
             operation = {Value: operation};
-            var $res = this.AddOp(operation);
+            var $res = this.AdditiveOperation(operation);
             operation = operation.Value;
             return $res;
         }).call(this);
         (function ()
         {
             rightExpr = {Value: rightExpr};
-            var $res = this.Term(rightExpr);
+            var $res = this.Terminal(rightExpr);
             rightExpr = rightExpr.Value;
             return $res;
         }).call(this);
         expr.Value = SharpAlg.Native.Expr.Binary(expr.Value, rightExpr, operation);
     }
 };
-SharpAlg.Native.Parser.Parser.prototype.Term = function (expr)
+SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
 {
     this.Expect(2);
     expr.Value = SharpAlg.Native.Expr.Constant(System.Int32.Parse$$String(this.t.val));
 };
-SharpAlg.Native.Parser.Parser.prototype.AddOp = function (operation)
+SharpAlg.Native.Parser.Parser.prototype.AdditiveOperation = function (operation)
 {
     operation.Value = 0;
     if (this.la.kind == 3)
@@ -320,7 +320,7 @@ SharpAlg.Native.Parser.Errors.prototype.GetErrorByCode = function (n)
             s = "??? expected";
             break;
         case 6:
-            s = "invalid AddOp";
+            s = "invalid AdditiveOperation";
             break;
         default :
             s = "error " + n;
