@@ -13,7 +13,7 @@ public class Parser {
 	public const int _EOF = 0;
 	public const int _ident = 1;
 	public const int _number = 2;
-	public const int maxT = 5;
+	public const int maxT = 6;
 
 	const bool T = true;
 	const bool x = false;
@@ -94,7 +94,7 @@ public class Parser {
 	void AdditiveExpression(out Expr expr) {
 		BinaryOperation operation; Expr rightExpr; 
 		Terminal(out expr);
-		while (la.kind == 3 || la.kind == 4) {
+		while (la.kind == 3 || la.kind == 4 || la.kind == 5) {
 			AdditiveOperation(out operation);
 			Terminal(out rightExpr);
 			expr = Expr.Binary(expr, rightExpr, operation); 
@@ -113,7 +113,10 @@ public class Parser {
 		} else if (la.kind == 4) {
 			Get();
 			operation = BinaryOperation.Subtract; 
-		} else SynErr(6);
+		} else if (la.kind == 5) {
+			Get();
+			operation = BinaryOperation.Divide; 
+		} else SynErr(7);
 	}
 
 
@@ -132,7 +135,7 @@ public class Parser {
 	}
 	
 	static readonly bool[,] set = {
-		{T,x,x,x, x,x,x}
+		{T,x,x,x, x,x,x,x}
 
 	};
 } // end Parser
@@ -147,8 +150,9 @@ public class Errors : ErrorsBase {
 			case 2: s = "number expected"; break;
 			case 3: s = "\"+\" expected"; break;
 			case 4: s = "\"-\" expected"; break;
-			case 5: s = "??? expected"; break;
-			case 6: s = "invalid AdditiveOperation"; break;
+			case 5: s = "\"/\" expected"; break;
+			case 6: s = "??? expected"; break;
+			case 7: s = "invalid AdditiveOperation"; break;
 
             default: s = "error " + n; break;
         }

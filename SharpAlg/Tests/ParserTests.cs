@@ -43,8 +43,8 @@ namespace SharpAlg.Tests {
             //Parse("2 * 3")
             //    .AssertValue(6);
 
-            //Parse("6 / 2")
-            //    .AssertValue(3);
+            Parse("6 / 2")
+                .AssertValue(3);
 
             //Parse("1 + 2 * 3")
             //    .AssertValue(7);
