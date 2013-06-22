@@ -41,16 +41,20 @@ namespace SharpAlg.Tests {
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
 
             Parse("2 * 3")
-                .AssertValue(6);
+                .AssertValue(6, Expr.Binary(Expr.Constant(2), Expr.Constant(3), BinaryOperation.Multiply));
 
             Parse("6 / 2")
-                .AssertValue(3);
+                .AssertValue(3, Expr.Binary(Expr.Constant(6), Expr.Constant(2), BinaryOperation.Divide));
 
-            //Parse("1 + 2 * 3")
-            //    .AssertValue(7);
+            Parse("1 + 2 * 3")
+                .AssertValue(7, Expr.Binary(Expr.Constant(1), Expr.Binary(Expr.Constant(2), Expr.Constant(3), BinaryOperation.Multiply), BinaryOperation.Add));
 
-            //Parse("6 / 2")
-            //    .AssertValue(3);
+            Parse("1 + 6 / 2")
+                .AssertValue(4, Expr.Binary(Expr.Constant(1), Expr.Binary(Expr.Constant(6), Expr.Constant(2), BinaryOperation.Divide), BinaryOperation.Add));
+
+            Parse("2 * 3 * 4 / 6 / 2 - 4 / 2")
+               .AssertValue(0);
+
         }
         Parser Parse(string expression) {
             Scanner scanner = new Scanner(expression);

@@ -93,17 +93,22 @@ public class Parser {
 
 	void AdditiveExpression(out Expr expr) {
 		BinaryOperation operation; Expr rightExpr; 
-		Terminal(out expr);
-		while (StartOf(1)) {
+		MultiplicativeExpression(out expr);
+		while (la.kind == 3 || la.kind == 4) {
 			AdditiveOperation(out operation);
-			Terminal(out rightExpr);
+			MultiplicativeExpression(out rightExpr);
 			expr = Expr.Binary(expr, rightExpr, operation); 
 		}
 	}
 
-	void Terminal(out Expr expr) {
-		Expect(2);
-		expr = Expr.Constant(Int32.Parse(t.val)); 
+	void MultiplicativeExpression(out Expr expr) {
+		BinaryOperation operation; Expr rightExpr; 
+		Terminal(out expr);
+		while (la.kind == 5 || la.kind == 6) {
+			MultiplicativeOperation(out operation);
+			Terminal(out rightExpr);
+			expr = Expr.Binary(expr, rightExpr, operation); 
+		}
 	}
 
 	void AdditiveOperation(out BinaryOperation operation) {
@@ -113,13 +118,22 @@ public class Parser {
 		} else if (la.kind == 4) {
 			Get();
 			operation = BinaryOperation.Subtract; 
-		} else if (la.kind == 5) {
+		} else SynErr(8);
+	}
+
+	void Terminal(out Expr expr) {
+		Expect(2);
+		expr = Expr.Constant(Int32.Parse(t.val)); 
+	}
+
+	void MultiplicativeOperation(out BinaryOperation operation) {
+		operation = BinaryOperation.Multiply; 
+		if (la.kind == 5) {
 			Get();
-			operation = BinaryOperation.Multiply; 
 		} else if (la.kind == 6) {
 			Get();
 			operation = BinaryOperation.Divide; 
-		} else SynErr(8);
+		} else SynErr(9);
 	}
 
 
@@ -143,8 +157,7 @@ public class Parser {
 */
 //parser set patch begin
 	static readonly bool[][] set = {
-		new bool[] {T,x,x,x, x,x,x,x, x},
-		new bool[] {x,x,x,T, T,T,T,x, x}
+		new bool[] {T,x,x,x, x,x,x,x, x}
 
 	};
 //parser set patch end
@@ -164,6 +177,7 @@ public class Errors : ErrorsBase {
 			case 6: s = "\"/\" expected"; break;
 			case 7: s = "??? expected"; break;
 			case 8: s = "invalid AdditiveOperation"; break;
+			case 9: s = "invalid MultiplicativeOperation"; break;
 
             default: s = "error " + n; break;
         }

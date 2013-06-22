@@ -21,10 +21,10 @@ SharpAlg 										(. Expr expr; .)
 .
 
 AdditiveExpression<out Expr expr>						(. BinaryOperation operation; Expr rightExpr; .)			
-= Terminal<out expr>
+= MultiplicativeExpression<out expr>
 	{
 	AdditiveOperation<out operation> 
-	Terminal<out rightExpr>							(. expr = Expr.Binary(expr, rightExpr, operation); .)
+	MultiplicativeExpression<out rightExpr>							(. expr = Expr.Binary(expr, rightExpr, operation); .)
 	}
 .
 
@@ -32,10 +32,24 @@ AdditiveOperation<out BinaryOperation operation>
 =												(. operation = BinaryOperation.Add; .)
   ( '+'
   | '-'											(. operation = BinaryOperation.Subtract; .)
-  | '*'											(. operation = BinaryOperation.Multiply; .)
+  )
+.
+
+MultiplicativeExpression<out Expr expr>						(. BinaryOperation operation; Expr rightExpr; .)			
+= Terminal<out expr>
+	{
+	MultiplicativeOperation<out operation> 
+	Terminal<out rightExpr>							(. expr = Expr.Binary(expr, rightExpr, operation); .)
+	}
+.
+
+MultiplicativeOperation<out BinaryOperation operation>
+=												(. operation = BinaryOperation.Multiply; .)
+  ( '*'
   | '/'											(. operation = BinaryOperation.Divide; .)
   )
 .
+
 
 Terminal<out Expr expr>
 = number										(. expr = Expr.Constant(Int32.Parse(t.val)); .)

@@ -147,7 +147,7 @@ SharpAlg.Native.Parser.Parser.maxT = 7;
 SharpAlg.Native.Parser.Parser.T = true;
 SharpAlg.Native.Parser.Parser.x = false;
 SharpAlg.Native.Parser.Parser.minErrDist = 2;
-SharpAlg.Native.Parser.Parser.set = [[true, false, false, false, false, false, false, false, false], [false, false, false, true, true, true, true, false, false]];
+SharpAlg.Native.Parser.Parser.set = [[true, false, false, false, false, false, false, false, false]];
 SharpAlg.Native.Parser.Parser.prototype.SynErr = function (n)
 {
     if (this.errDist >= 2)
@@ -237,13 +237,37 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
 {
     var operation;
     var rightExpr;
-    this.Terminal(expr);
-    while (this.StartOf(1))
+    this.MultiplicativeExpression(expr);
+    while (this.la.kind == 3 || this.la.kind == 4)
     {
         (function ()
         {
             operation = {Value: operation};
             var $res = this.AdditiveOperation(operation);
+            operation = operation.Value;
+            return $res;
+        }).call(this);
+        (function ()
+        {
+            rightExpr = {Value: rightExpr};
+            var $res = this.MultiplicativeExpression(rightExpr);
+            rightExpr = rightExpr.Value;
+            return $res;
+        }).call(this);
+        expr.Value = SharpAlg.Native.Expr.Binary(expr.Value, rightExpr, operation);
+    }
+};
+SharpAlg.Native.Parser.Parser.prototype.MultiplicativeExpression = function (expr)
+{
+    var operation;
+    var rightExpr;
+    this.Terminal(expr);
+    while (this.la.kind == 5 || this.la.kind == 6)
+    {
+        (function ()
+        {
+            operation = {Value: operation};
+            var $res = this.MultiplicativeOperation(operation);
             operation = operation.Value;
             return $res;
         }).call(this);
@@ -257,11 +281,6 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
         expr.Value = SharpAlg.Native.Expr.Binary(expr.Value, rightExpr, operation);
     }
 };
-SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
-{
-    this.Expect(2);
-    expr.Value = SharpAlg.Native.Expr.Constant(System.Int32.Parse$$String(this.t.val));
-};
 SharpAlg.Native.Parser.Parser.prototype.AdditiveOperation = function (operation)
 {
     operation.Value = 0;
@@ -274,10 +293,20 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveOperation = function (operation)
         this.Get();
         operation.Value = 1;
     }
-    else if (this.la.kind == 5)
+    else
+        this.SynErr(8);
+};
+SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
+{
+    this.Expect(2);
+    expr.Value = SharpAlg.Native.Expr.Constant(System.Int32.Parse$$String(this.t.val));
+};
+SharpAlg.Native.Parser.Parser.prototype.MultiplicativeOperation = function (operation)
+{
+    operation.Value = 2;
+    if (this.la.kind == 5)
     {
         this.Get();
-        operation.Value = 2;
     }
     else if (this.la.kind == 6)
     {
@@ -285,7 +314,7 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveOperation = function (operation)
         operation.Value = 3;
     }
     else
-        this.SynErr(8);
+        this.SynErr(9);
 };
 SharpAlg.Native.Parser.Parser.prototype.Parse = function ()
 {
@@ -337,6 +366,9 @@ SharpAlg.Native.Parser.Errors.prototype.GetErrorByCode = function (n)
             break;
         case 8:
             s = "invalid AdditiveOperation";
+            break;
+        case 9:
+            s = "invalid MultiplicativeOperation";
             break;
         default :
             s = "error " + n;
