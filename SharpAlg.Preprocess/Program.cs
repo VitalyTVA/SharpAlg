@@ -8,9 +8,26 @@ using System.Text.RegularExpressions;
 using System.IO;
 
 namespace SharpAlg.Preprocess {
-    class Program {
+    public class Program {
+        const string path = @"..\..\Native\Parser";
         static void Main(string[] args) {
-            string path = @"..\..\Native\Parser";
+            PatchScanner();
+
+            PatchParser();
+        }
+        static void PatchParser() {
+            string parserFileName = Path.Combine(path, @"Parser.cs");
+            string parser = File.ReadAllText(parserFileName);
+            int startIndex = parser.IndexOf("//parser set patch begin");
+            int endIndex = parser.IndexOf("//parser set patch end");
+            string patch = parser.Substring(startIndex, endIndex - startIndex);
+            string patch2 = PatchParser(patch);
+            parser = parser.Replace(patch, patch2);
+
+            RewriteFile(parserFileName, parser);
+        }
+        static void PatchScanner() {
+            
             string scannerFileName = Path.Combine(path, @"Scanner.cs");
             string scanner = File.ReadAllText(scannerFileName);
             scanner = scanner.Replace("tval[tlen++] = (char) ch;", "tval[tlen++] = GetCurrentChar();");
@@ -22,9 +39,6 @@ namespace SharpAlg.Preprocess {
             scanner = scanner.Replace(patch, patch2);
 
             RewriteFile(scannerFileName, scanner);
-
-            string parserFileName = Path.Combine(path, @"Parser.cs");
-            RewriteFile(parserFileName, File.ReadAllText(parserFileName));
         }
         static void RewriteFile(string fileName, string text) {
             string finalFileName = fileName.Replace(".cs", "_.cs");
@@ -42,11 +56,34 @@ namespace SharpAlg.Preprocess {
             result = Regex.Replace(result, regex, "{ AddCh(); state = $1; break; }");
             return result;
         }
+        public static string PatchParser(string s) {
+            return s.Replace("		{", "		new bool[] {");
+        }
+
     }
     [TestFixture]
     public class Tests {
         [Test]
-        public void Test() {
+        public void PatchParser() {
+            string s = @"
+static readonly bool[][] set = {
+		{T,x,x,x, x,x,x,x, x},
+		{x,x,x,T, T,T,T,x, x}
+
+	};
+";
+            string expected = @"
+static readonly bool[][] set = {
+		new bool[] {T,x,x,x, x,x,x,x, x},
+		new bool[] {x,x,x,T, T,T,T,x, x}
+
+	};
+";
+            string result = Program.PatchParser(s);
+            Assert.AreEqual(expected, result);
+        }
+        [Test]
+        public void PatchScanner() {
             string s = @"
 switch(state) {
 case -1: { t.kind = eofSym; break; } // NextCh already done

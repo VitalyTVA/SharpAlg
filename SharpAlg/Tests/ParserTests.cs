@@ -40,8 +40,8 @@ namespace SharpAlg.Tests {
             Parse("13 -")
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
 
-            //Parse("2 * 3")
-            //    .AssertValue(6);
+            Parse("2 * 3")
+                .AssertValue(6);
 
             Parse("6 / 2")
                 .AssertValue(3);

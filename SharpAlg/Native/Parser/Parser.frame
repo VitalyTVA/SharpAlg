@@ -49,7 +49,7 @@ public class Parser {
 	}
 	
 	bool StartOf (int s) {
-		return set[s, la.kind];
+		return set[s][la.kind];
 	}
 	
 	void ExpectWeak (int n, int follow) {
@@ -67,7 +67,7 @@ public class Parser {
 		else if (StartOf(repFol)) {return false;}
 		else {
 			SynErr(n);
-			while (!(set[syFol, kind] || set[repFol, kind] || set[0, kind])) {
+			while (!(set[syFol][kind] || set[repFol][kind] || set[0][kind])) {
 				Get();
 				kind = la.kind;
 			}
@@ -88,10 +88,16 @@ public class Parser {
 			SemErr(e.ToString());
 		}
 	}
-	
+/*original set	
 	static readonly bool[,] set = {
+<--initialization
+	};
+*/
+//parser set patch begin
+	static readonly bool[][] set = {
 -->initialization
 	};
+//parser set patch end
 } // end Parser
 
 [JsType(JsMode.Prototype, Filename = SR.JSParserName)]

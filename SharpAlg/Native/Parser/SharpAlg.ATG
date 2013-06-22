@@ -32,7 +32,7 @@ AdditiveOperation<out BinaryOperation operation>
 =												(. operation = BinaryOperation.Add; .)
   ( '+'
   | '-'											(. operation = BinaryOperation.Subtract; .)
-  /*| '*'											(. operation = BinaryOperation.Multiply; .)*/
+  | '*'											(. operation = BinaryOperation.Multiply; .)
   | '/'											(. operation = BinaryOperation.Divide; .)
   )
 .

@@ -13,7 +13,7 @@ public class Parser {
 	public const int _EOF = 0;
 	public const int _ident = 1;
 	public const int _number = 2;
-	public const int maxT = 6;
+	public const int maxT = 7;
 
 	const bool T = true;
 	const bool x = false;
@@ -58,7 +58,7 @@ public class Parser {
 	}
 	
 	bool StartOf (int s) {
-		return set[s, la.kind];
+		return set[s][la.kind];
 	}
 	
 	void ExpectWeak (int n, int follow) {
@@ -76,7 +76,7 @@ public class Parser {
 		else if (StartOf(repFol)) {return false;}
 		else {
 			SynErr(n);
-			while (!(set[syFol, kind] || set[repFol, kind] || set[0, kind])) {
+			while (!(set[syFol][kind] || set[repFol][kind] || set[0][kind])) {
 				Get();
 				kind = la.kind;
 			}
@@ -94,7 +94,7 @@ public class Parser {
 	void AdditiveExpression(out Expr expr) {
 		BinaryOperation operation; Expr rightExpr; 
 		Terminal(out expr);
-		while (la.kind == 3 || la.kind == 4 || la.kind == 5) {
+		while (StartOf(1)) {
 			AdditiveOperation(out operation);
 			Terminal(out rightExpr);
 			expr = Expr.Binary(expr, rightExpr, operation); 
@@ -115,8 +115,11 @@ public class Parser {
 			operation = BinaryOperation.Subtract; 
 		} else if (la.kind == 5) {
 			Get();
+			operation = BinaryOperation.Multiply; 
+		} else if (la.kind == 6) {
+			Get();
 			operation = BinaryOperation.Divide; 
-		} else SynErr(7);
+		} else SynErr(8);
 	}
 
 
@@ -133,11 +136,18 @@ public class Parser {
 			SemErr(e.ToString());
 		}
 	}
-	
+/*original set	
 	static readonly bool[,] set = {
-		{T,x,x,x, x,x,x,x}
+<--initialization
+	};
+*/
+//parser set patch begin
+	static readonly bool[][] set = {
+		new bool[] {T,x,x,x, x,x,x,x, x},
+		new bool[] {x,x,x,T, T,T,T,x, x}
 
 	};
+//parser set patch end
 } // end Parser
 
 [JsType(JsMode.Prototype, Filename = SR.JSParserName)]
@@ -150,9 +160,10 @@ public class Errors : ErrorsBase {
 			case 2: s = "number expected"; break;
 			case 3: s = "\"+\" expected"; break;
 			case 4: s = "\"-\" expected"; break;
-			case 5: s = "\"/\" expected"; break;
-			case 6: s = "??? expected"; break;
-			case 7: s = "invalid AdditiveOperation"; break;
+			case 5: s = "\"*\" expected"; break;
+			case 6: s = "\"/\" expected"; break;
+			case 7: s = "??? expected"; break;
+			case 8: s = "invalid AdditiveOperation"; break;
 
             default: s = "error " + n; break;
         }
