@@ -40,12 +40,14 @@ namespace SharpAlg.Tests {
             Parse("13 -")
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
 
+            //multiplicative
             Parse("2 * 3")
                 .AssertValue(6, Expr.Binary(Expr.Constant(2), Expr.Constant(3), BinaryOperation.Multiply));
 
             Parse("6 / 2")
                 .AssertValue(3, Expr.Binary(Expr.Constant(6), Expr.Constant(2), BinaryOperation.Divide));
 
+            //priority
             Parse("1 + 2 * 3")
                 .AssertValue(7, Expr.Binary(Expr.Constant(1), Expr.Binary(Expr.Constant(2), Expr.Constant(3), BinaryOperation.Multiply), BinaryOperation.Add));
 
@@ -55,10 +57,26 @@ namespace SharpAlg.Tests {
             Parse("2 * 3 * 4 / 6 / 2 - 4 / 2")
                .AssertValue(0);
 
+            //() implemetation
             Parse("(1 + 2) * 3")
                 .AssertValue(9, Expr.Binary(Expr.Binary(Expr.Constant(1), Expr.Constant(2), BinaryOperation.Add), Expr.Constant(3), BinaryOperation.Multiply));
             Parse("(2 + 4) / (4 / (1 + 1))")
                 .AssertValue(3);
+        }
+        [Test]
+        public void ExpressionsWithParameterTest() {
+            var context = new Context();
+            context.Register("x", Expr.Constant(9));
+            context.Register("someName", Expr.Constant(13));
+
+            Parse("x")
+                .AssertValue(9, Expr.Parameter("x"), context);
+
+            Parse("x * someName")
+                .AssertValue(117, Expr.Binary(Expr.Parameter("x"), Expr.Parameter("someName"), BinaryOperation.Multiply), context);
+
+            Parse("(x - 4) * (someName + x)")
+                .AssertValue(110, null, context);
         }
         Parser Parse(string expression) {
             Scanner scanner = new Scanner(expression);
@@ -72,11 +90,11 @@ namespace SharpAlg.Tests {
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ParserTestHelper {
-        public static Parser AssertValue(this Parser parser, int value, Expr expectedExpr = null) {
+        public static Parser AssertValue(this Parser parser, int value, Expr expectedExpr = null, Context context = null) {
             return parser
                 .IsEqual(x => x.errors.Errors, string.Empty)
                 .IsEqual(x => x.errors.Count, 0)
-                .IsEqual(x => x.Expr.Evaluate(), value)
+                .IsEqual(x => x.Expr.Evaluate(context), value)
                 .IsTrue(x => expectedExpr == null || x.Expr.ExprEquals(expectedExpr));
         }
         public static Parser AssertSingleSyntaxError(this Parser parser, string text) {

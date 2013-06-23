@@ -11,7 +11,7 @@ namespace SharpAlg.Native.Parser {
 [JsType(JsMode.Prototype, Filename = SR.JSParserName)]
 public class Parser {
 	public const int _EOF = 0;
-	public const int _ident = 1;
+	public const int _identifier = 1;
 	public const int _number = 2;
 	public const int maxT = 9;
 
@@ -130,6 +130,9 @@ public class Parser {
 			Get();
 			AdditiveExpression(out expr);
 			Expect(8);
+		} else if (la.kind == 1) {
+			Get();
+			expr = Expr.Parameter(t.val); 
 		} else SynErr(11);
 	}
 
@@ -176,7 +179,7 @@ public class Errors : ErrorsBase {
         string s;
         switch(n) {
 			case 0: s = "EOF expected"; break;
-			case 1: s = "ident expected"; break;
+			case 1: s = "identifier expected"; break;
 			case 2: s = "number expected"; break;
 			case 3: s = "\"+\" expected"; break;
 			case 4: s = "\"-\" expected"; break;

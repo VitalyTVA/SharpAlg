@@ -12,6 +12,7 @@ function RunTests()
     var fixtures = [new SharpAlg.Tests.ExprTests.ctor(), new SharpAlg.Tests.ParserTests.ctor()];
     var jQuery = $(document.body);
     jQuery.append("<br/>");
+    var ok = 0, failed = 0;
     for (var $i2 = 0, $l2 = fixtures.length, fixture = fixtures[$i2]; $i2 < $l2; $i2++, fixture = fixtures[$i2])
     {
         var methods = fixture.GetType().GetMethods();
@@ -19,14 +20,19 @@ function RunTests()
         {
             if (method.get_Name().EndsWith$$String("Test"))
             {
-                RunTest(jQuery, fixture, method);
+                if (RunTest(jQuery, fixture, method))
+                    ok++;
+                else
+                    failed++;
             }
         }
     }
+    jQuery.append(System.String.Format$$String$$Object$$Object$$Object("<br/>TOTAL {0}<br/>PASSED: {1}<br/>FAILED: {2}<br/>", (ok + failed), ok, failed));
 };
 function RunTest(jQuery, fixture, method)
 {
     var status = "OK";
+    var success = true;
     try
     {
         method.Invoke$$Object$$Object$Array(fixture, null);
@@ -34,6 +40,8 @@ function RunTest(jQuery, fixture, method)
     catch (e)
     {
         status = "Failure: " + e;
+        success = false;
     }
     jQuery.append(fixture.GetType().get_Name() + "." + method.get_Name() + ": " + status + "<br/>");
+    return success;
 };

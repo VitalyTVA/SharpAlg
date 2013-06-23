@@ -23,23 +23,31 @@ namespace SharpAlg {
                 };
             jQuery jQuery = new jQuery(HtmlContext.document.body);
             jQuery.append("<br/>");
+            int ok = 0, failed = 0;
             foreach(var fixture in fixtures) {
                 MethodInfo[] methods = fixture.GetType().GetMethods();
                 foreach(var method in methods) {
                     if(method.Name.EndsWith("Test")) {
-                        RunTest(jQuery, fixture, method);
+                        if(RunTest(jQuery, fixture, method))
+                            ok++;
+                        else
+                            failed++;
                     }
                 }
             }
+            jQuery.append(string.Format("<br/>TOTAL {0}<br/>PASSED: {1}<br/>FAILED: {2}<br/>", (ok + failed), ok, failed));
         }
-        static void RunTest(jQuery jQuery, object fixture, MethodInfo method) {
+        static bool RunTest(jQuery jQuery, object fixture, MethodInfo method) {
             string status = "OK";
+            bool success = true;
             try {
                 method.Invoke(fixture, null);
             } catch(Exception e) {
                 status = "Failure: " + e;
+                success = false;
             }
             jQuery.append(fixture.GetType().Name + "." + method.Name + ": " + status + "<br/>");
+            return success;
         }
     }
 }

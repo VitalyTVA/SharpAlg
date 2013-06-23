@@ -141,7 +141,7 @@ SharpAlg.Native.Parser.Parser = function (scanner)
     this.errors = new SharpAlg.Native.Parser.Errors();
 };
 SharpAlg.Native.Parser.Parser._EOF = 0;
-SharpAlg.Native.Parser.Parser._ident = 1;
+SharpAlg.Native.Parser.Parser._identifier = 1;
 SharpAlg.Native.Parser.Parser._number = 2;
 SharpAlg.Native.Parser.Parser.maxT = 9;
 SharpAlg.Native.Parser.Parser.T = true;
@@ -310,6 +310,11 @@ SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
         this.AdditiveExpression(expr);
         this.Expect(8);
     }
+    else if (this.la.kind == 1)
+    {
+        this.Get();
+        expr.Value = SharpAlg.Native.Expr.Parameter(this.t.val);
+    }
     else
         this.SynErr(11);
 };
@@ -356,7 +361,7 @@ SharpAlg.Native.Parser.Errors.prototype.GetErrorByCode = function (n)
             s = "EOF expected";
             break;
         case 1:
-            s = "ident expected";
+            s = "identifier expected";
             break;
         case 2:
             s = "number expected";

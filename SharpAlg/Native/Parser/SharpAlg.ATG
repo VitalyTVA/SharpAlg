@@ -9,7 +9,7 @@ CHARACTERS
   tab = '\t'.
 
 TOKENS
-  ident  = letter {letter | digit}.
+  identifier  = letter {letter | digit}.
   number = digit {digit}.
 
 IGNORE cr + lf + tab
@@ -55,6 +55,7 @@ Terminal<out Expr expr>							(. expr = null; .)
 =	
 	(number										(. expr = Expr.Constant(Int32.Parse(t.val)); .)
 	| '('AdditiveExpression<out expr>')'
+	| identifier								(. expr = Expr.Parameter(t.val); .)
 	)
 .
 
