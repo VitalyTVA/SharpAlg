@@ -14,23 +14,24 @@ namespace SharpAlg.Native {
             return expr1.Visit(new ExpressionComparer(expr2));
         }
     }
-    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class ExpressionComparer : IExpressionVisitor<bool> {
         readonly Expr expr;
         public ExpressionComparer(Expr expr) {
             this.expr = expr;
         }
         public bool Constant(ConstantExpr constant) {
-            var other = expr as ConstantExpr;
-            return other != null && other.Value == constant.Value;
+            return DoEqualityCheck(constant, (x1, x2) => x1.Value == x2.Value);
         }
         public bool Binary(BinaryExpr binary) {
-            var other = expr as BinaryExpr;
-            return other != null && other.Left.ExprEquals(binary.Left) && other.Right.ExprEquals(binary.Right) && other.Operation == binary.Operation;
+            return DoEqualityCheck(binary, (x1, x2) => x1.Left.ExprEquals(x2.Left) && x1.Right.ExprEquals(x2.Right) && x1.Operation == x2.Operation);
         }
         public bool Parameter(ParameterExpr parameter) {
-            var other = expr as ParameterExpr;
-            return other != null && other.ParameterName == parameter.ParameterName;
+            return DoEqualityCheck(parameter, (x1, x2) => x1.ParameterName == x2.ParameterName);
+        }
+        bool DoEqualityCheck<T>(T expr2, Func<T, T, bool> equalityCheck) where T : Expr {
+            var other = expr as T;
+            return other != null && equalityCheck(other, expr2);
         }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
@@ -69,7 +70,7 @@ namespace SharpAlg.Native {
             : base(message) {
         }
     }
-    //[JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public interface IExpressionVisitor<T> {
         T Constant(ConstantExpr constant);
         T Parameter(ParameterExpr parameter);

@@ -13,6 +13,19 @@ if (typeof($CreateException)=='undefined')
         return error;
     }
 }
+if (typeof ($CreateAnonymousDelegate) == 'undefined') {
+    var $CreateAnonymousDelegate = function (target, func) {
+        if (target == null || func == null)
+            return func;
+        var delegate = function () {
+            return func.apply(target, arguments);
+        };
+        delegate.func = func;
+        delegate.target = target;
+        delegate.isDelegate = true;
+        return delegate;
+    }
+}
 if (typeof(JsTypes) == "undefined")
     var JsTypes = [];
 var SharpAlg$Native$Expr =
@@ -169,7 +182,7 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         ExprEquals: function (expr1, expr2)
         {
-            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionComparer(expr2));
+            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionComparer.ctor(expr2));
         }
     },
     assemblyName: "SharpAlg",
@@ -183,30 +196,54 @@ var SharpAlg$Native$ExpressionExtensions =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionExtensions);
+var SharpAlg$Native$ExpressionComparer =
+{
+    fullname: "SharpAlg.Native.ExpressionComparer",
+    baseTypeName: "System.Object",
+    assemblyName: "SharpAlg",
+    interfaceNames: ["SharpAlg.Native.IExpressionVisitor$1"],
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (expr)
+        {
+            this.expr = null;
+            System.Object.ctor.call(this);
+            this.expr = expr;
+        },
+        Constant: function (constant)
+        {
+            return this.DoEqualityCheck$1(SharpAlg.Native.ConstantExpr.ctor, constant, $CreateAnonymousDelegate(this, function (x1, x2)
+            {
+                return x1.get_Value() == x2.get_Value();
+            }));
+        },
+        Binary: function (binary)
+        {
+            return this.DoEqualityCheck$1(SharpAlg.Native.BinaryExpr.ctor, binary, $CreateAnonymousDelegate(this, function (x1, x2)
+            {
+                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x1.get_Left(), x2.get_Left()) && SharpAlg.Native.ExpressionExtensions.ExprEquals(x1.get_Right(), x2.get_Right()) && x1.get_Operation() == x2.get_Operation();
+            }));
+        },
+        Parameter: function (parameter)
+        {
+            return this.DoEqualityCheck$1(SharpAlg.Native.ParameterExpr.ctor, parameter, $CreateAnonymousDelegate(this, function (x1, x2)
+            {
+                return x1.get_ParameterName() == x2.get_ParameterName();
+            }));
+        },
+        DoEqualityCheck$1: function (T, expr2, equalityCheck)
+        {
+            var other = As(this.expr, T);
+            return other != null && equalityCheck(other, expr2);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$ExpressionComparer);
 if (typeof(SharpAlg) == "undefined")
     var SharpAlg = {};
 if (typeof(SharpAlg.Native) == "undefined")
     SharpAlg.Native = {};
-SharpAlg.Native.ExpressionComparer = function (expr)
-{
-    this.expr = null;
-    this.expr = expr;
-};
-SharpAlg.Native.ExpressionComparer.prototype.Constant = function (constant)
-{
-    var other = As(this.expr, SharpAlg.Native.ConstantExpr.ctor);
-    return other != null && other.get_Value() == constant.get_Value();
-};
-SharpAlg.Native.ExpressionComparer.prototype.Binary = function (binary)
-{
-    var other = As(this.expr, SharpAlg.Native.BinaryExpr.ctor);
-    return other != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Left(), binary.get_Left()) && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Right(), binary.get_Right()) && other.get_Operation() == binary.get_Operation();
-};
-SharpAlg.Native.ExpressionComparer.prototype.Parameter = function (parameter)
-{
-    var other = As(this.expr, SharpAlg.Native.ParameterExpr.ctor);
-    return other != null && other.get_ParameterName() == parameter.get_ParameterName();
-};
 SharpAlg.Native.ExpressionEvaluator = function ()
 {
 };
@@ -269,3 +306,5 @@ var SharpAlg$Native$ExpressionEvaluationException =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionEvaluationException);
+var SharpAlg$Native$IExpressionVisitor$1 = {fullname: "SharpAlg.Native.IExpressionVisitor$1", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
+JsTypes.push(SharpAlg$Native$IExpressionVisitor$1);
