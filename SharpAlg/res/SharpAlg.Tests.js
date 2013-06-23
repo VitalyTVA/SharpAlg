@@ -47,7 +47,7 @@ var SharpAlg$Tests$ExprTests =
                 return x.get_ParameterName();
             }), "x"), $CreateAnonymousDelegate(this, function (x)
             {
-                SharpAlg.Native.ExpressionExtensions.Evaluate(x);
+                SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), Typeof(SharpAlg.Native.ExpressionEvaluationException.ctor), $CreateAnonymousDelegate(this, function (e)
             {
                 SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(System.Exception.ctor, e, $CreateAnonymousDelegate(this, function (x)
@@ -69,7 +69,7 @@ var SharpAlg$Tests$ExprTests =
                 return x.get_Value();
             }), 9), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.Evaluate(x);
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 9), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Constant(9));
@@ -110,20 +110,43 @@ var SharpAlg$Tests$ExprTests =
             }));
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13), 0), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.Evaluate(x);
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 22);
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13), 1), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.Evaluate(x);
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), -4);
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(10), SharpAlg.Native.Expr.Constant(5), 3), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.Evaluate(x);
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 2);
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13), 2), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.Evaluate(x);
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 117);
+        },
+        ParameterExprEvaluationTest: function ()
+        {
+            var context = new SharpAlg.Native.Context.ctor();
+            context.Register("x", SharpAlg.Native.Expr.Constant(9));
+            context.Register("y", SharpAlg.Native.Expr.Constant(13));
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ParameterExpr.ctor, SharpAlg.Native.Expr.Parameter("x"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
+            }), 9);
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ParameterExpr.ctor, SharpAlg.Native.Expr.Parameter("y"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
+            }), 13);
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y"), 0), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
+            }), 22);
+            context.Register("y", SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("x"), 2));
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y"), 0), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
+            }), 90);
         }
     }
 };
@@ -321,7 +344,7 @@ var SharpAlg$Tests$ParserTestHelper =
                 return x.errors.Count;
             }, 0), function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.Evaluate(x.Expr);
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x.Expr, null);
             }, value), function (x)
             {
                 return expectedExpr == null || SharpAlg.Native.ExpressionExtensions.ExprEquals(x.Expr, expectedExpr);

@@ -55,5 +55,22 @@ namespace SharpAlg.Tests {
             Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Multiply)
                 .IsEqual(x => x.Evaluate(), 9 * 13);
         }
+        [Test]
+        public void ParameterExprEvaluationTest() {
+            var context = new Context();
+            context.Register("x", Expr.Constant(9));
+            context.Register("y", Expr.Constant(13));
+            Expr.Parameter("x")
+                .IsEqual(x => x.Evaluate(context), 9);
+            Expr.Parameter("y")
+                .IsEqual(x => x.Evaluate(context), 13);
+
+            Expr.Binary(Expr.Parameter("x"), Expr.Parameter("y"), BinaryOperation.Add)
+                .IsEqual(x => x.Evaluate(context), 22);
+
+            context.Register("y", Expr.Binary(Expr.Parameter("x"), Expr.Parameter("x"), BinaryOperation.Multiply));
+            Expr.Binary(Expr.Parameter("x"), Expr.Parameter("y"), BinaryOperation.Add)
+                .IsEqual(x => x.Evaluate(context), 90);
+        }
     }
 }

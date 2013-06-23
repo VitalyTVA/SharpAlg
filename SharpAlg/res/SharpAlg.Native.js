@@ -28,6 +28,38 @@ if (typeof ($CreateAnonymousDelegate) == 'undefined') {
 }
 if (typeof(JsTypes) == "undefined")
     var JsTypes = [];
+var SharpAlg$Native$Context =
+{
+    fullname: "SharpAlg.Native.Context",
+    baseTypeName: "System.Object",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            this.names = new System.Collections.Generic.Dictionary$2.ctor(System.String.ctor, SharpAlg.Native.Expr.ctor);
+            System.Object.ctor.call(this);
+        },
+        Register: function (name, value)
+        {
+            this.names.set_Item$$TKey(name, value);
+        },
+        GetValue: function (name)
+        {
+            var result;
+            (function ()
+            {
+                result = {Value: result};
+                var $res = this.names.TryGetValue(name, result);
+                result = result.Value;
+                return $res;
+            }).call(this);
+            return result;
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$Context);
 var SharpAlg$Native$Expr =
 {
     fullname: "SharpAlg.Native.Expr",
@@ -176,9 +208,9 @@ var SharpAlg$Native$ExpressionExtensions =
     baseTypeName: "System.Object",
     staticDefinition:
     {
-        Evaluate: function (expr)
+        Evaluate: function (expr, context)
         {
-            return expr.Visit$1(System.Double.ctor, new SharpAlg.Native.ExpressionEvaluator());
+            return expr.Visit$1(System.Double.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : new SharpAlg.Native.Context.ctor())));
         },
         ExprEquals: function (expr1, expr2)
         {
@@ -244,8 +276,10 @@ if (typeof(SharpAlg) == "undefined")
     var SharpAlg = {};
 if (typeof(SharpAlg.Native) == "undefined")
     SharpAlg.Native = {};
-SharpAlg.Native.ExpressionEvaluator = function ()
+SharpAlg.Native.ExpressionEvaluator = function (context)
 {
+    this.context = null;
+    this.context = context;
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Constant = function (constant)
 {
@@ -257,7 +291,10 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Binary = function (binary)
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Parameter = function (parameter)
 {
-    throw $CreateException(new SharpAlg.Native.ExpressionEvaluationException.ctor$$String(System.String.Format$$String$$Object("{0} value is undefined", parameter.get_ParameterName())), new Error());
+    var parameterValue = this.context.GetValue(parameter.get_ParameterName());
+    if (parameterValue == null)
+        throw $CreateException(new SharpAlg.Native.ExpressionEvaluationException.ctor$$String(System.String.Format$$String$$Object("{0} value is undefined", parameter.get_ParameterName())), new Error());
+    return parameterValue.Visit$1(System.Double.ctor, this);
 };
 SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator = function (operation)
 {
