@@ -51,8 +51,9 @@ MultiplicativeOperation<out BinaryOperation operation>
 .
 
 
-Terminal<out Expr expr>
+Terminal<out Expr expr>							(. expr = null; .)
 = number										(. expr = Expr.Constant(Int32.Parse(t.val)); .)
+	| '('AdditiveExpression<out expr>')'
 .
 
 END SharpAlg.

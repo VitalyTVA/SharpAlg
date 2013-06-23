@@ -13,7 +13,7 @@ public class Parser {
 	public const int _EOF = 0;
 	public const int _ident = 1;
 	public const int _number = 2;
-	public const int maxT = 7;
+	public const int maxT = 9;
 
 	const bool T = true;
 	const bool x = false;
@@ -118,12 +118,19 @@ public class Parser {
 		} else if (la.kind == 4) {
 			Get();
 			operation = BinaryOperation.Subtract; 
-		} else SynErr(8);
+		} else SynErr(10);
 	}
 
 	void Terminal(out Expr expr) {
-		Expect(2);
-		expr = Expr.Constant(Int32.Parse(t.val)); 
+		expr = null; 
+		if (la.kind == 2) {
+			Get();
+			expr = Expr.Constant(Int32.Parse(t.val)); 
+		} else if (la.kind == 7) {
+			Get();
+			AdditiveExpression(out expr);
+			Expect(8);
+		} else SynErr(11);
 	}
 
 	void MultiplicativeOperation(out BinaryOperation operation) {
@@ -133,7 +140,7 @@ public class Parser {
 		} else if (la.kind == 6) {
 			Get();
 			operation = BinaryOperation.Divide; 
-		} else SynErr(9);
+		} else SynErr(12);
 	}
 
 
@@ -157,7 +164,7 @@ public class Parser {
 */
 //parser set patch begin
 	static readonly bool[][] set = {
-		new bool[] {T,x,x,x, x,x,x,x, x}
+		new bool[] {T,x,x,x, x,x,x,x, x,x,x}
 
 	};
 //parser set patch end
@@ -175,9 +182,12 @@ public class Errors : ErrorsBase {
 			case 4: s = "\"-\" expected"; break;
 			case 5: s = "\"*\" expected"; break;
 			case 6: s = "\"/\" expected"; break;
-			case 7: s = "??? expected"; break;
-			case 8: s = "invalid AdditiveOperation"; break;
-			case 9: s = "invalid MultiplicativeOperation"; break;
+			case 7: s = "\"(\" expected"; break;
+			case 8: s = "\")\" expected"; break;
+			case 9: s = "??? expected"; break;
+			case 10: s = "invalid AdditiveOperation"; break;
+			case 11: s = "invalid Terminal"; break;
+			case 12: s = "invalid MultiplicativeOperation"; break;
 
             default: s = "error " + n; break;
         }

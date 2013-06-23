@@ -143,11 +143,11 @@ SharpAlg.Native.Parser.Parser = function (scanner)
 SharpAlg.Native.Parser.Parser._EOF = 0;
 SharpAlg.Native.Parser.Parser._ident = 1;
 SharpAlg.Native.Parser.Parser._number = 2;
-SharpAlg.Native.Parser.Parser.maxT = 7;
+SharpAlg.Native.Parser.Parser.maxT = 9;
 SharpAlg.Native.Parser.Parser.T = true;
 SharpAlg.Native.Parser.Parser.x = false;
 SharpAlg.Native.Parser.Parser.minErrDist = 2;
-SharpAlg.Native.Parser.Parser.set = [[true, false, false, false, false, false, false, false, false]];
+SharpAlg.Native.Parser.Parser.set = [[true, false, false, false, false, false, false, false, false, false, false]];
 SharpAlg.Native.Parser.Parser.prototype.SynErr = function (n)
 {
     if (this.errDist >= 2)
@@ -166,7 +166,7 @@ SharpAlg.Native.Parser.Parser.prototype.Get = function ()
     {
         this.t = this.la;
         this.la = this.scanner.Scan();
-        if (this.la.kind <= 7)
+        if (this.la.kind <= 9)
         {
             ++this.errDist;
             break;
@@ -294,12 +294,24 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveOperation = function (operation)
         operation.Value = 1;
     }
     else
-        this.SynErr(8);
+        this.SynErr(10);
 };
 SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
 {
-    this.Expect(2);
-    expr.Value = SharpAlg.Native.Expr.Constant(System.Int32.Parse$$String(this.t.val));
+    expr.Value = null;
+    if (this.la.kind == 2)
+    {
+        this.Get();
+        expr.Value = SharpAlg.Native.Expr.Constant(System.Int32.Parse$$String(this.t.val));
+    }
+    else if (this.la.kind == 7)
+    {
+        this.Get();
+        this.AdditiveExpression(expr);
+        this.Expect(8);
+    }
+    else
+        this.SynErr(11);
 };
 SharpAlg.Native.Parser.Parser.prototype.MultiplicativeOperation = function (operation)
 {
@@ -314,7 +326,7 @@ SharpAlg.Native.Parser.Parser.prototype.MultiplicativeOperation = function (oper
         operation.Value = 3;
     }
     else
-        this.SynErr(9);
+        this.SynErr(12);
 };
 SharpAlg.Native.Parser.Parser.prototype.Parse = function ()
 {
@@ -362,12 +374,21 @@ SharpAlg.Native.Parser.Errors.prototype.GetErrorByCode = function (n)
             s = "\"/\" expected";
             break;
         case 7:
-            s = "??? expected";
+            s = "\"(\" expected";
             break;
         case 8:
-            s = "invalid AdditiveOperation";
+            s = "\")\" expected";
             break;
         case 9:
+            s = "??? expected";
+            break;
+        case 10:
+            s = "invalid AdditiveOperation";
+            break;
+        case 11:
+            s = "invalid Terminal";
+            break;
+        case 12:
             s = "invalid MultiplicativeOperation";
             break;
         default :
@@ -389,8 +410,8 @@ var SharpAlg$Native$Parser$Scanner =
         {
             SharpAlg.Native.Parser.Scanner.EOL = "\n";
             SharpAlg.Native.Parser.Scanner.eofSym = 0;
-            SharpAlg.Native.Parser.Scanner.maxT = 7;
-            SharpAlg.Native.Parser.Scanner.noSym = 7;
+            SharpAlg.Native.Parser.Scanner.maxT = 9;
+            SharpAlg.Native.Parser.Scanner.noSym = 9;
             SharpAlg.Native.Parser.Scanner.start = null;
             SharpAlg.Native.Parser.Scanner.start = new System.Collections.Generic.Dictionary$2.ctor(System.Int32.ctor, System.Int32.ctor);
             for (var i = 65; i <= 90; ++i)
@@ -403,6 +424,8 @@ var SharpAlg$Native$Parser$Scanner =
             SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(45, 4);
             SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(42, 5);
             SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(47, 6);
+            SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(40, 7);
+            SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(41, 8);
             SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(65536, -1);
         }
     },
@@ -493,7 +516,7 @@ var SharpAlg$Native$Parser$Scanner =
         {
             while (this.ch == 32 || this.ch >= 9 && this.ch <= 10 || this.ch == 13)
             this.NextCh();
-            var recKind = 7;
+            var recKind = 9;
             var recEnd = this.pos;
             this.t = {};
             this.t.pos = this.pos;
@@ -524,7 +547,7 @@ var SharpAlg$Native$Parser$Scanner =
                         }
                     case 0:
                         {
-                            if (recKind != 7)
+                            if (recKind != 9)
                             {
                                 this.tlen = recEnd - this.t.pos;
                                 this.SetScannerBehindT();
@@ -587,6 +610,18 @@ var SharpAlg$Native$Parser$Scanner =
                             done = true;
                             break;
                         }
+                    case 7:
+                        {
+                            this.t.kind = 7;
+                            done = true;
+                            break;
+                        }
+                    case 8:
+                        {
+                            this.t.kind = 8;
+                            done = true;
+                            break;
+                        }
                 }
             }
             this.t.val = System.String.Empty;
@@ -627,7 +662,7 @@ var SharpAlg$Native$Parser$Scanner =
                 }
                 this.pt = this.pt.next;
             }
-            while (this.pt.kind > 7)
+            while (this.pt.kind > 9)
             return this.pt;
         },
         ResetPeek: function ()

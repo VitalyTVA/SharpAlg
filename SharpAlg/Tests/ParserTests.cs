@@ -55,6 +55,8 @@ namespace SharpAlg.Tests {
             Parse("2 * 3 * 4 / 6 / 2 - 4 / 2")
                .AssertValue(0);
 
+            Parse("(1 + 2) * 3")
+                .AssertValue(9/*, Expr.Binary(Expr.Constant(1), Expr.Binary(Expr.Constant(2), Expr.Constant(3), BinaryOperation.Multiply), BinaryOperation.Add)*/);
         }
         Parser Parse(string expression) {
             Scanner scanner = new Scanner(expression);
@@ -63,7 +65,7 @@ namespace SharpAlg.Tests {
             return parser;
         }
         static string GetNumberExpectedMessage(int column) {
-            return ErrorsBase.GetErrorText(1, column, "number expected\r\n");
+            return ErrorsBase.GetErrorText(1, column, "invalid Terminal\r\n");
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

@@ -264,7 +264,7 @@ var SharpAlg$Tests$ParserTests =
     {
         GetNumberExpectedMessage: function (column)
         {
-            return SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, column, "number expected\r\n");
+            return SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, column, "invalid Terminal\r\n");
         }
     },
     assemblyName: "SharpAlg",
@@ -292,6 +292,7 @@ var SharpAlg$Tests$ParserTests =
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1 + 2 * 3"), 7, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(1), SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3), 2), 0));
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1 + 6 / 2"), 4, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(1), SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(6), SharpAlg.Native.Expr.Constant(2), 3), 0));
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 * 3 * 4 / 6 / 2 - 4 / 2"), 0, null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("(1 + 2) * 3"), 9, null);
         },
         Parse: function (expression)
         {
