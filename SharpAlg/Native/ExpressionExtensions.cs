@@ -24,21 +24,9 @@ namespace SharpAlg.Native {
             var other = expr as ConstantExpr;
             return other != null && other.Value == constant.Value;
         }
-        public bool Add(Expr left, Expr right) {
+        public bool Binary(BinaryExpr binary) {
             var other = expr as BinaryExpr;
-            return other != null && other.Left.ExprEquals(left) && other.Right.ExprEquals(right) && other.Operation == BinaryOperation.Add;
-        }
-        public bool Subtract(Expr left, Expr right) {
-            var other = expr as BinaryExpr;
-            return other != null && other.Left.ExprEquals(left) && other.Right.ExprEquals(right) && other.Operation == BinaryOperation.Subtract;
-        }
-        public bool Multiply(Expr left, Expr right) {
-            var other = expr as BinaryExpr;
-            return other != null && other.Left.ExprEquals(left) && other.Right.ExprEquals(right) && other.Operation == BinaryOperation.Multiply;
-        }
-        public bool Divide(Expr left, Expr right) {
-            var other = expr as BinaryExpr;
-            return other != null && other.Left.ExprEquals(left) && other.Right.ExprEquals(right) && other.Operation == BinaryOperation.Divide;
+            return other != null && other.Left.ExprEquals(binary.Left) && other.Right.ExprEquals(binary.Right) && other.Operation == binary.Operation;
         }
         public bool Parameter(ParameterExpr parameter) {
             var other = expr as ParameterExpr;
@@ -50,20 +38,26 @@ namespace SharpAlg.Native {
         public double Constant(ConstantExpr constant) {
             return constant.Value;
         }
-        public double Add(Expr left, Expr right) {
-            return left.Visit(this) + right.Visit(this);
-        }
-        public double Subtract(Expr left, Expr right) {
-            return left.Visit(this) - right.Visit(this);
-        }
-        public double Multiply(Expr left, Expr right) {
-            return left.Visit(this) * right.Visit(this);
-        }
-        public double Divide(Expr left, Expr right) {
-            return left.Visit(this) / right.Visit(this);
+        public double Binary(BinaryExpr binary) {
+            return GetBinaryOperationEvaluator(binary.Operation)(binary.Left.Visit(this), binary.Right.Visit(this));
         }
         public double Parameter(ParameterExpr parameter) {
             throw new ExpressionEvaluationException(string.Format("{0} value is undefined", parameter.ParameterName));
+        }
+        static Func<double, double, double> GetBinaryOperationEvaluator(BinaryOperation operation) {
+            switch(operation) {
+                case BinaryOperation.Add:
+                    return (x1, x2) => x1 + x2; 
+                case BinaryOperation.Subtract:
+                    return (x1, x2) => x1 - x2;
+                case BinaryOperation.Multiply:
+                    return (x1, x2) => x1 * x2;
+                case BinaryOperation.Divide:
+                    return (x1, x2) => x1 / x2;
+                default:
+                    throw new NotImplementedException();
+            }
+
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
@@ -79,9 +73,6 @@ namespace SharpAlg.Native {
     public interface IExpressionVisitor<T> {
         T Constant(ConstantExpr constant);
         T Parameter(ParameterExpr parameter);
-        T Add(Expr left, Expr right);
-        T Subtract(Expr left, Expr right);
-        T Multiply(Expr left, Expr right);
-        T Divide(Expr left, Expr right);
+        T Binary(BinaryExpr binary);
     }
 }

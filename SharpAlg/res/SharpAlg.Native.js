@@ -152,19 +152,7 @@ var SharpAlg$Native$BinaryExpr =
         },
         Visit$1: function (T, visitor)
         {
-            switch (this.get_Operation())
-            {
-                case 0:
-                    return visitor.Add(this.get_Left(), this.get_Right());
-                case 1:
-                    return visitor.Subtract(this.get_Left(), this.get_Right());
-                case 2:
-                    return visitor.Multiply(this.get_Left(), this.get_Right());
-                case 3:
-                    return visitor.Divide(this.get_Left(), this.get_Right());
-                default :
-                    throw $CreateException(new System.NotImplementedException.ctor(), new Error());
-            }
+            return visitor.Binary(this);
         }
     }
 };
@@ -209,25 +197,10 @@ SharpAlg.Native.ExpressionComparer.prototype.Constant = function (constant)
     var other = As(this.expr, SharpAlg.Native.ConstantExpr.ctor);
     return other != null && other.get_Value() == constant.get_Value();
 };
-SharpAlg.Native.ExpressionComparer.prototype.Add = function (left, right)
+SharpAlg.Native.ExpressionComparer.prototype.Binary = function (binary)
 {
     var other = As(this.expr, SharpAlg.Native.BinaryExpr.ctor);
-    return other != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Left(), left) && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Right(), right) && other.get_Operation() == 0;
-};
-SharpAlg.Native.ExpressionComparer.prototype.Subtract = function (left, right)
-{
-    var other = As(this.expr, SharpAlg.Native.BinaryExpr.ctor);
-    return other != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Left(), left) && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Right(), right) && other.get_Operation() == 1;
-};
-SharpAlg.Native.ExpressionComparer.prototype.Multiply = function (left, right)
-{
-    var other = As(this.expr, SharpAlg.Native.BinaryExpr.ctor);
-    return other != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Left(), left) && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Right(), right) && other.get_Operation() == 2;
-};
-SharpAlg.Native.ExpressionComparer.prototype.Divide = function (left, right)
-{
-    var other = As(this.expr, SharpAlg.Native.BinaryExpr.ctor);
-    return other != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Left(), left) && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Right(), right) && other.get_Operation() == 3;
+    return other != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Left(), binary.get_Left()) && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Right(), binary.get_Right()) && other.get_Operation() == binary.get_Operation();
 };
 SharpAlg.Native.ExpressionComparer.prototype.Parameter = function (parameter)
 {
@@ -241,25 +214,41 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Constant = function (constant)
 {
     return constant.get_Value();
 };
-SharpAlg.Native.ExpressionEvaluator.prototype.Add = function (left, right)
+SharpAlg.Native.ExpressionEvaluator.prototype.Binary = function (binary)
 {
-    return left.Visit$1(System.Double.ctor, this) + right.Visit$1(System.Double.ctor, this);
-};
-SharpAlg.Native.ExpressionEvaluator.prototype.Subtract = function (left, right)
-{
-    return left.Visit$1(System.Double.ctor, this) - right.Visit$1(System.Double.ctor, this);
-};
-SharpAlg.Native.ExpressionEvaluator.prototype.Multiply = function (left, right)
-{
-    return left.Visit$1(System.Double.ctor, this) * right.Visit$1(System.Double.ctor, this);
-};
-SharpAlg.Native.ExpressionEvaluator.prototype.Divide = function (left, right)
-{
-    return left.Visit$1(System.Double.ctor, this) / right.Visit$1(System.Double.ctor, this);
+    return SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(binary.get_Operation())(binary.get_Left().Visit$1(System.Double.ctor, this), binary.get_Right().Visit$1(System.Double.ctor, this));
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Parameter = function (parameter)
 {
     throw $CreateException(new SharpAlg.Native.ExpressionEvaluationException.ctor$$String(System.String.Format$$String$$Object("{0} value is undefined", parameter.get_ParameterName())), new Error());
+};
+SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator = function (operation)
+{
+    switch (operation)
+    {
+        case 0:
+            return function (x1, x2)
+            {
+                return x1 + x2;
+            };
+        case 1:
+            return function (x1, x2)
+            {
+                return x1 - x2;
+            };
+        case 2:
+            return function (x1, x2)
+            {
+                return x1 * x2;
+            };
+        case 3:
+            return function (x1, x2)
+            {
+                return x1 / x2;
+            };
+        default :
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    }
 };
 var SharpAlg$Native$ExpressionEvaluationException =
 {

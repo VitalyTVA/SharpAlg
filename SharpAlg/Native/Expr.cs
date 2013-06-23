@@ -51,18 +51,7 @@ namespace SharpAlg.Native {
         public Expr Right { get; private set; }
         public BinaryOperation Operation { get; private set; }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
-            switch(Operation) {
-                case BinaryOperation.Add:
-                    return visitor.Add(Left, Right);
-                case BinaryOperation.Subtract:
-                    return visitor.Subtract(Left, Right);
-                case BinaryOperation.Multiply:
-                    return visitor.Multiply(Left, Right);
-                case BinaryOperation.Divide:
-                    return visitor.Divide(Left, Right);
-                default:
-                    throw new NotImplementedException();
-            }
+            return visitor.Binary(this);
         }
     }
 }
