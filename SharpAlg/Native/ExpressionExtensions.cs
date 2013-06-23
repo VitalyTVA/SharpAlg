@@ -10,6 +10,40 @@ namespace SharpAlg.Native {
         public static double Evaluate(this Expr expr) {
             return expr.Visit(new ExpressionEvaluator());
         }
+        public static bool ExprEquals(this Expr expr1, Expr expr2) {
+            return expr1.Visit(new ExpressionComparer(expr2));
+        }
+    }
+    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
+    public class ExpressionComparer : IExpressionVisitor<bool> {
+        readonly Expr expr;
+        public ExpressionComparer(Expr expr) {
+            this.expr = expr;
+        }
+        public bool Constant(ConstantExpr constant) {
+            var other = expr as ConstantExpr;
+            return other != null && other.Value == constant.Value;
+        }
+        public bool Add(Expr left, Expr right) {
+            var other = expr as BinaryExpr;
+            return other != null && other.Left.ExprEquals(left) && other.Right.ExprEquals(right) && other.Operation == BinaryOperation.Add;
+        }
+        public bool Subtract(Expr left, Expr right) {
+            var other = expr as BinaryExpr;
+            return other != null && other.Left.ExprEquals(left) && other.Right.ExprEquals(right) && other.Operation == BinaryOperation.Subtract;
+        }
+        public bool Multiply(Expr left, Expr right) {
+            var other = expr as BinaryExpr;
+            return other != null && other.Left.ExprEquals(left) && other.Right.ExprEquals(right) && other.Operation == BinaryOperation.Multiply;
+        }
+        public bool Divide(Expr left, Expr right) {
+            var other = expr as BinaryExpr;
+            return other != null && other.Left.ExprEquals(left) && other.Right.ExprEquals(right) && other.Operation == BinaryOperation.Divide;
+        }
+        public bool Parameter(ParameterExpr parameter) {
+            var other = expr as ParameterExpr;
+            return other != null && other.ParameterName == parameter.ParameterName;
+        }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ExpressionEvaluator : IExpressionVisitor<double> {

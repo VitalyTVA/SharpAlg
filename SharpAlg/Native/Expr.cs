@@ -15,8 +15,6 @@ namespace SharpAlg.Native {
         public static BinaryExpr Binary(Expr left, Expr right, BinaryOperation type) {
             return new BinaryExpr(left, right, type);
         }
-        public abstract bool ExprEquals(Expr expr); //TODO rewrite using visitors (not logic in expressions) and go back to Prototype mode
-
         internal abstract T Visit<T>(IExpressionVisitor<T> visitor);
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
@@ -25,10 +23,6 @@ namespace SharpAlg.Native {
             Value = value;
         }
         public double Value { get; private set; }
-        public override bool ExprEquals(Expr expr) {
-            var other = expr as ConstantExpr;
-            return other != null && other.Value == Value;
-        }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             return visitor.Constant(this);
         }
@@ -39,10 +33,6 @@ namespace SharpAlg.Native {
             ParameterName = parameterName;
         }
         public string ParameterName { get; private set; }
-        public override bool ExprEquals(Expr expr) {
-            var other = expr as ParameterExpr;
-            return other != null && other.ParameterName == ParameterName;
-        }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             return visitor.Parameter(this);
         }
@@ -60,10 +50,6 @@ namespace SharpAlg.Native {
         public Expr Left { get; private set; }
         public Expr Right { get; private set; }
         public BinaryOperation Operation { get; private set; }
-        public override bool ExprEquals(Expr expr) {
-            var other = expr as BinaryExpr;
-            return other != null && other.Left.ExprEquals(Left) && other.Right.ExprEquals(Right) && other.Operation == Operation;
-        }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             switch(Operation) {
                 case BinaryOperation.Add:

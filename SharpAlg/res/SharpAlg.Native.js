@@ -68,11 +68,6 @@ var SharpAlg$Native$ConstantExpr =
         {
             this._Value = value;
         },
-        ExprEquals: function (expr)
-        {
-            var other = As(expr, SharpAlg.Native.ConstantExpr.ctor);
-            return other != null && other.get_Value() == this.get_Value();
-        },
         Visit$1: function (T, visitor)
         {
             return visitor.Constant(this);
@@ -102,11 +97,6 @@ var SharpAlg$Native$ParameterExpr =
         set_ParameterName: function (value)
         {
             this._ParameterName = value;
-        },
-        ExprEquals: function (expr)
-        {
-            var other = As(expr, SharpAlg.Native.ParameterExpr.ctor);
-            return other != null && other.get_ParameterName() == this.get_ParameterName();
         },
         Visit$1: function (T, visitor)
         {
@@ -160,11 +150,6 @@ var SharpAlg$Native$BinaryExpr =
         {
             this._Operation = value;
         },
-        ExprEquals: function (expr)
-        {
-            var other = As(expr, SharpAlg.Native.BinaryExpr.ctor);
-            return other != null && other.get_Left().ExprEquals(this.get_Left()) && other.get_Right().ExprEquals(this.get_Right()) && other.get_Operation() == this.get_Operation();
-        },
         Visit$1: function (T, visitor)
         {
             switch (this.get_Operation())
@@ -193,6 +178,10 @@ var SharpAlg$Native$ExpressionExtensions =
         Evaluate: function (expr)
         {
             return expr.Visit$1(System.Double.ctor, new SharpAlg.Native.ExpressionEvaluator());
+        },
+        ExprEquals: function (expr1, expr2)
+        {
+            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionComparer(expr2));
         }
     },
     assemblyName: "SharpAlg",
@@ -210,6 +199,41 @@ if (typeof(SharpAlg) == "undefined")
     var SharpAlg = {};
 if (typeof(SharpAlg.Native) == "undefined")
     SharpAlg.Native = {};
+SharpAlg.Native.ExpressionComparer = function (expr)
+{
+    this.expr = null;
+    this.expr = expr;
+};
+SharpAlg.Native.ExpressionComparer.prototype.Constant = function (constant)
+{
+    var other = As(this.expr, SharpAlg.Native.ConstantExpr.ctor);
+    return other != null && other.get_Value() == constant.get_Value();
+};
+SharpAlg.Native.ExpressionComparer.prototype.Add = function (left, right)
+{
+    var other = As(this.expr, SharpAlg.Native.BinaryExpr.ctor);
+    return other != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Left(), left) && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Right(), right) && other.get_Operation() == 0;
+};
+SharpAlg.Native.ExpressionComparer.prototype.Subtract = function (left, right)
+{
+    var other = As(this.expr, SharpAlg.Native.BinaryExpr.ctor);
+    return other != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Left(), left) && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Right(), right) && other.get_Operation() == 1;
+};
+SharpAlg.Native.ExpressionComparer.prototype.Multiply = function (left, right)
+{
+    var other = As(this.expr, SharpAlg.Native.BinaryExpr.ctor);
+    return other != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Left(), left) && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Right(), right) && other.get_Operation() == 2;
+};
+SharpAlg.Native.ExpressionComparer.prototype.Divide = function (left, right)
+{
+    var other = As(this.expr, SharpAlg.Native.BinaryExpr.ctor);
+    return other != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Left(), left) && SharpAlg.Native.ExpressionExtensions.ExprEquals(other.get_Right(), right) && other.get_Operation() == 3;
+};
+SharpAlg.Native.ExpressionComparer.prototype.Parameter = function (parameter)
+{
+    var other = As(this.expr, SharpAlg.Native.ParameterExpr.ctor);
+    return other != null && other.get_ParameterName() == parameter.get_ParameterName();
+};
 SharpAlg.Native.ExpressionEvaluator = function ()
 {
 };
