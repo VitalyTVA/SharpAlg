@@ -40,14 +40,14 @@ namespace SharpAlg.Tests {
             Parse("13 -")
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
 
-            //multiplicative
             Parse("2 * 3")
                 .AssertValue(6, Expr.Binary(Expr.Constant(2), Expr.Constant(3), BinaryOperation.Multiply));
 
             Parse("6 / 2")
                 .AssertValue(3, Expr.Binary(Expr.Constant(6), Expr.Constant(2), BinaryOperation.Divide));
-
-            //priority
+        }
+        [Test]
+        public void OperationsPriorityTest() {
             Parse("1 + 2 * 3")
                 .AssertValue(7, Expr.Binary(Expr.Constant(1), Expr.Binary(Expr.Constant(2), Expr.Constant(3), BinaryOperation.Multiply), BinaryOperation.Add));
 
@@ -56,8 +56,9 @@ namespace SharpAlg.Tests {
 
             Parse("2 * 3 * 4 / 6 / 2 - 4 / 2")
                .AssertValue(0);
-
-            //() implemetation
+        }
+        [Test]
+        public void ParenthesesTest() {
             Parse("(1 + 2) * 3")
                 .AssertValue(9, Expr.Binary(Expr.Binary(Expr.Constant(1), Expr.Constant(2), BinaryOperation.Add), Expr.Constant(3), BinaryOperation.Multiply));
             Parse("(2 + 4) / (4 / (1 + 1))")
