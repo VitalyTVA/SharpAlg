@@ -56,7 +56,9 @@ namespace SharpAlg.Tests {
                .AssertValue(0);
 
             Parse("(1 + 2) * 3")
-                .AssertValue(9/*, Expr.Binary(Expr.Constant(1), Expr.Binary(Expr.Constant(2), Expr.Constant(3), BinaryOperation.Multiply), BinaryOperation.Add)*/);
+                .AssertValue(9, Expr.Binary(Expr.Binary(Expr.Constant(1), Expr.Constant(2), BinaryOperation.Add), Expr.Constant(3), BinaryOperation.Multiply));
+            Parse("(2 + 4) / (4 / (1 + 1))")
+                .AssertValue(3);
         }
         Parser Parse(string expression) {
             Scanner scanner = new Scanner(expression);

@@ -292,7 +292,8 @@ var SharpAlg$Tests$ParserTests =
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1 + 2 * 3"), 7, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(1), SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3), 2), 0));
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1 + 6 / 2"), 4, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(1), SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(6), SharpAlg.Native.Expr.Constant(2), 3), 0));
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 * 3 * 4 / 6 / 2 - 4 / 2"), 0, null);
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("(1 + 2) * 3"), 9, null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("(1 + 2) * 3"), 9, SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(1), SharpAlg.Native.Expr.Constant(2), 0), SharpAlg.Native.Expr.Constant(3), 2));
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("(2 + 4) / (4 / (1 + 1))"), 3, null);
         },
         Parse: function (expression)
         {
