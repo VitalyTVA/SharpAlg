@@ -17,14 +17,14 @@ IGNORE cr + lf + tab
 PRODUCTIONS
 
 SharpAlg 										(. Expr expr; .)
-= AdditiveExpression<out expr>							(. this.Expr = expr; .)
+= AdditiveExpression<out expr>					(. this.Expr = expr; .)
 .
 
-AdditiveExpression<out Expr expr>						(. BinaryOperation operation; Expr rightExpr; .)			
+AdditiveExpression<out Expr expr>				(. BinaryOperation operation; Expr rightExpr; .)			
 = MultiplicativeExpression<out expr>
 	{
 	AdditiveOperation<out operation> 
-	MultiplicativeExpression<out rightExpr>							(. expr = Expr.Binary(expr, rightExpr, operation); .)
+	MultiplicativeExpression<out rightExpr>		(. expr = Expr.Binary(expr, rightExpr, operation); .)
 	}
 .
 
@@ -35,11 +35,11 @@ AdditiveOperation<out BinaryOperation operation>
   )
 .
 
-MultiplicativeExpression<out Expr expr>						(. BinaryOperation operation; Expr rightExpr; .)			
+MultiplicativeExpression<out Expr expr>			(. BinaryOperation operation; Expr rightExpr; .)			
 = Terminal<out expr>
 	{
 	MultiplicativeOperation<out operation> 
-	Terminal<out rightExpr>							(. expr = Expr.Binary(expr, rightExpr, operation); .)
+	Terminal<out rightExpr>						(. expr = Expr.Binary(expr, rightExpr, operation); .)
 	}
 .
 
@@ -52,8 +52,10 @@ MultiplicativeOperation<out BinaryOperation operation>
 
 
 Terminal<out Expr expr>							(. expr = null; .)
-= number										(. expr = Expr.Constant(Int32.Parse(t.val)); .)
+=	
+	(number										(. expr = Expr.Constant(Int32.Parse(t.val)); .)
 	| '('AdditiveExpression<out expr>')'
+	)
 .
 
 END SharpAlg.
