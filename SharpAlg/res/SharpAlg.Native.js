@@ -427,6 +427,10 @@ var SharpAlg$Native$ExpressionExtensions =
         {
             return expr.Visit$1(System.Double.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : new SharpAlg.Native.Context.ctor())));
         },
+        Diff: function (expr)
+        {
+            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor.ctor());
+        },
         ExprEquals: function (expr1, expr2)
         {
             return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionComparer.ctor(expr2));

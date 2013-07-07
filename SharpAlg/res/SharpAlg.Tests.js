@@ -209,6 +209,15 @@ var SharpAlg$Tests$ExprTestHelper =
             {
                 return SharpAlg.Native.ExpressionExtensions.Print(x);
             }, value);
+        },
+        AsEvaluator: function (expr)
+        {
+            return function (x)
+            {
+                var context = new SharpAlg.Native.Context.ctor();
+                context.Register("x", SharpAlg.Native.Expr.Constant(x));
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(expr, context);
+            };
         }
     },
     assemblyName: "SharpAlg",
