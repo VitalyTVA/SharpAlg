@@ -117,6 +117,8 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Binary = function (binary)
             return this.VisitMultiply(binary);
         case 3:
             return this.VisitDivide(binary);
+        case 4:
+            return this.VisitPower(binary);
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }
@@ -137,6 +139,12 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.VisitDivide = function (expr)
     var expr2 = this.builder.Multiply(expr.get_Left(), expr.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this));
     var expr3 = SharpAlg.Native.Expr.Multiply(expr.get_Right(), expr.get_Right());
     return SharpAlg.Native.Expr.Divide(this.builder.Subtract(expr1, expr2), expr3);
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.VisitPower = function (binary)
+{
+    if (!(Is(binary.get_Right(), SharpAlg.Native.ConstantExpr.ctor)))
+        throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    return SharpAlg.Native.Expr.Multiply(binary.get_Right(), SharpAlg.Native.Expr.Multiply(binary.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), SharpAlg.Native.Expr.Power(binary.get_Left(), SharpAlg.Native.Expr.Subtract(binary.get_Right(), SharpAlg.Native.Expr.One))));
 };
 var SharpAlg$Native$Expr =
 {

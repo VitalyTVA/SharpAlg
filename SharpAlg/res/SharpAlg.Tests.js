@@ -54,6 +54,11 @@ var SharpAlg$Tests$DiffTests =
             SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("36 / x")), [1, 2, 3], [-36, -9, -4]);
             SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("36 / (x * x + x)")), [1, 2], [-27, -5]);
             SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("27 * (x * x + 1) / (x * x * x + 1)")), [1, 2], [-13.5, -8]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("2 ^ 3")), [0, 1, 2], [0, 0, 0]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("(x + x) ^ 1")), [0, 1, 2], [2, 2, 2]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x ^ 2")), [0, 1, 2], [0, 2, 4]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("(x * x) ^ 3")), [0, 1, 2], [0, 6, 192]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("(x * x) ^ (1 + 2)")), [0, 1, 2], [0, 6, 192]);
         },
         DiffSimplifyTest: function ()
         {

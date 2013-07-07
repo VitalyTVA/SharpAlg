@@ -26,6 +26,8 @@ namespace SharpAlg.Native {
                     return VisitMultiply(binary);
                 case BinaryOperation.Divide:
                     return VisitDivide(binary);
+                case BinaryOperation.Power:
+                    return VisitPower(binary);
                 default:
                     throw new NotImplementedException();
             }
@@ -41,8 +43,13 @@ namespace SharpAlg.Native {
         Expr VisitDivide(BinaryExpr expr) {
             var expr1 = builder.Multiply(expr.Left.Visit(this), expr.Right);
             var expr2 = builder.Multiply(expr.Left, expr.Right.Visit(this));
-            var expr3 = Expr.Multiply(expr.Right, expr.Right);//TODO
-            return Expr.Divide(builder.Subtract(expr1, expr2), expr3);//TODO
+            var expr3 = Expr.Multiply(expr.Right, expr.Right);//TODO convolution
+            return Expr.Divide(builder.Subtract(expr1, expr2), expr3);//TODO convolution
+        }
+        Expr VisitPower(BinaryExpr binary) {
+            if(!(binary.Right is ConstantExpr))
+                throw new NotImplementedException(); //TODO when ln() is ready
+            return Expr.Multiply(binary.Right, Expr.Multiply(binary.Left.Visit(this), Expr.Power(binary.Left, Expr.Subtract(binary.Right, Expr.One))));
         }
     }
 }

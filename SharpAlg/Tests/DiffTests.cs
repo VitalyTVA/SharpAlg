@@ -25,6 +25,12 @@ namespace SharpAlg.Tests {
             "36 / x".Parse().Diff().AssertEvaluatedValues(new double[] { 1, 2, 3 }, new double[] { -36, -9, -4 });
             "36 / (x * x + x)".Parse().Diff().AssertEvaluatedValues(new double[] { 1, 2 }, new double[] { -3.0 * 9, -5.0 });
             "27 * (x * x + 1) / (x * x * x + 1)".Parse().Diff().AssertEvaluatedValues(new double[] { 1, 2 }, new double[] { -1.0 * 27 / 2, -8.0 });
+
+            "2 ^ 3".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 0, 0 });
+            "(x + x) ^ 1".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 2, 2, 2 });
+            "x ^ 2".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 2, 4 });
+            "(x * x) ^ 3".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 6, 6 * 2 * 2 * 2 * 2 * 2 });
+            "(x * x) ^ (1 + 2)".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 6, 6 * 2 * 2 * 2 * 2 * 2 });
         }
         [Test]
         public void DiffSimplifyTest() {
