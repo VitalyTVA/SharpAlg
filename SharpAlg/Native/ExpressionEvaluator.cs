@@ -23,7 +23,7 @@ namespace SharpAlg.Native {
                 throw new ExpressionEvaluationException(string.Format("{0} value is undefined", parameter.ParameterName));
             return parameterValue.Visit(this); //TODO recursion
         }
-        static Func<double, double, double> GetBinaryOperationEvaluator(BinaryOperation operation) {
+        public static Func<double, double, double> GetBinaryOperationEvaluator(BinaryOperation operation) {
             switch(operation) {
                 case BinaryOperation.Add:
                     return (x1, x2) => x1 + x2;

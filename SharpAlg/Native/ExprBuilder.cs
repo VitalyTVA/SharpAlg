@@ -24,7 +24,7 @@ namespace SharpAlg.Native {
             ////if(rightConst == 0)
             ////    return left;
             if(rightConst != null && leftConst != null)
-                return Expr.Constant(rightConst.Value + leftConst.Value);
+                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.Value, rightConst.Value));
             return Expr.Binary(left, right, operation);
         }
         //public static Expression Mult(Expression left, Expression right) {

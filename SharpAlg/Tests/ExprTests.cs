@@ -84,6 +84,9 @@ namespace SharpAlg.Tests {
         [Test]
         public void ConvolutionTest() {
             "9 + 13".Parse().AssertSimpleStringRepresentation("22");
+            "9 - 13".Parse().AssertSimpleStringRepresentation("-4");
+            "9 * 13".Parse().AssertSimpleStringRepresentation("117");
+            "117 / 9".Parse().AssertSimpleStringRepresentation("13");
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
