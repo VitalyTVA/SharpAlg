@@ -12,7 +12,7 @@ namespace SharpAlg.Native {
             return expr.Visit(new ExpressionEvaluator(context ?? new Context()));
         }
         public static Expr Diff(this Expr expr) {
-            return expr.Visit(new DiffExpressionVisitor());
+            return expr.Visit(new DiffExpressionVisitor(new ConvolutionExprBuilder()));
         }
         public static bool ExprEquals(this Expr expr1, Expr expr2) {
             return expr1.Visit(new ExpressionComparer(expr2));

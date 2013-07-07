@@ -429,7 +429,7 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         Diff: function (expr)
         {
-            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor.ctor());
+            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor.ctor(new SharpAlg.Native.ConvolutionExprBuilder()));
         },
         ExprEquals: function (expr1, expr2)
         {

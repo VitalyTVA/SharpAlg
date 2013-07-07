@@ -6,6 +6,10 @@ using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
     public class DiffExpressionVisitor : IExpressionVisitor<Expr> {
+        readonly ExprBuilder builder;
+        public DiffExpressionVisitor(ExprBuilder builder) {
+            this.builder = builder;
+        }
         public Expr Constant(ConstantExpr constant) {
             return Expr.Constant(0);
         }
@@ -26,12 +30,12 @@ namespace SharpAlg.Native {
             }
         }
         Expr VisitAdditive(BinaryExpr expr) {
-            return Expr.Binary(expr.Left.Visit(this), expr.Right.Visit(this), expr.Operation);
+            return builder.Binary(expr.Left.Visit(this), expr.Right.Visit(this), expr.Operation);
         }
         Expr VisitMultiply(BinaryExpr expr) {
-            var expr1 = Expr.Binary(expr.Left.Visit(this), expr.Right, BinaryOperation.Multiply);
-            var expr2 = Expr.Binary(expr.Left, expr.Right.Visit(this), BinaryOperation.Multiply);
-            return Expr.Binary(expr1, expr2, BinaryOperation.Add);
+            var expr1 = builder.Binary(expr.Left.Visit(this), expr.Right, BinaryOperation.Multiply);
+            var expr2 = builder.Binary(expr.Left, expr.Right.Visit(this), BinaryOperation.Multiply);
+            return builder.Binary(expr1, expr2, BinaryOperation.Add);
         }
         Expr VisitDivide(BinaryExpr expr) {
             var expr1 = Expr.Binary(expr.Left.Visit(this), expr.Right, BinaryOperation.Multiply);
