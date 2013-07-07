@@ -19,6 +19,7 @@ namespace SharpAlg {
         static void RunTests() {
             var fixtures = new object[] {
                     new ExprTests(),
+                    new DiffTests(),
                     new ParserTests()
                 };
             jQuery jQuery = new jQuery(HtmlContext.document.body);

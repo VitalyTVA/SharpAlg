@@ -5,24 +5,26 @@ using NUnit.Framework;
 using System.Linq.Expressions;
 using SharpAlg;
 using SharpAlg.Native;
+using SharpKit.JavaScript;
 
 namespace SharpAlg.Tests {
+    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     [TestFixture]
     public class DiffTests {
         [Test]
         public void DiffEvaluateTest() {
-            "13".Parse().Diff().AsEvaluator().Map(0, 1, 2).IsSequenceEqual(0, 0, 0);
-            "x".Parse().Diff().AsEvaluator().Map(0, 1, 2).IsSequenceEqual(1, 1, 1);
-            "x + x".Parse().Diff().AsEvaluator().Map(0, 1, 2).IsSequenceEqual(2, 2, 2);
-            "x + 1".Parse().Diff().AsEvaluator().Map(0, 1, 2).IsSequenceEqual(1, 1, 1);
-            "x + 1 + x".Parse().Diff().AsEvaluator().Map(0, 1, 2).IsSequenceEqual(2, 2, 2);
-            "x * x - x".Parse().Diff().AsEvaluator().Map(0, 1, 2).IsSequenceEqual(-1, 1, 3);
-            "x * x".Parse().Diff().AsEvaluator().Map(0, 1, 2).IsSequenceEqual(0, 2, 4);
-            "2 * x * x * x + x".Parse().Diff().AsEvaluator().Map(0, 1, 2).IsSequenceEqual(1, 7, 25);
-            "(x + 1) * (x + 2)".Parse().Diff().AsEvaluator().Map(0, 1, 2).IsSequenceEqual(3, 5, 7);
-            "1 / x".Parse().Diff().AsEvaluator().Map(1, 2, 3).IsSequenceEqual(-1, -1.0 / 4, -1.0 / 9);
-            "1 / (x * x + x)".Parse().Diff().AsEvaluator().Map(1, 2).IsSequenceEqual(-3.0 / 4, -5.0 / 36);
-            "(x * x + 1) / (x * x * x + 1)".Parse().Diff().AsEvaluator().Map(1, 2).IsSequenceEqual(-1.0 / 2, -8.0 / 27);
+            "13".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 0, 0 });
+            "x".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 1, 1, 1 });
+            "x + x".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 2, 2, 2 });
+            "x + 1".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 1, 1, 1 });
+            "x + 1 + x".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 2, 2, 2 });
+            "x * x - x".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { -1, 1, 3 });
+            "x * x".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 2, 4 });
+            "2 * x * x * x + x".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 1, 7, 25 });
+            "(x + 1) * (x + 2)".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 3, 5, 7 });
+            "36 / x".Parse().Diff().AssertEvaluatedValues(new double[] { 1, 2, 3 }, new double[] { -36, -9, -4 });
+            "36 / (x * x + x)".Parse().Diff().AssertEvaluatedValues(new double[] { 1, 2 }, new double[] { -3.0 * 9, -5.0 });
+            "27 * (x * x + 1) / (x * x * x + 1)".Parse().Diff().AssertEvaluatedValues(new double[] { 1, 2 }, new double[] { -1.0 * 27 / 2, -8.0 });
         }
         [Test]
         public void DiffSimplifyTest() {

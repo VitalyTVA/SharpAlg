@@ -62,13 +62,13 @@ namespace SharpAlg.Tests {
         }
 
         public static IEnumerable<T> IsSequenceEqual<T>(this IEnumerable<T> first, IEnumerable<T> second) {
-            Action<T, T> assert = (x, y) => Assert.AreEqual(x, y);
+            Action<T, T> assert = (x, y) => AreEqual(x, y);
             assert.Map(first, second);
             return first;
         }
-        public static IEnumerable<T> IsSequenceEqual<T>(this IEnumerable<T> first, params T[] second) {
-            return IsSequenceEqual(first, (IEnumerable<T>)second);
-        }
+        //public static IEnumerable<T> IsSequenceEqual<T>(this IEnumerable<T> first, params T[] second) {
+        //    return IsSequenceEqual(first, (IEnumerable<T>)second);
+        //}
 
         public static TInput Fails<TInput>(this TInput obj, Action<TInput> action, Type exceptionType = null, Action<Exception> exceptionCheck = null) {
             try {

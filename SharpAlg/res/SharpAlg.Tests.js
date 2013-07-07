@@ -28,6 +28,47 @@ if (typeof ($CreateAnonymousDelegate) == 'undefined') {
 }
 if (typeof(JsTypes) == "undefined")
     var JsTypes = [];
+var SharpAlg$Tests$DiffTests =
+{
+    fullname: "SharpAlg.Tests.DiffTests",
+    baseTypeName: "System.Object",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Object.ctor.call(this);
+        },
+        DiffEvaluateTest: function ()
+        {
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("13")), [0, 1, 2], [0, 0, 0]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x")), [0, 1, 2], [1, 1, 1]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x + x")), [0, 1, 2], [2, 2, 2]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x + 1")), [0, 1, 2], [1, 1, 1]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x + 1 + x")), [0, 1, 2], [2, 2, 2]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x * x - x")), [0, 1, 2], [-1, 1, 3]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x * x")), [0, 1, 2], [0, 2, 4]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("2 * x * x * x + x")), [0, 1, 2], [1, 7, 25]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("(x + 1) * (x + 2)")), [0, 1, 2], [3, 5, 7]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("36 / x")), [1, 2, 3], [-36, -9, -4]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("36 / (x * x + x)")), [1, 2], [-27, -5]);
+            SharpAlg.Tests.ExprTestHelper.AssertEvaluatedValues(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("27 * (x * x + 1) / (x * x * x + 1)")), [1, 2], [-13.5, -8]);
+        },
+        DiffSimplifyTest: function ()
+        {
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("1 + x")), "1");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x + 1")), "1");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x + x")), "2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x + x + x")), "3");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x * 2")), "2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("2 * x")), "2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x * x + 1")), "(2 * x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("1 + x * x + 1")), "(2 * x)");
+        }
+    }
+};
+JsTypes.push(SharpAlg$Tests$DiffTests);
 var SharpAlg$Tests$ExprTests =
 {
     fullname: "SharpAlg.Tests.ExprTests",
@@ -210,6 +251,15 @@ var SharpAlg$Tests$ExprTestHelper =
                 return SharpAlg.Native.ExpressionExtensions.Print(x);
             }, value);
         },
+        AssertEvaluatedValues: function (expr, input, expected)
+        {
+            var evaluator = SharpAlg.Tests.ExprTestHelper.AsEvaluator(expr);
+            SharpAlg.Tests.FluentAssert.IsSequenceEqual$1(System.Double.ctor, System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(System.Double.ctor, System.Double.ctor, input, function (x)
+            {
+                return evaluator(x);
+            }), expected);
+            return expr;
+        },
         AsEvaluator: function (expr)
         {
             return function (x)
@@ -291,18 +341,14 @@ var SharpAlg$Tests$FluentAssert =
         {
             return valueEvaluator == null ? obj : valueEvaluator(obj);
         },
-        IsSequenceEqual$1$$IEnumerable$1$$IEnumerable$1: function (T, first, second)
+        IsSequenceEqual$1: function (T, first, second)
         {
             var assert = function (x, y)
             {
-                NUnit.Framework.Assert.AreEqual$$Object$$Object(x, y);
+                SharpAlg.Tests.FluentAssert.AreEqual(x, y);
             };
-            SharpAlg.Native.FunctionalExtensions.Map$2$$Action$2$$IEnumerable$1$$IEnumerable$1(T, T, assert, first, second);
+            SharpAlg.Native.FunctionalExtensions.Map(assert, first, second);
             return first;
-        },
-        IsSequenceEqual$1$$IEnumerable$1$$T$Array: function (T, first, second)
-        {
-            return SharpAlg.Tests.FluentAssert.IsSequenceEqual$1$$IEnumerable$1$$IEnumerable$1(T, first, second);
         },
         Fails$1: function (TInput, obj, action, exceptionType, exceptionCheck)
         {

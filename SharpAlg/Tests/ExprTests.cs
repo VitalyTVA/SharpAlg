@@ -134,6 +134,11 @@ namespace SharpAlg.Tests {
         public static Expr AssertSimpleStringRepresentation(this Expr expr, string value) {
             return expr.IsEqual(x => x.Print(), value);
         }
+        public static Expr AssertEvaluatedValues(this Expr expr, double[] input, double[] expected) {
+            var evaluator = expr.AsEvaluator();
+            input.Select(x => evaluator(x)).IsSequenceEqual(expected);
+            return expr;
+        }
         public static Func<double, double> AsEvaluator(this Expr expr) {
             return x => { 
                 Context context = new Context();

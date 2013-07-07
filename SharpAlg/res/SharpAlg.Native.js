@@ -89,6 +89,55 @@ var SharpAlg$Native$Context =
     }
 };
 JsTypes.push(SharpAlg$Native$Context);
+if (typeof(SharpAlg) == "undefined")
+    var SharpAlg = {};
+if (typeof(SharpAlg.Native) == "undefined")
+    SharpAlg.Native = {};
+SharpAlg.Native.DiffExpressionVisitor = function (builder)
+{
+    this.builder = null;
+    this.builder = builder;
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.Constant = function (constant)
+{
+    return SharpAlg.Native.Expr.Constant(0);
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.Parameter = function (parameter)
+{
+    return SharpAlg.Native.Expr.Constant(1);
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.Binary = function (binary)
+{
+    switch (binary.get_Operation())
+    {
+        case 0:
+        case 1:
+            return this.VisitAdditive(binary);
+        case 2:
+            return this.VisitMultiply(binary);
+        case 3:
+            return this.VisitDivide(binary);
+        default :
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    }
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.VisitAdditive = function (expr)
+{
+    return this.builder.Binary(expr.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), expr.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), expr.get_Operation());
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.VisitMultiply = function (expr)
+{
+    var expr1 = this.builder.Binary(expr.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), expr.get_Right(), 2);
+    var expr2 = this.builder.Binary(expr.get_Left(), expr.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), 2);
+    return this.builder.Binary(expr1, expr2, 0);
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.VisitDivide = function (expr)
+{
+    var expr1 = SharpAlg.Native.Expr.Binary(expr.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), expr.get_Right(), 2);
+    var expr2 = SharpAlg.Native.Expr.Binary(expr.get_Left(), expr.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), 2);
+    var expr3 = SharpAlg.Native.Expr.Binary(expr.get_Right(), expr.get_Right(), 2);
+    return SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Binary(expr1, expr2, 1), expr3, 3);
+};
 var SharpAlg$Native$Expr =
 {
     fullname: "SharpAlg.Native.Expr",
@@ -231,10 +280,6 @@ var SharpAlg$Native$BinaryExpr =
     }
 };
 JsTypes.push(SharpAlg$Native$BinaryExpr);
-if (typeof(SharpAlg) == "undefined")
-    var SharpAlg = {};
-if (typeof(SharpAlg.Native) == "undefined")
-    SharpAlg.Native = {};
 SharpAlg.Native.ExprBuilder = function ()
 {
 };
@@ -429,7 +474,7 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         Diff: function (expr)
         {
-            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor.ctor(new SharpAlg.Native.ConvolutionExprBuilder()));
+            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(new SharpAlg.Native.ConvolutionExprBuilder()));
         },
         ExprEquals: function (expr1, expr2)
         {
@@ -495,6 +540,23 @@ SharpAlg.Native.ExpressionPrinter.GetBinaryOperationSymbol = function (operation
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }
+};
+SharpAlg.Native.FunctionalExtensions = function ()
+{
+};
+SharpAlg.Native.FunctionalExtensions.STR_InputSequencesHaveDifferentLength = "Input sequences have different length.";
+SharpAlg.Native.FunctionalExtensions.Map = function (action, input1, input2)
+{
+    var enumerator1 = input1.GetEnumerator();
+    var enumerator2 = input2.GetEnumerator();
+    while (enumerator1.MoveNext())
+    {
+        if (!enumerator2.MoveNext())
+            throw $CreateException(new System.ArgumentException.ctor$$String("Input sequences have different length."), new Error());
+        action(enumerator1.get_Current(), enumerator2.get_Current());
+    }
+    if (enumerator2.MoveNext())
+        throw $CreateException(new System.ArgumentException.ctor$$String("Input sequences have different length."), new Error());
 };
 var SharpAlg$Native$IExpressionVisitor$1 = {fullname: "SharpAlg.Native.IExpressionVisitor$1", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IExpressionVisitor$1);

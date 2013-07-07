@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
+    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class DiffExpressionVisitor : IExpressionVisitor<Expr> {
         readonly ExprBuilder builder;
         public DiffExpressionVisitor(ExprBuilder builder) {
