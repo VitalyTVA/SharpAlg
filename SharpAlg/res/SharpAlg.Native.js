@@ -253,6 +253,10 @@ SharpAlg.Native.ConvolutionExprBuilder = function ()
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right, operation)
 {
+    return (SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution(left, right, operation) != null ? SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution(left, right, operation) : (SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution(left, right, operation) != null ? SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation)));
+};
+SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution = function (left, right, operation)
+{
     var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(left);
     if (leftConst == 0)
     {
@@ -281,7 +285,20 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right,
     }
     if (rightConst != null && leftConst != null)
         return SharpAlg.Native.Expr.Constant(SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.get_Value(), rightConst.get_Value()));
-    return SharpAlg.Native.Expr.Binary(left, right, operation);
+    return null;
+};
+SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution = function (left, right, operation)
+{
+    if (SharpAlg.Native.ExpressionExtensions.ExprEquals(left, right))
+    {
+        if (operation == 0)
+            return SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(2), left, 2);
+        if (operation == 1)
+            return SharpAlg.Native.Expr.Constant(0);
+        if (operation == 3)
+            return SharpAlg.Native.Expr.Constant(1);
+    }
+    return null;
 };
 SharpAlg.Native.ConvolutionExprBuilder.GetConstValue = function (expr)
 {

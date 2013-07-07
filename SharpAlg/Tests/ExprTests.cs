@@ -116,10 +116,17 @@ namespace SharpAlg.Tests {
             "x / 1".Parse().AssertSimpleStringRepresentation("x");
             "0 / x".Parse().AssertSimpleStringRepresentation("0");
 
-            //x+x
-            //x-x
-            //x/x
-            //x*x
+            "x + x".Parse().AssertSimpleStringRepresentation("(2 * x)");
+            "2 * x +  2 * x".Parse().AssertSimpleStringRepresentation("(2 * (2 * x))");
+            "x - x".Parse().AssertSimpleStringRepresentation("0");
+            "2 * x - 2 * x".Parse().AssertSimpleStringRepresentation("0");
+            "x / x".Parse().AssertSimpleStringRepresentation("1");
+            "(2 * x) / (2 * x)".Parse().AssertSimpleStringRepresentation("1");
+
+            //"x + x + x".Parse().AssertSimpleStringRepresentation("(3 * x)"); //TODO
+            //"3 * x + 2 * x".Parse().AssertSimpleStringRepresentation("(5 * x)"); //TODO
+            //"x * x".Parse().AssertSimpleStringRepresentation("x ^ 2"); //TODO
+            //"x * x".Parse().AssertSimpleStringRepresentation("x ^ 2"); //TODO
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

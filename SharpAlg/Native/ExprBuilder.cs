@@ -17,6 +17,11 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ConvolutionExprBuilder : ExprBuilder {
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
+            return ConstantConvolution(left, right, operation) 
+                ?? EqualityConvolution(left, right, operation) 
+                ?? Expr.Binary(left, right, operation);
+        }
+        static Expr ConstantConvolution(Expr left, Expr right, BinaryOperation operation) {
             double? leftConst = GetConstValue(left);
 
             if(leftConst == 0) {
@@ -45,21 +50,19 @@ namespace SharpAlg.Native {
 
             if(rightConst != null && leftConst != null)
                 return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.Value, rightConst.Value));
-            return Expr.Binary(left, right, operation);
+            return null;
         }
-        //public static Expression Mult(Expression left, Expression right) {
-        //    double? leftConst = GetConstValue(left);
-        //    double? rightConst = GetConstValue(right);
-        //    if(leftConst == 0 || rightConst == 0)
-        //        return Expression.Constant(0d);
-        //    if(leftConst == 1)
-        //        return right;
-        //    if(rightConst == 1)
-        //        return left;
-        //    if(rightConst.HasValue && leftConst.HasValue)
-        //        return Expression.Constant(rightConst.Value * leftConst.Value);
-        //    return Expression.Multiply(left, right);
-        //}
+        static Expr EqualityConvolution(Expr left, Expr right, BinaryOperation operation) {
+            if(left.ExprEquals(right)) {
+                if(operation == BinaryOperation.Add)
+                    return Expr.Binary(Expr.Constant(2), left, BinaryOperation.Multiply);
+                if(operation == BinaryOperation.Subtract)
+                    return Expr.Constant(0);
+                if(operation == BinaryOperation.Divide)
+                    return Expr.Constant(1);
+            }
+            return null;
+        }
         static double? GetConstValue(Expr expr) {
             var constant = expr as ConstantExpr;
             return constant != null ? (double)constant.Value : (double?)null;
