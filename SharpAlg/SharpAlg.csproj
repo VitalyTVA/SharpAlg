@@ -79,8 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Native\Context.cs" />
-    <Compile Include="Native\DiffExpressionTreeVisitor.cs" />
-    <Compile Include="ExplessionExtensions.cs" />
     <Compile Include="Native\DiffExpressionVisitor.cs" />
     <Compile Include="Native\Expr.cs" />
     <Compile Include="Native\ExprBuilder.cs" />
