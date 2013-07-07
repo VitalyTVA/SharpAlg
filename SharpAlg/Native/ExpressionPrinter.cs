@@ -28,6 +28,8 @@ namespace SharpAlg.Native {
                     return "*";
                 case BinaryOperation.Divide:
                     return "/";
+                case BinaryOperation.Power:
+                    return "^";
                 default:
                     throw new NotImplementedException();
             }

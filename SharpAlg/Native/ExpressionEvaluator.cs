@@ -33,6 +33,8 @@ namespace SharpAlg.Native {
                     return (x1, x2) => x1 * x2;
                 case BinaryOperation.Divide:
                     return (x1, x2) => x1 / x2;
+                case BinaryOperation.Power:
+                    return (x1, x2) => Math.Pow(x1, x2);
                 default:
                     throw new NotImplementedException();
             }

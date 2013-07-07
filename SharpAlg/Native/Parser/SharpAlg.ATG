@@ -36,10 +36,10 @@ AdditiveOperation<out BinaryOperation operation>
 .
 
 MultiplicativeExpression<out Expr expr>			(. BinaryOperation operation; Expr rightExpr; .)			
-= Terminal<out expr>
+= PowerExpression<out expr>
 	{
 	MultiplicativeOperation<out operation> 
-	Terminal<out rightExpr>						(. expr = builder.Binary(expr, rightExpr, operation); .)
+	PowerExpression<out rightExpr>						(. expr = builder.Binary(expr, rightExpr, operation); .)
 	}
 .
 
@@ -50,6 +50,13 @@ MultiplicativeOperation<out BinaryOperation operation>
   )
 .
 
+PowerExpression<out Expr expr>					(. Expr rightExpr; .)			
+= Terminal<out expr>
+	{
+	'^' 
+	Terminal<out rightExpr>						(. expr = builder.Power(expr, rightExpr); .)
+	}
+.
 
 Terminal<out Expr expr>							(. expr = null; .)
 =	

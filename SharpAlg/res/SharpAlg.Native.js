@@ -176,6 +176,10 @@ var SharpAlg$Native$Expr =
         Divide: function (left, right)
         {
             return SharpAlg.Native.Expr.Binary(left, right, 3);
+        },
+        Power: function (left, right)
+        {
+            return SharpAlg.Native.Expr.Binary(left, right, 4);
         }
     },
     assemblyName: "SharpAlg",
@@ -338,6 +342,10 @@ SharpAlg.Native.ExprBuilder.prototype.Divide = function (left, right)
 {
     return this.Binary(left, right, 3);
 };
+SharpAlg.Native.ExprBuilder.prototype.Power = function (left, right)
+{
+    return this.Binary(left, right, 4);
+};
 SharpAlg.Native.TrivialExprBuilder = function ()
 {
     SharpAlg.Native.ExprBuilder.call(this);
@@ -494,6 +502,11 @@ SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator = function (oper
             {
                 return x1 / x2;
             };
+        case 4:
+            return function (x1, x2)
+            {
+                return System.Math.Pow(x1, x2);
+            };
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }
@@ -592,6 +605,8 @@ SharpAlg.Native.ExpressionPrinter.GetBinaryOperationSymbol = function (operation
             return "*";
         case 3:
             return "/";
+        case 4:
+            return "^";
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }

@@ -19,6 +19,9 @@ namespace SharpAlg.Native {
         public Expr Divide(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Divide);
         }
+        public Expr Power(Expr left, Expr right) {
+            return Binary(left, right, BinaryOperation.Power);
+        }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class TrivialExprBuilder : ExprBuilder {

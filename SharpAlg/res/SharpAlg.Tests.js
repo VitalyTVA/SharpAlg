@@ -139,7 +139,8 @@ var SharpAlg$Tests$ExprTests =
             var expr2 = SharpAlg.Native.Expr.Divide(left, right);
             var expr3 = SharpAlg.Native.Expr.Divide(right, left);
             var expr4 = SharpAlg.Native.Expr.Add(left, right);
-            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
+            var expr5 = SharpAlg.Native.Expr.Power(left, right);
+            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, expr2);
             })), $CreateAnonymousDelegate(this, function (x)
@@ -148,6 +149,9 @@ var SharpAlg$Tests$ExprTests =
             })), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, expr4);
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, expr5);
             }));
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13)), $CreateAnonymousDelegate(this, function (x)
             {
@@ -165,6 +169,10 @@ var SharpAlg$Tests$ExprTests =
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 117);
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3)), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), 8);
         },
         ParameterExprEvaluationTest: function ()
         {
@@ -199,6 +207,8 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(9 / x)"), "(9 / x)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x + y * z"), "(x + (y * z))");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(x + y) * z"), "((x + y) * z)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x ^ y"), "(x ^ y)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x * z ^ y"), "(x * (z ^ y))");
         },
         ConvolutionTest: function ()
         {
@@ -440,12 +450,15 @@ var SharpAlg$Tests$ParserTests =
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("13 -"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(5));
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 * 3"), 6, SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3)), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("6 / 2"), 3, SharpAlg.Native.Expr.Divide(SharpAlg.Native.Expr.Constant(6), SharpAlg.Native.Expr.Constant(2)), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 ^ 3"), 8, SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3)), null);
         },
         OperationsPriorityTest: function ()
         {
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1 + 2 * 3"), 7, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.One, SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3))), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1 + 6 / 2"), 4, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.One, SharpAlg.Native.Expr.Divide(SharpAlg.Native.Expr.Constant(6), SharpAlg.Native.Expr.Constant(2))), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 * 3 * 4 / 6 / 2 - 4 / 2"), 0, null, null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 * 2 ^ 3"), 16, SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3))), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 + 2 ^ 3"), 10, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3))), null);
         },
         ParenthesesTest: function ()
         {

@@ -45,6 +45,8 @@ namespace SharpAlg.Tests {
 
             Parse("6 / 2")
                 .AssertValue(3, Expr.Divide(Expr.Constant(6), Expr.Constant(2)));
+            Parse("2 ^ 3")
+                .AssertValue(8, Expr.Power(Expr.Constant(2), Expr.Constant(3)));
         }
         [Test]
         public void OperationsPriorityTest() {
@@ -56,6 +58,11 @@ namespace SharpAlg.Tests {
 
             Parse("2 * 3 * 4 / 6 / 2 - 4 / 2")
                .AssertValue(0);
+
+            Parse("2 * 2 ^ 3")
+                .AssertValue(16, Expr.Multiply(Expr.Constant(2), Expr.Power(Expr.Constant(2), Expr.Constant(3))));
+            Parse("2 + 2 ^ 3")
+                .AssertValue(10, Expr.Add(Expr.Constant(2), Expr.Power(Expr.Constant(2), Expr.Constant(3))));
         }
         [Test]
         public void ParenthesesTest() {

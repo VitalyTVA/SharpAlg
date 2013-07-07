@@ -13,7 +13,7 @@ public class Parser {
 	public const int _EOF = 0;
 	public const int _identifier = 1;
 	public const int _number = 2;
-	public const int maxT = 9;
+	public const int maxT = 10;
 
 	const bool T = true;
 	const bool x = false;
@@ -105,10 +105,10 @@ public class Parser {
 
 	void MultiplicativeExpression(out Expr expr) {
 		BinaryOperation operation; Expr rightExpr; 
-		Terminal(out expr);
+		PowerExpression(out expr);
 		while (la.kind == 5 || la.kind == 6) {
 			MultiplicativeOperation(out operation);
-			Terminal(out rightExpr);
+			PowerExpression(out rightExpr);
 			expr = builder.Binary(expr, rightExpr, operation); 
 		}
 	}
@@ -120,22 +120,17 @@ public class Parser {
 		} else if (la.kind == 4) {
 			Get();
 			operation = BinaryOperation.Subtract; 
-		} else SynErr(10);
+		} else SynErr(11);
 	}
 
-	void Terminal(out Expr expr) {
-		expr = null; 
-		if (la.kind == 2) {
+	void PowerExpression(out Expr expr) {
+		Expr rightExpr; 
+		Terminal(out expr);
+		while (la.kind == 7) {
 			Get();
-			expr = Expr.Constant(Int32.Parse(t.val)); 
-		} else if (la.kind == 7) {
-			Get();
-			AdditiveExpression(out expr);
-			Expect(8);
-		} else if (la.kind == 1) {
-			Get();
-			expr = Expr.Parameter(t.val); 
-		} else SynErr(11);
+			Terminal(out rightExpr);
+			expr = builder.Power(expr, rightExpr); 
+		}
 	}
 
 	void MultiplicativeOperation(out BinaryOperation operation) {
@@ -146,6 +141,21 @@ public class Parser {
 			Get();
 			operation = BinaryOperation.Divide; 
 		} else SynErr(12);
+	}
+
+	void Terminal(out Expr expr) {
+		expr = null; 
+		if (la.kind == 2) {
+			Get();
+			expr = Expr.Constant(Int32.Parse(t.val)); 
+		} else if (la.kind == 8) {
+			Get();
+			AdditiveExpression(out expr);
+			Expect(9);
+		} else if (la.kind == 1) {
+			Get();
+			expr = Expr.Parameter(t.val); 
+		} else SynErr(13);
 	}
 
 
@@ -169,7 +179,7 @@ public class Parser {
 */
 //parser set patch begin
 	static readonly bool[][] set = {
-		new bool[] {T,x,x,x, x,x,x,x, x,x,x}
+		new bool[] {T,x,x,x, x,x,x,x, x,x,x,x}
 
 	};
 //parser set patch end
@@ -187,12 +197,13 @@ public class Errors : ErrorsBase {
 			case 4: s = "\"-\" expected"; break;
 			case 5: s = "\"*\" expected"; break;
 			case 6: s = "\"/\" expected"; break;
-			case 7: s = "\"(\" expected"; break;
-			case 8: s = "\")\" expected"; break;
-			case 9: s = "??? expected"; break;
-			case 10: s = "invalid AdditiveOperation"; break;
-			case 11: s = "invalid Terminal"; break;
+			case 7: s = "\"^\" expected"; break;
+			case 8: s = "\"(\" expected"; break;
+			case 9: s = "\")\" expected"; break;
+			case 10: s = "??? expected"; break;
+			case 11: s = "invalid AdditiveOperation"; break;
 			case 12: s = "invalid MultiplicativeOperation"; break;
+			case 13: s = "invalid Terminal"; break;
 
             default: s = "error " + n; break;
         }

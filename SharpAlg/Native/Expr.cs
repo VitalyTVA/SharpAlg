@@ -29,6 +29,9 @@ namespace SharpAlg.Native {
         public static BinaryExpr Divide(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Divide);
         }
+        public static BinaryExpr Power(Expr left, Expr right) {
+            return Binary(left, right, BinaryOperation.Power);
+        }
         internal abstract T Visit<T>(IExpressionVisitor<T> visitor);
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
@@ -52,7 +55,7 @@ namespace SharpAlg.Native {
         }
     }
     public enum BinaryOperation {
-        Add, Subtract, Multiply, Divide
+        Add, Subtract, Multiply, Divide, Power
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class BinaryExpr : Expr {

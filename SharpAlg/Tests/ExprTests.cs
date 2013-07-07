@@ -39,10 +39,12 @@ namespace SharpAlg.Tests {
             var expr2 = Expr.Divide(left, right);
             var expr3 = Expr.Divide(right, left);
             var expr4 = Expr.Add(left, right);
+            var expr5 = Expr.Power(left, right);
             expr
                 .IsTrue(x => x.ExprEquals(expr2))
                 .IsFalse(x => x.ExprEquals(expr3))
-                .IsFalse(x => x.ExprEquals(expr4));
+                .IsFalse(x => x.ExprEquals(expr4))
+                .IsFalse(x => x.ExprEquals(expr5));
 
             Expr.Add(Expr.Constant(9), Expr.Constant(13))
                 .IsEqual(x => x.Evaluate(), 22);
@@ -52,6 +54,8 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.Evaluate(), 2);
             Expr.Multiply(Expr.Constant(9), Expr.Constant(13))
                 .IsEqual(x => x.Evaluate(), 9 * 13);
+            Expr.Power(Expr.Constant(2), Expr.Constant(3))
+                .IsEqual(x => x.Evaluate(), 8);
         }
         [Test]
         public void ParameterExprEvaluationTest() {
@@ -80,6 +84,8 @@ namespace SharpAlg.Tests {
             "(9 / x)".Parse().AssertSimpleStringRepresentation("(9 / x)");
             "x + y * z".Parse().AssertSimpleStringRepresentation("(x + (y * z))");
             "(x + y) * z".Parse().AssertSimpleStringRepresentation("((x + y) * z)");
+            "x ^ y".Parse().AssertSimpleStringRepresentation("(x ^ y)");
+            "x * z ^ y".Parse().AssertSimpleStringRepresentation("(x * (z ^ y))");
         }
         [Test]
         public void ConvolutionTest() {
