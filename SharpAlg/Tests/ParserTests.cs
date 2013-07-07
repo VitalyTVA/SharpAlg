@@ -17,11 +17,11 @@ namespace SharpAlg.Tests {
         [Test]
         public void ParseNumericTest() {
             Parse("1")
-                .AssertValue(1, Expr.Constant(1));
+                .AssertValue(1, Expr.One);
             Parse("9 + 13")
-                .AssertValue(22, Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Add));
+                .AssertValue(22, Expr.Add(Expr.Constant(9), Expr.Constant(13)));
             Parse("9 + 13 + 117")
-                .AssertValue(139, Expr.Binary(Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Add), Expr.Constant(117), BinaryOperation.Add));
+                .AssertValue(139, Expr.Add(Expr.Add(Expr.Constant(9), Expr.Constant(13)), Expr.Constant(117)));
             //Parse("x")
             //    .AssertSingleSyntaxError(GetNumberExpectedMessage(1));
             Parse("+")
@@ -32,27 +32,27 @@ namespace SharpAlg.Tests {
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
 
             Parse("13 - 9")
-                .AssertValue(4, Expr.Binary(Expr.Constant(13), Expr.Constant(9), BinaryOperation.Subtract));
+                .AssertValue(4, Expr.Subtract(Expr.Constant(13), Expr.Constant(9)));
             Parse("130 - 9 - 2")
-                .AssertValue(119, Expr.Binary(Expr.Binary(Expr.Constant(130), Expr.Constant(9), BinaryOperation.Subtract), Expr.Constant(2), BinaryOperation.Subtract));
+                .AssertValue(119, Expr.Subtract(Expr.Subtract(Expr.Constant(130), Expr.Constant(9)), Expr.Constant(2)));
             Parse("130 - 9 + 12 - 4")
-                .AssertValue(129, Expr.Binary(Expr.Binary(Expr.Binary(Expr.Constant(130), Expr.Constant(9), BinaryOperation.Subtract), Expr.Constant(12), BinaryOperation.Add), Expr.Constant(4), BinaryOperation.Subtract));
+                .AssertValue(129, Expr.Subtract(Expr.Add(Expr.Subtract(Expr.Constant(130), Expr.Constant(9)), Expr.Constant(12)), Expr.Constant(4)));
             Parse("13 -")
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
 
             Parse("2 * 3")
-                .AssertValue(6, Expr.Binary(Expr.Constant(2), Expr.Constant(3), BinaryOperation.Multiply));
+                .AssertValue(6, Expr.Multiply(Expr.Constant(2), Expr.Constant(3)));
 
             Parse("6 / 2")
-                .AssertValue(3, Expr.Binary(Expr.Constant(6), Expr.Constant(2), BinaryOperation.Divide));
+                .AssertValue(3, Expr.Divide(Expr.Constant(6), Expr.Constant(2)));
         }
         [Test]
         public void OperationsPriorityTest() {
             Parse("1 + 2 * 3")
-                .AssertValue(7, Expr.Binary(Expr.Constant(1), Expr.Binary(Expr.Constant(2), Expr.Constant(3), BinaryOperation.Multiply), BinaryOperation.Add));
+                .AssertValue(7, Expr.Add(Expr.One, Expr.Multiply(Expr.Constant(2), Expr.Constant(3))));
 
             Parse("1 + 6 / 2")
-                .AssertValue(4, Expr.Binary(Expr.Constant(1), Expr.Binary(Expr.Constant(6), Expr.Constant(2), BinaryOperation.Divide), BinaryOperation.Add));
+                .AssertValue(4, Expr.Add(Expr.One, Expr.Divide(Expr.Constant(6), Expr.Constant(2))));
 
             Parse("2 * 3 * 4 / 6 / 2 - 4 / 2")
                .AssertValue(0);
@@ -60,7 +60,7 @@ namespace SharpAlg.Tests {
         [Test]
         public void ParenthesesTest() {
             Parse("(1 + 2) * 3")
-                .AssertValue(9, Expr.Binary(Expr.Binary(Expr.Constant(1), Expr.Constant(2), BinaryOperation.Add), Expr.Constant(3), BinaryOperation.Multiply));
+                .AssertValue(9, Expr.Multiply(Expr.Add(Expr.One, Expr.Constant(2)), Expr.Constant(3)));
             Parse("(2 + 4) / (4 / (1 + 1))")
                 .AssertValue(3);
         }
@@ -74,7 +74,7 @@ namespace SharpAlg.Tests {
                 .AssertValue(9, Expr.Parameter("x"), context);
 
             Parse("x * someName")
-                .AssertValue(117, Expr.Binary(Expr.Parameter("x"), Expr.Parameter("someName"), BinaryOperation.Multiply), context);
+                .AssertValue(117, Expr.Multiply(Expr.Parameter("x"), Expr.Parameter("someName")), context);
 
             Parse("(x - 4) * (someName + x)")
                 .AssertValue(110, null, context);

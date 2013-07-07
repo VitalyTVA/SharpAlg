@@ -36,6 +36,11 @@ namespace SharpAlg.Tests {
             "2 * x".Parse().Diff().AssertSimpleStringRepresentation("2");
             "x * x + 1".Parse().Diff().AssertSimpleStringRepresentation("(2 * x)");
             "1 + x * x + 1".Parse().Diff().AssertSimpleStringRepresentation("(2 * x)");
+
+            "1 / x".Parse().Diff().AssertSimpleStringRepresentation("(-1 / (x * x))");
+
+            "x / x".Parse().Diff().AssertSimpleStringRepresentation("0");
+            //"(x * x) / x".Parse().Diff().AssertSimpleStringRepresentation("1");//TODO convolution
         }
     }
 }

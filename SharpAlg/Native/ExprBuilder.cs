@@ -7,6 +7,18 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public abstract class ExprBuilder {
         public abstract Expr Binary(Expr left, Expr right, BinaryOperation operation);
+        public Expr Add(Expr left, Expr right) {
+            return Binary(left, right, BinaryOperation.Add);
+        }
+        public Expr Subtract(Expr left, Expr right) {
+            return Binary(left, right, BinaryOperation.Subtract);
+        }
+        public Expr Multiply(Expr left, Expr right) {
+            return Binary(left, right, BinaryOperation.Multiply);
+        }
+        public Expr Divide(Expr left, Expr right) {
+            return Binary(left, right, BinaryOperation.Divide);
+        }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class TrivialExprBuilder : ExprBuilder {
@@ -28,7 +40,7 @@ namespace SharpAlg.Native {
                 if(operation == BinaryOperation.Add)
                     return right;
                 if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Divide)
-                    return Expr.Constant(0);
+                    return Expr.Zero;
             }
             if(leftConst == 1) {
                 if(operation == BinaryOperation.Multiply)
@@ -41,7 +53,7 @@ namespace SharpAlg.Native {
                 if(operation == BinaryOperation.Add || operation == BinaryOperation.Subtract)
                     return left;
                 if(operation == BinaryOperation.Multiply)
-                    return Expr.Constant(0);
+                    return Expr.Zero;
             }
             if(rightConst == 1) {
                 if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Divide)
@@ -55,11 +67,11 @@ namespace SharpAlg.Native {
         static Expr EqualityConvolution(Expr left, Expr right, BinaryOperation operation) {
             if(left.ExprEquals(right)) {
                 if(operation == BinaryOperation.Add)
-                    return Expr.Binary(Expr.Constant(2), left, BinaryOperation.Multiply);
+                    return Expr.Multiply(Expr.Constant(2), left);
                 if(operation == BinaryOperation.Subtract)
-                    return Expr.Constant(0);
+                    return Expr.Zero;
                 if(operation == BinaryOperation.Divide)
-                    return Expr.Constant(1);
+                    return Expr.One;
             }
             return null;
         }

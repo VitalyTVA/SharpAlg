@@ -12,10 +12,10 @@ namespace SharpAlg.Native {
             this.builder = builder;
         }
         public Expr Constant(ConstantExpr constant) {
-            return Expr.Constant(0);
+            return Expr.Zero;
         }
         public Expr Parameter(ParameterExpr parameter) {
-            return Expr.Constant(1);
+            return Expr.One;
         }
         public Expr Binary(BinaryExpr binary) {
             switch(binary.Operation) {
@@ -34,15 +34,15 @@ namespace SharpAlg.Native {
             return builder.Binary(expr.Left.Visit(this), expr.Right.Visit(this), expr.Operation);
         }
         Expr VisitMultiply(BinaryExpr expr) {
-            var expr1 = builder.Binary(expr.Left.Visit(this), expr.Right, BinaryOperation.Multiply);
-            var expr2 = builder.Binary(expr.Left, expr.Right.Visit(this), BinaryOperation.Multiply);
-            return builder.Binary(expr1, expr2, BinaryOperation.Add);
+            var expr1 = builder.Multiply(expr.Left.Visit(this), expr.Right);
+            var expr2 = builder.Multiply(expr.Left, expr.Right.Visit(this));
+            return builder.Add(expr1, expr2);
         }
         Expr VisitDivide(BinaryExpr expr) {
-            var expr1 = Expr.Binary(expr.Left.Visit(this), expr.Right, BinaryOperation.Multiply);
-            var expr2 = Expr.Binary(expr.Left, expr.Right.Visit(this), BinaryOperation.Multiply);
-            var expr3 = Expr.Binary(expr.Right, expr.Right, BinaryOperation.Multiply);
-            return Expr.Binary(Expr.Binary(expr1, expr2, BinaryOperation.Subtract), expr3, BinaryOperation.Divide);
+            var expr1 = builder.Multiply(expr.Left.Visit(this), expr.Right);
+            var expr2 = builder.Multiply(expr.Left, expr.Right.Visit(this));
+            var expr3 = Expr.Multiply(expr.Right, expr.Right);//TODO
+            return Expr.Divide(builder.Subtract(expr1, expr2), expr3);//TODO
         }
     }
 }

@@ -31,26 +31,26 @@ namespace SharpAlg.Tests {
         public void BinaryExprTest() {
             var left = Expr.Constant(9);
             var right = Expr.Parameter("x");
-            var expr = Expr.Binary(left, right, BinaryOperation.Divide);
+            var expr = Expr.Divide(left, right);
             expr
                 .IsEqual(x => x.Left, left).IsEqual(x => x.Right, right)
                 .IsEqual(x => x.Operation, BinaryOperation.Divide);
 
-            var expr2 = Expr.Binary(left, right, BinaryOperation.Divide);
-            var expr3 = Expr.Binary(right, left, BinaryOperation.Divide);
-            var expr4 = Expr.Binary(left, right, BinaryOperation.Add);
+            var expr2 = Expr.Divide(left, right);
+            var expr3 = Expr.Divide(right, left);
+            var expr4 = Expr.Add(left, right);
             expr
                 .IsTrue(x => x.ExprEquals(expr2))
                 .IsFalse(x => x.ExprEquals(expr3))
                 .IsFalse(x => x.ExprEquals(expr4));
 
-            Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Add)
+            Expr.Add(Expr.Constant(9), Expr.Constant(13))
                 .IsEqual(x => x.Evaluate(), 22);
-            Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Subtract)
+            Expr.Subtract(Expr.Constant(9), Expr.Constant(13))
                 .IsEqual(x => x.Evaluate(), -4);
-            Expr.Binary(Expr.Constant(10), Expr.Constant(5), BinaryOperation.Divide)
+            Expr.Divide(Expr.Constant(10), Expr.Constant(5))
                 .IsEqual(x => x.Evaluate(), 2);
-            Expr.Binary(Expr.Constant(9), Expr.Constant(13), BinaryOperation.Multiply)
+            Expr.Multiply(Expr.Constant(9), Expr.Constant(13))
                 .IsEqual(x => x.Evaluate(), 9 * 13);
         }
         [Test]
@@ -63,11 +63,11 @@ namespace SharpAlg.Tests {
             Expr.Parameter("y")
                 .IsEqual(x => x.Evaluate(context), 13);
 
-            Expr.Binary(Expr.Parameter("x"), Expr.Parameter("y"), BinaryOperation.Add)
+            Expr.Add(Expr.Parameter("x"), Expr.Parameter("y"))
                 .IsEqual(x => x.Evaluate(context), 22);
 
-            context.Register("y", Expr.Binary(Expr.Parameter("x"), Expr.Parameter("x"), BinaryOperation.Multiply));
-            Expr.Binary(Expr.Parameter("x"), Expr.Parameter("y"), BinaryOperation.Add)
+            context.Register("y", Expr.Multiply(Expr.Parameter("x"), Expr.Parameter("x")));
+            Expr.Add(Expr.Parameter("x"), Expr.Parameter("y"))
                 .IsEqual(x => x.Evaluate(context), 90);
         }
         [Test]
@@ -99,7 +99,7 @@ namespace SharpAlg.Tests {
             "2 - 1 + x".Parse().AssertSimpleStringRepresentation("(1 + x)");
             "x - 1".Parse().AssertSimpleStringRepresentation("(x - 1)");
             "1 - x".Parse().AssertSimpleStringRepresentation("(1 - x)");
-            "0 - x".Parse().AssertSimpleStringRepresentation("(0 - x)"); //TODO
+            "0 - x".Parse().AssertSimpleStringRepresentation("(0 - x)"); //TODO convolution
             "x - 0".Parse().AssertSimpleStringRepresentation("x");
 
             "2 * 2 * x".Parse().AssertSimpleStringRepresentation("(4 * x)");
@@ -123,10 +123,10 @@ namespace SharpAlg.Tests {
             "x / x".Parse().AssertSimpleStringRepresentation("1");
             "(2 * x) / (2 * x)".Parse().AssertSimpleStringRepresentation("1");
 
-            //"x + x + x".Parse().AssertSimpleStringRepresentation("(3 * x)"); //TODO
-            //"3 * x + 2 * x".Parse().AssertSimpleStringRepresentation("(5 * x)"); //TODO
-            //"x * x".Parse().AssertSimpleStringRepresentation("x ^ 2"); //TODO
-            //"x * x".Parse().AssertSimpleStringRepresentation("x ^ 2"); //TODO
+            //"x + x + x".Parse().AssertSimpleStringRepresentation("(3 * x)"); //TODO convolution
+            //"3 * x + 2 * x".Parse().AssertSimpleStringRepresentation("(5 * x)"); //TODO convolution
+            //"x * x".Parse().AssertSimpleStringRepresentation("x ^ 2"); //TODO convolution
+            //"x * x".Parse().AssertSimpleStringRepresentation("x ^ 2"); //TODO convolution
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

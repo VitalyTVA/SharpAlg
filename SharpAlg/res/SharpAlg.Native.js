@@ -100,11 +100,11 @@ SharpAlg.Native.DiffExpressionVisitor = function (builder)
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Constant = function (constant)
 {
-    return SharpAlg.Native.Expr.Constant(0);
+    return SharpAlg.Native.Expr.Zero;
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Parameter = function (parameter)
 {
-    return SharpAlg.Native.Expr.Constant(1);
+    return SharpAlg.Native.Expr.One;
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Binary = function (binary)
 {
@@ -127,16 +127,16 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.VisitAdditive = function (expr)
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.VisitMultiply = function (expr)
 {
-    var expr1 = this.builder.Binary(expr.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), expr.get_Right(), 2);
-    var expr2 = this.builder.Binary(expr.get_Left(), expr.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), 2);
-    return this.builder.Binary(expr1, expr2, 0);
+    var expr1 = this.builder.Multiply(expr.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), expr.get_Right());
+    var expr2 = this.builder.Multiply(expr.get_Left(), expr.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this));
+    return this.builder.Add(expr1, expr2);
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.VisitDivide = function (expr)
 {
-    var expr1 = SharpAlg.Native.Expr.Binary(expr.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), expr.get_Right(), 2);
-    var expr2 = SharpAlg.Native.Expr.Binary(expr.get_Left(), expr.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), 2);
-    var expr3 = SharpAlg.Native.Expr.Binary(expr.get_Right(), expr.get_Right(), 2);
-    return SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Binary(expr1, expr2, 1), expr3, 3);
+    var expr1 = this.builder.Multiply(expr.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), expr.get_Right());
+    var expr2 = this.builder.Multiply(expr.get_Left(), expr.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this));
+    var expr3 = SharpAlg.Native.Expr.Multiply(expr.get_Right(), expr.get_Right());
+    return SharpAlg.Native.Expr.Divide(this.builder.Subtract(expr1, expr2), expr3);
 };
 var SharpAlg$Native$Expr =
 {
@@ -144,6 +144,11 @@ var SharpAlg$Native$Expr =
     baseTypeName: "System.Object",
     staticDefinition:
     {
+        cctor: function ()
+        {
+            SharpAlg.Native.Expr.Zero = new SharpAlg.Native.ConstantExpr.ctor(0);
+            SharpAlg.Native.Expr.One = new SharpAlg.Native.ConstantExpr.ctor(1);
+        },
         Constant: function (constant)
         {
             return new SharpAlg.Native.ConstantExpr.ctor(constant);
@@ -155,6 +160,22 @@ var SharpAlg$Native$Expr =
         Binary: function (left, right, type)
         {
             return new SharpAlg.Native.BinaryExpr.ctor(left, right, type);
+        },
+        Add: function (left, right)
+        {
+            return SharpAlg.Native.Expr.Binary(left, right, 0);
+        },
+        Subtract: function (left, right)
+        {
+            return SharpAlg.Native.Expr.Binary(left, right, 1);
+        },
+        Multiply: function (left, right)
+        {
+            return SharpAlg.Native.Expr.Binary(left, right, 2);
+        },
+        Divide: function (left, right)
+        {
+            return SharpAlg.Native.Expr.Binary(left, right, 3);
         }
     },
     assemblyName: "SharpAlg",
@@ -172,6 +193,12 @@ var SharpAlg$Native$ConstantExpr =
 {
     fullname: "SharpAlg.Native.ConstantExpr",
     baseTypeName: "SharpAlg.Native.Expr",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+        }
+    },
     assemblyName: "SharpAlg",
     Kind: "Class",
     definition:
@@ -202,6 +229,12 @@ var SharpAlg$Native$ParameterExpr =
 {
     fullname: "SharpAlg.Native.ParameterExpr",
     baseTypeName: "SharpAlg.Native.Expr",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+        }
+    },
     assemblyName: "SharpAlg",
     Kind: "Class",
     definition:
@@ -232,6 +265,12 @@ var SharpAlg$Native$BinaryExpr =
 {
     fullname: "SharpAlg.Native.BinaryExpr",
     baseTypeName: "SharpAlg.Native.Expr",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+        }
+    },
     assemblyName: "SharpAlg",
     Kind: "Class",
     definition:
@@ -283,6 +322,22 @@ JsTypes.push(SharpAlg$Native$BinaryExpr);
 SharpAlg.Native.ExprBuilder = function ()
 {
 };
+SharpAlg.Native.ExprBuilder.prototype.Add = function (left, right)
+{
+    return this.Binary(left, right, 0);
+};
+SharpAlg.Native.ExprBuilder.prototype.Subtract = function (left, right)
+{
+    return this.Binary(left, right, 1);
+};
+SharpAlg.Native.ExprBuilder.prototype.Multiply = function (left, right)
+{
+    return this.Binary(left, right, 2);
+};
+SharpAlg.Native.ExprBuilder.prototype.Divide = function (left, right)
+{
+    return this.Binary(left, right, 3);
+};
 SharpAlg.Native.TrivialExprBuilder = function ()
 {
     SharpAlg.Native.ExprBuilder.call(this);
@@ -308,7 +363,7 @@ SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution = function (left, rig
         if (operation == 0)
             return right;
         if (operation == 2 || operation == 3)
-            return SharpAlg.Native.Expr.Constant(0);
+            return SharpAlg.Native.Expr.Zero;
     }
     if (leftConst == 1)
     {
@@ -321,7 +376,7 @@ SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution = function (left, rig
         if (operation == 0 || operation == 1)
             return left;
         if (operation == 2)
-            return SharpAlg.Native.Expr.Constant(0);
+            return SharpAlg.Native.Expr.Zero;
     }
     if (rightConst == 1)
     {
@@ -337,11 +392,11 @@ SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution = function (left, rig
     if (SharpAlg.Native.ExpressionExtensions.ExprEquals(left, right))
     {
         if (operation == 0)
-            return SharpAlg.Native.Expr.Binary(SharpAlg.Native.Expr.Constant(2), left, 2);
+            return SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(2), left);
         if (operation == 1)
-            return SharpAlg.Native.Expr.Constant(0);
+            return SharpAlg.Native.Expr.Zero;
         if (operation == 3)
-            return SharpAlg.Native.Expr.Constant(1);
+            return SharpAlg.Native.Expr.One;
     }
     return null;
 };
