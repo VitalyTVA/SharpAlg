@@ -129,6 +129,14 @@ namespace SharpAlg.Tests {
             "x / x".Parse().AssertSimpleStringRepresentation("1");
             "(2 * x) / (2 * x)".Parse().AssertSimpleStringRepresentation("1");
 
+            "(x + 1) ^ (2 + 1)".Parse().AssertSimpleStringRepresentation("((x + 1) ^ 3)");
+            "(x + 1) ^ 0".Parse().AssertSimpleStringRepresentation("1");
+            "(x + 1) ^ (2 - 1)".Parse().AssertSimpleStringRepresentation("(x + 1)");
+            "(x + 1) ^ (y - y)".Parse().AssertSimpleStringRepresentation("1");
+            "2 ^ 3".Parse().AssertSimpleStringRepresentation("8");
+            "(x - x) ^ y".Parse().AssertSimpleStringRepresentation("0");
+            "(x / x) ^ y".Parse().AssertSimpleStringRepresentation("1");
+
             //"x + x + x".Parse().AssertSimpleStringRepresentation("(3 * x)"); //TODO convolution
             //"3 * x + 2 * x".Parse().AssertSimpleStringRepresentation("(5 * x)"); //TODO convolution
             //"x * x".Parse().AssertSimpleStringRepresentation("x ^ 2"); //TODO convolution

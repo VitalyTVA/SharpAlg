@@ -378,13 +378,15 @@ SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution = function (left, rig
     {
         if (operation == 0)
             return right;
-        if (operation == 2 || operation == 3)
+        if (operation == 2 || operation == 3 || operation == 4)
             return SharpAlg.Native.Expr.Zero;
     }
     if (leftConst == 1)
     {
         if (operation == 2)
             return right;
+        if (operation == 4)
+            return SharpAlg.Native.Expr.One;
     }
     var rightConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(right);
     if (rightConst == 0)
@@ -393,10 +395,14 @@ SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution = function (left, rig
             return left;
         if (operation == 2)
             return SharpAlg.Native.Expr.Zero;
+        if (operation == 4)
+            return SharpAlg.Native.Expr.One;
     }
     if (rightConst == 1)
     {
         if (operation == 2 || operation == 3)
+            return left;
+        if (operation == 4)
             return left;
     }
     if (rightConst != null && leftConst != null)

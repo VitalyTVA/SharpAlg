@@ -42,12 +42,14 @@ namespace SharpAlg.Native {
             if(leftConst == 0) {
                 if(operation == BinaryOperation.Add)
                     return right;
-                if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Divide)
+                if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Divide || operation == BinaryOperation.Power)
                     return Expr.Zero;
             }
             if(leftConst == 1) {
                 if(operation == BinaryOperation.Multiply)
                     return right;
+                if(operation == BinaryOperation.Power)
+                    return Expr.One;
             }
 
             double? rightConst = GetConstValue(right);
@@ -57,9 +59,13 @@ namespace SharpAlg.Native {
                     return left;
                 if(operation == BinaryOperation.Multiply)
                     return Expr.Zero;
+                if(operation == BinaryOperation.Power)
+                    return Expr.One;
             }
             if(rightConst == 1) {
                 if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Divide)
+                    return left;
+                if(operation == BinaryOperation.Power)
                     return left;
             }
 
