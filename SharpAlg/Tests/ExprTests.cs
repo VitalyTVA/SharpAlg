@@ -17,7 +17,8 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.ParameterName, "x")
                 .Fails(x => x.Evaluate(), typeof(ExpressionEvaluationException), e => e.IsEqual(x => x.Message, "x value is undefined"))
                 .IsTrue(x => x.ExprEquals(Expr.Parameter("x")))
-                .IsFalse(x => x.ExprEquals(Expr.Parameter("y")));
+                .IsFalse(x => x.ExprEquals(Expr.Parameter("y")))
+                .IsEqual(x => x.ToString(), "x");
         }
         [Test]
         public void ConstantExprTest() {
@@ -25,7 +26,17 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.Value, 9)
                 .IsEqual(x => x.Evaluate(), 9)
                 .IsTrue(x => x.ExprEquals(Expr.Constant(9)))
-                .IsFalse(x => x.ExprEquals(Expr.Constant(13)));
+                .IsFalse(x => x.ExprEquals(Expr.Constant(13)))
+                .IsEqual(x => x.ToString(), "9");
+        }
+        [Test]
+        public void ToStringTest() {
+            var left = Expr.Constant(9);
+            var right = Expr.Parameter("x");
+            Expr.Binary(left, right, BinaryOperation.Add).IsEqual(x => x.ToString(), "(9 + x)");
+            Expr.Binary(left, right, BinaryOperation.Subtract).IsEqual(x => x.ToString(), "(9 - x)");
+            Expr.Binary(left, right, BinaryOperation.Multiply).IsEqual(x => x.ToString(), "(9 * x)");
+            Expr.Binary(left, right, BinaryOperation.Divide).IsEqual(x => x.ToString(), "(9 / x)");
         }
         [Test]
         public void BinaryExprTest() {
@@ -36,8 +47,6 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.Left, left).IsEqual(x => x.Right, right)
                 .IsEqual(x => x.Operation, BinaryOperation.Divide);
 
-            var left2 = Expr.Constant(9);
-            var right2 = Expr.Parameter("x");
             var expr2 = Expr.Binary(left, right, BinaryOperation.Divide);
             var expr3 = Expr.Binary(right, left, BinaryOperation.Divide);
             var expr4 = Expr.Binary(left, right, BinaryOperation.Add);

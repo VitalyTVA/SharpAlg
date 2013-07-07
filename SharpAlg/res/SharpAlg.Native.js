@@ -86,6 +86,10 @@ var SharpAlg$Native$Expr =
         ctor: function ()
         {
             System.Object.ctor.call(this);
+        },
+        toString: function ()
+        {
+            return this.Visit$1(System.String.ctor, new SharpAlg.Native.ExpressionPrinter());
         }
     }
 };
@@ -343,5 +347,36 @@ var SharpAlg$Native$ExpressionExtensions =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionExtensions);
+SharpAlg.Native.ExpressionPrinter = function ()
+{
+};
+SharpAlg.Native.ExpressionPrinter.prototype.Constant = function (constant)
+{
+    return constant.get_Value().toString();
+};
+SharpAlg.Native.ExpressionPrinter.prototype.Binary = function (binary)
+{
+    return System.String.Format$$String$$Object$$Object$$Object("({0} {2} {1})", binary.get_Left().Visit$1(System.String.ctor, this), binary.get_Right().Visit$1(System.String.ctor, this), SharpAlg.Native.ExpressionPrinter.GetBinaryOperationSymbol(binary.get_Operation()));
+};
+SharpAlg.Native.ExpressionPrinter.prototype.Parameter = function (parameter)
+{
+    return parameter.get_ParameterName();
+};
+SharpAlg.Native.ExpressionPrinter.GetBinaryOperationSymbol = function (operation)
+{
+    switch (operation)
+    {
+        case 0:
+            return "+";
+        case 1:
+            return "-";
+        case 2:
+            return "*";
+        case 3:
+            return "/";
+        default :
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    }
+};
 var SharpAlg$Native$IExpressionVisitor$1 = {fullname: "SharpAlg.Native.IExpressionVisitor$1", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IExpressionVisitor$1);
