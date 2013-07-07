@@ -202,32 +202,6 @@ var SharpAlg$Native$BinaryExpr =
     }
 };
 JsTypes.push(SharpAlg$Native$BinaryExpr);
-var SharpAlg$Native$ExpressionExtensions =
-{
-    fullname: "SharpAlg.Native.ExpressionExtensions",
-    baseTypeName: "System.Object",
-    staticDefinition:
-    {
-        Evaluate: function (expr, context)
-        {
-            return expr.Visit$1(System.Double.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : new SharpAlg.Native.Context.ctor())));
-        },
-        ExprEquals: function (expr1, expr2)
-        {
-            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionComparer.ctor(expr2));
-        }
-    },
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function ()
-        {
-            System.Object.ctor.call(this);
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$ExpressionExtensions);
 var SharpAlg$Native$ExpressionComparer =
 {
     fullname: "SharpAlg.Native.ExpressionComparer",
@@ -343,5 +317,31 @@ var SharpAlg$Native$ExpressionEvaluationException =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionEvaluationException);
+var SharpAlg$Native$ExpressionExtensions =
+{
+    fullname: "SharpAlg.Native.ExpressionExtensions",
+    baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        Evaluate: function (expr, context)
+        {
+            return expr.Visit$1(System.Double.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : new SharpAlg.Native.Context.ctor())));
+        },
+        ExprEquals: function (expr1, expr2)
+        {
+            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionComparer.ctor(expr2));
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Object.ctor.call(this);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$ExpressionExtensions);
 var SharpAlg$Native$IExpressionVisitor$1 = {fullname: "SharpAlg.Native.IExpressionVisitor$1", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IExpressionVisitor$1);
