@@ -77,6 +77,8 @@ namespace SharpAlg.Native {
             if(left.ExprEquals(right)) {
                 if(operation == BinaryOperation.Add)
                     return Expr.Multiply(Expr.Constant(2), left);
+                if(operation == BinaryOperation.Multiply)
+                    return Expr.Power(left, Expr.Constant(2));
                 if(operation == BinaryOperation.Subtract)
                     return Expr.Zero;
                 if(operation == BinaryOperation.Divide)

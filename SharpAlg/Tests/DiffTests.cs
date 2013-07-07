@@ -26,9 +26,6 @@ namespace SharpAlg.Tests {
             "36 / (x * x + x)".Parse().Diff().AssertEvaluatedValues(new double[] { 1, 2 }, new double[] { -3.0 * 9, -5.0 });
             "27 * (x * x + 1) / (x * x * x + 1)".Parse().Diff().AssertEvaluatedValues(new double[] { 1, 2 }, new double[] { -1.0 * 27 / 2, -8.0 });
 
-            "2 ^ 3".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 0, 0 });
-            "(x + x) ^ 1".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 2, 2, 2 });
-            "x ^ 2".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 2, 4 });
             "(x * x) ^ 3".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 6, 6 * 2 * 2 * 2 * 2 * 2 });
             "(x * x) ^ (1 + 2)".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 6, 6 * 2 * 2 * 2 * 2 * 2 });
         }
@@ -47,6 +44,11 @@ namespace SharpAlg.Tests {
 
             "x / x".Parse().Diff().AssertSimpleStringRepresentation("0");
             //"(x * x) / x".Parse().Diff().AssertSimpleStringRepresentation("1");//TODO convolution
+
+            "2 ^ 3".Parse().Diff().AssertSimpleStringRepresentation("0");
+            "(x + x) ^ 1".Parse().Diff().AssertSimpleStringRepresentation("2");
+            "x ^ 2".Parse().Diff().AssertSimpleStringRepresentation("(2 * x)");
+            //"(x * x) ^ 3".Parse().Diff().AssertSimpleStringRepresentation("(6 * (x ^ 5))");//TODO convolution
         }
     }
 }

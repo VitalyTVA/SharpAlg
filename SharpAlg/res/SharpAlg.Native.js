@@ -144,7 +144,7 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.VisitPower = function (binary)
 {
     if (!(Is(binary.get_Right(), SharpAlg.Native.ConstantExpr.ctor)))
         throw $CreateException(new System.NotImplementedException.ctor(), new Error());
-    return SharpAlg.Native.Expr.Multiply(binary.get_Right(), SharpAlg.Native.Expr.Multiply(binary.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), SharpAlg.Native.Expr.Power(binary.get_Left(), SharpAlg.Native.Expr.Subtract(binary.get_Right(), SharpAlg.Native.Expr.One))));
+    return SharpAlg.Native.Expr.Multiply(binary.get_Right(), this.builder.Multiply(binary.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), this.builder.Power(binary.get_Left(), this.builder.Subtract(binary.get_Right(), SharpAlg.Native.Expr.One))));
 };
 var SharpAlg$Native$Expr =
 {
@@ -415,6 +415,8 @@ SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution = function (left, rig
     {
         if (operation == 0)
             return SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(2), left);
+        if (operation == 2)
+            return SharpAlg.Native.Expr.Power(left, SharpAlg.Native.Expr.Constant(2));
         if (operation == 1)
             return SharpAlg.Native.Expr.Zero;
         if (operation == 3)

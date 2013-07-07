@@ -49,7 +49,7 @@ namespace SharpAlg.Native {
         Expr VisitPower(BinaryExpr binary) {
             if(!(binary.Right is ConstantExpr))
                 throw new NotImplementedException(); //TODO when ln() is ready
-            return Expr.Multiply(binary.Right, Expr.Multiply(binary.Left.Visit(this), Expr.Power(binary.Left, Expr.Subtract(binary.Right, Expr.One))));
+            return Expr.Multiply(binary.Right, builder.Multiply(binary.Left.Visit(this), builder.Power(binary.Left, builder.Subtract(binary.Right, Expr.One)))); //TODO convolution when ln() is ready
         }
     }
 }
