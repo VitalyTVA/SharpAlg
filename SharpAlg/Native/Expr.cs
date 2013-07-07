@@ -16,9 +16,6 @@ namespace SharpAlg.Native {
             return new BinaryExpr(left, right, type);
         }
         internal abstract T Visit<T>(IExpressionVisitor<T> visitor);
-        public override string ToString() {
-            return Visit(new ExpressionPrinter());
-        }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class ConstantExpr : Expr {

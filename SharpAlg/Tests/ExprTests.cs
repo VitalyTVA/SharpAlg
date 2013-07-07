@@ -17,8 +17,7 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.ParameterName, "x")
                 .Fails(x => x.Evaluate(), typeof(ExpressionEvaluationException), e => e.IsEqual(x => x.Message, "x value is undefined"))
                 .IsTrue(x => x.ExprEquals(Expr.Parameter("x")))
-                .IsFalse(x => x.ExprEquals(Expr.Parameter("y")))
-                .IsEqual(x => x.ToString(), "x");
+                .IsFalse(x => x.ExprEquals(Expr.Parameter("y")));
         }
         [Test]
         public void ConstantExprTest() {
@@ -26,17 +25,7 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.Value, 9)
                 .IsEqual(x => x.Evaluate(), 9)
                 .IsTrue(x => x.ExprEquals(Expr.Constant(9)))
-                .IsFalse(x => x.ExprEquals(Expr.Constant(13)))
-                .IsEqual(x => x.ToString(), "9");
-        }
-        [Test]
-        public void ToStringTest() {
-            var left = Expr.Constant(9);
-            var right = Expr.Parameter("x");
-            Expr.Binary(left, right, BinaryOperation.Add).IsEqual(x => x.ToString(), "(9 + x)");
-            Expr.Binary(left, right, BinaryOperation.Subtract).IsEqual(x => x.ToString(), "(9 - x)");
-            Expr.Binary(left, right, BinaryOperation.Multiply).IsEqual(x => x.ToString(), "(9 * x)");
-            Expr.Binary(left, right, BinaryOperation.Divide).IsEqual(x => x.ToString(), "(9 / x)");
+                .IsFalse(x => x.ExprEquals(Expr.Constant(13)));
         }
         [Test]
         public void BinaryExprTest() {
@@ -80,6 +69,24 @@ namespace SharpAlg.Tests {
             context.Register("y", Expr.Binary(Expr.Parameter("x"), Expr.Parameter("x"), BinaryOperation.Multiply));
             Expr.Binary(Expr.Parameter("x"), Expr.Parameter("y"), BinaryOperation.Add)
                 .IsEqual(x => x.Evaluate(context), 90);
+        }
+        [Test]
+        public void ToStringTest() {
+            "9".Parse().AssertSimpleStringRepresentation("9");
+            "x".Parse().AssertSimpleStringRepresentation("x");
+            "9 + x".Parse().AssertSimpleStringRepresentation("(9 + x)");
+            "(9 - x)".Parse().AssertSimpleStringRepresentation("(9 - x)");
+            "(9 * x)".Parse().AssertSimpleStringRepresentation("(9 * x)");
+            "(9 / x)".Parse().AssertSimpleStringRepresentation("(9 / x)");
+            "x + y * z".Parse().AssertSimpleStringRepresentation("(x + (y * z))");
+            "(x + y) * z".Parse().AssertSimpleStringRepresentation("((x + y) * z)");
+        }
+
+    }
+    [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+    public static class ExprTestHelper {
+        public static Expr AssertSimpleStringRepresentation(this Expr expr, string value) {
+            return expr.IsEqual(x => x.Print(), value);
         }
     }
 }

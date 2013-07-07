@@ -86,10 +86,6 @@ var SharpAlg$Native$Expr =
         ctor: function ()
         {
             System.Object.ctor.call(this);
-        },
-        toString: function ()
-        {
-            return this.Visit$1(System.String.ctor, new SharpAlg.Native.ExpressionPrinter());
         }
     }
 };
@@ -334,6 +330,24 @@ var SharpAlg$Native$ExpressionExtensions =
         ExprEquals: function (expr1, expr2)
         {
             return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionComparer.ctor(expr2));
+        },
+        Print: function (expr)
+        {
+            return expr.Visit$1(System.String.ctor, new SharpAlg.Native.ExpressionPrinter());
+        },
+        Parse: function (expression)
+        {
+            var parser = SharpAlg.Native.ExpressionExtensions.ParseCore(expression);
+            if (parser.errors.Count > 0)
+                throw $CreateException(new System.InvalidOperationException.ctor$$String("String can not be parsed"), new Error());
+            return parser.Expr;
+        },
+        ParseCore: function (expression)
+        {
+            var scanner = new SharpAlg.Native.Parser.Scanner.ctor(expression);
+            var parser = new SharpAlg.Native.Parser.Parser(scanner);
+            parser.Parse();
+            return parser;
         }
     },
     assemblyName: "SharpAlg",
