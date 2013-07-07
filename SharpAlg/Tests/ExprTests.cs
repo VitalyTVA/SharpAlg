@@ -87,6 +87,39 @@ namespace SharpAlg.Tests {
             "9 - 13".Parse().AssertSimpleStringRepresentation("-4");
             "9 * 13".Parse().AssertSimpleStringRepresentation("117");
             "117 / 9".Parse().AssertSimpleStringRepresentation("13");
+            "117 / 9 - 4".Parse().AssertSimpleStringRepresentation("9");
+            "(5 + 5) / 2".Parse().AssertSimpleStringRepresentation("5");
+
+            "1 + 1 + x".Parse().AssertSimpleStringRepresentation("(2 + x)");
+            "x + 1".Parse().AssertSimpleStringRepresentation("(x + 1)");
+            "1 + x".Parse().AssertSimpleStringRepresentation("(1 + x)");
+            "0 + x".Parse().AssertSimpleStringRepresentation("x");
+            "x + 0".Parse().AssertSimpleStringRepresentation("x");
+
+            "2 - 1 + x".Parse().AssertSimpleStringRepresentation("(1 + x)");
+            "x - 1".Parse().AssertSimpleStringRepresentation("(x - 1)");
+            "1 - x".Parse().AssertSimpleStringRepresentation("(1 - x)");
+            "0 - x".Parse().AssertSimpleStringRepresentation("(0 - x)"); //TODO
+            "x - 0".Parse().AssertSimpleStringRepresentation("x");
+
+            "2 * 2 * x".Parse().AssertSimpleStringRepresentation("(4 * x)");
+            "x * 2".Parse().AssertSimpleStringRepresentation("(x * 2)");
+            "2 * x".Parse().AssertSimpleStringRepresentation("(2 * x)");
+            "0 * x".Parse().AssertSimpleStringRepresentation("0");
+            "x * 0".Parse().AssertSimpleStringRepresentation("0");
+            "1 * x".Parse().AssertSimpleStringRepresentation("x");
+            "x * 1".Parse().AssertSimpleStringRepresentation("x");
+
+            "4 / 2 / x".Parse().AssertSimpleStringRepresentation("(2 / x)");
+            "x / 2".Parse().AssertSimpleStringRepresentation("(x / 2)");
+            "1 / x".Parse().AssertSimpleStringRepresentation("(1 / x)");
+            "x / 1".Parse().AssertSimpleStringRepresentation("x");
+            "0 / x".Parse().AssertSimpleStringRepresentation("0");
+
+            //x+x
+            //x-x
+            //x/x
+            //x*x
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

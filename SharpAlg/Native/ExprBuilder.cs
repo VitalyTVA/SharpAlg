@@ -18,11 +18,31 @@ namespace SharpAlg.Native {
     public class ConvolutionExprBuilder : ExprBuilder {
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
             double? leftConst = GetConstValue(left);
-            ////if(leftConst == 0)
-            ////    return right;
+
+            if(leftConst == 0) {
+                if(operation == BinaryOperation.Add)
+                    return right;
+                if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Divide)
+                    return Expr.Constant(0);
+            }
+            if(leftConst == 1) {
+                if(operation == BinaryOperation.Multiply)
+                    return right;
+            }
+
             double? rightConst = GetConstValue(right);
-            ////if(rightConst == 0)
-            ////    return left;
+
+            if(rightConst == 0) {
+                if(operation == BinaryOperation.Add || operation == BinaryOperation.Subtract)
+                    return left;
+                if(operation == BinaryOperation.Multiply)
+                    return Expr.Constant(0);
+            }
+            if(rightConst == 1) {
+                if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Divide)
+                    return left;
+            }
+
             if(rightConst != null && leftConst != null)
                 return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.Value, rightConst.Value));
             return Expr.Binary(left, right, operation);
