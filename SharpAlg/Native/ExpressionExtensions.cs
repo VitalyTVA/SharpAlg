@@ -18,14 +18,14 @@ namespace SharpAlg.Native {
             return expr.Visit(new ExpressionPrinter());
         }
         public static Expr Parse(this string expression) {
-            Parser.Parser parser = ParseCore(expression);
+            Parser.Parser parser = ParseCore(expression, new ConvolutionExprBuilder());
             if(parser.errors.Count > 0)
                 throw new InvalidOperationException("String can not be parsed"); //TODO message
             return parser.Expr;
         }
-        internal static Parser.Parser ParseCore(string expression) {
+        internal static Parser.Parser ParseCore(string expression, ExprBuilder builder) {
             Scanner scanner = new Scanner(expression);
-            Parser.Parser parser = new Parser.Parser(scanner);
+            Parser.Parser parser = new Parser.Parser(scanner, builder);
             parser.Parse();
             return parser;
         }

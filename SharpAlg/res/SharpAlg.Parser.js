@@ -129,16 +129,18 @@ SharpAlg.Native.Parser.ErrorsBase.prototype.AppendLine = function (s)
     this.errorsBuilder.Append$$String(s);
     this.errorsBuilder.Append$$String("\r\n");
 };
-SharpAlg.Native.Parser.Parser = function (scanner)
+SharpAlg.Native.Parser.Parser = function (scanner, builder)
 {
     this.scanner = null;
     this.errors = null;
     this.t = null;
     this.la = null;
     this.errDist = 2;
+    this.builder = null;
     this.Expr = null;
     this.scanner = scanner;
     this.errors = new SharpAlg.Native.Parser.Errors();
+    this.builder = builder;
 };
 SharpAlg.Native.Parser.Parser._EOF = 0;
 SharpAlg.Native.Parser.Parser._identifier = 1;
@@ -254,7 +256,7 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
             rightExpr = rightExpr.Value;
             return $res;
         }).call(this);
-        expr.Value = SharpAlg.Native.Expr.Binary(expr.Value, rightExpr, operation);
+        expr.Value = this.builder.Binary(expr.Value, rightExpr, operation);
     }
 };
 SharpAlg.Native.Parser.Parser.prototype.MultiplicativeExpression = function (expr)
@@ -278,7 +280,7 @@ SharpAlg.Native.Parser.Parser.prototype.MultiplicativeExpression = function (exp
             rightExpr = rightExpr.Value;
             return $res;
         }).call(this);
-        expr.Value = SharpAlg.Native.Expr.Binary(expr.Value, rightExpr, operation);
+        expr.Value = this.builder.Binary(expr.Value, rightExpr, operation);
     }
 };
 SharpAlg.Native.Parser.Parser.prototype.AdditiveOperation = function (operation)

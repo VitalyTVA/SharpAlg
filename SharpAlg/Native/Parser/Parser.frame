@@ -19,9 +19,11 @@ public class Parser {
 
 -->declarations
 	public Expr Expr { get; private set; }
-	public Parser(Scanner scanner) {
+	readonly ExprBuilder builder;
+	public Parser(Scanner scanner, ExprBuilder builder) {
 		this.scanner = scanner;
 		errors = new Errors();
+		this.builder = builder;
 	}
 
 	void SynErr (int n) {

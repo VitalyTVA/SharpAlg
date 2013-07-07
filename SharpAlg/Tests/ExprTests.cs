@@ -81,7 +81,10 @@ namespace SharpAlg.Tests {
             "x + y * z".Parse().AssertSimpleStringRepresentation("(x + (y * z))");
             "(x + y) * z".Parse().AssertSimpleStringRepresentation("((x + y) * z)");
         }
-
+        [Test]
+        public void ConvolutionTest() {
+            "9 + 13".Parse().AssertSimpleStringRepresentation("22");
+        }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ExprTestHelper {

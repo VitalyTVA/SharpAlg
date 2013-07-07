@@ -80,7 +80,7 @@ namespace SharpAlg.Tests {
                 .AssertValue(110, null, context);
         }
         Parser Parse(string expression) {
-            return ExpressionExtensions.ParseCore(expression);
+            return ExpressionExtensions.ParseCore(expression, new TrivialExprBuilder());
         }
         static string GetNumberExpectedMessage(int column) {
             return ErrorsBase.GetErrorText(1, column, "invalid Terminal\r\n");

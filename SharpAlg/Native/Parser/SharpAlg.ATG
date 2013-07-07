@@ -24,7 +24,7 @@ AdditiveExpression<out Expr expr>				(. BinaryOperation operation; Expr rightExp
 = MultiplicativeExpression<out expr>
 	{
 	AdditiveOperation<out operation> 
-	MultiplicativeExpression<out rightExpr>		(. expr = Expr.Binary(expr, rightExpr, operation); .)
+	MultiplicativeExpression<out rightExpr>		(. expr = builder.Binary(expr, rightExpr, operation); .)
 	}
 .
 
@@ -39,7 +39,7 @@ MultiplicativeExpression<out Expr expr>			(. BinaryOperation operation; Expr rig
 = Terminal<out expr>
 	{
 	MultiplicativeOperation<out operation> 
-	Terminal<out rightExpr>						(. expr = Expr.Binary(expr, rightExpr, operation); .)
+	Terminal<out rightExpr>						(. expr = builder.Binary(expr, rightExpr, operation); .)
 	}
 .
 

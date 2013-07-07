@@ -82,6 +82,7 @@
     <Compile Include="Native\DiffExpressionTreeVisitor.cs" />
     <Compile Include="ExplessionExtensions.cs" />
     <Compile Include="Native\Expr.cs" />
+    <Compile Include="Native\ExprBuilder.cs" />
     <Compile Include="Native\ExpressionComparer.cs" />
     <Compile Include="Native\ExpressionEvaluator.cs" />
     <Compile Include="Native\ExpressionExtensions.cs" />

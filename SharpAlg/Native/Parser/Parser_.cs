@@ -28,9 +28,11 @@ public class Parser {
 
 
 	public Expr Expr { get; private set; }
-	public Parser(Scanner scanner) {
+	readonly ExprBuilder builder;
+	public Parser(Scanner scanner, ExprBuilder builder) {
 		this.scanner = scanner;
 		errors = new Errors();
+		this.builder = builder;
 	}
 
 	void SynErr (int n) {
@@ -97,7 +99,7 @@ public class Parser {
 		while (la.kind == 3 || la.kind == 4) {
 			AdditiveOperation(out operation);
 			MultiplicativeExpression(out rightExpr);
-			expr = Expr.Binary(expr, rightExpr, operation); 
+			expr = builder.Binary(expr, rightExpr, operation); 
 		}
 	}
 
@@ -107,7 +109,7 @@ public class Parser {
 		while (la.kind == 5 || la.kind == 6) {
 			MultiplicativeOperation(out operation);
 			Terminal(out rightExpr);
-			expr = Expr.Binary(expr, rightExpr, operation); 
+			expr = builder.Binary(expr, rightExpr, operation); 
 		}
 	}
 

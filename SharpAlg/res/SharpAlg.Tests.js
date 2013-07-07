@@ -156,6 +156,10 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(9 / x)"), "(9 / x)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x + y * z"), "(x + (y * z))");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(x + y) * z"), "((x + y) * z)");
+        },
+        ConvolutionTest: function ()
+        {
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("9 + 13"), "22");
         }
     }
 };
@@ -369,7 +373,7 @@ var SharpAlg$Tests$ParserTests =
         },
         Parse: function (expression)
         {
-            return SharpAlg.Native.ExpressionExtensions.ParseCore(expression);
+            return SharpAlg.Native.ExpressionExtensions.ParseCore(expression, new SharpAlg.Native.TrivialExprBuilder());
         }
     }
 };
