@@ -17,20 +17,29 @@ namespace SharpAlg.Native {
         public static BinaryExpr Binary(Expr left, Expr right, BinaryOperation type) {
             return new BinaryExpr(left, right, type);
         }
-        public static BinaryExpr Add(Expr left, Expr right) {
+        public static BinaryExpr Add(Expr left, Expr right) { //TODO use builder everywhere
             return Binary(left, right, BinaryOperation.Add);
         }
         public static BinaryExpr Subtract(Expr left, Expr right) {
-            return Binary(left, right, BinaryOperation.Subtract);
+            return Add(left, Minus(right));
         }
         public static BinaryExpr Multiply(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Multiply);
         }
         public static BinaryExpr Divide(Expr left, Expr right) {
-            return Binary(left, right, BinaryOperation.Divide);
+            return Multiply(left, Inverse(right));
         }
         public static BinaryExpr Power(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Power);
+        }
+        public static Expr Unary(Expr expr, UnaryOperation operation) {
+            return new UnaryExpr(expr, operation);
+        }
+        public static Expr Minus(Expr expr) {
+            return Unary(expr, UnaryOperation.Minus);
+        }
+        public static Expr Inverse(Expr expr) {
+            return Unary(expr, UnaryOperation.Inverse);
         }
         internal abstract T Visit<T>(IExpressionVisitor<T> visitor);
     }
@@ -55,6 +64,9 @@ namespace SharpAlg.Native {
         }
     }
     public enum BinaryOperation {
+        Add, Multiply, Power
+    }
+    public enum BinaryOperationEx {
         Add, Subtract, Multiply, Divide, Power
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
@@ -69,6 +81,21 @@ namespace SharpAlg.Native {
         public BinaryOperation Operation { get; private set; }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             return visitor.Binary(this);
+        }
+    }
+    public enum UnaryOperation {
+        Minus, Inverse
+    }
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    public class UnaryExpr : Expr {
+        internal UnaryExpr(Expr expr, UnaryOperation operation) {
+            Expr = expr;
+            Operation = operation;
+        }
+        public Expr Expr { get; private set; }
+        public UnaryOperation Operation { get; private set; }
+        internal override T Visit<T>(IExpressionVisitor<T> visitor) {
+            return visitor.Unary(this);
         }
     }
 }

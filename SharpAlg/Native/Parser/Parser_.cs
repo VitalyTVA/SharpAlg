@@ -94,32 +94,32 @@ public class Parser {
 	}
 
 	void AdditiveExpression(out Expr expr) {
-		BinaryOperation operation; Expr rightExpr; 
+		bool minus; Expr rightExpr; 
 		MultiplicativeExpression(out expr);
 		while (la.kind == 3 || la.kind == 4) {
-			AdditiveOperation(out operation);
+			AdditiveOperation(out minus);
 			MultiplicativeExpression(out rightExpr);
-			expr = builder.Binary(expr, rightExpr, operation); 
+			expr = builder.Binary(expr, (minus ? Expr.Minus(rightExpr) : rightExpr), BinaryOperation.Add); 
 		}
 	}
 
 	void MultiplicativeExpression(out Expr expr) {
-		BinaryOperation operation; Expr rightExpr; 
+		bool divide; Expr rightExpr; 
 		PowerExpression(out expr);
 		while (la.kind == 5 || la.kind == 6) {
-			MultiplicativeOperation(out operation);
+			MultiplicativeOperation(out divide);
 			PowerExpression(out rightExpr);
-			expr = builder.Binary(expr, rightExpr, operation); 
+			expr = builder.Binary(expr, (divide ? Expr.Inverse(rightExpr) : rightExpr), BinaryOperation.Multiply); 
 		}
 	}
 
-	void AdditiveOperation(out BinaryOperation operation) {
-		operation = BinaryOperation.Add; 
+	void AdditiveOperation(out bool minus) {
+		minus = false; 
 		if (la.kind == 3) {
 			Get();
 		} else if (la.kind == 4) {
 			Get();
-			operation = BinaryOperation.Subtract; 
+			minus = true; 
 		} else SynErr(11);
 	}
 
@@ -133,13 +133,13 @@ public class Parser {
 		}
 	}
 
-	void MultiplicativeOperation(out BinaryOperation operation) {
-		operation = BinaryOperation.Multiply; 
+	void MultiplicativeOperation(out bool divide) {
+		divide = false; 
 		if (la.kind == 5) {
 			Get();
 		} else if (la.kind == 6) {
 			Get();
-			operation = BinaryOperation.Divide; 
+			divide = true; 
 		} else SynErr(12);
 	}
 

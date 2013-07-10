@@ -17,6 +17,9 @@ namespace SharpAlg.Native {
         public bool Binary(BinaryExpr binary) {
             return DoEqualityCheck(binary, (x1, x2) => x1.Left.ExprEquals(x2.Left) && x1.Right.ExprEquals(x2.Right) && x1.Operation == x2.Operation);
         }
+        public bool Unary(UnaryExpr unary) {
+            return DoEqualityCheck(unary, (x1, x2) => x1.Expr.ExprEquals(x2.Expr) && x1.Operation == x2.Operation);
+        }
         public bool Parameter(ParameterExpr parameter) {
             return DoEqualityCheck(parameter, (x1, x2) => x1.ParameterName == x2.ParameterName);
         }

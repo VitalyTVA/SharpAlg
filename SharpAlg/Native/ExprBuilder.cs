@@ -11,16 +11,25 @@ namespace SharpAlg.Native {
             return Binary(left, right, BinaryOperation.Add);
         }
         public Expr Subtract(Expr left, Expr right) {
-            return Binary(left, right, BinaryOperation.Subtract);
+            return Add(left, Minus(right));
         }
         public Expr Multiply(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Multiply);
         }
         public Expr Divide(Expr left, Expr right) {
-            return Binary(left, right, BinaryOperation.Divide);
+            return Multiply(left, Inverse(right));
         }
         public Expr Power(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Power);
+        }
+        public Expr Unary(Expr expr, UnaryOperation operation) {
+            return new UnaryExpr(expr, operation);
+        }
+        public Expr Minus(Expr expr) {
+            return Unary(expr, UnaryOperation.Minus);
+        }
+        public Expr Inverse(Expr expr) {
+            return Unary(expr, UnaryOperation.Inverse);
         }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
@@ -32,56 +41,57 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ConvolutionExprBuilder : ExprBuilder {
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
-            return ConstantConvolution(left, right, operation) 
-                ?? EqualityConvolution(left, right, operation) 
+            UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(right, operation);
+            return ConstantConvolution(left, info.Expr, info.Operation)
+                ?? EqualityConvolution(left, info.Expr, info.Operation) 
                 ?? Expr.Binary(left, right, operation);
         }
-        static Expr ConstantConvolution(Expr left, Expr right, BinaryOperation operation) {
+        static Expr ConstantConvolution(Expr left, Expr right, BinaryOperationEx operation) {
             double? leftConst = GetConstValue(left);
 
             if(leftConst == 0) {
-                if(operation == BinaryOperation.Add)
+                if(operation == BinaryOperationEx.Add)
                     return right;
-                if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Divide || operation == BinaryOperation.Power)
+                if(operation == BinaryOperationEx.Multiply || operation == BinaryOperationEx.Divide || operation == BinaryOperationEx.Power)
                     return Expr.Zero;
             }
             if(leftConst == 1) {
-                if(operation == BinaryOperation.Multiply)
+                if(operation == BinaryOperationEx.Multiply)
                     return right;
-                if(operation == BinaryOperation.Power)
+                if(operation == BinaryOperationEx.Power)
                     return Expr.One;
             }
 
             double? rightConst = GetConstValue(right);
 
             if(rightConst == 0) {
-                if(operation == BinaryOperation.Add || operation == BinaryOperation.Subtract)
+                if(operation == BinaryOperationEx.Add || operation == BinaryOperationEx.Subtract)
                     return left;
-                if(operation == BinaryOperation.Multiply)
+                if(operation == BinaryOperationEx.Multiply)
                     return Expr.Zero;
-                if(operation == BinaryOperation.Power)
+                if(operation == BinaryOperationEx.Power)
                     return Expr.One;
             }
             if(rightConst == 1) {
-                if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Divide)
+                if(operation == BinaryOperationEx.Multiply || operation == BinaryOperationEx.Divide)
                     return left;
-                if(operation == BinaryOperation.Power)
+                if(operation == BinaryOperationEx.Power)
                     return left;
             }
 
             if(rightConst != null && leftConst != null)
-                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.Value, rightConst.Value));
+                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluatorEx(operation)(leftConst.Value, rightConst.Value));
             return null;
         }
-        static Expr EqualityConvolution(Expr left, Expr right, BinaryOperation operation) {
+        static Expr EqualityConvolution(Expr left, Expr right, BinaryOperationEx operation) {
             if(left.ExprEquals(right)) {
-                if(operation == BinaryOperation.Add)
+                if(operation == BinaryOperationEx.Add)
                     return Expr.Multiply(Expr.Constant(2), left);
-                if(operation == BinaryOperation.Multiply)
+                if(operation == BinaryOperationEx.Multiply)
                     return Expr.Power(left, Expr.Constant(2));
-                if(operation == BinaryOperation.Subtract)
+                if(operation == BinaryOperationEx.Subtract)
                     return Expr.Zero;
-                if(operation == BinaryOperation.Divide)
+                if(operation == BinaryOperationEx.Divide)
                     return Expr.One;
             }
             return null;

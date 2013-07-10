@@ -20,14 +20,21 @@ namespace SharpAlg.Native {
         public Expr Binary(BinaryExpr binary) {
             switch(binary.Operation) {
                 case BinaryOperation.Add:
-                case BinaryOperation.Subtract:
                     return VisitAdditive(binary);
                 case BinaryOperation.Multiply:
                     return VisitMultiply(binary);
-                case BinaryOperation.Divide:
-                    return VisitDivide(binary);
                 case BinaryOperation.Power:
                     return VisitPower(binary);
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        public Expr Unary(UnaryExpr unary) {
+            switch(unary.Operation) {
+                case UnaryOperation.Minus:
+                    return Expr.Unary(unary.Expr.Visit(this), unary.Operation);
+                case UnaryOperation.Inverse:
+                    return Expr.Divide(Expr.Unary(unary.Expr.Visit(this), UnaryOperation.Minus), Expr.Multiply(unary.Expr, unary.Expr));
                 default:
                     throw new NotImplementedException();
             }
@@ -40,12 +47,12 @@ namespace SharpAlg.Native {
             var expr2 = builder.Multiply(expr.Left, expr.Right.Visit(this));
             return builder.Add(expr1, expr2);
         }
-        Expr VisitDivide(BinaryExpr expr) {
-            var expr1 = builder.Multiply(expr.Left.Visit(this), expr.Right);
-            var expr2 = builder.Multiply(expr.Left, expr.Right.Visit(this));
-            var expr3 = Expr.Multiply(expr.Right, expr.Right);//TODO convolution
-            return Expr.Divide(builder.Subtract(expr1, expr2), expr3);//TODO convolution
-        }
+        //Expr VisitDivide(BinaryExpr expr) {
+        //    var expr1 = builder.Multiply(expr.Left.Visit(this), expr.Right);
+        //    var expr2 = builder.Multiply(expr.Left, expr.Right.Visit(this));
+        //    var expr3 = Expr.Multiply(expr.Right, expr.Right);//TODO convolution
+        //    return Expr.Divide(builder.Subtract(expr1, expr2), expr3);//TODO convolution
+        //}
         Expr VisitPower(BinaryExpr binary) {
             if(!(binary.Right is ConstantExpr))
                 throw new NotImplementedException(); //TODO when ln() is ready

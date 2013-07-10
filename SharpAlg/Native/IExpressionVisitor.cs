@@ -10,5 +10,6 @@ namespace SharpAlg.Native {
         T Constant(ConstantExpr constant);
         T Parameter(ParameterExpr parameter);
         T Binary(BinaryExpr binary);
+        T Unary(UnaryExpr unary);
     }
 }

@@ -20,33 +20,33 @@ SharpAlg 										(. Expr expr; .)
 = AdditiveExpression<out expr>					(. this.Expr = expr; .)
 .
 
-AdditiveExpression<out Expr expr>				(. BinaryOperation operation; Expr rightExpr; .)			
+AdditiveExpression<out Expr expr>				(. bool minus; Expr rightExpr; .)			
 = MultiplicativeExpression<out expr>
 	{
-	AdditiveOperation<out operation> 
-	MultiplicativeExpression<out rightExpr>		(. expr = builder.Binary(expr, rightExpr, operation); .)
+	AdditiveOperation<out minus> 
+	MultiplicativeExpression<out rightExpr>		(. expr = builder.Binary(expr, (minus ? Expr.Minus(rightExpr) : rightExpr), BinaryOperation.Add); .)
 	}
 .
 
-AdditiveOperation<out BinaryOperation operation>
-=												(. operation = BinaryOperation.Add; .)
+AdditiveOperation<out bool minus>
+=												(. minus = false; .)
   ( '+'
-  | '-'											(. operation = BinaryOperation.Subtract; .)
+  | '-'											(. minus = true; .)
   )
 .
 
-MultiplicativeExpression<out Expr expr>			(. BinaryOperation operation; Expr rightExpr; .)			
+MultiplicativeExpression<out Expr expr>			(. bool divide; Expr rightExpr; .)			
 = PowerExpression<out expr>
 	{
-	MultiplicativeOperation<out operation> 
-	PowerExpression<out rightExpr>						(. expr = builder.Binary(expr, rightExpr, operation); .)
+	MultiplicativeOperation<out divide> 
+	PowerExpression<out rightExpr>				(. expr = builder.Binary(expr, (divide ? Expr.Inverse(rightExpr) : rightExpr), BinaryOperation.Multiply); .)
 	}
 .
 
-MultiplicativeOperation<out BinaryOperation operation>
-=												(. operation = BinaryOperation.Multiply; .)
+MultiplicativeOperation<out bool divide>
+=												(. divide = false; .)
   ( '*'
-  | '/'											(. operation = BinaryOperation.Divide; .)
+  | '/'											(. divide = true; .)
   )
 .
 

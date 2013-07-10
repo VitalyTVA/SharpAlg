@@ -67,7 +67,7 @@ var SharpAlg$Tests$DiffTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("2 * x")), "2");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x * x + 1")), "(2 * x)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("1 + x * x + 1")), "(2 * x)");
-            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("1 / x")), "(-1 / (x * x))");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("1 / x")), "((-1) / (x * x))");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x / x")), "0");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("2 ^ 3")), "0");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("(x + x) ^ 1")), "2");
@@ -131,16 +131,22 @@ var SharpAlg$Tests$ExprTests =
             var left = SharpAlg.Native.Expr.Constant(9);
             var right = SharpAlg.Native.Expr.Parameter("x");
             var expr = SharpAlg.Native.Expr.Divide(left, right);
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.UnaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.UnaryExpr.ctor, SharpAlg.Native.MayBe.With(SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
             {
                 return x.get_Left();
             }), left), $CreateAnonymousDelegate(this, function (x)
             {
-                return x.get_Right();
+                return x.get_Operation();
+            }), 1), $CreateAnonymousDelegate(this, function (x)
+            {
+                return As(x.get_Right(), SharpAlg.Native.UnaryExpr.ctor);
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_Expr();
             }), right), $CreateAnonymousDelegate(this, function (x)
             {
                 return x.get_Operation();
-            }), 3);
+            }), 1);
             var expr2 = SharpAlg.Native.Expr.Divide(left, right);
             var expr3 = SharpAlg.Native.Expr.Divide(right, left);
             var expr4 = SharpAlg.Native.Expr.Add(left, right);
@@ -214,6 +220,16 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(x + y) * z"), "((x + y) * z)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x ^ y"), "(x ^ y)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x * z ^ y"), "(x * (z ^ y))");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Parameter("x")), "(-x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Inverse(SharpAlg.Native.Expr.Parameter("x")), "(1 / x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Parameter("x"))), "(9 - x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Inverse(SharpAlg.Native.Expr.Parameter("x"))), "(9 / x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Parameter("x")))), "(9 - (-x))");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Inverse(SharpAlg.Native.Expr.Inverse(SharpAlg.Native.Expr.Parameter("x")))), "(9 / (1 / x))");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Inverse(SharpAlg.Native.Expr.Parameter("x"))), "(9 + (1 / x))");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Parameter("x"))), "(9 * (-x))");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Inverse(SharpAlg.Native.Expr.Parameter("x")))), "(9 - (1 / x))");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Inverse(SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Parameter("x")))), "(9 / (-x))");
         },
         ConvolutionTest: function ()
         {

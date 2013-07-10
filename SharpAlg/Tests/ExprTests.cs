@@ -33,8 +33,11 @@ namespace SharpAlg.Tests {
             var right = Expr.Parameter("x");
             var expr = Expr.Divide(left, right);
             expr
-                .IsEqual(x => x.Left, left).IsEqual(x => x.Right, right)
-                .IsEqual(x => x.Operation, BinaryOperation.Divide);
+                .IsEqual(x => x.Left, left)
+                .IsEqual(x => x.Operation, BinaryOperation.Multiply)
+                .With(x => x.Right as UnaryExpr)
+                    .IsEqual(x => x.Expr, right)
+                    .IsEqual(x => x.Operation, UnaryOperation.Inverse);
 
             var expr2 = Expr.Divide(left, right);
             var expr3 = Expr.Divide(right, left);
@@ -86,6 +89,21 @@ namespace SharpAlg.Tests {
             "(x + y) * z".Parse().AssertSimpleStringRepresentation("((x + y) * z)");
             "x ^ y".Parse().AssertSimpleStringRepresentation("(x ^ y)");
             "x * z ^ y".Parse().AssertSimpleStringRepresentation("(x * (z ^ y))");
+
+            Expr.Minus(Expr.Parameter("x")).AssertSimpleStringRepresentation("(-x)");
+            Expr.Inverse(Expr.Parameter("x")).AssertSimpleStringRepresentation("(1 / x)");
+
+            Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 - x)");
+            Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 / x)");
+            
+
+            Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 - (-x))");
+            Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 / (1 / x))");
+
+            Expr.Add(Expr.Constant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 + (1 / x))");
+            Expr.Multiply(Expr.Constant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 * (-x))");
+            Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 - (1 / x))");
+            Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 / (-x))");
         }
         [Test]
         public void ConvolutionTest() {

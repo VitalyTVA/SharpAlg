@@ -237,16 +237,16 @@ SharpAlg.Native.Parser.Parser.prototype.SharpAlg = function ()
 };
 SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
 {
-    var operation;
+    var minus;
     var rightExpr;
     this.MultiplicativeExpression(expr);
     while (this.la.kind == 3 || this.la.kind == 4)
     {
         (function ()
         {
-            operation = {Value: operation};
-            var $res = this.AdditiveOperation(operation);
-            operation = operation.Value;
+            minus = {Value: minus};
+            var $res = this.AdditiveOperation(minus);
+            minus = minus.Value;
             return $res;
         }).call(this);
         (function ()
@@ -256,21 +256,21 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
             rightExpr = rightExpr.Value;
             return $res;
         }).call(this);
-        expr.Value = this.builder.Binary(expr.Value, rightExpr, operation);
+        expr.Value = this.builder.Binary(expr.Value, (minus ? SharpAlg.Native.Expr.Minus(rightExpr) : rightExpr), 0);
     }
 };
 SharpAlg.Native.Parser.Parser.prototype.MultiplicativeExpression = function (expr)
 {
-    var operation;
+    var divide;
     var rightExpr;
     this.PowerExpression(expr);
     while (this.la.kind == 5 || this.la.kind == 6)
     {
         (function ()
         {
-            operation = {Value: operation};
-            var $res = this.MultiplicativeOperation(operation);
-            operation = operation.Value;
+            divide = {Value: divide};
+            var $res = this.MultiplicativeOperation(divide);
+            divide = divide.Value;
             return $res;
         }).call(this);
         (function ()
@@ -280,12 +280,12 @@ SharpAlg.Native.Parser.Parser.prototype.MultiplicativeExpression = function (exp
             rightExpr = rightExpr.Value;
             return $res;
         }).call(this);
-        expr.Value = this.builder.Binary(expr.Value, rightExpr, operation);
+        expr.Value = this.builder.Binary(expr.Value, (divide ? SharpAlg.Native.Expr.Inverse(rightExpr) : rightExpr), 1);
     }
 };
-SharpAlg.Native.Parser.Parser.prototype.AdditiveOperation = function (operation)
+SharpAlg.Native.Parser.Parser.prototype.AdditiveOperation = function (minus)
 {
-    operation.Value = 0;
+    minus.Value = false;
     if (this.la.kind == 3)
     {
         this.Get();
@@ -293,7 +293,7 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveOperation = function (operation)
     else if (this.la.kind == 4)
     {
         this.Get();
-        operation.Value = 1;
+        minus.Value = true;
     }
     else
         this.SynErr(11);
@@ -315,9 +315,9 @@ SharpAlg.Native.Parser.Parser.prototype.PowerExpression = function (expr)
         expr.Value = this.builder.Power(expr.Value, rightExpr);
     }
 };
-SharpAlg.Native.Parser.Parser.prototype.MultiplicativeOperation = function (operation)
+SharpAlg.Native.Parser.Parser.prototype.MultiplicativeOperation = function (divide)
 {
-    operation.Value = 2;
+    divide.Value = false;
     if (this.la.kind == 5)
     {
         this.Get();
@@ -325,7 +325,7 @@ SharpAlg.Native.Parser.Parser.prototype.MultiplicativeOperation = function (oper
     else if (this.la.kind == 6)
     {
         this.Get();
-        operation.Value = 3;
+        divide.Value = true;
     }
     else
         this.SynErr(12);
