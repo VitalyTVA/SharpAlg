@@ -155,6 +155,10 @@ public class Parser {
 		} else if (la.kind == 1) {
 			Get();
 			expr = Expr.Parameter(t.val); 
+		} else if (la.kind == 4) {
+			Get();
+			Terminal(out expr);
+			expr = Expr.Minus(expr); 
 		} else SynErr(13);
 	}
 

@@ -503,6 +503,12 @@ var SharpAlg$Tests$ParserTests =
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x"), 9, SharpAlg.Native.Expr.Parameter("x"), context);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x * someName"), 117, SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("someName")), context);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("(x - 4) * (someName + x)"), 110, null , context);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("-x"), -9, SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Parameter("x")), context);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("-9"), -9, SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Constant(9)), context);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("-(x + 1)"), -10, SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Constant(1))), context);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("-(x * 2)"), -18, SharpAlg.Native.Expr.Minus(SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Constant(2))), context);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("--(x + 1)"), 10, null , context);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("-(-(x + 1))"), 10, null , context);
         },
         Parse: function (expression)
         {

@@ -85,6 +85,19 @@ namespace SharpAlg.Tests {
 
             Parse("(x - 4) * (someName + x)")
                 .AssertValue(110, null, context);
+
+            Parse("-x")
+                .AssertValue(-9, Expr.Minus(Expr.Parameter("x")), context);
+            Parse("-9")
+                .AssertValue(-9, Expr.Minus(Expr.Constant(9)), context);
+            Parse("-(x + 1)")
+                .AssertValue(-10, Expr.Minus(Expr.Add(Expr.Parameter("x"), Expr.Constant(1))), context);
+            Parse("-(x * 2)")
+                .AssertValue(-18, Expr.Minus(Expr.Multiply(Expr.Parameter("x"), Expr.Constant(2))), context);
+            Parse("--(x + 1)")
+                .AssertValue(10, null, context);
+            Parse("-(-(x + 1))")
+                .AssertValue(10, null, context);
         }
         Parser Parse(string expression) {
             return ExpressionExtensions.ParseCore(expression, new TrivialExprBuilder());

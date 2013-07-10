@@ -349,6 +349,12 @@ SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
         this.Get();
         expr.Value = SharpAlg.Native.Expr.Parameter(this.t.val);
     }
+    else if (this.la.kind == 4)
+    {
+        this.Get();
+        this.Terminal(expr);
+        expr.Value = SharpAlg.Native.Expr.Minus(expr.Value);
+    }
     else
         this.SynErr(13);
 };
