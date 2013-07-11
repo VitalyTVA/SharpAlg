@@ -353,7 +353,7 @@ SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
     {
         this.Get();
         this.Terminal(expr);
-        expr.Value = SharpAlg.Native.Expr.Minus(expr.Value);
+        expr.Value = this.builder.Minus(expr.Value);
     }
     else
         this.SynErr(13);

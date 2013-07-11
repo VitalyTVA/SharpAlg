@@ -36,7 +36,7 @@ namespace SharpAlg.Native {
         public static Func<double, double, double> GetBinaryOperationEvaluator(BinaryOperation operation) {
             return GetBinaryOperationEvaluatorEx(GetBinaryOperationEx(operation));
         }
-        public static Func<double, double, double> GetBinaryOperationEvaluatorEx(BinaryOperationEx operation) {
+        static Func<double, double, double> GetBinaryOperationEvaluatorEx(BinaryOperationEx operation) {
             switch(operation) {
                 case BinaryOperationEx.Add:
                     return (x1, x2) => x1 + x2;
@@ -63,6 +63,14 @@ namespace SharpAlg.Native {
                 default:
                     throw new NotImplementedException();
             }
+        }
+        public static bool IsInvertedOperation(BinaryOperationEx operation) {
+            switch(operation) {
+                case BinaryOperationEx.Subtract:
+                case BinaryOperationEx.Divide:
+                    return true;
+            }
+            return false;
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]

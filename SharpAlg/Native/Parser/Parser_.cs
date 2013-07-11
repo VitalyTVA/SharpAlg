@@ -158,7 +158,7 @@ public class Parser {
 		} else if (la.kind == 4) {
 			Get();
 			Terminal(out expr);
-			expr = Expr.Minus(expr); 
+			expr = builder.Minus(expr); 
 		} else SynErr(13);
 	}
 
