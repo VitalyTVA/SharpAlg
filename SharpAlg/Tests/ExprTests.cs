@@ -80,9 +80,12 @@ namespace SharpAlg.Tests {
         [Test]
         public void ToStringTest() {
             "9".Parse().AssertSimpleStringRepresentation("9");
+            "-9".Parse().AssertSimpleStringRepresentation("(-9)");
             "x".Parse().AssertSimpleStringRepresentation("x");
+            "-x".Parse().AssertSimpleStringRepresentation("(-x)");
             "9 + x".Parse().AssertSimpleStringRepresentation("(9 + x)");
             "(9 - x)".Parse().AssertSimpleStringRepresentation("(9 - x)");
+            "-(9 - x)".Parse().AssertSimpleStringRepresentation("(-(9 - x))");
             "(9 * x)".Parse().AssertSimpleStringRepresentation("(9 * x)");
             "(9 / x)".Parse().AssertSimpleStringRepresentation("(9 / x)");
             "x + y * z".Parse().AssertSimpleStringRepresentation("(x + (y * z))");
@@ -123,7 +126,7 @@ namespace SharpAlg.Tests {
             "2 - 1 + x".Parse().AssertSimpleStringRepresentation("(1 + x)");
             "x - 1".Parse().AssertSimpleStringRepresentation("(x - 1)");
             "1 - x".Parse().AssertSimpleStringRepresentation("(1 - x)");
-            "0 - x".Parse().AssertSimpleStringRepresentation("(0 - x)"); //TODO convolution
+            "0 - x".Parse().AssertSimpleStringRepresentation("(-x)");
             "x - 0".Parse().AssertSimpleStringRepresentation("x");
 
             "2 * 2 * x".Parse().AssertSimpleStringRepresentation("(4 * x)");
@@ -157,9 +160,25 @@ namespace SharpAlg.Tests {
             "(x - x) ^ y".Parse().AssertSimpleStringRepresentation("0");
             "(x / x) ^ y".Parse().AssertSimpleStringRepresentation("1");
 
+            "-9 + 13".Parse().AssertSimpleStringRepresentation("4");
+            //"-(x + 1) + (x + 1)".Parse().AssertSimpleStringRepresentation("0");
+            //"-(x + 1) / (x + 1)".Parse().AssertSimpleStringRepresentation("-1");
+
             //"x + x + x".Parse().AssertSimpleStringRepresentation("(3 * x)"); //TODO convolution
             //"3 * x + 2 * x".Parse().AssertSimpleStringRepresentation("(5 * x)"); //TODO convolution
             //"x * x * x".Parse().AssertSimpleStringRepresentation("x ^ 2"); //TODO convolution
+
+            //Expr placeholder = Expr.Placeholder;
+            //Expr placeholder2 = Expr.Placeholder;
+            //Rule.Binary(Expr.Zero, placeholder, BinaryOperation.Add, expr => expr);
+            //Rule.Binary(placeholder, Expr.Zero, BinaryOperation.Add, expr => expr);
+            //Rule.Binary(placeholder, Expr.Zero, BinaryOperation.Multiply, expr => Expr.Zero);
+            //Rule.Binary(placeholder, placeholder, BinaryOperation.Add, expr => Expr.Mult(Expr.Const(2), expr));
+            //Rule.Binary(Expr.Zero, Expr.Zero, BinaryOperation.Add, expr => expr);
+
+            //Rule.Unary(e => e.Expr is ConstantExpr, op => op == UnaryOperation.Minus, unary => Expr.Const(-unary.Expr.Value));
+            //Rule.Binary(e => e == Expr.Zero, e => true, op => op == BinaryOperation.Add, binary => binary.Right);
+            //Rule.Binary(e => e is Const, e => e is Const, op => op == BinaryOperation.Add, binary => Expr.Constant(binary.Right.Left + binary.Right.Value));
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

@@ -442,8 +442,7 @@ SharpAlg.Native.ConvolutionExprBuilder = function ()
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right, operation)
 {
-    var info = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(right, operation);
-    return (SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution(left, info.Expr, info.Operation) != null ? SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution(left, info.Expr, info.Operation) : (SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution(left, info.Expr, info.Operation) != null ? SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution(left, info.Expr, info.Operation) : SharpAlg.Native.Expr.Binary(left, right, operation)));
+    return (SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution(left, right, operation) != null ? SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution(left, right, operation) : (SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution(left, right, operation) != null ? SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation)));
 };
 SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution = function (left, right, operation)
 {
@@ -452,39 +451,42 @@ SharpAlg.Native.ConvolutionExprBuilder.ConstantConvolution = function (left, rig
     {
         if (operation == 0)
             return right;
-        if (operation == 2 || operation == 3 || operation == 4)
+        if (operation == 1 || operation == 2)
             return SharpAlg.Native.Expr.Zero;
     }
     if (leftConst == 1)
     {
-        if (operation == 2)
+        if (operation == 1)
             return right;
-        if (operation == 4)
+        if (operation == 2)
             return SharpAlg.Native.Expr.One;
     }
     var rightConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(right);
     if (rightConst == 0)
     {
-        if (operation == 0 || operation == 1)
+        if (operation == 0)
             return left;
-        if (operation == 2)
+        if (operation == 1)
             return SharpAlg.Native.Expr.Zero;
-        if (operation == 4)
+        if (operation == 2)
             return SharpAlg.Native.Expr.One;
     }
     if (rightConst == 1)
     {
-        if (operation == 2 || operation == 3)
+        if (operation == 1)
             return left;
-        if (operation == 4)
+        if (operation == 2)
             return left;
     }
     if (rightConst != null && leftConst != null)
-        return SharpAlg.Native.Expr.Constant(SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluatorEx(operation)(leftConst.get_Value(), rightConst.get_Value()));
+        return SharpAlg.Native.Expr.Constant(SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.get_Value(), rightConst.get_Value()));
     return null;
 };
-SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution = function (left, right, operation)
+SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution = function (left, right, operation_)
 {
+    var info = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(right, operation_);
+    right = info.Expr;
+    var operation = info.Operation;
     if (SharpAlg.Native.ExpressionExtensions.ExprEquals(left, right))
     {
         if (operation == 0)
@@ -500,8 +502,12 @@ SharpAlg.Native.ConvolutionExprBuilder.EqualityConvolution = function (left, rig
 };
 SharpAlg.Native.ConvolutionExprBuilder.GetConstValue = function (expr)
 {
-    var constant = As(expr, SharpAlg.Native.ConstantExpr.ctor);
-    return constant != null ? constant.get_Value() : null;
+    var unary = As(expr, SharpAlg.Native.UnaryExpr.ctor);
+    if ((unary != null && Is(unary.get_Expr(), SharpAlg.Native.ConstantExpr.ctor)) || Is(expr, SharpAlg.Native.ConstantExpr.ctor))
+    {
+        return SharpAlg.Native.ExpressionExtensions.Evaluate(expr, new SharpAlg.Native.Context.ctor());
+    }
+    return null;
 };
 $Inherit(SharpAlg.Native.ConvolutionExprBuilder, SharpAlg.Native.ExprBuilder);
 var SharpAlg$Native$ExpressionComparer =

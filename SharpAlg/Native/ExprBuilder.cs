@@ -41,49 +41,52 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ConvolutionExprBuilder : ExprBuilder {
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
-            UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(right, operation);
-            return ConstantConvolution(left, info.Expr, info.Operation)
-                ?? EqualityConvolution(left, info.Expr, info.Operation) 
+            return ConstantConvolution(left, right, operation)
+                ?? EqualityConvolution(left, right, operation) 
                 ?? Expr.Binary(left, right, operation);
         }
-        static Expr ConstantConvolution(Expr left, Expr right, BinaryOperationEx operation) {
+        static Expr ConstantConvolution(Expr left, Expr right, BinaryOperation operation) {
             double? leftConst = GetConstValue(left);
 
             if(leftConst == 0) {
-                if(operation == BinaryOperationEx.Add)
+                if(operation == BinaryOperation.Add)
                     return right;
-                if(operation == BinaryOperationEx.Multiply || operation == BinaryOperationEx.Divide || operation == BinaryOperationEx.Power)
+                if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Power)
                     return Expr.Zero;
             }
             if(leftConst == 1) {
-                if(operation == BinaryOperationEx.Multiply)
+                if(operation == BinaryOperation.Multiply)
                     return right;
-                if(operation == BinaryOperationEx.Power)
+                if(operation == BinaryOperation.Power)
                     return Expr.One;
             }
 
             double? rightConst = GetConstValue(right);
 
             if(rightConst == 0) {
-                if(operation == BinaryOperationEx.Add || operation == BinaryOperationEx.Subtract)
+                if(operation == BinaryOperation.Add)
                     return left;
-                if(operation == BinaryOperationEx.Multiply)
+                if(operation == BinaryOperation.Multiply)
                     return Expr.Zero;
-                if(operation == BinaryOperationEx.Power)
+                if(operation == BinaryOperation.Power)
                     return Expr.One;
             }
             if(rightConst == 1) {
-                if(operation == BinaryOperationEx.Multiply || operation == BinaryOperationEx.Divide)
+                if(operation == BinaryOperation.Multiply)
                     return left;
-                if(operation == BinaryOperationEx.Power)
+                if(operation == BinaryOperation.Power)
                     return left;
             }
 
             if(rightConst != null && leftConst != null)
-                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluatorEx(operation)(leftConst.Value, rightConst.Value));
+                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.Value, rightConst.Value));
             return null;
         }
-        static Expr EqualityConvolution(Expr left, Expr right, BinaryOperationEx operation) {
+        static Expr EqualityConvolution(Expr left, Expr right, BinaryOperation operation_) {
+            UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(right, operation_);
+            right = info.Expr;
+            BinaryOperationEx operation = info.Operation;
+
             if(left.ExprEquals(right)) {
                 if(operation == BinaryOperationEx.Add)
                     return Expr.Multiply(Expr.Constant(2), left);
@@ -97,8 +100,11 @@ namespace SharpAlg.Native {
             return null;
         }
         static double? GetConstValue(Expr expr) {
-            var constant = expr as ConstantExpr;
-            return constant != null ? (double)constant.Value : (double?)null;
+            UnaryExpr unary = expr as UnaryExpr;
+            if((unary != null && unary.Expr is ConstantExpr) || expr is ConstantExpr) {
+                return expr.Evaluate(new Context());
+            }
+            return null;
         }
     }
 }
