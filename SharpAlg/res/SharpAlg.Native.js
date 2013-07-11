@@ -127,7 +127,7 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Unary = function (unary)
         case 0:
             return SharpAlg.Native.Expr.Unary(unary.get_Expr().Visit$1(SharpAlg.Native.Expr.ctor, this), unary.get_Operation());
         case 1:
-            return SharpAlg.Native.Expr.Divide(SharpAlg.Native.Expr.Unary(unary.get_Expr().Visit$1(SharpAlg.Native.Expr.ctor, this), 0), SharpAlg.Native.Expr.Multiply(unary.get_Expr(), unary.get_Expr()));
+            return SharpAlg.Native.Expr.Divide(this.builder.Unary(unary.get_Expr().Visit$1(SharpAlg.Native.Expr.ctor, this), 0), this.builder.Multiply(unary.get_Expr(), unary.get_Expr()));
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }

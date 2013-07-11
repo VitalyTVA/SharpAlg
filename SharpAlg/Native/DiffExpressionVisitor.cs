@@ -34,7 +34,7 @@ namespace SharpAlg.Native {
                 case UnaryOperation.Minus:
                     return Expr.Unary(unary.Expr.Visit(this), unary.Operation);
                 case UnaryOperation.Inverse:
-                    return Expr.Divide(Expr.Unary(unary.Expr.Visit(this), UnaryOperation.Minus), Expr.Multiply(unary.Expr, unary.Expr));
+                    return Expr.Divide(builder.Unary(unary.Expr.Visit(this), UnaryOperation.Minus), builder.Multiply(unary.Expr, unary.Expr));
                 default:
                     throw new NotImplementedException();
             }
