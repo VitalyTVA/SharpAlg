@@ -69,7 +69,9 @@ namespace SharpAlg.Native {
             this.operation = operation;
         }
         public UnaryExpressionInfo Constant(ConstantExpr constant) {
-            return GetDefaultInfo(constant);
+            return constant.Value >= 0 ? 
+                GetDefaultInfo(constant) : 
+                new UnaryExpressionInfo(Expr.Constant(-constant.Value), BinaryOperationEx.Subtract);
         }
         public UnaryExpressionInfo Parameter(ParameterExpr parameter) {
             return GetDefaultInfo(parameter);

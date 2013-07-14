@@ -795,7 +795,7 @@ SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo = function (expr, oper
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Constant = function (constant)
 {
-    return this.GetDefaultInfo(constant);
+    return constant.get_Value() >= 0 ? this.GetDefaultInfo(constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(-constant.get_Value()), 1);
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Parameter = function (parameter)
 {
