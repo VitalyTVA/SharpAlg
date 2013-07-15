@@ -16,6 +16,9 @@ namespace SharpAlg.Native {
             UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(binary.Right, binary.Operation);
             return string.Format("({0} {1} {2})", binary.Left.Visit(this), GetBinaryOperationSymbol(info.Operation), info.Expr.Visit(this)); //TODO singleton
         }
+        public string Power(PowerExpr power) {
+            return string.Format("({0} ^ {1})", power.Left.Visit(this), power.Right.Visit(this));
+        }
         public string Unary(UnaryExpr unary) {
             return String.Format("({0}{1})", GetUnaryOperationSymbol(unary.Operation), unary.Expr.Visit(this));
         }
@@ -43,8 +46,6 @@ namespace SharpAlg.Native {
                     return "*";
                 case BinaryOperationEx.Divide:
                     return "/";
-                case BinaryOperationEx.Power:
-                    return "^";
                 default:
                     throw new NotImplementedException();
             }
@@ -78,6 +79,9 @@ namespace SharpAlg.Native {
         }
         public UnaryExpressionInfo Binary(BinaryExpr binary) {
             return GetDefaultInfo(binary);
+        }
+        public UnaryExpressionInfo Power(PowerExpr power) {
+            return GetDefaultInfo(power);
         }
         public UnaryExpressionInfo Unary(UnaryExpr unary) {
             if(operation == BinaryOperation.Add && unary.Operation == UnaryOperation.Minus) {

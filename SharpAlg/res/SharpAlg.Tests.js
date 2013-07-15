@@ -180,7 +180,7 @@ var SharpAlg$Tests$ExprTests =
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 117);
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3)), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.PowerExpr.ctor, SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 8);

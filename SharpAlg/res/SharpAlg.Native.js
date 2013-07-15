@@ -114,11 +114,15 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Binary = function (binary)
             return this.VisitAdditive(binary);
         case 1:
             return this.VisitMultiply(binary);
-        case 2:
-            return this.VisitPower(binary);
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.Power = function (power)
+{
+    if (!(Is(power.get_Right(), SharpAlg.Native.ConstantExpr.ctor)))
+        throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    return SharpAlg.Native.Expr.Multiply(power.get_Right(), this.builder.Multiply(power.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), this.builder.Power(power.get_Left(), this.builder.Subtract(power.get_Right(), SharpAlg.Native.Expr.One))));
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Unary = function (unary)
 {
@@ -141,12 +145,6 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.VisitMultiply = function (expr)
     var expr1 = this.builder.Multiply(expr.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), expr.get_Right());
     var expr2 = this.builder.Multiply(expr.get_Left(), expr.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this));
     return this.builder.Add(expr1, expr2);
-};
-SharpAlg.Native.DiffExpressionVisitor.prototype.VisitPower = function (binary)
-{
-    if (!(Is(binary.get_Right(), SharpAlg.Native.ConstantExpr.ctor)))
-        throw $CreateException(new System.NotImplementedException.ctor(), new Error());
-    return SharpAlg.Native.Expr.Multiply(binary.get_Right(), this.builder.Multiply(binary.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), this.builder.Power(binary.get_Left(), this.builder.Subtract(binary.get_Right(), SharpAlg.Native.Expr.One))));
 };
 var SharpAlg$Native$Expr =
 {
@@ -189,7 +187,7 @@ var SharpAlg$Native$Expr =
         },
         Power: function (left, right)
         {
-            return SharpAlg.Native.Expr.Binary(left, right, 2);
+            return new SharpAlg.Native.PowerExpr.ctor(left, right);
         },
         Unary: function (expr, operation)
         {
@@ -345,6 +343,53 @@ var SharpAlg$Native$BinaryExpr =
     }
 };
 JsTypes.push(SharpAlg$Native$BinaryExpr);
+var SharpAlg$Native$PowerExpr =
+{
+    fullname: "SharpAlg.Native.PowerExpr",
+    baseTypeName: "SharpAlg.Native.Expr",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (left, right)
+        {
+            this._Left = null;
+            this._Right = null;
+            SharpAlg.Native.Expr.ctor.call(this);
+            this.set_Right(right);
+            this.set_Left(left);
+        },
+        Left$$: "SharpAlg.Native.Expr",
+        get_Left: function ()
+        {
+            return this._Left;
+        },
+        set_Left: function (value)
+        {
+            this._Left = value;
+        },
+        Right$$: "SharpAlg.Native.Expr",
+        get_Right: function ()
+        {
+            return this._Right;
+        },
+        set_Right: function (value)
+        {
+            this._Right = value;
+        },
+        Visit$1: function (T, visitor)
+        {
+            return visitor.Power(this);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$PowerExpr);
 var SharpAlg$Native$UnaryExpr =
 {
     fullname: "SharpAlg.Native.UnaryExpr",
@@ -411,10 +456,6 @@ SharpAlg.Native.ExprBuilder.prototype.Divide = function (left, right)
 {
     return this.Multiply(left, this.Inverse(right));
 };
-SharpAlg.Native.ExprBuilder.prototype.Power = function (left, right)
-{
-    return this.Binary(left, right, 2);
-};
 SharpAlg.Native.ExprBuilder.prototype.Minus = function (expr)
 {
     return this.Unary(expr, 0);
@@ -435,6 +476,10 @@ SharpAlg.Native.TrivialExprBuilder.prototype.Unary = function (expr, operation)
 {
     return new SharpAlg.Native.UnaryExpr.ctor(expr, operation);
 };
+SharpAlg.Native.TrivialExprBuilder.prototype.Power = function (left, right)
+{
+    return SharpAlg.Native.Expr.Power(left, right);
+};
 $Inherit(SharpAlg.Native.TrivialExprBuilder, SharpAlg.Native.ExprBuilder);
 SharpAlg.Native.ConvolutionExprBuilder = function ()
 {
@@ -454,6 +499,10 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right,
 {
     return (this.ConstantConvolution(left, right, operation) != null ? this.ConstantConvolution(left, right, operation) : (this.EqualityConvolution(left, right, operation) != null ? this.EqualityConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation)));
 };
+SharpAlg.Native.ConvolutionExprBuilder.prototype.Power = function (left, right)
+{
+    return (this.ConstantPowerConvolution(left, right) != null ? this.ConstantPowerConvolution(left, right) : SharpAlg.Native.Expr.Power(left, right));
+};
 SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantConvolution = function (left, right, operation)
 {
     var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(left);
@@ -461,15 +510,13 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantConvolution = function 
     {
         if (operation == 0)
             return right;
-        if (operation == 1 || operation == 2)
+        if (operation == 1)
             return SharpAlg.Native.Expr.Zero;
     }
     if (leftConst == 1)
     {
         if (operation == 1)
             return right;
-        if (operation == 2)
-            return SharpAlg.Native.Expr.One;
     }
     var rightConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(right);
     if (rightConst == 0)
@@ -478,18 +525,38 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantConvolution = function 
             return left;
         if (operation == 1)
             return SharpAlg.Native.Expr.Zero;
-        if (operation == 2)
-            return SharpAlg.Native.Expr.One;
     }
     if (rightConst == 1)
     {
         if (operation == 1)
             return left;
-        if (operation == 2)
-            return left;
     }
     if (rightConst != null && leftConst != null)
         return SharpAlg.Native.Expr.Constant(SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.get_Value(), rightConst.get_Value()));
+    return null;
+};
+SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantPowerConvolution = function (left, right)
+{
+    var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(left);
+    if (leftConst == 0)
+    {
+        return SharpAlg.Native.Expr.Zero;
+    }
+    if (leftConst == 1)
+    {
+        return SharpAlg.Native.Expr.One;
+    }
+    var rightConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(right);
+    if (rightConst == 0)
+    {
+        return SharpAlg.Native.Expr.One;
+    }
+    if (rightConst == 1)
+    {
+        return left;
+    }
+    if (rightConst != null && leftConst != null)
+        return SharpAlg.Native.Expr.Constant(System.Math.Pow(leftConst.get_Value(), rightConst.get_Value()));
     return null;
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.EqualityConvolution = function (left, right, operation)
@@ -545,6 +612,13 @@ var SharpAlg$Native$ExpressionComparer =
                 return SharpAlg.Native.ExpressionExtensions.ExprEquals(x1.get_Left(), x2.get_Left()) && SharpAlg.Native.ExpressionExtensions.ExprEquals(x1.get_Right(), x2.get_Right()) && x1.get_Operation() == x2.get_Operation();
             }));
         },
+        Power: function (power)
+        {
+            return this.DoEqualityCheck$1(SharpAlg.Native.PowerExpr.ctor, power, $CreateAnonymousDelegate(this, function (x1, x2)
+            {
+                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x1.get_Left(), x2.get_Left()) && SharpAlg.Native.ExpressionExtensions.ExprEquals(x1.get_Right(), x2.get_Right());
+            }));
+        },
         Unary: function (unary)
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.UnaryExpr.ctor, unary, $CreateAnonymousDelegate(this, function (x1, x2)
@@ -579,6 +653,10 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Constant = function (constant)
 SharpAlg.Native.ExpressionEvaluator.prototype.Binary = function (binary)
 {
     return SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(binary.get_Operation())(binary.get_Left().Visit$1(System.Double.ctor, this), binary.get_Right().Visit$1(System.Double.ctor, this));
+};
+SharpAlg.Native.ExpressionEvaluator.prototype.Power = function (power)
+{
+    return System.Math.Pow(power.get_Left().Visit$1(System.Double.ctor, this), power.get_Right().Visit$1(System.Double.ctor, this));
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Unary = function (unary)
 {
@@ -627,11 +705,6 @@ SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluatorEx = function (op
             {
                 return x1 / x2;
             };
-        case 4:
-            return function (x1, x2)
-            {
-                return System.Math.Pow(x1, x2);
-            };
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }
@@ -644,8 +717,6 @@ SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEx = function (operation)
             return 0;
         case 1:
             return 2;
-        case 2:
-            return 4;
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }
@@ -739,6 +810,10 @@ SharpAlg.Native.ExpressionPrinter.prototype.Binary = function (binary)
     var info = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(binary.get_Right(), binary.get_Operation());
     return System.String.Format$$String$$Object$$Object$$Object("({0} {1} {2})", binary.get_Left().Visit$1(System.String.ctor, this), SharpAlg.Native.ExpressionPrinter.GetBinaryOperationSymbol(info.Operation), info.Expr.Visit$1(System.String.ctor, this));
 };
+SharpAlg.Native.ExpressionPrinter.prototype.Power = function (power)
+{
+    return System.String.Format$$String$$Object$$Object("({0} ^ {1})", power.get_Left().Visit$1(System.String.ctor, this), power.get_Right().Visit$1(System.String.ctor, this));
+};
 SharpAlg.Native.ExpressionPrinter.prototype.Unary = function (unary)
 {
     return System.String.Format$$String$$Object$$Object("({0}{1})", SharpAlg.Native.ExpressionPrinter.GetUnaryOperationSymbol(unary.get_Operation()), unary.get_Expr().Visit$1(System.String.ctor, this));
@@ -771,8 +846,6 @@ SharpAlg.Native.ExpressionPrinter.GetBinaryOperationSymbol = function (operation
             return "*";
         case 3:
             return "/";
-        case 4:
-            return "^";
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }
@@ -804,6 +877,10 @@ SharpAlg.Native.UnaryExpressionExtractor.prototype.Parameter = function (paramet
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Binary = function (binary)
 {
     return this.GetDefaultInfo(binary);
+};
+SharpAlg.Native.UnaryExpressionExtractor.prototype.Power = function (power)
+{
+    return this.GetDefaultInfo(power);
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Unary = function (unary)
 {

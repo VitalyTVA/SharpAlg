@@ -8,6 +8,7 @@ namespace SharpAlg.Native {
     public abstract class ExprBuilder {
         public abstract Expr Binary(Expr left, Expr right, BinaryOperation operation);
         public abstract Expr Unary(Expr expr, UnaryOperation operation);
+        public abstract Expr Power(Expr left, Expr right);
         public Expr Add(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Add);
         }
@@ -19,9 +20,6 @@ namespace SharpAlg.Native {
         }
         public Expr Divide(Expr left, Expr right) {
             return Multiply(left, Inverse(right));
-        }
-        public Expr Power(Expr left, Expr right) {
-            return Binary(left, right, BinaryOperation.Power);
         }
         public Expr Minus(Expr expr) {
             return Unary(expr, UnaryOperation.Minus);
@@ -37,6 +35,9 @@ namespace SharpAlg.Native {
         }
         public override Expr Unary(Expr expr, UnaryOperation operation) {
             return new UnaryExpr(expr, operation);
+        }
+        public override Expr Power(Expr left, Expr right) {
+            return Expr.Power(left, right);
         }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
@@ -54,20 +55,22 @@ namespace SharpAlg.Native {
                 ?? EqualityConvolution(left, right, operation) 
                 ?? Expr.Binary(left, right, operation);
         }
+        public override Expr Power(Expr left, Expr right) {
+            return ConstantPowerConvolution(left, right) 
+                ?? Expr.Power(left, right);
+        }
         Expr ConstantConvolution(Expr left, Expr right, BinaryOperation operation) {
             double? leftConst = GetConstValue(left);
 
             if(leftConst == 0) {
                 if(operation == BinaryOperation.Add)
                     return right;
-                if(operation == BinaryOperation.Multiply || operation == BinaryOperation.Power)
+                if(operation == BinaryOperation.Multiply)
                     return Expr.Zero;
             }
             if(leftConst == 1) {
                 if(operation == BinaryOperation.Multiply)
                     return right;
-                if(operation == BinaryOperation.Power)
-                    return Expr.One;
             }
 
             double? rightConst = GetConstValue(right);
@@ -77,18 +80,37 @@ namespace SharpAlg.Native {
                     return left;
                 if(operation == BinaryOperation.Multiply)
                     return Expr.Zero;
-                if(operation == BinaryOperation.Power)
-                    return Expr.One;
             }
             if(rightConst == 1) {
                 if(operation == BinaryOperation.Multiply)
-                    return left;
-                if(operation == BinaryOperation.Power)
                     return left;
             }
 
             if(rightConst != null && leftConst != null)
                 return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.Value, rightConst.Value));
+            return null;
+        }
+        Expr ConstantPowerConvolution(Expr left, Expr right) {
+            double? leftConst = GetConstValue(left);
+
+            if(leftConst == 0) {
+                    return Expr.Zero;
+            }
+            if(leftConst == 1) {
+                return Expr.One;
+            }
+
+            double? rightConst = GetConstValue(right);
+
+            if(rightConst == 0) {
+                return Expr.One;
+            }
+            if(rightConst == 1) {
+                return left;
+            }
+
+            if(rightConst != null && leftConst != null)
+                return Expr.Constant(Math.Pow(leftConst.Value, rightConst.Value));
             return null;
         }
         Expr EqualityConvolution(Expr left, Expr right, BinaryOperation operation) {

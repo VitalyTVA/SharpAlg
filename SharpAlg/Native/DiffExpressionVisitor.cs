@@ -23,11 +23,14 @@ namespace SharpAlg.Native {
                     return VisitAdditive(binary);
                 case BinaryOperation.Multiply:
                     return VisitMultiply(binary);
-                case BinaryOperation.Power:
-                    return VisitPower(binary);
                 default:
                     throw new NotImplementedException();
             }
+        }
+        public Expr Power(PowerExpr power) {
+            if(!(power.Right is ConstantExpr))
+                throw new NotImplementedException(); //TODO when ln() is ready
+            return Expr.Multiply(power.Right, builder.Multiply(power.Left.Visit(this), builder.Power(power.Left, builder.Subtract(power.Right, Expr.One)))); //TODO convolution when ln() is ready
         }
         public Expr Unary(UnaryExpr unary) {
             switch(unary.Operation) {
@@ -53,10 +56,5 @@ namespace SharpAlg.Native {
         //    var expr3 = Expr.Multiply(expr.Right, expr.Right);//TODO convolution
         //    return Expr.Divide(builder.Subtract(expr1, expr2), expr3);//TODO convolution
         //}
-        Expr VisitPower(BinaryExpr binary) {
-            if(!(binary.Right is ConstantExpr))
-                throw new NotImplementedException(); //TODO when ln() is ready
-            return Expr.Multiply(binary.Right, builder.Multiply(binary.Left.Visit(this), builder.Power(binary.Left, builder.Subtract(binary.Right, Expr.One)))); //TODO convolution when ln() is ready
-        }
     }
 }

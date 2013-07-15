@@ -17,6 +17,10 @@ namespace SharpAlg.Native {
         public double Binary(BinaryExpr binary) {
             return GetBinaryOperationEvaluator(binary.Operation)(binary.Left.Visit(this), binary.Right.Visit(this));
         }
+        public double Power(PowerExpr power) {
+            return Math.Pow(power.Left.Visit(this), power.Right.Visit(this));
+        }
+
         public double Unary(UnaryExpr unary) {
             switch(unary.Operation) {
                 case UnaryOperation.Minus:
@@ -46,8 +50,6 @@ namespace SharpAlg.Native {
                     return (x1, x2) => x1 * x2;
                 case BinaryOperationEx.Divide:
                     return (x1, x2) => x1 / x2;
-                case BinaryOperationEx.Power:
-                    return (x1, x2) => Math.Pow(x1, x2);
                 default:
                     throw new NotImplementedException();
             }
@@ -58,8 +60,6 @@ namespace SharpAlg.Native {
                     return BinaryOperationEx.Add;
                 case BinaryOperation.Multiply:
                     return BinaryOperationEx.Multiply;
-                case BinaryOperation.Power:
-                    return BinaryOperationEx.Power;
                 default:
                     throw new NotImplementedException();
             }
