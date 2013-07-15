@@ -52,12 +52,21 @@ namespace SharpAlg.Native {
         }
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
             return ConstantConvolution(left, right, operation)
-                ?? EqualityConvolution(left, right, operation) 
+                ?? EqualityConvolution(left, right, operation)
+                ?? MultiConvolution(left, right, operation)
                 ?? Expr.Binary(left, right, operation);
         }
         public override Expr Power(Expr left, Expr right) {
             return ConstantPowerConvolution(left, right) 
                 ?? Expr.Power(left, right);
+        }
+        Expr MultiConvolution(Expr left, Expr right, BinaryOperation operation) {
+            return Expr.Multi(GetArgs(left, operation).Concat(GetArgs(right, operation)), operation);
+        }
+        static IEnumerable<Expr> GetArgs(Expr expr, BinaryOperation operation) {
+            if(expr is MultiExpr && ((MultiExpr)expr).Operation == operation)
+                return ((MultiExpr)expr).Args;
+            return new[] { expr };
         }
         Expr ConstantConvolution(Expr left, Expr right, BinaryOperation operation) {
             double? leftConst = GetConstValue(left);

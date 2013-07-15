@@ -42,12 +42,19 @@ namespace SharpAlg.Native {
                     throw new NotImplementedException();
             }
         }
-        Expr VisitAdditive(MultiExpr expr) {
-            return builder.Binary(expr.Args.ElementAt(0).Visit(this), expr.Args.ElementAt(1).Visit(this), expr.Operation);
+        Expr VisitAdditive(MultiExpr multi) {
+            Expr result = null;
+            multi.Accumulate(x => {
+                result = x.Visit(this);
+            }, x => {
+                result = builder.Add(result, x.Visit(this));
+            });
+            return result;
         }
         Expr VisitMultiply(MultiExpr expr) {
-            var expr1 = builder.Multiply(expr.Args.ElementAt(0).Visit(this), expr.Args.ElementAt(1));
-            var expr2 = builder.Multiply(expr.Args.ElementAt(0), expr.Args.ElementAt(1).Visit(this));
+            var tail = expr.Tail();
+            var expr1 = builder.Multiply(expr.Args.First().Visit(this), tail);
+            var expr2 = builder.Multiply(expr.Args.First(), tail.Visit(this));
             return builder.Add(expr1, expr2);
         }
         //Expr VisitDivide(BinaryExpr expr) {

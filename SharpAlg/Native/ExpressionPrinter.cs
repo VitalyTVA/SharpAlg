@@ -14,17 +14,16 @@ namespace SharpAlg.Native {
             return constant.Value.ToString();
         }
         public string Multi(MultiExpr multi) {
-            var enumerator = multi.Args.GetEnumerator();
             var sb = new StringBuilder("(");
-            if(enumerator.MoveNext())
-                sb.Append(enumerator.Current.Visit(this));
-            while(enumerator.MoveNext()) {
-                UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(enumerator.Current, multi.Operation);
+            multi.Accumulate(x => {
+                sb.Append(x.Visit(this));
+            }, x => {
+                UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(x, multi.Operation);
                 sb.Append(" ");
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(" ");
                 sb.Append(info.Expr.Visit(this));
-            }
+            });
             sb.Append(")");
             return sb.ToString();
         }

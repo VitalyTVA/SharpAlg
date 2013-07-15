@@ -136,14 +136,23 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Unary = function (unary)
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }
 };
-SharpAlg.Native.DiffExpressionVisitor.prototype.VisitAdditive = function (expr)
+SharpAlg.Native.DiffExpressionVisitor.prototype.VisitAdditive = function (multi)
 {
-    return this.builder.Binary(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, expr.get_Args(), 0).Visit$1(SharpAlg.Native.Expr.ctor, this), System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, expr.get_Args(), 1).Visit$1(SharpAlg.Native.Expr.ctor, this), expr.get_Operation());
+    var result = null;
+    SharpAlg.Native.ExpressionExtensions.Accumulate(multi, $CreateAnonymousDelegate(this, function (x)
+    {
+        result = x.Visit$1(SharpAlg.Native.Expr.ctor, this);
+    }), $CreateAnonymousDelegate(this, function (x)
+    {
+        result = this.builder.Add(result, x.Visit$1(SharpAlg.Native.Expr.ctor, this));
+    }));
+    return result;
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.VisitMultiply = function (expr)
 {
-    var expr1 = this.builder.Multiply(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, expr.get_Args(), 0).Visit$1(SharpAlg.Native.Expr.ctor, this), System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, expr.get_Args(), 1));
-    var expr2 = this.builder.Multiply(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, expr.get_Args(), 0), System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, expr.get_Args(), 1).Visit$1(SharpAlg.Native.Expr.ctor, this));
+    var tail = SharpAlg.Native.ExpressionExtensions.Tail(expr);
+    var expr1 = this.builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, expr.get_Args()).Visit$1(SharpAlg.Native.Expr.ctor, this), tail);
+    var expr2 = this.builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, expr.get_Args()), tail.Visit$1(SharpAlg.Native.Expr.ctor, this));
     return this.builder.Add(expr1, expr2);
 };
 var SharpAlg$Native$Expr =
@@ -167,7 +176,11 @@ var SharpAlg$Native$Expr =
         },
         Binary: function (left, right, type)
         {
-            return new SharpAlg.Native.MultiExpr.ctor([left, right], type);
+            return SharpAlg.Native.Expr.Multi([left, right], type);
+        },
+        Multi: function (args, type)
+        {
+            return new SharpAlg.Native.MultiExpr.ctor(args, type);
         },
         Add: function (left, right)
         {
@@ -486,11 +499,21 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.Unary = function (expr, operati
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right, operation)
 {
-    return (this.ConstantConvolution(left, right, operation) != null ? this.ConstantConvolution(left, right, operation) : (this.EqualityConvolution(left, right, operation) != null ? this.EqualityConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation)));
+    return (this.ConstantConvolution(left, right, operation) != null ? this.ConstantConvolution(left, right, operation) : (this.EqualityConvolution(left, right, operation) != null ? this.EqualityConvolution(left, right, operation) : (this.MultiConvolution(left, right, operation) != null ? this.MultiConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation))));
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Power = function (left, right)
 {
     return (this.ConstantPowerConvolution(left, right) != null ? this.ConstantPowerConvolution(left, right) : SharpAlg.Native.Expr.Power(left, right));
+};
+SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (left, right, operation)
+{
+    return SharpAlg.Native.Expr.Multi(System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ConvolutionExprBuilder.GetArgs(left, operation), SharpAlg.Native.ConvolutionExprBuilder.GetArgs(right, operation)), operation);
+};
+SharpAlg.Native.ConvolutionExprBuilder.GetArgs = function (expr, operation)
+{
+    if (Is(expr, SharpAlg.Native.MultiExpr.ctor) && (Cast(expr, SharpAlg.Native.MultiExpr.ctor)).get_Operation() == operation)
+        return (Cast(expr, SharpAlg.Native.MultiExpr.ctor)).get_Args();
+    return [expr];
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantConvolution = function (left, right, operation)
 {
@@ -644,14 +667,14 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Constant = function (constant)
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Multi = function (multi)
 {
-    var enumerator = multi.get_Args().GetEnumerator();
     var result = 0;
-    if (enumerator.MoveNext())
-        result = enumerator.get_Current().Visit$1(System.Double.ctor, this);
-    while (enumerator.MoveNext())
+    SharpAlg.Native.ExpressionExtensions.Accumulate(multi, $CreateAnonymousDelegate(this, function (x)
     {
-        result = SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(multi.get_Operation())(result, enumerator.get_Current().Visit$1(System.Double.ctor, this));
-    }
+        result = x.Visit$1(System.Double.ctor, this);
+    }), $CreateAnonymousDelegate(this, function (x)
+    {
+        result = SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(multi.get_Operation())(result, x.Visit$1(System.Double.ctor, this));
+    }));
     return result;
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Power = function (power)
@@ -785,6 +808,27 @@ var SharpAlg$Native$ExpressionExtensions =
             var parser = new SharpAlg.Native.Parser.Parser(scanner, builder);
             parser.Parse();
             return parser;
+        },
+        Accumulate: function (multi, init, next)
+        {
+            var enumerator = multi.get_Args().GetEnumerator();
+            if (enumerator.MoveNext())
+                init(enumerator.get_Current());
+            else
+                throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
+            while (enumerator.MoveNext())
+            {
+                next(enumerator.get_Current());
+            }
+        },
+        Tail: function (multi)
+        {
+            var count = System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args());
+            if (count > 2)
+                return SharpAlg.Native.Expr.Multi(SharpAlg.Native.FunctionalExtensions.RemoveAt(multi.get_Args(), 0), multi.get_Operation());
+            if (count == 2)
+                return System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1);
+            throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
         }
     },
     assemblyName: "SharpAlg",
@@ -807,18 +851,18 @@ SharpAlg.Native.ExpressionPrinter.prototype.Constant = function (constant)
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Multi = function (multi)
 {
-    var enumerator = multi.get_Args().GetEnumerator();
     var sb = new System.Text.StringBuilder.ctor$$String("(");
-    if (enumerator.MoveNext())
-        sb.Append$$String(enumerator.get_Current().Visit$1(System.String.ctor, this));
-    while (enumerator.MoveNext())
+    SharpAlg.Native.ExpressionExtensions.Accumulate(multi, $CreateAnonymousDelegate(this, function (x)
     {
-        var info = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(enumerator.get_Current(), multi.get_Operation());
+        sb.Append$$String(x.Visit$1(System.String.ctor, this));
+    }), $CreateAnonymousDelegate(this, function (x)
+    {
+        var info = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(x, multi.get_Operation());
         sb.Append$$String(" ");
         sb.Append$$String(SharpAlg.Native.ExpressionPrinter.GetBinaryOperationSymbol(info.Operation));
         sb.Append$$String(" ");
         sb.Append$$String(info.Expr.Visit$1(System.String.ctor, this));
-    }
+    }));
     sb.Append$$String(")");
     return sb.toString();
 };
@@ -939,6 +983,20 @@ SharpAlg.Native.FunctionalExtensions.EnumerableEqual = function (first, second, 
             return false;
     }
     return !en2.MoveNext();
+};
+SharpAlg.Native.FunctionalExtensions.RemoveAt = function (source, index)
+{
+    var $yield = [];
+    var en = source.GetEnumerator();
+    while (en.MoveNext())
+    {
+        if (index != 0)
+            $yield.push(en.get_Current());
+        index--;
+    }
+    if (index > 0)
+        throw $CreateException(new System.IndexOutOfRangeException.ctor$$String("index"), new Error());
+    return $yield;
 };
 var SharpAlg$Native$IExpressionVisitor$1 = {fullname: "SharpAlg.Native.IExpressionVisitor$1", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IExpressionVisitor$1);

@@ -45,6 +45,16 @@ namespace SharpAlg.Native {
             }
             return !en2.MoveNext();
         }
+        public static IEnumerable<T> RemoveAt<T>(this IEnumerable<T> source, int index) {
+            var en = source.GetEnumerator();
+            while(en.MoveNext()) {
+                if(index != 0)
+                    yield return en.Current;
+                index--;
+            }
+            if(index > 0)
+                throw new IndexOutOfRangeException("index");
+        }
         //public static bool Equal<T>(this IEnumerable<T> first, params T[] second) {
         //    return Equal(first, (IEnumerable<T>)second);
         //}

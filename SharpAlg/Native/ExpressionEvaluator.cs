@@ -15,13 +15,12 @@ namespace SharpAlg.Native {
             return constant.Value;
         }
         public double Multi(MultiExpr multi) {
-            var enumerator = multi.Args.GetEnumerator();
             double result = 0;
-            if(enumerator.MoveNext())
-                result = enumerator.Current.Visit(this);
-            while(enumerator.MoveNext()) {
-                result = GetBinaryOperationEvaluator(multi.Operation)(result, enumerator.Current.Visit(this));
-            }
+            multi.Accumulate(x => {
+                result = x.Visit(this);
+            }, x => {
+                result = GetBinaryOperationEvaluator(multi.Operation)(result, x.Visit(this));
+            });
             return result;
         }
         public double Power(PowerExpr power) {

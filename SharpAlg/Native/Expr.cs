@@ -15,7 +15,10 @@ namespace SharpAlg.Native {
             return new ParameterExpr(parameterName);
         }
         public static MultiExpr Binary(Expr left, Expr right, BinaryOperation type) {
-            return new MultiExpr(new Expr[] { left, right }, type);
+            return Multi(new Expr[] { left, right }, type);
+        }
+        public static MultiExpr Multi(IEnumerable<Expr> args, BinaryOperation type) {
+            return new MultiExpr(args, type);
         }
         public static MultiExpr Add(Expr left, Expr right) { //TODO use builder everywhere
             return Binary(left, right, BinaryOperation.Add);

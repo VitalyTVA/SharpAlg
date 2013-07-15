@@ -32,6 +32,23 @@ namespace SharpAlg.Native {
             parser.Parse();
             return parser;
         }
-
+        public static void Accumulate(this MultiExpr multi, Action<Expr> init, Action<Expr> next) {
+            var enumerator = multi.Args.GetEnumerator();
+            if(enumerator.MoveNext())
+                init(enumerator.Current);
+            else
+                throw new InvalidOperationException();
+            while(enumerator.MoveNext()) {
+                next(enumerator.Current);
+            }
+        }
+        public static Expr Tail(this MultiExpr multi) {
+            int count = multi.Args.Count();
+            if(count > 2)
+                return Expr.Multi(multi.Args.RemoveAt(0), multi.Operation);
+            if(count == 2)
+                return multi.Args.ElementAt(1);
+            throw new InvalidOperationException();
+        }
     }
 }
