@@ -4039,6 +4039,18 @@ var System$Linq$Enumerable =
     baseTypeName: "System.Object",
     staticDefinition:
     {
+        Concat$1: function (T, en1, en2)
+        {
+            if (en1 == null) {
+                throw $CreateException(System.Linq.Error.ArgumentNull("en1"), new Error());
+            }
+            if (en2 == null) {
+                throw $CreateException(System.Linq.Error.ArgumentNull("en2"), new Error());
+            }
+            var result = new System.Collections.Generic.List$1.ctor$$IEnumerable$1(T, en1);
+            result.AddRange(en2);
+            return result;
+        },
         CombinePredicates$1: function (TSource, predicate1, predicate2)
         {
             return function (x)
