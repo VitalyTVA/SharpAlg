@@ -14,19 +14,19 @@ namespace SharpAlg.Native {
         public static ParameterExpr Parameter(string parameterName) {
             return new ParameterExpr(parameterName);
         }
-        public static BinaryExpr Binary(Expr left, Expr right, BinaryOperation type) {
-            return new BinaryExpr(new Expr[] { left, right }, type);
+        public static MultiExpr Binary(Expr left, Expr right, BinaryOperation type) {
+            return new MultiExpr(new Expr[] { left, right }, type);
         }
-        public static BinaryExpr Add(Expr left, Expr right) { //TODO use builder everywhere
+        public static MultiExpr Add(Expr left, Expr right) { //TODO use builder everywhere
             return Binary(left, right, BinaryOperation.Add);
         }
-        public static BinaryExpr Subtract(Expr left, Expr right) {
+        public static MultiExpr Subtract(Expr left, Expr right) {
             return Add(left, Minus(right));
         }
-        public static BinaryExpr Multiply(Expr left, Expr right) {
+        public static MultiExpr Multiply(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Multiply);
         }
-        public static BinaryExpr Divide(Expr left, Expr right) {
+        public static MultiExpr Divide(Expr left, Expr right) {
             return Multiply(left, Inverse(right));
         }
         public static PowerExpr Power(Expr left, Expr right) {
@@ -70,15 +70,15 @@ namespace SharpAlg.Native {
         Add, Subtract, Multiply, Divide
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    public class BinaryExpr : Expr {
-        internal BinaryExpr(IEnumerable<Expr> args, BinaryOperation operation) {
+    public class MultiExpr : Expr {
+        internal MultiExpr(IEnumerable<Expr> args, BinaryOperation operation) {
             Args = args;
             Operation = operation;
         }
         public BinaryOperation Operation { get; private set; }
         public IEnumerable<Expr> Args { get; private set; }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
-            return visitor.Binary(this);
+            return visitor.Multi(this);
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]

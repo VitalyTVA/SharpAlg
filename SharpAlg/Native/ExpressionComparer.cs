@@ -14,8 +14,8 @@ namespace SharpAlg.Native {
         public bool Constant(ConstantExpr constant) {
             return DoEqualityCheck(constant, (x1, x2) => x1.Value == x2.Value);
         }
-        public bool Binary(BinaryExpr binary) {
-            return DoEqualityCheck(binary, (x1, x2) => {
+        public bool Multi(MultiExpr multi) {
+            return DoEqualityCheck(multi, (x1, x2) => {
                 return x1.Operation == x2.Operation && x1.Args.EnumerableEqual(x2.Args, (x, y) => x.ExprEquals(y));  //TODO singleton
             });
         }

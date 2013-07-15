@@ -13,13 +13,13 @@ namespace SharpAlg.Native {
         public string Constant(ConstantExpr constant) {
             return constant.Value.ToString();
         }
-        public string Binary(BinaryExpr binary) {
-            var enumerator = binary.Args.GetEnumerator();
+        public string Multi(MultiExpr multi) {
+            var enumerator = multi.Args.GetEnumerator();
             var sb = new StringBuilder("(");
             if(enumerator.MoveNext())
                 sb.Append(enumerator.Current.Visit(this));
             while(enumerator.MoveNext()) {
-                UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(enumerator.Current, binary.Operation);
+                UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(enumerator.Current, multi.Operation);
                 sb.Append(" ");
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(" ");
@@ -89,8 +89,8 @@ namespace SharpAlg.Native {
         public UnaryExpressionInfo Parameter(ParameterExpr parameter) {
             return GetDefaultInfo(parameter);
         }
-        public UnaryExpressionInfo Binary(BinaryExpr binary) {
-            return GetDefaultInfo(binary);
+        public UnaryExpressionInfo Multi(MultiExpr multi) {
+            return GetDefaultInfo(multi);
         }
         public UnaryExpressionInfo Power(PowerExpr power) {
             return GetDefaultInfo(power);

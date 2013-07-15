@@ -17,12 +17,12 @@ namespace SharpAlg.Native {
         public Expr Parameter(ParameterExpr parameter) {
             return Expr.One;
         }
-        public Expr Binary(BinaryExpr binary) {
-            switch(binary.Operation) {
+        public Expr Multi(MultiExpr multi) {
+            switch(multi.Operation) {
                 case BinaryOperation.Add:
-                    return VisitAdditive(binary);
+                    return VisitAdditive(multi);
                 case BinaryOperation.Multiply:
-                    return VisitMultiply(binary);
+                    return VisitMultiply(multi);
                 default:
                     throw new NotImplementedException();
             }
@@ -42,10 +42,10 @@ namespace SharpAlg.Native {
                     throw new NotImplementedException();
             }
         }
-        Expr VisitAdditive(BinaryExpr expr) {
+        Expr VisitAdditive(MultiExpr expr) {
             return builder.Binary(expr.Args.ElementAt(0).Visit(this), expr.Args.ElementAt(1).Visit(this), expr.Operation);
         }
-        Expr VisitMultiply(BinaryExpr expr) {
+        Expr VisitMultiply(MultiExpr expr) {
             var expr1 = builder.Multiply(expr.Args.ElementAt(0).Visit(this), expr.Args.ElementAt(1));
             var expr2 = builder.Multiply(expr.Args.ElementAt(0), expr.Args.ElementAt(1).Visit(this));
             return builder.Add(expr1, expr2);

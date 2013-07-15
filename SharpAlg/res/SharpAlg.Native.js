@@ -106,14 +106,14 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Parameter = function (parameter)
 {
     return SharpAlg.Native.Expr.One;
 };
-SharpAlg.Native.DiffExpressionVisitor.prototype.Binary = function (binary)
+SharpAlg.Native.DiffExpressionVisitor.prototype.Multi = function (multi)
 {
-    switch (binary.get_Operation())
+    switch (multi.get_Operation())
     {
         case 0:
-            return this.VisitAdditive(binary);
+            return this.VisitAdditive(multi);
         case 1:
-            return this.VisitMultiply(binary);
+            return this.VisitMultiply(multi);
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }
@@ -167,7 +167,7 @@ var SharpAlg$Native$Expr =
         },
         Binary: function (left, right, type)
         {
-            return new SharpAlg.Native.BinaryExpr.ctor([left, right], type);
+            return new SharpAlg.Native.MultiExpr.ctor([left, right], type);
         },
         Add: function (left, right)
         {
@@ -285,9 +285,9 @@ var SharpAlg$Native$ParameterExpr =
     }
 };
 JsTypes.push(SharpAlg$Native$ParameterExpr);
-var SharpAlg$Native$BinaryExpr =
+var SharpAlg$Native$MultiExpr =
 {
-    fullname: "SharpAlg.Native.BinaryExpr",
+    fullname: "SharpAlg.Native.MultiExpr",
     baseTypeName: "SharpAlg.Native.Expr",
     staticDefinition:
     {
@@ -327,11 +327,11 @@ var SharpAlg$Native$BinaryExpr =
         },
         Visit$1: function (T, visitor)
         {
-            return visitor.Binary(this);
+            return visitor.Multi(this);
         }
     }
 };
-JsTypes.push(SharpAlg$Native$BinaryExpr);
+JsTypes.push(SharpAlg$Native$MultiExpr);
 var SharpAlg$Native$PowerExpr =
 {
     fullname: "SharpAlg.Native.PowerExpr",
@@ -594,9 +594,9 @@ var SharpAlg$Native$ExpressionComparer =
                 return x1.get_Value() == x2.get_Value();
             }));
         },
-        Binary: function (binary)
+        Multi: function (multi)
         {
-            return this.DoEqualityCheck$1(SharpAlg.Native.BinaryExpr.ctor, binary, $CreateAnonymousDelegate(this, function (x1, x2)
+            return this.DoEqualityCheck$1(SharpAlg.Native.MultiExpr.ctor, multi, $CreateAnonymousDelegate(this, function (x1, x2)
             {
                 return x1.get_Operation() == x2.get_Operation() && SharpAlg.Native.FunctionalExtensions.EnumerableEqual(x1.get_Args(), x2.get_Args(), $CreateAnonymousDelegate(this, function (x, y)
                 {
@@ -642,15 +642,15 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Constant = function (constant)
 {
     return constant.get_Value();
 };
-SharpAlg.Native.ExpressionEvaluator.prototype.Binary = function (binary)
+SharpAlg.Native.ExpressionEvaluator.prototype.Multi = function (multi)
 {
-    var enumerator = binary.get_Args().GetEnumerator();
+    var enumerator = multi.get_Args().GetEnumerator();
     var result = 0;
     if (enumerator.MoveNext())
         result = enumerator.get_Current().Visit$1(System.Double.ctor, this);
     while (enumerator.MoveNext())
     {
-        result = SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(binary.get_Operation())(result, enumerator.get_Current().Visit$1(System.Double.ctor, this));
+        result = SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(multi.get_Operation())(result, enumerator.get_Current().Visit$1(System.Double.ctor, this));
     }
     return result;
 };
@@ -805,15 +805,15 @@ SharpAlg.Native.ExpressionPrinter.prototype.Constant = function (constant)
 {
     return constant.get_Value().toString();
 };
-SharpAlg.Native.ExpressionPrinter.prototype.Binary = function (binary)
+SharpAlg.Native.ExpressionPrinter.prototype.Multi = function (multi)
 {
-    var enumerator = binary.get_Args().GetEnumerator();
+    var enumerator = multi.get_Args().GetEnumerator();
     var sb = new System.Text.StringBuilder.ctor$$String("(");
     if (enumerator.MoveNext())
         sb.Append$$String(enumerator.get_Current().Visit$1(System.String.ctor, this));
     while (enumerator.MoveNext())
     {
-        var info = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(enumerator.get_Current(), binary.get_Operation());
+        var info = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(enumerator.get_Current(), multi.get_Operation());
         sb.Append$$String(" ");
         sb.Append$$String(SharpAlg.Native.ExpressionPrinter.GetBinaryOperationSymbol(info.Operation));
         sb.Append$$String(" ");
@@ -886,9 +886,9 @@ SharpAlg.Native.UnaryExpressionExtractor.prototype.Parameter = function (paramet
 {
     return this.GetDefaultInfo(parameter);
 };
-SharpAlg.Native.UnaryExpressionExtractor.prototype.Binary = function (binary)
+SharpAlg.Native.UnaryExpressionExtractor.prototype.Multi = function (multi)
 {
-    return this.GetDefaultInfo(binary);
+    return this.GetDefaultInfo(multi);
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Power = function (power)
 {

@@ -14,13 +14,13 @@ namespace SharpAlg.Native {
         public double Constant(ConstantExpr constant) {
             return constant.Value;
         }
-        public double Binary(BinaryExpr binary) {
-            var enumerator = binary.Args.GetEnumerator();
+        public double Multi(MultiExpr multi) {
+            var enumerator = multi.Args.GetEnumerator();
             double result = 0;
             if(enumerator.MoveNext())
                 result = enumerator.Current.Visit(this);
             while(enumerator.MoveNext()) {
-                result = GetBinaryOperationEvaluator(binary.Operation)(result, enumerator.Current.Visit(this));
+                result = GetBinaryOperationEvaluator(multi.Operation)(result, enumerator.Current.Visit(this));
             }
             return result;
         }

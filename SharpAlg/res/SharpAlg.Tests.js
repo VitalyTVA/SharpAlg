@@ -131,7 +131,7 @@ var SharpAlg$Tests$ExprTests =
             var left = SharpAlg.Native.Expr.Constant(9);
             var right = SharpAlg.Native.Expr.Parameter("x");
             var expr = SharpAlg.Native.Expr.Divide(left, right);
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.UnaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.UnaryExpr.ctor, SharpAlg.Native.MayBe.With(SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.UnaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.UnaryExpr.ctor, SharpAlg.Native.MayBe.With(SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.MultiExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.MultiExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
             {
                 return System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, x.get_Args(), 0);
             }), left), $CreateAnonymousDelegate(this, function (x)
@@ -151,7 +151,7 @@ var SharpAlg$Tests$ExprTests =
             var expr3 = SharpAlg.Native.Expr.Divide(right, left);
             var expr4 = SharpAlg.Native.Expr.Add(left, right);
             var expr5 = SharpAlg.Native.Expr.Power(left, right);
-            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.BinaryExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.MultiExpr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.MultiExpr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.MultiExpr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.MultiExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, expr2);
             })), $CreateAnonymousDelegate(this, function (x)
@@ -164,19 +164,19 @@ var SharpAlg$Tests$ExprTests =
             {
                 return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, expr5);
             }));
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13)), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.MultiExpr.ctor, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 22);
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Subtract(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13)), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.MultiExpr.ctor, SharpAlg.Native.Expr.Subtract(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), -4);
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Divide(SharpAlg.Native.Expr.Constant(10), SharpAlg.Native.Expr.Constant(5)), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.MultiExpr.ctor, SharpAlg.Native.Expr.Divide(SharpAlg.Native.Expr.Constant(10), SharpAlg.Native.Expr.Constant(5)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 2);
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13)), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.MultiExpr.ctor, SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(9), SharpAlg.Native.Expr.Constant(13)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 117);
@@ -198,12 +198,12 @@ var SharpAlg$Tests$ExprTests =
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
             }), 13);
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y")), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.MultiExpr.ctor, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y")), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
             }), 22);
             context.Register("y", SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("x")));
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y")), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.MultiExpr.ctor, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y")), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
             }), 90);
