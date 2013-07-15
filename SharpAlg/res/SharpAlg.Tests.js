@@ -133,13 +133,13 @@ var SharpAlg$Tests$ExprTests =
             var expr = SharpAlg.Native.Expr.Divide(left, right);
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.UnaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.UnaryExpr.ctor, SharpAlg.Native.MayBe.With(SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.BinaryExpr.ctor, expr, $CreateAnonymousDelegate(this, function (x)
             {
-                return x.get_Left();
+                return System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, x.get_Args(), 0);
             }), left), $CreateAnonymousDelegate(this, function (x)
             {
                 return x.get_Operation();
             }), 1), $CreateAnonymousDelegate(this, function (x)
             {
-                return As(x.get_Right(), SharpAlg.Native.UnaryExpr.ctor);
+                return As(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, x.get_Args(), 1), SharpAlg.Native.UnaryExpr.ctor);
             })), $CreateAnonymousDelegate(this, function (x)
             {
                 return x.get_Expr();

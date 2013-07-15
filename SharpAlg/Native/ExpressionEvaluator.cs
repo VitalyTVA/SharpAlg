@@ -15,7 +15,14 @@ namespace SharpAlg.Native {
             return constant.Value;
         }
         public double Binary(BinaryExpr binary) {
-            return GetBinaryOperationEvaluator(binary.Operation)(binary.Left.Visit(this), binary.Right.Visit(this));
+            var enumerator = binary.Args.GetEnumerator();
+            double result = 0;
+            if(enumerator.MoveNext())
+                result = enumerator.Current.Visit(this);
+            while(enumerator.MoveNext()) {
+                result = GetBinaryOperationEvaluator(binary.Operation)(result, enumerator.Current.Visit(this));
+            }
+            return result;
         }
         public double Power(PowerExpr power) {
             return Math.Pow(power.Left.Visit(this), power.Right.Visit(this));

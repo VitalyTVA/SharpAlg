@@ -4096,6 +4096,36 @@ var System$Linq$Enumerable =
             }
             throw $CreateException(System.Linq.Error.NoElements(), new Error());
         },
+        ElementAt$1: function (TSource, source, index)
+        {
+            if (source == null)
+            {
+                throw $CreateException(System.Linq.Error.ArgumentNull("source"), new Error());
+            }
+            var list = As(source, System.Collections.Generic.IList$1.ctor);
+            if (list != null)
+            {
+                return list.get_Item$$Int32(index);
+            }
+            else
+            {
+                var enumerator = source.GetEnumerator();
+                try
+                {
+                    while (enumerator.MoveNext())
+                    {
+                        if(index == 0)
+                            return enumerator.get_Current();
+                        index--;
+                    }
+                }
+                finally
+                {
+                    enumerator.Dispose();
+                }
+            }
+            throw $CreateException(System.Linq.Error.NoElements(), new Error());
+        },
         First$1$$IEnumerable$1$$Func$2: function (TSource, source, predicate)
         {
             if (source == null)

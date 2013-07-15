@@ -15,7 +15,7 @@ namespace SharpAlg.Native {
             return new ParameterExpr(parameterName);
         }
         public static BinaryExpr Binary(Expr left, Expr right, BinaryOperation type) {
-            return new BinaryExpr(left, right, type);
+            return new BinaryExpr(new Expr[] { left, right }, type);
         }
         public static BinaryExpr Add(Expr left, Expr right) { //TODO use builder everywhere
             return Binary(left, right, BinaryOperation.Add);
@@ -71,14 +71,12 @@ namespace SharpAlg.Native {
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class BinaryExpr : Expr {
-        internal BinaryExpr(Expr left, Expr right, BinaryOperation operation) {
+        internal BinaryExpr(IEnumerable<Expr> args, BinaryOperation operation) {
+            Args = args;
             Operation = operation;
-            Right = right;
-            Left = left;
         }
-        public Expr Left { get; private set; }
-        public Expr Right { get; private set; }
         public BinaryOperation Operation { get; private set; }
+        public IEnumerable<Expr> Args { get; private set; }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             return visitor.Binary(this);
         }

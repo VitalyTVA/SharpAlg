@@ -34,9 +34,17 @@ namespace SharpAlg.Native {
                 throw new ArgumentException(SR.STR_InputSequencesHaveDifferentLength);
         }
 
-        //public static bool Equal<T>(this IEnumerable<T> first, IEnumerable<T> second) {
-        //    return Enumerable.SequenceEqual(first, second);
-        //}
+        public static bool EnumerableEqual<T>(this IEnumerable<T> first, IEnumerable<T> second, Func<T, T, bool> comparer) {
+            var en1 = first.GetEnumerator();
+            var en2 = second.GetEnumerator();
+            while(en1.MoveNext()) {
+                if(!en2.MoveNext())
+                    return false;
+                if(!comparer(en1.Current, en2.Current))
+                    return false;
+            }
+            return !en2.MoveNext();
+        }
         //public static bool Equal<T>(this IEnumerable<T> first, params T[] second) {
         //    return Equal(first, (IEnumerable<T>)second);
         //}

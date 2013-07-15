@@ -33,9 +33,9 @@ namespace SharpAlg.Tests {
             var right = Expr.Parameter("x");
             var expr = Expr.Divide(left, right);
             expr
-                .IsEqual(x => x.Left, left)
+                .IsEqual(x => x.Args.ElementAt(0), left)
                 .IsEqual(x => x.Operation, BinaryOperation.Multiply)
-                .With(x => x.Right as UnaryExpr)
+                .With(x => x.Args.ElementAt(1) as UnaryExpr)
                     .IsEqual(x => x.Expr, right)
                     .IsEqual(x => x.Operation, UnaryOperation.Inverse);
 

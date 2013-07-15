@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text;
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
@@ -13,8 +14,19 @@ namespace SharpAlg.Native {
             return constant.Value.ToString();
         }
         public string Binary(BinaryExpr binary) {
-            UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(binary.Right, binary.Operation);
-            return string.Format("({0} {1} {2})", binary.Left.Visit(this), GetBinaryOperationSymbol(info.Operation), info.Expr.Visit(this)); //TODO singleton
+            var enumerator = binary.Args.GetEnumerator();
+            var sb = new StringBuilder("(");
+            if(enumerator.MoveNext())
+                sb.Append(enumerator.Current.Visit(this));
+            while(enumerator.MoveNext()) {
+                UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(enumerator.Current, binary.Operation);
+                sb.Append(" ");
+                sb.Append(GetBinaryOperationSymbol(info.Operation));
+                sb.Append(" ");
+                sb.Append(info.Expr.Visit(this));
+            }
+            sb.Append(")");
+            return sb.ToString();
         }
         public string Power(PowerExpr power) {
             return string.Format("({0} ^ {1})", power.Left.Visit(this), power.Right.Visit(this));
