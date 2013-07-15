@@ -80,7 +80,7 @@ namespace SharpAlg.Tests {
         [Test]
         public void ToStringTest() {
             "9".Parse().AssertSimpleStringRepresentation("9");
-            "-9".Parse().AssertSimpleStringRepresentation("-9");
+            "-9".Parse().AssertSimpleStringRepresentation("(-9)");
             "x".Parse().AssertSimpleStringRepresentation("x");
             "-x".Parse().AssertSimpleStringRepresentation("(-x)");
             "9 + x".Parse().AssertSimpleStringRepresentation("(9 + x)");
@@ -102,7 +102,6 @@ namespace SharpAlg.Tests {
 
             Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 - x)");
             Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 / x)");
-            
 
             Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 - (-x))");
             Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 / (1 / x))");
@@ -111,11 +110,13 @@ namespace SharpAlg.Tests {
             Expr.Multiply(Expr.Constant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 * (-x))");
             Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 - (1 / x))");
             Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 / (-x))");
+
+            Expr.Multi(new Expr[] { Expr.Parameter("x"), Expr.Constant(-1) }, BinaryOperation.Multiply).AssertSimpleStringRepresentation("(x * (-1))");
         }
         [Test]
         public void ConvolutionTest() {
             "9 + 13".Parse().AssertSimpleStringRepresentation("22");
-            "9 - 13".Parse().AssertSimpleStringRepresentation("-4");
+            "9 - 13".Parse().AssertSimpleStringRepresentation("(-4)");
             "9 * 13".Parse().AssertSimpleStringRepresentation("117");
             "117 / 9".Parse().AssertSimpleStringRepresentation("13");
             "117 / 9 - 4".Parse().AssertSimpleStringRepresentation("9");
@@ -166,8 +167,8 @@ namespace SharpAlg.Tests {
 
             "-9 + 13".Parse().AssertSimpleStringRepresentation("4");
             "-(x + 1) + (x + 1)".Parse().AssertSimpleStringRepresentation("0");
-            "-(x + 1) - (x + 1)".Parse().AssertSimpleStringRepresentation("(-2 * (x + 1))");
-            "-((x + 1) / (x + 1))".Parse().AssertSimpleStringRepresentation("-1");
+            "-(x + 1) - (x + 1)".Parse().AssertSimpleStringRepresentation("((-2) * (x + 1))");
+            "-((x + 1) / (x + 1))".Parse().AssertSimpleStringRepresentation("(-1)");
             
             "x + (1 - 2)".Parse().AssertSimpleStringRepresentation("(x - 1)");
             //"x + 1 - 2".Parse().AssertSimpleStringRepresentation("(x - 1)"); //TODO convolution

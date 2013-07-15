@@ -11,7 +11,8 @@ namespace SharpAlg.Native {
         public ExpressionPrinter() {
         }
         public string Constant(ConstantExpr constant) {
-            return constant.Value.ToString();
+            string stringValue = constant.Value.ToString();
+            return constant.Value >= 0 ? stringValue : "(" + stringValue + ")";
         }
         public string Multi(MultiExpr multi) {
             var sb = new StringBuilder("(");
@@ -81,7 +82,7 @@ namespace SharpAlg.Native {
             this.operation = operation;
         }
         public UnaryExpressionInfo Constant(ConstantExpr constant) {
-            return constant.Value >= 0 ? 
+            return constant.Value >= 0 || operation != BinaryOperation.Add ? 
                 GetDefaultInfo(constant) : 
                 new UnaryExpressionInfo(Expr.Constant(-constant.Value), BinaryOperationEx.Subtract);
         }

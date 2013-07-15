@@ -847,7 +847,8 @@ SharpAlg.Native.ExpressionPrinter = function ()
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Constant = function (constant)
 {
-    return constant.get_Value().toString();
+    var stringValue = constant.get_Value().toString();
+    return constant.get_Value() >= 0 ? stringValue : "(" + stringValue + ")";
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Multi = function (multi)
 {
@@ -924,7 +925,7 @@ SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo = function (expr, oper
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Constant = function (constant)
 {
-    return constant.get_Value() >= 0 ? this.GetDefaultInfo(constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(-constant.get_Value()), 1);
+    return constant.get_Value() >= 0 || this.operation != 0 ? this.GetDefaultInfo(constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(-constant.get_Value()), 1);
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Parameter = function (parameter)
 {
