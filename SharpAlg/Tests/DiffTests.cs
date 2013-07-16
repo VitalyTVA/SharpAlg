@@ -38,17 +38,17 @@ namespace SharpAlg.Tests {
             "x + x + x".Parse().Diff().AssertSimpleStringRepresentation("3");
             "x * 2".Parse().Diff().AssertSimpleStringRepresentation("2");
             "2 * x".Parse().Diff().AssertSimpleStringRepresentation("2");
-            "x * x + 1".Parse().Diff().AssertSimpleStringRepresentation("(2 * x)");
-            "1 + x * x + 1".Parse().Diff().AssertSimpleStringRepresentation("(2 * x)");
+            "x * x + 1".Parse().Diff().AssertSimpleStringRepresentation("2 * x");
+            "1 + x * x + 1".Parse().Diff().AssertSimpleStringRepresentation("2 * x");
 
-            "1 / x".Parse().Diff().AssertSimpleStringRepresentation("((-1) / (x ^ 2))");
+            "1 / x".Parse().Diff().AssertSimpleStringRepresentation("(-1) / x ^ 2"); //TODO parens
 
             "x / x".Parse().Diff().AssertSimpleStringRepresentation("0");
             //"(x * x) / x".Parse().Diff().AssertSimpleStringRepresentation("1");//TODO convolution
 
             "2 ^ 3".Parse().Diff().AssertSimpleStringRepresentation("0");
             "(x + x) ^ 1".Parse().Diff().AssertSimpleStringRepresentation("2");
-            "x ^ 2".Parse().Diff().AssertSimpleStringRepresentation("(2 * x)");
+            "x ^ 2".Parse().Diff().AssertSimpleStringRepresentation("2 * x");
             //"(x * x) ^ 3".Parse().Diff().AssertSimpleStringRepresentation("(6 * (x ^ 5))");//TODO convolution
         }
     }

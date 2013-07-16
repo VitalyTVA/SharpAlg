@@ -8,31 +8,35 @@ using System.Text;
 namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ExpressionPrinter : IExpressionVisitor<string> {
-        public ExpressionPrinter() {
+        readonly OperationPriority priority;
+        public ExpressionPrinter(OperationPriority priority = OperationPriority.None) {
+            this.priority = priority;
         }
         public string Constant(ConstantExpr constant) {
             string stringValue = constant.Value.ToString();
-            return constant.Value >= 0 ? stringValue : "(" + stringValue + ")";
+            return constant.Value >= 0 ? stringValue : Wrap(stringValue, OperationPriority.Add);
         }
         public string Multi(MultiExpr multi) {
-            var sb = new StringBuilder("(");
+            var sb = new StringBuilder();
+            var nextPrinter = new ExpressionPrinter(GetPriority(multi.Operation));
             multi.Accumulate(x => {
-                sb.Append(x.Visit(this));
+                sb.Append(x.Visit(nextPrinter));
             }, x => {
                 UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(x, multi.Operation);
                 sb.Append(" ");
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(" ");
-                sb.Append(info.Expr.Visit(this));
+                sb.Append(info.Expr.Visit(nextPrinter));
             });
-            sb.Append(")");
-            return sb.ToString();
+            return Wrap(sb.ToString(), GetPriority(multi.Operation));
         }
         public string Power(PowerExpr power) {
-            return string.Format("({0} ^ {1})", power.Left.Visit(this), power.Right.Visit(this));
+            var nextPrinter = new ExpressionPrinter(OperationPriority.Power);
+            return Wrap(string.Format("{0} ^ {1}", power.Left.Visit(nextPrinter), power.Right.Visit(nextPrinter)), OperationPriority.Power);
         }
         public string Unary(UnaryExpr unary) {
-            return String.Format("({0}{1})", GetUnaryOperationSymbol(unary.Operation), unary.Expr.Visit(this));
+            var newPriority = GetPriority(unary.Operation);
+            return Wrap(String.Format("{0}{1}", GetUnaryOperationSymbol(unary.Operation), unary.Expr.Visit(new ExpressionPrinter(newPriority))), newPriority);
         }
         public string Parameter(ParameterExpr parameter) {
             return parameter.ParameterName;
@@ -61,6 +65,31 @@ namespace SharpAlg.Native {
                 default:
                     throw new NotImplementedException();
             }
+        }
+        static OperationPriority GetPriority(BinaryOperation operation) {
+            switch(operation) {
+                case BinaryOperation.Add:
+                    return OperationPriority.Add;
+                case BinaryOperation.Multiply:
+                    return OperationPriority.Multiply;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        static OperationPriority GetPriority(UnaryOperation operation) {
+            switch(operation) {
+                case UnaryOperation.Minus:
+                    return OperationPriority.Add;
+                case UnaryOperation.Inverse:
+                    return OperationPriority.Multiply;
+                default:
+                    throw new NotImplementedException();
+            }
+        }
+        string Wrap(string s, OperationPriority newPriority) {
+            if(newPriority <= priority)
+                return "(" + s + ")";
+            return s;
         }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]

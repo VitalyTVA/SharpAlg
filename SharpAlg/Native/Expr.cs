@@ -72,6 +72,9 @@ namespace SharpAlg.Native {
     public enum BinaryOperationEx {
         Add, Subtract, Multiply, Divide
     }
+    public enum OperationPriority { 
+        None, Add, Multiply, Power 
+    }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class MultiExpr : Expr {
         internal MultiExpr(IEnumerable<Expr> args, BinaryOperation operation) {

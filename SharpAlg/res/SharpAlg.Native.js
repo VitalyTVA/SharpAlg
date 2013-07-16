@@ -793,7 +793,7 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         Print: function (expr)
         {
-            return expr.Visit$1(System.String.ctor, new SharpAlg.Native.ExpressionPrinter());
+            return expr.Visit$1(System.String.ctor, new SharpAlg.Native.ExpressionPrinter(0));
         },
         Parse: function (expression)
         {
@@ -842,38 +842,42 @@ var SharpAlg$Native$ExpressionExtensions =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionExtensions);
-SharpAlg.Native.ExpressionPrinter = function ()
+SharpAlg.Native.ExpressionPrinter = function (priority)
 {
+    this.priority = 0;
+    this.priority = priority;
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Constant = function (constant)
 {
     var stringValue = constant.get_Value().toString();
-    return constant.get_Value() >= 0 ? stringValue : "(" + stringValue + ")";
+    return constant.get_Value() >= 0 ? stringValue : this.Wrap(stringValue, 1);
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Multi = function (multi)
 {
-    var sb = new System.Text.StringBuilder.ctor$$String("(");
+    var sb = new System.Text.StringBuilder.ctor();
+    var nextPrinter = new SharpAlg.Native.ExpressionPrinter(SharpAlg.Native.ExpressionPrinter.GetPriority(multi.get_Operation()));
     SharpAlg.Native.ExpressionExtensions.Accumulate(multi, $CreateAnonymousDelegate(this, function (x)
     {
-        sb.Append$$String(x.Visit$1(System.String.ctor, this));
+        sb.Append$$String(x.Visit$1(System.String.ctor, nextPrinter));
     }), $CreateAnonymousDelegate(this, function (x)
     {
         var info = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(x, multi.get_Operation());
         sb.Append$$String(" ");
         sb.Append$$String(SharpAlg.Native.ExpressionPrinter.GetBinaryOperationSymbol(info.Operation));
         sb.Append$$String(" ");
-        sb.Append$$String(info.Expr.Visit$1(System.String.ctor, this));
+        sb.Append$$String(info.Expr.Visit$1(System.String.ctor, nextPrinter));
     }));
-    sb.Append$$String(")");
-    return sb.toString();
+    return this.Wrap(sb.toString(), SharpAlg.Native.ExpressionPrinter.GetPriority(multi.get_Operation()));
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Power = function (power)
 {
-    return System.String.Format$$String$$Object$$Object("({0} ^ {1})", power.get_Left().Visit$1(System.String.ctor, this), power.get_Right().Visit$1(System.String.ctor, this));
+    var nextPrinter = new SharpAlg.Native.ExpressionPrinter(3);
+    return this.Wrap(System.String.Format$$String$$Object$$Object("{0} ^ {1}", power.get_Left().Visit$1(System.String.ctor, nextPrinter), power.get_Right().Visit$1(System.String.ctor, nextPrinter)), 3);
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Unary = function (unary)
 {
-    return System.String.Format$$String$$Object$$Object("({0}{1})", SharpAlg.Native.ExpressionPrinter.GetUnaryOperationSymbol(unary.get_Operation()), unary.get_Expr().Visit$1(System.String.ctor, this));
+    var newPriority = SharpAlg.Native.ExpressionPrinter.GetPriority(unary.get_Operation());
+    return this.Wrap(System.String.Format$$String$$Object$$Object("{0}{1}", SharpAlg.Native.ExpressionPrinter.GetUnaryOperationSymbol(unary.get_Operation()), unary.get_Expr().Visit$1(System.String.ctor, new SharpAlg.Native.ExpressionPrinter(newPriority))), newPriority);
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Parameter = function (parameter)
 {
@@ -906,6 +910,36 @@ SharpAlg.Native.ExpressionPrinter.GetBinaryOperationSymbol = function (operation
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
     }
+};
+SharpAlg.Native.ExpressionPrinter.GetPriority = function (operation)
+{
+    switch (operation)
+    {
+        case 0:
+            return 1;
+        case 1:
+            return 2;
+        default :
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    }
+};
+SharpAlg.Native.ExpressionPrinter.GetPriority = function (operation)
+{
+    switch (operation)
+    {
+        case 0:
+            return 1;
+        case 1:
+            return 2;
+        default :
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    }
+};
+SharpAlg.Native.ExpressionPrinter.prototype.Wrap = function (s, newPriority)
+{
+    if (newPriority <= this.priority)
+        return "(" + s + ")";
+    return s;
 };
 SharpAlg.Native.UnaryExpressionInfo = function (expr, operation)
 {

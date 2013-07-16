@@ -80,86 +80,87 @@ namespace SharpAlg.Tests {
         [Test]
         public void ToStringTest() {
             "9".Parse().AssertSimpleStringRepresentation("9");
-            "-9".Parse().AssertSimpleStringRepresentation("(-9)");
+            "-9".Parse().AssertSimpleStringRepresentation("-9");
             "x".Parse().AssertSimpleStringRepresentation("x");
-            "-x".Parse().AssertSimpleStringRepresentation("(-x)");
-            "9 + x".Parse().AssertSimpleStringRepresentation("(9 + x)");
-            "(9 - x)".Parse().AssertSimpleStringRepresentation("(9 - x)");
-            "-(9 - x)".Parse().AssertSimpleStringRepresentation("(-(9 - x))");
-            "(9 * x)".Parse().AssertSimpleStringRepresentation("(9 * x)");
-            "(9 / x)".Parse().AssertSimpleStringRepresentation("(9 / x)");
-            "x + y * z".Parse().AssertSimpleStringRepresentation("(x + (y * z))");
-            "(x + y) * z".Parse().AssertSimpleStringRepresentation("((x + y) * z)");
-            "x ^ y".Parse().AssertSimpleStringRepresentation("(x ^ y)");
-            "x * z ^ y".Parse().AssertSimpleStringRepresentation("(x * (z ^ y))");
-            "x + y + z".Parse().AssertSimpleStringRepresentation("(x + y + z)");
-            "x - y - z".Parse().AssertSimpleStringRepresentation("(x - y - z)");
-            "x / y / z".Parse().AssertSimpleStringRepresentation("(x / y / z)");
-            "1 + 2 * x + 3 * y".Parse().AssertSimpleStringRepresentation("(1 + (2 * x) + (3 * y))");
+            "-x".Parse().AssertSimpleStringRepresentation("-x");
+            "9 + x".Parse().AssertSimpleStringRepresentation("9 + x");
+            "(9 - x)".Parse().AssertSimpleStringRepresentation("9 - x");
+            "-(9 - x)".Parse().AssertSimpleStringRepresentation("-(9 - x)");
+            "(9 * x)".Parse().AssertSimpleStringRepresentation("9 * x");
+            "(9 / x)".Parse().AssertSimpleStringRepresentation("9 / x");
+            "x + y * z".Parse().AssertSimpleStringRepresentation("x + y * z");
+            "(x + y) * z".Parse().AssertSimpleStringRepresentation("(x + y) * z");
+            "x ^ y".Parse().AssertSimpleStringRepresentation("x ^ y");
+            "x * z ^ y".Parse().AssertSimpleStringRepresentation("x * z ^ y");
+            "x + y + z".Parse().AssertSimpleStringRepresentation("x + y + z");
+            "x - y - z".Parse().AssertSimpleStringRepresentation("x - y - z");
+            "x / y / z".Parse().AssertSimpleStringRepresentation("x / y / z");
+            "1 + 2 * x + 3 * y".Parse().AssertSimpleStringRepresentation("1 + 2 * x + 3 * y");
+            "(x + 1) ^ (x * y)".Parse().AssertSimpleStringRepresentation("(x + 1) ^ (x * y)");
 
-            Expr.Minus(Expr.Parameter("x")).AssertSimpleStringRepresentation("(-x)");
-            Expr.Inverse(Expr.Parameter("x")).AssertSimpleStringRepresentation("(1 / x)");
+            Expr.Minus(Expr.Parameter("x")).AssertSimpleStringRepresentation("-x");
+            Expr.Inverse(Expr.Parameter("x")).AssertSimpleStringRepresentation("1 / x");
 
-            Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 - x)");
-            Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 / x)");
+            Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 - x");
+            Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 / x");
 
-            Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 - (-x))");
-            Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 / (1 / x))");
+            Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 - (-x)");
+            Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 / (1 / x)");
 
-            Expr.Add(Expr.Constant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 + (1 / x))");
-            Expr.Multiply(Expr.Constant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("(9 * (-x))");
-            Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 - (1 / x))");
-            Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("(9 / (-x))");
+            Expr.Add(Expr.Constant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 + 1 / x");
+            Expr.Multiply(Expr.Constant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 * (-x)");
+            Expr.Add(Expr.Constant(9), Expr.Minus(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 - 1 / x");
+            Expr.Multiply(Expr.Constant(9), Expr.Inverse(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 / (-x)");
 
-            Expr.Multi(new Expr[] { Expr.Parameter("x"), Expr.Constant(-1) }, BinaryOperation.Multiply).AssertSimpleStringRepresentation("(x * (-1))");
+            Expr.Multi(new Expr[] { Expr.Parameter("x"), Expr.Constant(-1) }, BinaryOperation.Multiply).AssertSimpleStringRepresentation("x * (-1)");
         }
         [Test]
         public void ConvolutionTest() {
             "9 + 13".Parse().AssertSimpleStringRepresentation("22");
-            "9 - 13".Parse().AssertSimpleStringRepresentation("(-4)");
+            "9 - 13".Parse().AssertSimpleStringRepresentation("-4");
             "9 * 13".Parse().AssertSimpleStringRepresentation("117");
             "117 / 9".Parse().AssertSimpleStringRepresentation("13");
             "117 / 9 - 4".Parse().AssertSimpleStringRepresentation("9");
             "(5 + 5) / 2".Parse().AssertSimpleStringRepresentation("5");
 
-            "1 + 1 + x".Parse().AssertSimpleStringRepresentation("(2 + x)");
-            "x + 1".Parse().AssertSimpleStringRepresentation("(x + 1)");
-            "1 + x".Parse().AssertSimpleStringRepresentation("(1 + x)");
+            "1 + 1 + x".Parse().AssertSimpleStringRepresentation("2 + x");
+            "x + 1".Parse().AssertSimpleStringRepresentation("x + 1");
+            "1 + x".Parse().AssertSimpleStringRepresentation("1 + x");
             "0 + x".Parse().AssertSimpleStringRepresentation("x");
             "x + 0".Parse().AssertSimpleStringRepresentation("x");
 
-            "2 - 1 + x".Parse().AssertSimpleStringRepresentation("(1 + x)");
-            "x - 1".Parse().AssertSimpleStringRepresentation("(x - 1)");
-            "1 - x".Parse().AssertSimpleStringRepresentation("(1 - x)");
-            "0 - x".Parse().AssertSimpleStringRepresentation("(-x)");
+            "2 - 1 + x".Parse().AssertSimpleStringRepresentation("1 + x");
+            "x - 1".Parse().AssertSimpleStringRepresentation("x - 1");
+            "1 - x".Parse().AssertSimpleStringRepresentation("1 - x");
+            "0 - x".Parse().AssertSimpleStringRepresentation("-x");
             "x - 0".Parse().AssertSimpleStringRepresentation("x");
 
-            "2 * 2 * x".Parse().AssertSimpleStringRepresentation("(4 * x)");
-            "x * 2".Parse().AssertSimpleStringRepresentation("(x * 2)");
-            "2 * x".Parse().AssertSimpleStringRepresentation("(2 * x)");
+            "2 * 2 * x".Parse().AssertSimpleStringRepresentation("4 * x");
+            "x * 2".Parse().AssertSimpleStringRepresentation("x * 2");
+            "2 * x".Parse().AssertSimpleStringRepresentation("2 * x");
             "0 * x".Parse().AssertSimpleStringRepresentation("0");
             "x * 0".Parse().AssertSimpleStringRepresentation("0");
             "1 * x".Parse().AssertSimpleStringRepresentation("x");
             "x * 1".Parse().AssertSimpleStringRepresentation("x");
 
-            "4 / 2 / x".Parse().AssertSimpleStringRepresentation("(2 / x)");
-            "x / 2".Parse().AssertSimpleStringRepresentation("(x / 2)");
-            "1 / x".Parse().AssertSimpleStringRepresentation("(1 / x)");
+            "4 / 2 / x".Parse().AssertSimpleStringRepresentation("2 / x");
+            "x / 2".Parse().AssertSimpleStringRepresentation("x / 2");
+            "1 / x".Parse().AssertSimpleStringRepresentation("1 / x");
             "x / 1".Parse().AssertSimpleStringRepresentation("x");
             "0 / x".Parse().AssertSimpleStringRepresentation("0");
 
-            "x + x".Parse().AssertSimpleStringRepresentation("(2 * x)");
-            "2 * x +  2 * x".Parse().AssertSimpleStringRepresentation("(2 * 2 * x)"); //TODO convolution
+            "x + x".Parse().AssertSimpleStringRepresentation("2 * x");
+            "2 * x +  2 * x".Parse().AssertSimpleStringRepresentation("2 * 2 * x"); //TODO convolution
             "x - x".Parse().AssertSimpleStringRepresentation("0");
             "2 * x - 2 * x".Parse().AssertSimpleStringRepresentation("0");
             "x / x".Parse().AssertSimpleStringRepresentation("1");
             "(2 * x) / (2 * x)".Parse().AssertSimpleStringRepresentation("1");
-            "x * x".Parse().AssertSimpleStringRepresentation("(x ^ 2)");
-            "(x + 1) * (x + 1)".Parse().AssertSimpleStringRepresentation("((x + 1) ^ 2)");
+            "x * x".Parse().AssertSimpleStringRepresentation("x ^ 2");
+            "(x + 1) * (x + 1)".Parse().AssertSimpleStringRepresentation("(x + 1) ^ 2");
 
-            "(x + 1) ^ (2 + 1)".Parse().AssertSimpleStringRepresentation("((x + 1) ^ 3)");
+            "(x + 1) ^ (2 + 1)".Parse().AssertSimpleStringRepresentation("(x + 1) ^ 3");
             "(x + 1) ^ 0".Parse().AssertSimpleStringRepresentation("1");
-            "(x + 1) ^ (2 - 1)".Parse().AssertSimpleStringRepresentation("(x + 1)");
+            "(x + 1) ^ (2 - 1)".Parse().AssertSimpleStringRepresentation("x + 1");
             "(x + 1) ^ (y - y)".Parse().AssertSimpleStringRepresentation("1");
             "2 ^ 3".Parse().AssertSimpleStringRepresentation("8");
             "(x - x) ^ y".Parse().AssertSimpleStringRepresentation("0");
@@ -167,10 +168,10 @@ namespace SharpAlg.Tests {
 
             "-9 + 13".Parse().AssertSimpleStringRepresentation("4");
             "-(x + 1) + (x + 1)".Parse().AssertSimpleStringRepresentation("0");
-            "-(x + 1) - (x + 1)".Parse().AssertSimpleStringRepresentation("((-2) * (x + 1))");
-            "-((x + 1) / (x + 1))".Parse().AssertSimpleStringRepresentation("(-1)");
+            "-(x + 1) - (x + 1)".Parse().AssertSimpleStringRepresentation("(-2) * (x + 1)");
+            "-((x + 1) / (x + 1))".Parse().AssertSimpleStringRepresentation("-1");
             
-            "x + (1 - 2)".Parse().AssertSimpleStringRepresentation("(x - 1)");
+            "x + (1 - 2)".Parse().AssertSimpleStringRepresentation("x - 1");
             //"x + 1 - 2".Parse().AssertSimpleStringRepresentation("(x - 1)"); //TODO convolution
             //"-(x + 1) / (x + 1)".Parse().AssertSimpleStringRepresentation("-1"); //TODO convolution
             //"x + x + x".Parse().AssertSimpleStringRepresentation("(3 * x)"); //TODO convolution
