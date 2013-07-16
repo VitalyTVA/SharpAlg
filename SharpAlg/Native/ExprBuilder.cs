@@ -61,7 +61,23 @@ namespace SharpAlg.Native {
                 ?? Expr.Power(left, right);
         }
         Expr MultiConvolution(Expr left, Expr right, BinaryOperation operation) {
-            return Expr.Multi(GetArgs(left, operation).Concat(GetArgs(right, operation)), operation);
+            var args = GetArgs(left, operation).Concat(GetArgs(right, operation)).ToList();
+            for(int i = 0; i < args.Count; i++) {
+                for(int j = i + 1; j < args.Count; j++) {
+                    var convoluted = ConstantConvolution(args[i], args[j], operation);
+                    if(convoluted != null) {
+                        args[i] = convoluted;
+                        args.RemoveAt(j);
+                    } else {
+                        convoluted = EqualityConvolution(args[i], args[j], operation);
+                        if(convoluted != null) {
+                            args[i] = convoluted;
+                            args.RemoveAt(j);
+                        }
+                    }
+                }
+            }
+            return Expr.Multi(args, operation);
         }
         static IEnumerable<Expr> GetArgs(Expr expr, BinaryOperation operation) {
             if(expr is MultiExpr && ((MultiExpr)expr).Operation == operation)
