@@ -180,31 +180,22 @@ namespace SharpAlg.Tests {
 
             "x * y * x * y * x".Parse().AssertSimpleStringRepresentation("x ^ 3 * y ^ 2");
             "x * x * x".Parse().AssertSimpleStringRepresentation("x ^ 3");
+            "x + x + x".Parse().AssertSimpleStringRepresentation("3 * x");
             "2 * y + 3 * y".Parse().AssertSimpleStringRepresentation("5 * y");
             "2 * y + y".Parse().AssertSimpleStringRepresentation("3 * y");
             "y + x + y + 2 * x + y + 3 * x".Parse().AssertSimpleStringRepresentation("3 * y + 6 * x");
-            //"y + x + y - 2 * x + y - 3 * x".Parse().AssertSimpleStringRepresentation("3 * y - 4 * x");
-
             "x + 1 + y - 2".Parse().AssertSimpleStringRepresentation("x - 1 + y");
+
+            "y * x + 2 * y * x".Parse().AssertSimpleStringRepresentation("3 * y * x");
+            //"2 * y - 3 * y".Parse().AssertSimpleStringRepresentation("-y"); //TODO convolution
+            //"(x * y) ^ 3 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 5 * y ^ 5");//TODO convolution
+            //"(x * y) * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 3 * y ^ 3");//TODO convolution
+            //"(x * y) ^ 2 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 4 * y ^ 4");//TODO convolution
 
             //"-x + y".Parse().AssertSimpleStringRepresentation("- x * y"); //TODO printing
             //"- x * y".Parse().AssertSimpleStringRepresentation("- x * y"); //TODO printing
 
             //"-(x + 1) / (x + 1)".Parse().AssertSimpleStringRepresentation("-1"); //TODO convolution
-            //"x + x + x".Parse().AssertSimpleStringRepresentation("(3 * x)"); //TODO convolution
-            //"3 * x + 2 * x".Parse().AssertSimpleStringRepresentation("(5 * x)"); //TODO convolution
-
-            //Expr placeholder = Expr.Placeholder;
-            //Expr placeholder2 = Expr.Placeholder;
-            //Rule.Binary(Expr.Zero, placeholder, BinaryOperation.Add, expr => expr);
-            //Rule.Binary(placeholder, Expr.Zero, BinaryOperation.Add, expr => expr);
-            //Rule.Binary(placeholder, Expr.Zero, BinaryOperation.Multiply, expr => Expr.Zero);
-            //Rule.Binary(placeholder, placeholder, BinaryOperation.Add, expr => Expr.Mult(Expr.Const(2), expr));
-            //Rule.Binary(Expr.Zero, Expr.Zero, BinaryOperation.Add, expr => expr);
-
-            //Rule.Unary(e => e.Expr is ConstantExpr, op => op == UnaryOperation.Minus, unary => Expr.Const(-unary.Expr.Value));
-            //Rule.Binary(e => e == Expr.Zero, e => true, op => op == BinaryOperation.Add, binary => binary.Right);
-            //Rule.Binary(e => e is Const, e => e is Const, op => op == BinaryOperation.Add, binary => Expr.Constant(binary.Right.Left + binary.Right.Value));
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
