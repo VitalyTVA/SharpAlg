@@ -27,16 +27,16 @@ namespace SharpAlg.Native {
             return Math.Pow(power.Left.Visit(this), power.Right.Visit(this));
         }
 
-        public double Unary(UnaryExpr unary) {
-            switch(unary.Operation) {
-                case UnaryOperation.Minus:
-                    return -unary.Expr.Visit(this);
-                case UnaryOperation.Inverse:
-                    return 1 / unary.Expr.Visit(this);
-                default:
-                    throw new NotImplementedException();
-            }
-        }
+        //public double Unary(UnaryExpr unary) {
+        //    switch(unary.Operation) {
+        //        case UnaryOperation.Minus:
+        //            return -unary.Expr.Visit(this);
+        //        case UnaryOperation.Inverse:
+        //            return 1 / unary.Expr.Visit(this);
+        //        default:
+        //            throw new NotImplementedException();
+        //    }
+        //}
         public double Parameter(ParameterExpr parameter) {
             var parameterValue = context.GetValue(parameter.ParameterName);
             if(parameterValue == null)
@@ -44,22 +44,29 @@ namespace SharpAlg.Native {
             return parameterValue.Visit(this); //TODO recursion
         }
         public static Func<double, double, double> GetBinaryOperationEvaluator(BinaryOperation operation) {
-            return GetBinaryOperationEvaluatorEx(GetBinaryOperationEx(operation));
-        }
-        static Func<double, double, double> GetBinaryOperationEvaluatorEx(BinaryOperationEx operation) {
             switch(operation) {
-                case BinaryOperationEx.Add:
+                case BinaryOperation.Add:
                     return (x1, x2) => x1 + x2;
-                case BinaryOperationEx.Subtract:
-                    return (x1, x2) => x1 - x2;
-                case BinaryOperationEx.Multiply:
+                case BinaryOperation.Multiply:
                     return (x1, x2) => x1 * x2;
-                case BinaryOperationEx.Divide:
-                    return (x1, x2) => x1 / x2;
                 default:
                     throw new NotImplementedException();
             }
         }
+        //static Func<double, double, double> GetBinaryOperationEvaluatorEx(BinaryOperationEx operation) {
+        //    switch(operation) {
+        //        case BinaryOperationEx.Add:
+        //            return (x1, x2) => x1 + x2;
+        //        case BinaryOperationEx.Subtract:
+        //            return (x1, x2) => x1 - x2;
+        //        case BinaryOperationEx.Multiply:
+        //            return (x1, x2) => x1 * x2;
+        //        case BinaryOperationEx.Divide:
+        //            return (x1, x2) => x1 / x2;
+        //        default:
+        //            throw new NotImplementedException();
+        //    }
+        //}
         public static BinaryOperationEx GetBinaryOperationEx(BinaryOperation operation) {
             switch(operation) {
                 case BinaryOperation.Add:

@@ -7,7 +7,7 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public abstract class ExprBuilder {
         public abstract Expr Binary(Expr left, Expr right, BinaryOperation operation);
-        public abstract Expr Unary(Expr expr, UnaryOperation operation);
+        //public abstract Expr Unary(Expr expr, UnaryOperation operation);
         public abstract Expr Power(Expr left, Expr right);
         public Expr Add(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Add);
@@ -22,10 +22,10 @@ namespace SharpAlg.Native {
             return Multiply(left, Inverse(right));
         }
         public Expr Minus(Expr expr) {
-            return Unary(expr, UnaryOperation.Minus);
+            return Multiply(Expr.MinusOne, expr);
         }
         public Expr Inverse(Expr expr) {
-            return Unary(expr, UnaryOperation.Inverse);
+            return Power(expr, Expr.MinusOne);
         }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
@@ -33,23 +33,23 @@ namespace SharpAlg.Native {
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
             return Expr.Binary(left, right, operation);
         }
-        public override Expr Unary(Expr expr, UnaryOperation operation) {
-            return new UnaryExpr(expr, operation);
-        }
+        //public override Expr Unary(Expr expr, UnaryOperation operation) {
+        //    return new UnaryExpr(expr, operation);
+        //}
         public override Expr Power(Expr left, Expr right) {
             return Expr.Power(left, right);
         }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ConvolutionExprBuilder : ExprBuilder {
-        public override Expr Unary(Expr expr, UnaryOperation operation) {
-            Expr defaultResult = Expr.Unary(expr, operation);
-            double? constant = GetConstValue(defaultResult);
-            if(constant != null) {
-                return Expr.Constant(constant.Value);
-            }
-            return defaultResult;
-        }
+        //public override Expr Unary(Expr expr, UnaryOperation operation) {
+        //    Expr defaultResult = Expr.Unary(expr, operation);
+        //    double? constant = GetConstValue(defaultResult);
+        //    if(constant != null) {
+        //        return Expr.Constant(constant.Value);
+        //    }
+        //    return defaultResult;
+        //}
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
             return ConstantConvolution(left, right, operation)
                 ?? EqualityConvolution(left, right, operation)
@@ -147,11 +147,21 @@ namespace SharpAlg.Native {
             return null;
         }
         static double? GetConstValue(Expr expr) {
-            UnaryExpr unary = expr as UnaryExpr;
-            if((unary != null && unary.Expr is ConstantExpr) || expr is ConstantExpr) {
+            if(CanEvaluate(expr)) {
                 return expr.Evaluate(new Context());
             }
             return null;
+        }
+        static bool CanEvaluate(Expr expr) {
+            if(expr is ConstantExpr)
+                return true;
+            PowerExpr power = expr as PowerExpr;
+            if(power != null && power.Left is ConstantExpr && power.Right.ExprEquals(Expr.MinusOne))
+                return true;
+            MultiExpr multi = expr as MultiExpr;
+            if(multi != null && multi.Args.Count() == 2 && multi.Args.ElementAt(1) is ConstantExpr && multi.Args.ElementAt(0).ExprEquals(Expr.MinusOne))
+                return true;
+            return false;
         }
     }
 }

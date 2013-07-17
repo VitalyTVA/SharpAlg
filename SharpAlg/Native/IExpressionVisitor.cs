@@ -11,6 +11,5 @@ namespace SharpAlg.Native {
         T Parameter(ParameterExpr parameter);
         T Multi(MultiExpr multi);
         T Power(PowerExpr power);
-        T Unary(UnaryExpr unary);
     }
 }

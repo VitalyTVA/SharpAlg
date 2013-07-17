@@ -32,16 +32,16 @@ namespace SharpAlg.Native {
                 throw new NotImplementedException(); //TODO when ln() is ready
             return Expr.Multiply(power.Right, builder.Multiply(power.Left.Visit(this), builder.Power(power.Left, builder.Subtract(power.Right, Expr.One)))); //TODO convolution when ln() is ready
         }
-        public Expr Unary(UnaryExpr unary) {
-            switch(unary.Operation) {
-                case UnaryOperation.Minus:
-                    return Expr.Unary(unary.Expr.Visit(this), unary.Operation);
-                case UnaryOperation.Inverse:
-                    return Expr.Divide(builder.Unary(unary.Expr.Visit(this), UnaryOperation.Minus), builder.Multiply(unary.Expr, unary.Expr));
-                default:
-                    throw new NotImplementedException();
-            }
-        }
+        //public Expr Unary(UnaryExpr unary) {
+        //    switch(unary.Operation) {
+        //        case UnaryOperation.Minus:
+        //            return Expr.Unary(unary.Expr.Visit(this), unary.Operation);
+        //        case UnaryOperation.Inverse:
+        //            return Expr.Divide(builder.Unary(unary.Expr.Visit(this), UnaryOperation.Minus), builder.Multiply(unary.Expr, unary.Expr));
+        //        default:
+        //            throw new NotImplementedException();
+        //    }
+        //}
         Expr VisitAdditive(MultiExpr multi) {
             Expr result = null;
             multi.Accumulate(x => {
