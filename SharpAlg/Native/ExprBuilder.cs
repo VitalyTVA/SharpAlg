@@ -40,7 +40,7 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ConvolutionExprBuilder : ExprBuilder {
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
-            return EqualityConvolution(left, right, operation)
+            return EqualityConvolution(left, right, operation) //TODO kill EqualityConvolution
                 ?? MultiConvolution(left, right, operation)
                 ?? Expr.Binary(left, right, operation);
         }
@@ -52,8 +52,8 @@ namespace SharpAlg.Native {
             var args = GetArgs(left, operation).Concat(GetArgs(right, operation)).ToList();
             for(int i = 0; i < args.Count; i++) {
                 for(int j = i + 1; j < args.Count; j++) {
-                    var convoluted = ConstantConvolution(args[i], args[j], operation) 
-                        ?? EqualityConvolution(args[i], args[j], operation)
+                    var convoluted = ConstantConvolution(args[i], args[j], operation)
+                        //?? EqualityConvolution(args[i], args[j], operation) //TODO kill EqualityConvolution
                         ?? PowerConvolution(args[i], args[j], operation)
                         ?? MultiplyConvolution(args[i], args[j], operation);
                     if(convoluted != null) {

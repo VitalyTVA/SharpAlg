@@ -441,7 +441,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (le
     {
         for (var j = i + 1; j < args.get_Count(); j++)
         {
-            var convoluted = (this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : (this.EqualityConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.EqualityConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : (this.PowerConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.PowerConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : this.MultiplyConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation))));
+            var convoluted = (this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : (this.PowerConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.PowerConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : this.MultiplyConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation)));
             if (convoluted != null)
             {
                 args.set_Item$$Int32(i, convoluted);
