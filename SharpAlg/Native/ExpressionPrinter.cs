@@ -142,7 +142,7 @@ namespace SharpAlg.Native {
         MultiplyExpressionExtractor() { }
         public override Tuple<Expr, Expr> Multi(MultiExpr multi) {
             if(multi.Operation == BinaryOperation.Multiply)
-                return new Tuple<Expr, Expr>(multi.Args.First(), Expr.Multi(multi.Args.Skip(1).ToList(), BinaryOperation.Multiply));
+                return new Tuple<Expr, Expr>(multi.Args.First(), Expr.Multi(multi.Args.Skip(1), BinaryOperation.Multiply));
             return base.Multi(multi);
         }
         protected override Tuple<Expr, Expr> GetDefault(Expr expr) {

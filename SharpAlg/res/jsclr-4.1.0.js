@@ -5341,8 +5341,8 @@ var System$Linq$Enumerable$SkipIterator =
         },
         GetEnumerator: function ()
         {
-            if (this.State == 0)
-                return this;
+            //if (this.State == 0)
+            //    return this;
             return new System.Linq.Enumerable.SkipIterator.ctor(this.T, this.Source, this.SkipCount);
         }
     }

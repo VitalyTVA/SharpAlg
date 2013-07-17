@@ -965,7 +965,7 @@ SharpAlg.Native.MultiplyExpressionExtractor.ExtractMultiply = function (expr)
 SharpAlg.Native.MultiplyExpressionExtractor.prototype.Multi = function (multi)
 {
     if (multi.get_Operation() == 1)
-        return new System.Tuple$2.ctor(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.Expr.Multi(System.Linq.Enumerable.ToList$1(SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.Skip$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1)), 1));
+        return new System.Tuple$2.ctor(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.Expr.Multi(System.Linq.Enumerable.Skip$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1), 1));
     return SharpAlg.Native.DefaultExpressionVisitor.prototype.Multi.call(this, multi);
 };
 SharpAlg.Native.MultiplyExpressionExtractor.prototype.GetDefault = function (expr)
