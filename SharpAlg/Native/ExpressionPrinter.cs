@@ -41,24 +41,9 @@ namespace SharpAlg.Native {
             }
             return Wrap(string.Format("{0} ^ {1}", power.Left.Visit(nextPrinter), power.Right.Visit(nextPrinter)), OperationPriority.Power);
         }
-        //public string Unary(UnaryExpr unary) {
-        //    var newPriority = GetPriority(unary.Operation);
-        //    return Wrap(String.Format("{0}{1}", GetUnaryOperationSymbol(unary.Operation), unary.Expr.Visit(new ExpressionPrinter(newPriority))), newPriority);
-        //}
         public string Parameter(ParameterExpr parameter) {
             return parameter.ParameterName;
         }
-
-        //static string GetUnaryOperationSymbol(UnaryOperation operation) {
-        //    switch(operation) {
-        //        case UnaryOperation.Minus:
-        //            return "-";
-        //        case UnaryOperation.Inverse:
-        //            return "1 / ";
-        //        default:
-        //            throw new NotImplementedException();
-        //    }
-        //}
         static string GetBinaryOperationSymbol(BinaryOperationEx operation) {
             switch(operation) {
                 case BinaryOperationEx.Add:
@@ -83,16 +68,6 @@ namespace SharpAlg.Native {
                     throw new NotImplementedException();
             }
         }
-        //static OperationPriority GetPriority(UnaryOperation operation) {
-        //    switch(operation) {
-        //        case UnaryOperation.Minus:
-        //            return OperationPriority.Add;
-        //        case UnaryOperation.Inverse:
-        //            return OperationPriority.Multiply;
-        //        default:
-        //            throw new NotImplementedException();
-        //    }
-        //}
         string Wrap(string s, OperationPriority newPriority) {
             if(newPriority <= priority)
                 return "(" + s + ")";
@@ -137,15 +112,6 @@ namespace SharpAlg.Native {
             }
             return GetDefaultInfo(power);
         }
-        //public UnaryExpressionInfo Unary(UnaryExpr unary) {
-        //    if(operation == BinaryOperation.Add && unary.Operation == UnaryOperation.Minus) {
-        //        return new UnaryExpressionInfo(unary.Expr, BinaryOperationEx.Subtract);
-        //    }
-        //    if(operation == BinaryOperation.Multiply && unary.Operation == UnaryOperation.Inverse) {
-        //        return new UnaryExpressionInfo(unary.Expr, BinaryOperationEx.Divide);
-        //    }
-        //    return GetDefaultInfo(unary);
-        //}
         UnaryExpressionInfo GetDefaultInfo(Expr expr) {
             return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(operation));
         }

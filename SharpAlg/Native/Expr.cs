@@ -36,9 +36,6 @@ namespace SharpAlg.Native {
         public static PowerExpr Power(Expr left, Expr right) {
             return new PowerExpr(left, right);
         }
-        //public static Expr Unary(Expr expr, UnaryOperation operation) {
-        //    return new UnaryExpr(expr, operation);
-        //}
         public static Expr Minus(Expr expr) {
             return Multiply(Expr.MinusOne, expr);
         }
@@ -100,19 +97,4 @@ namespace SharpAlg.Native {
             return visitor.Power(this);
         }
     }
-    //public enum UnaryOperation {
-    //    Minus, Inverse
-    //}
-    //[JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    //public class UnaryExpr : Expr {
-    //    internal UnaryExpr(Expr expr, UnaryOperation operation) {
-    //        Expr = expr;
-    //        Operation = operation;
-    //    }
-    //    public Expr Expr { get; private set; }
-    //    public UnaryOperation Operation { get; private set; }
-    //    internal override T Visit<T>(IExpressionVisitor<T> visitor) {
-    //        return visitor.Unary(this);
-    //    }
-    //}
 }

@@ -26,17 +26,6 @@ namespace SharpAlg.Native {
         public double Power(PowerExpr power) {
             return Math.Pow(power.Left.Visit(this), power.Right.Visit(this));
         }
-
-        //public double Unary(UnaryExpr unary) {
-        //    switch(unary.Operation) {
-        //        case UnaryOperation.Minus:
-        //            return -unary.Expr.Visit(this);
-        //        case UnaryOperation.Inverse:
-        //            return 1 / unary.Expr.Visit(this);
-        //        default:
-        //            throw new NotImplementedException();
-        //    }
-        //}
         public double Parameter(ParameterExpr parameter) {
             var parameterValue = context.GetValue(parameter.ParameterName);
             if(parameterValue == null)

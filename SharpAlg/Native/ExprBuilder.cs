@@ -33,23 +33,12 @@ namespace SharpAlg.Native {
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
             return Expr.Binary(left, right, operation);
         }
-        //public override Expr Unary(Expr expr, UnaryOperation operation) {
-        //    return new UnaryExpr(expr, operation);
-        //}
         public override Expr Power(Expr left, Expr right) {
             return Expr.Power(left, right);
         }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ConvolutionExprBuilder : ExprBuilder {
-        //public override Expr Unary(Expr expr, UnaryOperation operation) {
-        //    Expr defaultResult = Expr.Unary(expr, operation);
-        //    double? constant = GetConstValue(defaultResult);
-        //    if(constant != null) {
-        //        return Expr.Constant(constant.Value);
-        //    }
-        //    return defaultResult;
-        //}
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
             return ConstantConvolution(left, right, operation)
                 ?? EqualityConvolution(left, right, operation)
@@ -156,10 +145,10 @@ namespace SharpAlg.Native {
             if(expr is ConstantExpr)
                 return true;
             PowerExpr power = expr as PowerExpr;
-            if(power != null && power.Left is ConstantExpr && power.Right.ExprEquals(Expr.MinusOne))
+            if(power != null && power.Left is ConstantExpr && UnaryExpressionExtractor.IsInverseExpression(power))
                 return true;
             MultiExpr multi = expr as MultiExpr;
-            if(multi != null && multi.Args.Count() == 2 && multi.Args.ElementAt(1) is ConstantExpr && multi.Args.ElementAt(0).ExprEquals(Expr.MinusOne))
+            if(multi != null && UnaryExpressionExtractor.IsMinusExpression(multi) && multi.Args.ElementAt(1) is ConstantExpr)
                 return true;
             return false;
         }

@@ -535,10 +535,10 @@ SharpAlg.Native.ConvolutionExprBuilder.CanEvaluate = function (expr)
     if (Is(expr, SharpAlg.Native.ConstantExpr.ctor))
         return true;
     var power = As(expr, SharpAlg.Native.PowerExpr.ctor);
-    if (power != null && Is(power.get_Left(), SharpAlg.Native.ConstantExpr.ctor) && SharpAlg.Native.ExpressionExtensions.ExprEquals(power.get_Right(), SharpAlg.Native.Expr.MinusOne))
+    if (power != null && Is(power.get_Left(), SharpAlg.Native.ConstantExpr.ctor) && SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression(power))
         return true;
     var multi = As(expr, SharpAlg.Native.MultiExpr.ctor);
-    if (multi != null && System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()) == 2 && Is(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1), SharpAlg.Native.ConstantExpr.ctor) && SharpAlg.Native.ExpressionExtensions.ExprEquals(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 0), SharpAlg.Native.Expr.MinusOne))
+    if (multi != null && SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpression(multi) && Is(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1), SharpAlg.Native.ConstantExpr.ctor))
         return true;
     return false;
 };
