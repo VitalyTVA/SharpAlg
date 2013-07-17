@@ -54,7 +54,8 @@ namespace SharpAlg.Native {
                 for(int j = i + 1; j < args.Count; j++) {
                     var convoluted = ConstantConvolution(args[i], args[j], operation) 
                         ?? EqualityConvolution(args[i], args[j], operation)
-                        ?? PowerConvolution(args[i], args[j], operation);
+                        ?? PowerConvolution(args[i], args[j], operation)
+                        ?? MultiplyConvolution(args[i], args[j], operation);
                     if(convoluted != null) {
                         args[i] = convoluted;
                         args.RemoveAt(j);
@@ -143,6 +144,16 @@ namespace SharpAlg.Native {
                 if(leftPower.Left.ExprEquals(rightPower.Left)) {
                     return Power(leftPower.Left, Add(leftPower.Right, rightPower.Right));
                 }
+            }
+            return null;
+        }
+        Expr MultiplyConvolution(Expr left, Expr right, BinaryOperation operation) {
+            if(operation == BinaryOperation.Add) {
+                //PowerExpr leftPower = PowerExpressionExtractor.ExtractPower(left);
+                //PowerExpr rightPower = PowerExpressionExtractor.ExtractPower(right);
+                //if(leftPower.Left.ExprEquals(rightPower.Left)) {
+                //    return Power(leftPower.Left, Add(leftPower.Right, rightPower.Right));
+                //}
             }
             return null;
         }

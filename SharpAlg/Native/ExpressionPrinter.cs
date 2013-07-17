@@ -84,36 +84,9 @@ namespace SharpAlg.Native {
         public BinaryOperationEx Operation { get; private set; }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
-    public class UnaryExpressionExtractor : IExpressionVisitor<UnaryExpressionInfo> {
+    public class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
         public static UnaryExpressionInfo ExtractUnaryInfo(Expr expr, BinaryOperation operation) {
             return expr.Visit(new UnaryExpressionExtractor(operation));
-        }
-        readonly BinaryOperation operation;
-        UnaryExpressionExtractor(BinaryOperation operation) {
-            this.operation = operation;
-        }
-        public UnaryExpressionInfo Constant(ConstantExpr constant) {
-            return constant.Value >= 0 || operation != BinaryOperation.Add ? 
-                GetDefaultInfo(constant) : 
-                new UnaryExpressionInfo(Expr.Constant(-constant.Value), BinaryOperationEx.Subtract);
-        }
-        public UnaryExpressionInfo Parameter(ParameterExpr parameter) {
-            return GetDefaultInfo(parameter);
-        }
-        public UnaryExpressionInfo Multi(MultiExpr multi) {
-            if(operation == BinaryOperation.Add && IsMinusExpression(multi)) {
-                return new UnaryExpressionInfo(multi.Args.ElementAt(1), BinaryOperationEx.Subtract);
-            }
-            return GetDefaultInfo(multi);
-        }
-        public UnaryExpressionInfo Power(PowerExpr power) {
-            if(operation == BinaryOperation.Multiply && IsInverseExpression(power)) {
-                return new UnaryExpressionInfo(power.Left, BinaryOperationEx.Divide);
-            }
-            return GetDefaultInfo(power);
-        }
-        UnaryExpressionInfo GetDefaultInfo(Expr expr) {
-            return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(operation));
         }
         public static bool IsMinusExpression(MultiExpr multi) {
             return multi.Args.Count() == 2 && Expr.MinusOne.ExprEquals(multi.Args.ElementAt(0));
@@ -121,29 +94,61 @@ namespace SharpAlg.Native {
         public static bool IsInverseExpression(PowerExpr power) {
             return Expr.MinusOne.ExprEquals(power.Right);
         }
+
+        readonly BinaryOperation operation;
+        UnaryExpressionExtractor(BinaryOperation operation) {
+            this.operation = operation;
+        }
+        public override UnaryExpressionInfo Constant(ConstantExpr constant) {
+            return constant.Value >= 0 || operation != BinaryOperation.Add ?
+                base.Constant(constant) : 
+                new UnaryExpressionInfo(Expr.Constant(-constant.Value), BinaryOperationEx.Subtract);
+        }
+        public override UnaryExpressionInfo Multi(MultiExpr multi) {
+            if(operation == BinaryOperation.Add && IsMinusExpression(multi)) {
+                return new UnaryExpressionInfo(multi.Args.ElementAt(1), BinaryOperationEx.Subtract);
+            }
+            return base.Multi(multi);
+        }
+        public override UnaryExpressionInfo Power(PowerExpr power) {
+            if(operation == BinaryOperation.Multiply && IsInverseExpression(power)) {
+                return new UnaryExpressionInfo(power.Left, BinaryOperationEx.Divide);
+            }
+            return base.Power(power);
+        }
+        protected override UnaryExpressionInfo GetDefault(Expr expr) {
+            return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(operation));
+        }
     }
 
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
-    public class PowerExpressionExtractor : IExpressionVisitor<PowerExpr> {
+    public class PowerExpressionExtractor : DefaultExpressionVisitor<PowerExpr> {
         public static PowerExpr ExtractPower(Expr expr) {
             return expr.Visit(new PowerExpressionExtractor()); //TODO singleton
         }
         PowerExpressionExtractor() { }
-
-        public PowerExpr Constant(ConstantExpr constant) {
-            return GetDefault(constant);
-        }
-        public PowerExpr Parameter(ParameterExpr parameter) {
-            return GetDefault(parameter);
-        }
-        public PowerExpr Multi(MultiExpr multi) {
-            return GetDefault(multi);
-        }
-        public PowerExpr Power(PowerExpr power) {
+        public override PowerExpr Power(PowerExpr power) {
             return power;
         }
-        static PowerExpr GetDefault(Expr expr) {
+        protected override PowerExpr GetDefault(Expr expr) {
             return Expr.Power(expr, Expr.One);
         }
+    }
+    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
+    public abstract class DefaultExpressionVisitor<T> : IExpressionVisitor<T> {
+        protected DefaultExpressionVisitor() { }
+        public virtual T Constant(ConstantExpr constant) {
+            return GetDefault(constant);
+        }
+        public virtual T Parameter(ParameterExpr parameter) {
+            return GetDefault(parameter);
+        }
+        public virtual T Multi(MultiExpr multi) {
+            return GetDefault(multi);
+        }
+        public virtual T Power(PowerExpr power) {
+            return GetDefault(power);
+        }
+        protected abstract T GetDefault(Expr expr);
     }
 }

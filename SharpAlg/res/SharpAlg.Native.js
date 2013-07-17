@@ -436,7 +436,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (le
     {
         for (var j = i + 1; j < args.get_Count(); j++)
         {
-            var convoluted = (this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : (this.EqualityConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.EqualityConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : this.PowerConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation)));
+            var convoluted = (this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : (this.EqualityConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.EqualityConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : (this.PowerConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.PowerConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : this.MultiplyConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation))));
             if (convoluted != null)
             {
                 args.set_Item$$Int32(i, convoluted);
@@ -533,6 +533,13 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.PowerConvolution = function (le
         {
             return this.Power(leftPower.get_Left(), this.Add(leftPower.get_Right(), rightPower.get_Right()));
         }
+    }
+    return null;
+};
+SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiplyConvolution = function (left, right, operation)
+{
+    if (operation == 0)
+    {
     }
     return null;
 };
@@ -857,42 +864,34 @@ SharpAlg.Native.UnaryExpressionInfo = function (expr, operation)
     this.Operation = operation;
     this.Expr = expr;
 };
+SharpAlg.Native.DefaultExpressionVisitor = function ()
+{
+};
+SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant = function (constant)
+{
+    return this.GetDefault(constant);
+};
+SharpAlg.Native.DefaultExpressionVisitor.prototype.Parameter = function (parameter)
+{
+    return this.GetDefault(parameter);
+};
+SharpAlg.Native.DefaultExpressionVisitor.prototype.Multi = function (multi)
+{
+    return this.GetDefault(multi);
+};
+SharpAlg.Native.DefaultExpressionVisitor.prototype.Power = function (power)
+{
+    return this.GetDefault(power);
+};
 SharpAlg.Native.UnaryExpressionExtractor = function (operation)
 {
     this.operation = 0;
+    SharpAlg.Native.DefaultExpressionVisitor.call(this);
     this.operation = operation;
 };
 SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo = function (expr, operation)
 {
     return expr.Visit$1(SharpAlg.Native.UnaryExpressionInfo, new SharpAlg.Native.UnaryExpressionExtractor(operation));
-};
-SharpAlg.Native.UnaryExpressionExtractor.prototype.Constant = function (constant)
-{
-    return constant.get_Value() >= 0 || this.operation != 0 ? this.GetDefaultInfo(constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(-constant.get_Value()), 1);
-};
-SharpAlg.Native.UnaryExpressionExtractor.prototype.Parameter = function (parameter)
-{
-    return this.GetDefaultInfo(parameter);
-};
-SharpAlg.Native.UnaryExpressionExtractor.prototype.Multi = function (multi)
-{
-    if (this.operation == 0 && SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpression(multi))
-    {
-        return new SharpAlg.Native.UnaryExpressionInfo(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1), 1);
-    }
-    return this.GetDefaultInfo(multi);
-};
-SharpAlg.Native.UnaryExpressionExtractor.prototype.Power = function (power)
-{
-    if (this.operation == 1 && SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression(power))
-    {
-        return new SharpAlg.Native.UnaryExpressionInfo(power.get_Left(), 3);
-    }
-    return this.GetDefaultInfo(power);
-};
-SharpAlg.Native.UnaryExpressionExtractor.prototype.GetDefaultInfo = function (expr)
-{
-    return new SharpAlg.Native.UnaryExpressionInfo(expr, SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEx(this.operation));
 };
 SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpression = function (multi)
 {
@@ -902,33 +901,48 @@ SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression = function (power)
 {
     return SharpAlg.Native.ExpressionExtensions.ExprEquals(SharpAlg.Native.Expr.MinusOne, power.get_Right());
 };
+SharpAlg.Native.UnaryExpressionExtractor.prototype.Constant = function (constant)
+{
+    return constant.get_Value() >= 0 || this.operation != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(-constant.get_Value()), 1);
+};
+SharpAlg.Native.UnaryExpressionExtractor.prototype.Multi = function (multi)
+{
+    if (this.operation == 0 && SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpression(multi))
+    {
+        return new SharpAlg.Native.UnaryExpressionInfo(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1), 1);
+    }
+    return SharpAlg.Native.DefaultExpressionVisitor.prototype.Multi.call(this, multi);
+};
+SharpAlg.Native.UnaryExpressionExtractor.prototype.Power = function (power)
+{
+    if (this.operation == 1 && SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression(power))
+    {
+        return new SharpAlg.Native.UnaryExpressionInfo(power.get_Left(), 3);
+    }
+    return SharpAlg.Native.DefaultExpressionVisitor.prototype.Power.call(this, power);
+};
+SharpAlg.Native.UnaryExpressionExtractor.prototype.GetDefault = function (expr)
+{
+    return new SharpAlg.Native.UnaryExpressionInfo(expr, SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEx(this.operation));
+};
+$Inherit(SharpAlg.Native.UnaryExpressionExtractor, SharpAlg.Native.DefaultExpressionVisitor);
 SharpAlg.Native.PowerExpressionExtractor = function ()
 {
+    SharpAlg.Native.DefaultExpressionVisitor.call(this);
 };
 SharpAlg.Native.PowerExpressionExtractor.ExtractPower = function (expr)
 {
     return expr.Visit$1(SharpAlg.Native.PowerExpr.ctor, new SharpAlg.Native.PowerExpressionExtractor());
 };
-SharpAlg.Native.PowerExpressionExtractor.prototype.Constant = function (constant)
-{
-    return SharpAlg.Native.PowerExpressionExtractor.GetDefault(constant);
-};
-SharpAlg.Native.PowerExpressionExtractor.prototype.Parameter = function (parameter)
-{
-    return SharpAlg.Native.PowerExpressionExtractor.GetDefault(parameter);
-};
-SharpAlg.Native.PowerExpressionExtractor.prototype.Multi = function (multi)
-{
-    return SharpAlg.Native.PowerExpressionExtractor.GetDefault(multi);
-};
 SharpAlg.Native.PowerExpressionExtractor.prototype.Power = function (power)
 {
     return power;
 };
-SharpAlg.Native.PowerExpressionExtractor.GetDefault = function (expr)
+SharpAlg.Native.PowerExpressionExtractor.prototype.GetDefault = function (expr)
 {
     return SharpAlg.Native.Expr.Power(expr, SharpAlg.Native.Expr.One);
 };
+$Inherit(SharpAlg.Native.PowerExpressionExtractor, SharpAlg.Native.DefaultExpressionVisitor);
 SharpAlg.Native.FunctionalExtensions = function ()
 {
 };

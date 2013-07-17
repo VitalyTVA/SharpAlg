@@ -180,7 +180,7 @@ namespace SharpAlg.Tests {
 
             "x * y * x * y * x".Parse().AssertSimpleStringRepresentation("x ^ 3 * y ^ 2");
             "x * x * x".Parse().AssertSimpleStringRepresentation("x ^ 3"); //TODO convolution
-            //"x + y + x".Parse().AssertSimpleStringRepresentation("2 * x + y");
+            //"y + x + y + x + y".Parse().AssertSimpleStringRepresentation("3 * y + 2 * x");
 
             "x + 1 + y - 2".Parse().AssertSimpleStringRepresentation("x - 1 + y");
 
