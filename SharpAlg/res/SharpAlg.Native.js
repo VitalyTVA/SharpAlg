@@ -512,24 +512,15 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (le
     {
         for (var j = i + 1; j < args.get_Count(); j++)
         {
-            var convoluted = this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation);
+            var convoluted = (this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : this.EqualityConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation));
             if (convoluted != null)
             {
                 args.set_Item$$Int32(i, convoluted);
                 args.RemoveAt(j);
             }
-            else
-            {
-                convoluted = this.EqualityConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation);
-                if (convoluted != null)
-                {
-                    args.set_Item$$Int32(i, convoluted);
-                    args.RemoveAt(j);
-                }
-            }
         }
     }
-    return SharpAlg.Native.Expr.Multi(args, operation);
+    return args.get_Count() > 1 ? SharpAlg.Native.Expr.Multi(args, operation) : args.get_Item$$Int32(0);
 };
 SharpAlg.Native.ConvolutionExprBuilder.GetArgs = function (expr, operation)
 {

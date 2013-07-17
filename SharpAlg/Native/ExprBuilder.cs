@@ -64,20 +64,15 @@ namespace SharpAlg.Native {
             var args = GetArgs(left, operation).Concat(GetArgs(right, operation)).ToList();
             for(int i = 0; i < args.Count; i++) {
                 for(int j = i + 1; j < args.Count; j++) {
-                    var convoluted = ConstantConvolution(args[i], args[j], operation);
+                    var convoluted = ConstantConvolution(args[i], args[j], operation) ?? EqualityConvolution(args[i], args[j], operation);
                     if(convoluted != null) {
                         args[i] = convoluted;
                         args.RemoveAt(j);
-                    } else {
-                        convoluted = EqualityConvolution(args[i], args[j], operation);
-                        if(convoluted != null) {
-                            args[i] = convoluted;
-                            args.RemoveAt(j);
-                        }
+                        //j--;
                     }
                 }
             }
-            return Expr.Multi(args, operation);
+            return args.Count > 1 ? Expr.Multi(args, operation) : args[0];
         }
         static IEnumerable<Expr> GetArgs(Expr expr, BinaryOperation operation) {
             if(expr is MultiExpr && ((MultiExpr)expr).Operation == operation)
