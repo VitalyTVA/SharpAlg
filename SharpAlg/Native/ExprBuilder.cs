@@ -63,7 +63,7 @@ namespace SharpAlg.Native {
                     }
                 }
             }
-            return args.Count > 1 ? Expr.Multi(args, operation) : args[0];
+            return Expr.Multi(args, operation);
         }
         static IEnumerable<Expr> GetArgs(Expr expr, BinaryOperation operation) {
             if(expr is MultiExpr && ((MultiExpr)expr).Operation == operation)
@@ -149,11 +149,11 @@ namespace SharpAlg.Native {
         }
         Expr MultiplyConvolution(Expr left, Expr right, BinaryOperation operation) {
             if(operation == BinaryOperation.Add) {
-                //PowerExpr leftPower = PowerExpressionExtractor.ExtractPower(left);
-                //PowerExpr rightPower = PowerExpressionExtractor.ExtractPower(right);
-                //if(leftPower.Left.ExprEquals(rightPower.Left)) {
-                //    return Power(leftPower.Left, Add(leftPower.Right, rightPower.Right));
-                //}
+                Tuple<Expr, Expr> leftMultiply = MultiplyExpressionExtractor.ExtractMultiply(left);
+                Tuple<Expr, Expr> rightMultiply = MultiplyExpressionExtractor.ExtractMultiply(right);
+                if(leftMultiply.Item2.ExprEquals(rightMultiply.Item2)) {
+                    return Multiply(Add(leftMultiply.Item1, rightMultiply.Item1), leftMultiply.Item2);
+                }
             }
             return null;
         }

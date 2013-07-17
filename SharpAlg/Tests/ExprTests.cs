@@ -31,7 +31,7 @@ namespace SharpAlg.Tests {
         public void BinaryExprTest() {
             var left = Expr.Constant(9);
             var right = Expr.Parameter("x");
-            var expr = Expr.Divide(left, right);
+            var expr = (MultiExpr)Expr.Divide(left, right);
             expr
                 .IsEqual(x => x.Args.ElementAt(0), left)
                 .IsEqual(x => x.Operation, BinaryOperation.Multiply)
@@ -179,8 +179,11 @@ namespace SharpAlg.Tests {
             "x + y + x".Parse().AssertSimpleStringRepresentation("2 * x + y");
 
             "x * y * x * y * x".Parse().AssertSimpleStringRepresentation("x ^ 3 * y ^ 2");
-            "x * x * x".Parse().AssertSimpleStringRepresentation("x ^ 3"); //TODO convolution
-            //"y + x + y + x + y".Parse().AssertSimpleStringRepresentation("3 * y + 2 * x");
+            "x * x * x".Parse().AssertSimpleStringRepresentation("x ^ 3");
+            "2 * y + 3 * y".Parse().AssertSimpleStringRepresentation("5 * y");
+            "2 * y + y".Parse().AssertSimpleStringRepresentation("3 * y");
+            "y + x + y + 2 * x + y + 3 * x".Parse().AssertSimpleStringRepresentation("3 * y + 6 * x");
+            //"y + x + y - 2 * x + y - 3 * x".Parse().AssertSimpleStringRepresentation("3 * y - 4 * x");
 
             "x + 1 + y - 2".Parse().AssertSimpleStringRepresentation("x - 1 + y");
 

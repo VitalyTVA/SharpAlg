@@ -135,6 +135,22 @@ namespace SharpAlg.Native {
         }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
+    public class MultiplyExpressionExtractor : DefaultExpressionVisitor<Tuple<Expr, Expr>> {
+        public static Tuple<Expr, Expr> ExtractMultiply(Expr expr) {
+            return expr.Visit(new MultiplyExpressionExtractor()); //TODO singleton
+        }
+        MultiplyExpressionExtractor() { }
+        public override Tuple<Expr, Expr> Multi(MultiExpr multi) {
+            if(multi.Operation == BinaryOperation.Multiply)
+                return new Tuple<Expr, Expr>(multi.Args.First(), Expr.Multi(multi.Args.Skip(1).ToList(), BinaryOperation.Multiply));
+            return base.Multi(multi);
+        }
+        protected override Tuple<Expr, Expr> GetDefault(Expr expr) {
+            return new Tuple<Expr, Expr>(Expr.One, expr);
+        }
+    }
+
+    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public abstract class DefaultExpressionVisitor<T> : IExpressionVisitor<T> {
         protected DefaultExpressionVisitor() { }
         public virtual T Constant(ConstantExpr constant) {
