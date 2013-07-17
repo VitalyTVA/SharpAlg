@@ -423,7 +423,7 @@ SharpAlg.Native.ConvolutionExprBuilder = function ()
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right, operation)
 {
-    return (this.ConstantConvolution(left, right, operation) != null ? this.ConstantConvolution(left, right, operation) : (this.EqualityConvolution(left, right, operation) != null ? this.EqualityConvolution(left, right, operation) : (this.MultiConvolution(left, right, operation) != null ? this.MultiConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation))));
+    return (this.EqualityConvolution(left, right, operation) != null ? this.EqualityConvolution(left, right, operation) : (this.MultiConvolution(left, right, operation) != null ? this.MultiConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation)));
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Power = function (left, right)
 {
@@ -441,6 +441,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (le
             {
                 args.set_Item$$Int32(i, convoluted);
                 args.RemoveAt(j);
+                j--;
             }
         }
     }

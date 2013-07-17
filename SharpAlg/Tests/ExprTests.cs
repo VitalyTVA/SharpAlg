@@ -117,8 +117,6 @@ namespace SharpAlg.Tests {
         [Test]
         public void ConvolutionTest() {
             //correct printing of first element in multi expression
-            //correct printing of single element in multi expression
-            //no multiexpression for single argument in convolution builder
 
             "9 + 13".Parse().AssertSimpleStringRepresentation("22");
             "9 - 13".Parse().AssertSimpleStringRepresentation("-4");
