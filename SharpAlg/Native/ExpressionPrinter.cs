@@ -122,4 +122,28 @@ namespace SharpAlg.Native {
             return Expr.MinusOne.ExprEquals(power.Right);
         }
     }
+
+    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
+    public class PowerExpressionExtractor : IExpressionVisitor<PowerExpr> {
+        public static PowerExpr ExtractPower(Expr expr) {
+            return expr.Visit(new PowerExpressionExtractor()); //TODO singleton
+        }
+        PowerExpressionExtractor() { }
+
+        public PowerExpr Constant(ConstantExpr constant) {
+            return GetDefault(constant);
+        }
+        public PowerExpr Parameter(ParameterExpr parameter) {
+            return GetDefault(parameter);
+        }
+        public PowerExpr Multi(MultiExpr multi) {
+            return GetDefault(multi);
+        }
+        public PowerExpr Power(PowerExpr power) {
+            return power;
+        }
+        static PowerExpr GetDefault(Expr expr) {
+            return Expr.Power(expr, Expr.One);
+        }
+    }
 }
