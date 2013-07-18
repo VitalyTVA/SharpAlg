@@ -24,7 +24,7 @@ AdditiveExpression<out Expr expr>				(. bool minus; Expr rightExpr; .)
 = MultiplicativeExpression<out expr>
 	{
 	AdditiveOperation<out minus> 
-	MultiplicativeExpression<out rightExpr>		(. expr = builder.Binary(expr, (minus ? Expr.Minus(rightExpr) : rightExpr), BinaryOperation.Add); .)
+	MultiplicativeExpression<out rightExpr>		(. expr = builder.Binary(expr, (minus ? builder.Minus(rightExpr) : rightExpr), BinaryOperation.Add); .)
 	}
 .
 

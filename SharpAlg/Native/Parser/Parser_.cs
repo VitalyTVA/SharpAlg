@@ -99,7 +99,7 @@ public class Parser {
 		while (la.kind == 3 || la.kind == 4) {
 			AdditiveOperation(out minus);
 			MultiplicativeExpression(out rightExpr);
-			expr = builder.Binary(expr, (minus ? Expr.Minus(rightExpr) : rightExpr), BinaryOperation.Add); 
+			expr = builder.Binary(expr, (minus ? builder.Minus(rightExpr) : rightExpr), BinaryOperation.Add); 
 		}
 	}
 

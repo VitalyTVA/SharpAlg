@@ -256,7 +256,7 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
             rightExpr = rightExpr.Value;
             return $res;
         }).call(this);
-        expr.Value = this.builder.Binary(expr.Value, (minus ? SharpAlg.Native.Expr.Minus(rightExpr) : rightExpr), 0);
+        expr.Value = this.builder.Binary(expr.Value, (minus ? this.builder.Minus(rightExpr) : rightExpr), 0);
     }
 };
 SharpAlg.Native.Parser.Parser.prototype.MultiplicativeExpression = function (expr)
