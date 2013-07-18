@@ -55,6 +55,34 @@ if (typeof ($CreateAnonymousDelegate) == 'undefined') {
         return delegate;
     }
 }
+if (typeof($CreateDelegate)=='undefined'){
+    if(typeof($iKey)=='undefined') var $iKey = 0;
+    if(typeof($pKey)=='undefined') var $pKey = String.fromCharCode(1);
+    var $CreateDelegate = function(target, func){
+        if (target == null || func == null) 
+            return func;
+        if(func.target==target && func.func==func)
+            return func;
+        if (target.$delegateCache == null)
+            target.$delegateCache = {};
+        if (func.$key == null)
+            func.$key = $pKey + String(++$iKey);
+        var delegate;
+        if(target.$delegateCache!=null)
+            delegate = target.$delegateCache[func.$key];
+        if (delegate == null){
+            delegate = function(){
+                return func.apply(target, arguments);
+            };
+            delegate.func = func;
+            delegate.target = target;
+            delegate.isDelegate = true;
+            if(target.$delegateCache!=null)
+                target.$delegateCache[func.$key] = delegate;
+        }
+        return delegate;
+    }
+}
 if (typeof(JsTypes) == "undefined")
     var JsTypes = [];
 var SharpAlg$Native$Context =
@@ -619,17 +647,14 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.MultiExpr.ctor, multi, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return x1.get_Operation() == x2.get_Operation() && SharpAlg.Native.FunctionalExtensions.EnumerableEqual$1(SharpAlg.Native.Expr.ctor, x1.get_Args(), x2.get_Args(), $CreateAnonymousDelegate(this, function (x, y)
-                {
-                    return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, y);
-                }));
+                return x1.get_Operation() == x2.get_Operation() && this.GetArgsEqualComparer()(x1.get_Args(), x2.get_Args());
             }));
         },
         Power: function (power)
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.PowerExpr.ctor, power, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return this.Equals$$Expr$$Expr(x1.get_Left(), x2.get_Left()) && this.Equals$$Expr$$Expr(x1.get_Right(), x2.get_Right());
+                return this.EqualsCore(x1.get_Left(), x2.get_Left()) && this.EqualsCore(x1.get_Right(), x2.get_Right());
             }));
         },
         Parameter: function (parameter)
@@ -644,9 +669,16 @@ var SharpAlg$Native$ExpressionEqualityComparer =
             var other = As(this.expr, T);
             return other != null && equalityCheck(other, expr2);
         },
-        Equals$$Expr$$Expr: function (expr1, expr2)
+        EqualsCore: function (expr1, expr2)
         {
             return expr1.Visit$1(System.Boolean.ctor, this.Clone(expr2));
+        },
+        GetArgsEqualComparer: function ()
+        {
+            return $CreateAnonymousDelegate(this, function (x, y)
+            {
+                return SharpAlg.Native.FunctionalExtensions.EnumerableEqual$1(SharpAlg.Native.Expr.ctor, x, y, $CreateDelegate(this, this.EqualsCore));
+            });
         },
         Clone: function (expr)
         {
@@ -667,15 +699,12 @@ var SharpAlg$Native$ExpressionEquivalenceComparer =
         {
             SharpAlg.Native.ExpressionEqualityComparer.ctor.call(this, expr);
         },
-        Multi: function (multi)
+        GetArgsEqualComparer: function ()
         {
-            return this.DoEqualityCheck$1(SharpAlg.Native.MultiExpr.ctor, multi, $CreateAnonymousDelegate(this, function (x1, x2)
+            return $CreateAnonymousDelegate(this, function (x, y)
             {
-                return x1.get_Operation() == x2.get_Operation() && SharpAlg.Native.FunctionalExtensions.SetEqual$1(SharpAlg.Native.Expr.ctor, x1.get_Args(), x2.get_Args(), $CreateAnonymousDelegate(this, function (x, y)
-                {
-                    return SharpAlg.Native.ExpressionExtensions.ExprEquivalent(x, y);
-                }));
-            }));
+                return SharpAlg.Native.FunctionalExtensions.SetEqual$1(SharpAlg.Native.Expr.ctor, x, y, $CreateDelegate(this, this.EqualsCore));
+            });
         },
         Clone: function (expr)
         {
