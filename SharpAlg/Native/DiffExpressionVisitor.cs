@@ -47,11 +47,5 @@ namespace SharpAlg.Native {
             var expr2 = builder.Multiply(expr.Args.First(), tail.Visit(this));
             return builder.Add(expr1, expr2);
         }
-        //Expr VisitDivide(BinaryExpr expr) {
-        //    var expr1 = builder.Multiply(expr.Left.Visit(this), expr.Right);
-        //    var expr2 = builder.Multiply(expr.Left, expr.Right.Visit(this));
-        //    var expr3 = Expr.Multiply(expr.Right, expr.Right);//TODO convolution
-        //    return Expr.Divide(builder.Subtract(expr1, expr2), expr3);//TODO convolution
-        //}
     }
 }

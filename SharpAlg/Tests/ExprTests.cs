@@ -188,14 +188,15 @@ namespace SharpAlg.Tests {
 
             "y * x + 2 * y * x".Parse().AssertSimpleStringRepresentation("3 * y * x");
             "2 * y - 3 * y".Parse().AssertSimpleStringRepresentation("-y");
+            "-(x + 1) / (x + 1)".Parse().AssertSimpleStringRepresentation("-1");
+            "(x ^ 2) ^ 3".Parse().AssertSimpleStringRepresentation("x ^ 6");
+
             //"(x * y) ^ 3 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 5 * y ^ 5");//TODO convolution
             //"(x * y) * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 3 * y ^ 3");//TODO convolution
             //"(x * y) ^ 2 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 4 * y ^ 4");//TODO convolution
 
             //"-x + y".Parse().AssertSimpleStringRepresentation("- x * y"); //TODO printing
             //"- x * y".Parse().AssertSimpleStringRepresentation("- x * y"); //TODO printing
-
-            //"-(x + 1) / (x + 1)".Parse().AssertSimpleStringRepresentation("-1"); //TODO convolution
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
