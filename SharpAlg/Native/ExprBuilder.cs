@@ -45,7 +45,8 @@ namespace SharpAlg.Native {
                 ?? Expr.Binary(left, right, operation);
         }
         public override Expr Power(Expr left, Expr right) {
-            return ConstantPowerConvolution(left, right) 
+            return ConstantPowerConvolution(left, right)
+                ?? ExpressionPowerConvolution(left, right)
                 ?? Expr.Power(left, right);
         }
         Expr MultiConvolution(Expr left, Expr right, BinaryOperation operation) {
@@ -121,6 +122,16 @@ namespace SharpAlg.Native {
 
             if(rightConst != null && leftConst != null)
                 return Expr.Constant(Math.Pow(leftConst.Value, rightConst.Value));
+            return null;
+        }
+        Expr ExpressionPowerConvolution(Expr left, Expr right) {
+            double? rightConst = GetConstValue(right);
+            if(rightConst != null) {
+                var power = PowerExpressionExtractor.ExtractPower(left);
+                double? leftConst = GetConstValue(power.Right);
+                if(leftConst != null)
+                    return Expr.Power(power.Left, Expr.Constant(rightConst.Value * leftConst.Value));
+            }
             return null;
         }
         Expr EqualityConvolution(Expr left, Expr right, BinaryOperation operation) {

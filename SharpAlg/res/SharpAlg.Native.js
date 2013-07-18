@@ -432,7 +432,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right,
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Power = function (left, right)
 {
-    return (this.ConstantPowerConvolution(left, right) != null ? this.ConstantPowerConvolution(left, right) : SharpAlg.Native.Expr.Power(left, right));
+    return (this.ConstantPowerConvolution(left, right) != null ? this.ConstantPowerConvolution(left, right) : (this.ExpressionPowerConvolution(left, right) != null ? this.ExpressionPowerConvolution(left, right) : SharpAlg.Native.Expr.Power(left, right)));
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (left, right, operation)
 {
@@ -512,6 +512,18 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantPowerConvolution = func
     }
     if (rightConst != null && leftConst != null)
         return SharpAlg.Native.Expr.Constant(System.Math.Pow(leftConst.get_Value(), rightConst.get_Value()));
+    return null;
+};
+SharpAlg.Native.ConvolutionExprBuilder.prototype.ExpressionPowerConvolution = function (left, right)
+{
+    var rightConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(right);
+    if (rightConst != null)
+    {
+        var power = SharpAlg.Native.PowerExpressionExtractor.ExtractPower(left);
+        var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(power.get_Right());
+        if (leftConst != null)
+            return SharpAlg.Native.Expr.Power(power.get_Left(), SharpAlg.Native.Expr.Constant(rightConst.get_Value() * leftConst.get_Value()));
+    }
     return null;
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.EqualityConvolution = function (left, right, operation)
