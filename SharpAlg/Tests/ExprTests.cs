@@ -194,7 +194,7 @@ namespace SharpAlg.Tests {
             "x * 14  + 2 * x * 2 + x - 5 * x + x * (-1)".Parse().AssertSimpleStringRepresentation("13 * x");
             "x * 14 * y  + 2 * x * y + x * y * 3 - 5 * x *y - x * (-2) * y + 2 * x * (-3) * y".Parse().AssertSimpleStringRepresentation("10 * x * y");
 
-            "y * z * x + x * y* z + 2 * z * x * y - z * y * (-2) * x".Parse().AssertSimpleStringRepresentation("6 * y * z * x");
+            "y * z * x + x * y * z + 2 * z * x * y - z * y * (-2) * x".Parse().AssertSimpleStringRepresentation("6 * y * z * x");
 
             "(x + 1) ^ 2 * (x + 1) ^ 3".Parse().AssertSimpleStringRepresentation("(x + 1) ^ 5");
             "(x + 1 - y) ^ 2 * (-y + 1 + x) ^ 3".Parse().AssertSimpleStringRepresentation("(x + 1 - y) ^ 5");
@@ -202,7 +202,9 @@ namespace SharpAlg.Tests {
             "(x * y + 1) ^ 2 * (1 + y * x) ^ 3".Parse().AssertSimpleStringRepresentation("(x * y + 1) ^ 5");
             "y ^ 2 * x + 3 * x * y ^ 2".Parse().AssertSimpleStringRepresentation("4 * y ^ 2 * x");
             "x / y  / z + 3 * x / z / y".Parse().AssertSimpleStringRepresentation("4 * x / y / z");
-            
+            "x ^ (z * y) + x ^ (y * z)".Parse().AssertSimpleStringRepresentation("2 * x ^ (z * y)");
+            "(t * x) ^ (z * y) + (x * t) ^ (y * z)".Parse().AssertSimpleStringRepresentation("2 * (t * x) ^ (z * y)");
+            //"(t * (-x)) ^ (z * y) + (x * (-t)) ^ (y * z)".Parse().AssertSimpleStringRepresentation("2 * (t * x) ^ (z * y)");
 
             //"(x * y) ^ 3 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 5 * y ^ 5");//TODO convolution
             //"(x * y) * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 3 * y ^ 3");//TODO convolution

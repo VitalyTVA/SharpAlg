@@ -20,7 +20,7 @@ namespace SharpAlg.Native {
             });
         }
         public virtual bool Power(PowerExpr power) {
-            return DoEqualityCheck(power, (x1, x2) => x1.Left.ExprEquals(x2.Left) && x1.Right.ExprEquals(x2.Right));
+            return DoEqualityCheck(power, (x1, x2) => Equals(x1.Left, x2.Left) && Equals(x1.Right, x2.Right));
         }
         public virtual bool Parameter(ParameterExpr parameter) {
             return DoEqualityCheck(parameter, (x1, x2) => x1.ParameterName == x2.ParameterName);
@@ -29,12 +29,12 @@ namespace SharpAlg.Native {
             var other = expr as T;
             return other != null && equalityCheck(other, expr2);
         }
-        //bool Equals(Expr expr1, Expr expr2) {
-        //    return expr1.Visit(Clone(expr2));
-        //}
-        //protected virtual ExpressionEqualityComparer Clone(Expr expr) {
-        //    return new ExpressionEqualityComparer(expr);
-        //}
+        bool Equals(Expr expr1, Expr expr2) {
+            return expr1.Visit(Clone(expr2));
+        }
+        protected virtual ExpressionEqualityComparer Clone(Expr expr) {
+            return new ExpressionEqualityComparer(expr);
+        }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class ExpressionEquivalenceComparer : ExpressionEqualityComparer {
@@ -42,8 +42,6 @@ namespace SharpAlg.Native {
             : base(expr) {
         }
         public override bool Multi(MultiExpr multi) {
-            if(base.Multi(multi))
-                return true;
             if(!DoEqualityCheck(multi, (x1, x2) => x1.Operation == x2.Operation)) //TODO!!!!!
                 return false;
             var list = ((MultiExpr)expr).Args.ToList();
@@ -61,8 +59,8 @@ namespace SharpAlg.Native {
             }
             return list.Count == 0;
         }
-        //protected override ExpressionEqualityComparer Clone(Expr expr) {
-        //    return new ExpressionEquivalenceComparer(expr);
-        //}
+        protected override ExpressionEqualityComparer Clone(Expr expr) {
+            return new ExpressionEquivalenceComparer(expr);
+        }
     }
 }

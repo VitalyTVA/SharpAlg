@@ -629,7 +629,7 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.PowerExpr.ctor, power, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x1.get_Left(), x2.get_Left()) && SharpAlg.Native.ExpressionExtensions.ExprEquals(x1.get_Right(), x2.get_Right());
+                return this.Equals$$Expr$$Expr(x1.get_Left(), x2.get_Left()) && this.Equals$$Expr$$Expr(x1.get_Right(), x2.get_Right());
             }));
         },
         Parameter: function (parameter)
@@ -643,6 +643,14 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             var other = As(this.expr, T);
             return other != null && equalityCheck(other, expr2);
+        },
+        Equals$$Expr$$Expr: function (expr1, expr2)
+        {
+            return expr1.Visit$1(System.Boolean.ctor, this.Clone(expr2));
+        },
+        Clone: function (expr)
+        {
+            return new SharpAlg.Native.ExpressionEqualityComparer.ctor(expr);
         }
     }
 };
@@ -661,8 +669,6 @@ var SharpAlg$Native$ExpressionEquivalenceComparer =
         },
         Multi: function (multi)
         {
-            if (SharpAlg.Native.ExpressionEqualityComparer.commonPrototype.Multi.call(this, multi))
-                return true;
             if (!this.DoEqualityCheck$1(SharpAlg.Native.MultiExpr.ctor, multi, $CreateAnonymousDelegate(this, function (x1, x2)
             {
                 return x1.get_Operation() == x2.get_Operation();
@@ -689,6 +695,10 @@ var SharpAlg$Native$ExpressionEquivalenceComparer =
                     return false;
             }
             return list.get_Count() == 0;
+        },
+        Clone: function (expr)
+        {
+            return new SharpAlg.Native.ExpressionEquivalenceComparer.ctor(expr);
         }
     }
 };
