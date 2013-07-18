@@ -436,6 +436,12 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.Power = function (left, right)
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (left, right, operation)
 {
+    if (Is(right, SharpAlg.Native.ConstantExpr.ctor) && operation == 1)
+    {
+        var temp = left;
+        left = right;
+        right = temp;
+    }
     var args = System.Linq.Enumerable.ToList$1(SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ConvolutionExprBuilder.GetArgs(left, operation), SharpAlg.Native.ConvolutionExprBuilder.GetArgs(right, operation)));
     for (var i = 0; i < args.get_Count(); i++)
     {

@@ -50,6 +50,11 @@ namespace SharpAlg.Native {
                 ?? Expr.Power(left, right);
         }
         Expr MultiConvolution(Expr left, Expr right, BinaryOperation operation) {
+            if(right is ConstantExpr && operation == BinaryOperation.Multiply) {
+                Expr temp = left;
+                left = right;
+                right = temp;
+            }
             var args = GetArgs(left, operation).Concat(GetArgs(right, operation)).ToList();
             for(int i = 0; i < args.Count; i++) {
                 for(int j = i + 1; j < args.Count; j++) {
