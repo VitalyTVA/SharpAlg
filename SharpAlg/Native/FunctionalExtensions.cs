@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public static class FunctionalExtensions {
         const string STR_InputSequencesHaveDifferentLength = "Input sequences have different length.";
         //public static IEnumerable<TOut> Map<TIn, TOut>(this Func<TIn, TOut> function, IEnumerable<TIn> input) {
@@ -44,6 +44,22 @@ namespace SharpAlg.Native {
                     return false;
             }
             return !en2.MoveNext();
+        }
+        public static bool SetEqual<T>(this IEnumerable<T> first, IEnumerable<T> second, Func<T, T, bool> comparer) {
+            var list = second.ToList();
+            foreach(var item in first) {
+                bool found = false;
+                foreach(var item2 in list) {
+                    if(comparer(item, item2)) {
+                        list.Remove(item2);
+                        found = true;
+                        break;
+                    }
+                }
+                if(found == false)
+                    return false;
+            }
+            return list.Count == 0;
         }
         public static IEnumerable<T> RemoveAt<T>(this IEnumerable<T> source, int index) {
             var en = source.GetEnumerator();

@@ -42,22 +42,9 @@ namespace SharpAlg.Native {
             : base(expr) {
         }
         public override bool Multi(MultiExpr multi) {
-            if(!DoEqualityCheck(multi, (x1, x2) => x1.Operation == x2.Operation)) //TODO!!!!!
-                return false;
-            var list = ((MultiExpr)expr).Args.ToList();
-            foreach(var item in multi.Args) {
-                bool found = false;
-                foreach(var item2 in list) {
-                    if(item.ExprEquivalent(item2)) {
-                        list.Remove(item2);
-                        found = true;
-                        break;
-                    }
-                }
-                if(found == false)
-                    return false;
-            }
-            return list.Count == 0;
+            return DoEqualityCheck(multi, (x1, x2) => {
+                return x1.Operation == x2.Operation && x1.Args.SetEqual(x2.Args, (x, y) => x.ExprEquivalent(y));  //TODO singleton
+            });
         }
         protected override ExpressionEqualityComparer Clone(Expr expr) {
             return new ExpressionEquivalenceComparer(expr);

@@ -431,7 +431,7 @@ var SharpAlg$Tests$FluentAssert =
             {
                 SharpAlg.Tests.FluentAssert.AreEqual(x, y);
             };
-            SharpAlg.Native.FunctionalExtensions.Map(assert, first, second);
+            SharpAlg.Native.FunctionalExtensions.Map$2(T, T, assert, first, second);
             return first;
         },
         Fails$1: function (TInput, obj, action, exceptionType, exceptionCheck)

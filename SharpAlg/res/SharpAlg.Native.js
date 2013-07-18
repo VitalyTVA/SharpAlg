@@ -619,7 +619,7 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.MultiExpr.ctor, multi, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return x1.get_Operation() == x2.get_Operation() && SharpAlg.Native.FunctionalExtensions.EnumerableEqual(x1.get_Args(), x2.get_Args(), $CreateAnonymousDelegate(this, function (x, y)
+                return x1.get_Operation() == x2.get_Operation() && SharpAlg.Native.FunctionalExtensions.EnumerableEqual$1(SharpAlg.Native.Expr.ctor, x1.get_Args(), x2.get_Args(), $CreateAnonymousDelegate(this, function (x, y)
                 {
                     return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, y);
                 }));
@@ -669,32 +669,13 @@ var SharpAlg$Native$ExpressionEquivalenceComparer =
         },
         Multi: function (multi)
         {
-            if (!this.DoEqualityCheck$1(SharpAlg.Native.MultiExpr.ctor, multi, $CreateAnonymousDelegate(this, function (x1, x2)
+            return this.DoEqualityCheck$1(SharpAlg.Native.MultiExpr.ctor, multi, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return x1.get_Operation() == x2.get_Operation();
-            })))
-                return false;
-            var list = System.Linq.Enumerable.ToList$1(SharpAlg.Native.Expr.ctor, (Cast(this.expr, SharpAlg.Native.MultiExpr.ctor)).get_Args());
-            var $it1 = multi.get_Args().GetEnumerator();
-            while ($it1.MoveNext())
-            {
-                var item = $it1.get_Current();
-                var found = false;
-                var $it2 = list.GetEnumerator();
-                while ($it2.MoveNext())
+                return x1.get_Operation() == x2.get_Operation() && SharpAlg.Native.FunctionalExtensions.SetEqual$1(SharpAlg.Native.Expr.ctor, x1.get_Args(), x2.get_Args(), $CreateAnonymousDelegate(this, function (x, y)
                 {
-                    var item2 = $it2.get_Current();
-                    if (SharpAlg.Native.ExpressionExtensions.ExprEquivalent(item, item2))
-                    {
-                        list.Remove(item2);
-                        found = true;
-                        break;
-                    }
-                }
-                if (found == false)
-                    return false;
-            }
-            return list.get_Count() == 0;
+                    return SharpAlg.Native.ExpressionExtensions.ExprEquivalent(x, y);
+                }));
+            }));
         },
         Clone: function (expr)
         {
@@ -850,7 +831,7 @@ var SharpAlg$Native$ExpressionExtensions =
         {
             var count = System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args());
             if (count > 2)
-                return SharpAlg.Native.Expr.Multi(SharpAlg.Native.FunctionalExtensions.RemoveAt(multi.get_Args(), 0), multi.get_Operation());
+                return SharpAlg.Native.Expr.Multi(SharpAlg.Native.FunctionalExtensions.RemoveAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 0), multi.get_Operation());
             if (count == 2)
                 return System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1);
             throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
@@ -1051,50 +1032,92 @@ SharpAlg.Native.MultiplyExpressionExtractor.prototype.GetDefault = function (exp
     return new System.Tuple$2.ctor(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.One, expr);
 };
 $Inherit(SharpAlg.Native.MultiplyExpressionExtractor, SharpAlg.Native.DefaultExpressionVisitor);
-SharpAlg.Native.FunctionalExtensions = function ()
+var SharpAlg$Native$FunctionalExtensions =
 {
-};
-SharpAlg.Native.FunctionalExtensions.STR_InputSequencesHaveDifferentLength = "Input sequences have different length.";
-SharpAlg.Native.FunctionalExtensions.Map = function (action, input1, input2)
-{
-    var enumerator1 = input1.GetEnumerator();
-    var enumerator2 = input2.GetEnumerator();
-    while (enumerator1.MoveNext())
+    fullname: "SharpAlg.Native.FunctionalExtensions",
+    baseTypeName: "System.Object",
+    staticDefinition:
     {
-        if (!enumerator2.MoveNext())
-            throw $CreateException(new System.ArgumentException.ctor$$String("Input sequences have different length."), new Error());
-        action(enumerator1.get_Current(), enumerator2.get_Current());
-    }
-    if (enumerator2.MoveNext())
-        throw $CreateException(new System.ArgumentException.ctor$$String("Input sequences have different length."), new Error());
-};
-SharpAlg.Native.FunctionalExtensions.EnumerableEqual = function (first, second, comparer)
-{
-    var en1 = first.GetEnumerator();
-    var en2 = second.GetEnumerator();
-    while (en1.MoveNext())
+        cctor: function ()
+        {
+            SharpAlg.Native.FunctionalExtensions.STR_InputSequencesHaveDifferentLength = "Input sequences have different length.";
+        },
+        Map$2: function (TIn1, TIn2, action, input1, input2)
+        {
+            var enumerator1 = input1.GetEnumerator();
+            var enumerator2 = input2.GetEnumerator();
+            while (enumerator1.MoveNext())
+            {
+                if (!enumerator2.MoveNext())
+                    throw $CreateException(new System.ArgumentException.ctor$$String("Input sequences have different length."), new Error());
+                action(enumerator1.get_Current(), enumerator2.get_Current());
+            }
+            if (enumerator2.MoveNext())
+                throw $CreateException(new System.ArgumentException.ctor$$String("Input sequences have different length."), new Error());
+        },
+        EnumerableEqual$1: function (T, first, second, comparer)
+        {
+            var en1 = first.GetEnumerator();
+            var en2 = second.GetEnumerator();
+            while (en1.MoveNext())
+            {
+                if (!en2.MoveNext())
+                    return false;
+                if (!comparer(en1.get_Current(), en2.get_Current()))
+                    return false;
+            }
+            return !en2.MoveNext();
+        },
+        SetEqual$1: function (T, first, second, comparer)
+        {
+            var list = System.Linq.Enumerable.ToList$1(T, second);
+            var $it1 = first.GetEnumerator();
+            while ($it1.MoveNext())
+            {
+                var item = $it1.get_Current();
+                var found = false;
+                var $it2 = list.GetEnumerator();
+                while ($it2.MoveNext())
+                {
+                    var item2 = $it2.get_Current();
+                    if (comparer(item, item2))
+                    {
+                        list.Remove(item2);
+                        found = true;
+                        break;
+                    }
+                }
+                if (found == false)
+                    return false;
+            }
+            return list.get_Count() == 0;
+        },
+        RemoveAt$1: function (T, source, index)
+        {
+            var $yield = [];
+            var en = source.GetEnumerator();
+            while (en.MoveNext())
+            {
+                if (index != 0)
+                    $yield.push(en.get_Current());
+                index--;
+            }
+            if (index > 0)
+                throw $CreateException(new System.IndexOutOfRangeException.ctor$$String("index"), new Error());
+            return $yield;
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
     {
-        if (!en2.MoveNext())
-            return false;
-        if (!comparer(en1.get_Current(), en2.get_Current()))
-            return false;
+        ctor: function ()
+        {
+            System.Object.ctor.call(this);
+        }
     }
-    return !en2.MoveNext();
 };
-SharpAlg.Native.FunctionalExtensions.RemoveAt = function (source, index)
-{
-    var $yield = [];
-    var en = source.GetEnumerator();
-    while (en.MoveNext())
-    {
-        if (index != 0)
-            $yield.push(en.get_Current());
-        index--;
-    }
-    if (index > 0)
-        throw $CreateException(new System.IndexOutOfRangeException.ctor$$String("index"), new Error());
-    return $yield;
-};
+JsTypes.push(SharpAlg$Native$FunctionalExtensions);
 var SharpAlg$Native$IExpressionVisitor$1 = {fullname: "SharpAlg.Native.IExpressionVisitor$1", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IExpressionVisitor$1);
 SharpAlg.Native.MayBe = function ()
