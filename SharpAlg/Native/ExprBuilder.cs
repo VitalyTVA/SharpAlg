@@ -156,7 +156,7 @@ namespace SharpAlg.Native {
             if(operation == BinaryOperation.Multiply) {
                 PowerExpr leftPower = PowerExpressionExtractor.ExtractPower(left);
                 PowerExpr rightPower = PowerExpressionExtractor.ExtractPower(right);
-                if(leftPower.Left.ExprEquals(rightPower.Left)) {
+                if(leftPower.Left.ExprEquivalent(rightPower.Left)) {
                     return Power(leftPower.Left, Add(leftPower.Right, rightPower.Right));
                 }
             }
@@ -166,7 +166,7 @@ namespace SharpAlg.Native {
             if(operation == BinaryOperation.Add) {
                 Tuple<Expr, Expr> leftMultiply = MultiplyExpressionExtractor.ExtractMultiply(left);
                 Tuple<Expr, Expr> rightMultiply = MultiplyExpressionExtractor.ExtractMultiply(right);
-                if(leftMultiply.Item2.ExprEquals(rightMultiply.Item2)) {
+                if(leftMultiply.Item2.ExprEquivalent(rightMultiply.Item2)) {
                     return Multiply(Add(leftMultiply.Item1, rightMultiply.Item1), leftMultiply.Item2);
                 }
             }

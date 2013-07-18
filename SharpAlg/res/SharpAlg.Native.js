@@ -552,7 +552,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.PowerConvolution = function (le
     {
         var leftPower = SharpAlg.Native.PowerExpressionExtractor.ExtractPower(left);
         var rightPower = SharpAlg.Native.PowerExpressionExtractor.ExtractPower(right);
-        if (SharpAlg.Native.ExpressionExtensions.ExprEquals(leftPower.get_Left(), rightPower.get_Left()))
+        if (SharpAlg.Native.ExpressionExtensions.ExprEquivalent(leftPower.get_Left(), rightPower.get_Left()))
         {
             return this.Power(leftPower.get_Left(), this.Add(leftPower.get_Right(), rightPower.get_Right()));
         }
@@ -565,7 +565,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiplyConvolution = function 
     {
         var leftMultiply = SharpAlg.Native.MultiplyExpressionExtractor.ExtractMultiply(left);
         var rightMultiply = SharpAlg.Native.MultiplyExpressionExtractor.ExtractMultiply(right);
-        if (SharpAlg.Native.ExpressionExtensions.ExprEquals(leftMultiply.get_Item2(), rightMultiply.get_Item2()))
+        if (SharpAlg.Native.ExpressionExtensions.ExprEquivalent(leftMultiply.get_Item2(), rightMultiply.get_Item2()))
         {
             return this.Multiply(this.Add(leftMultiply.get_Item1(), rightMultiply.get_Item1()), leftMultiply.get_Item2());
         }
@@ -593,9 +593,9 @@ SharpAlg.Native.ConvolutionExprBuilder.CanEvaluate = function (expr)
     return false;
 };
 $Inherit(SharpAlg.Native.ConvolutionExprBuilder, SharpAlg.Native.ExprBuilder);
-var SharpAlg$Native$ExpressionComparer =
+var SharpAlg$Native$ExpressionEqualityComparer =
 {
-    fullname: "SharpAlg.Native.ExpressionComparer",
+    fullname: "SharpAlg.Native.ExpressionEqualityComparer",
     baseTypeName: "System.Object",
     assemblyName: "SharpAlg",
     interfaceNames: ["SharpAlg.Native.IExpressionVisitor$1"],
@@ -646,7 +646,53 @@ var SharpAlg$Native$ExpressionComparer =
         }
     }
 };
-JsTypes.push(SharpAlg$Native$ExpressionComparer);
+JsTypes.push(SharpAlg$Native$ExpressionEqualityComparer);
+var SharpAlg$Native$ExpressionEquivalenceComparer =
+{
+    fullname: "SharpAlg.Native.ExpressionEquivalenceComparer",
+    baseTypeName: "SharpAlg.Native.ExpressionEqualityComparer",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (expr)
+        {
+            SharpAlg.Native.ExpressionEqualityComparer.ctor.call(this, expr);
+        },
+        Multi: function (multi)
+        {
+            if (SharpAlg.Native.ExpressionEqualityComparer.commonPrototype.Multi.call(this, multi))
+                return true;
+            if (!this.DoEqualityCheck$1(SharpAlg.Native.MultiExpr.ctor, multi, $CreateAnonymousDelegate(this, function (x1, x2)
+            {
+                return x1.get_Operation() == x2.get_Operation();
+            })))
+                return false;
+            var list = System.Linq.Enumerable.ToList$1(SharpAlg.Native.Expr.ctor, (Cast(this.expr, SharpAlg.Native.MultiExpr.ctor)).get_Args());
+            var $it1 = multi.get_Args().GetEnumerator();
+            while ($it1.MoveNext())
+            {
+                var item = $it1.get_Current();
+                var found = false;
+                var $it2 = list.GetEnumerator();
+                while ($it2.MoveNext())
+                {
+                    var item2 = $it2.get_Current();
+                    if (SharpAlg.Native.ExpressionExtensions.ExprEquivalent(item, item2))
+                    {
+                        list.Remove(item2);
+                        found = true;
+                        break;
+                    }
+                }
+                if (found == false)
+                    return false;
+            }
+            return list.get_Count() == 0;
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$ExpressionEquivalenceComparer);
 SharpAlg.Native.ExpressionEvaluator = function (context)
 {
     this.context = null;
@@ -754,7 +800,11 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         ExprEquals: function (expr1, expr2)
         {
-            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionComparer.ctor(expr2));
+            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionEqualityComparer.ctor(expr2));
+        },
+        ExprEquivalent: function (expr1, expr2)
+        {
+            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionEquivalenceComparer.ctor(expr2));
         },
         Print: function (expr)
         {
