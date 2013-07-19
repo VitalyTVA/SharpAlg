@@ -97,6 +97,7 @@ namespace SharpAlg.Tests {
             "x / y / z".Parse().AssertSimpleStringRepresentation("x / y / z");
             "1 + 2 * x + 3 * y".Parse().AssertSimpleStringRepresentation("1 + 2 * x + 3 * y");
             "(x + 1) ^ (x * y)".Parse().AssertSimpleStringRepresentation("(x + 1) ^ (x * y)");
+            "(x - 0.05) ^ (x * .2 * y)".Parse().AssertSimpleStringRepresentation("(x - 0.05) ^ (0.2 * x * y)");
 
             Expr.Minus(Expr.Parameter("x")).AssertSimpleStringRepresentation("-x");
             Expr.Inverse(Expr.Parameter("x")).AssertSimpleStringRepresentation("1 / x");
