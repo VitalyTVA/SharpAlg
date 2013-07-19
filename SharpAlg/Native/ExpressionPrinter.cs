@@ -1,6 +1,7 @@
 using SharpKit.JavaScript;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -8,12 +9,20 @@ using System.Text;
 namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ExpressionPrinter : IExpressionVisitor<string> {
+        [JsMethod(Code = "return System.Double.Parse$$String(s);")]
+        public static double Parse(string s) { //TODO compatibility layer
+            return double.Parse(s, CultureInfo.InvariantCulture);
+        }
+        [JsMethod(Code = "return d.toString();")]
+        string ToString(double d) { //TODO compatibility layer
+            return d.ToString(CultureInfo.InvariantCulture);
+        }
         readonly OperationPriority priority;
         public ExpressionPrinter(OperationPriority priority = OperationPriority.None) {
             this.priority = priority;
         }
         public string Constant(ConstantExpr constant) {
-            string stringValue = constant.Value.ToString();
+            string stringValue = ToString(constant.Value);
             return constant.Value >= 0 ? stringValue : Wrap(stringValue, OperationPriority.Add);
         }
         public string Multi(MultiExpr multi) {

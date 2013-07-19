@@ -62,7 +62,7 @@ PowerExpression<out Expr expr>					(. Expr rightExpr; .)
 Terminal<out Expr expr>							(. expr = null; .)
 =	
 	(number										(. expr = Expr.Constant(Int32.Parse(t.val)); .)
-	| floatNumber								(. expr = Expr.Constant(double.Parse(t.val)); .)
+	| floatNumber								(. expr = Expr.Constant(ExpressionPrinter.Parse(t.val)); .)
 	| '('AdditiveExpression<out expr>')'
 	| identifier								(. expr = Expr.Parameter(t.val); .)
 	| '-' Terminal<out expr>					(. expr = builder.Minus(expr); .)

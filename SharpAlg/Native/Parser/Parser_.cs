@@ -151,7 +151,7 @@ public class Parser {
 			expr = Expr.Constant(Int32.Parse(t.val)); 
 		} else if (la.kind == 3) {
 			Get();
-			expr = Expr.Constant(double.Parse(t.val)); 
+			expr = Expr.Constant(ExpressionPrinter.Parse(t.val)); 
 		} else if (la.kind == 9) {
 			Get();
 			AdditiveExpression(out expr);

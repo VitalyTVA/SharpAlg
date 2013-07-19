@@ -882,9 +882,17 @@ SharpAlg.Native.ExpressionPrinter = function (priority)
     this.priority = 0;
     this.priority = priority;
 };
+SharpAlg.Native.ExpressionPrinter.Parse = function (s)
+{
+    return System.Double.Parse$$String(s);
+};
+SharpAlg.Native.ExpressionPrinter.prototype.ToString = function (d)
+{
+    return d.toString();
+};
 SharpAlg.Native.ExpressionPrinter.prototype.Constant = function (constant)
 {
-    var stringValue = constant.get_Value().toString();
+    var stringValue = this.ToString(constant.get_Value());
     return constant.get_Value() >= 0 ? stringValue : this.Wrap(stringValue, 1);
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Multi = function (multi)
