@@ -54,6 +54,10 @@ namespace SharpAlg.Preprocess {
             MatchCollection matches = Regex.Matches(s, regex);
             string result = s.Replace("break;", "done = true; break;");
             result = Regex.Replace(result, regex, "{ AddCh(); state = $1; break; }");
+
+            regex = @"{goto case (\d+);}";
+            matches = Regex.Matches(s, regex);
+            result = Regex.Replace(result, regex, "{ state = $1; break; }");
             return result;
         }
         public static string PatchParser(string s) {
@@ -100,7 +104,7 @@ if(ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') {
 else { t.kind = 1; break; }
 case 2:
 recEnd = pos; recKind = 2;
-if(ch >= '0' && ch <= '9') {AddCh(); goto case 2;}
+if(ch >= '0' && ch <= '9') {goto case 2;}
 else { t.kind = 2; break; }
 case 3:
 { t.kind = 3; break; }
@@ -122,7 +126,7 @@ if(ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') {
 else { t.kind = 1; done = true; break; }
 case 2:
 recEnd = pos; recKind = 2;
-if(ch >= '0' && ch <= '9') { AddCh(); state = 2; break; }
+if(ch >= '0' && ch <= '9') { state = 2; break; }
 else { t.kind = 2; done = true; break; }
 case 3:
 { t.kind = 3; done = true; break; }

@@ -47,6 +47,14 @@ namespace SharpAlg.Tests {
                 .AssertValue(3, Expr.Divide(Expr.Constant(6), Expr.Constant(2)));
             Parse("2 ^ 3")
                 .AssertValue(8, Expr.Power(Expr.Constant(2), Expr.Constant(3)));
+            Parse(".234")
+                .AssertValue(.234, Expr.Constant(.234));
+            Parse("0.234")
+                .AssertValue(.234, Expr.Constant(.234));
+            Parse("-0.234")
+                .AssertValue(-.234);
+            Parse("-.234")
+                .AssertValue(-.234);
         }
         [Test]
         public void OperationsPriorityTest() {
@@ -108,7 +116,7 @@ namespace SharpAlg.Tests {
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ParserTestHelper {
-        public static Parser AssertValue(this Parser parser, int value, Expr expectedExpr = null, Context context = null) {
+        public static Parser AssertValue(this Parser parser, double value, Expr expectedExpr = null, Context context = null) {
             return parser
                 .IsEqual(x => x.errors.Errors, string.Empty)
                 .IsEqual(x => x.errors.Count, 0)

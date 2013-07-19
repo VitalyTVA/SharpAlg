@@ -523,6 +523,10 @@ var SharpAlg$Tests$ParserTests =
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 * 3"), 6, SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3)), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("6 / 2"), 3, SharpAlg.Native.Expr.Divide(SharpAlg.Native.Expr.Constant(6), SharpAlg.Native.Expr.Constant(2)), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 ^ 3"), 8, SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Constant(2), SharpAlg.Native.Expr.Constant(3)), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse(".234"), 0.234, SharpAlg.Native.Expr.Constant(0.234), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("0.234"), 0.234, SharpAlg.Native.Expr.Constant(0.234), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("-0.234"), -0.234, null, null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("-.234"), -0.234, null, null);
         },
         OperationsPriorityTest: function ()
         {

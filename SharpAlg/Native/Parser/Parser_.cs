@@ -13,7 +13,8 @@ public class Parser {
 	public const int _EOF = 0;
 	public const int _identifier = 1;
 	public const int _number = 2;
-	public const int maxT = 10;
+	public const int _floatNumber = 3;
+	public const int maxT = 11;
 
 	const bool T = true;
 	const bool x = false;
@@ -96,7 +97,7 @@ public class Parser {
 	void AdditiveExpression(out Expr expr) {
 		bool minus; Expr rightExpr; 
 		MultiplicativeExpression(out expr);
-		while (la.kind == 3 || la.kind == 4) {
+		while (la.kind == 4 || la.kind == 5) {
 			AdditiveOperation(out minus);
 			MultiplicativeExpression(out rightExpr);
 			expr = builder.Binary(expr, (minus ? builder.Minus(rightExpr) : rightExpr), BinaryOperation.Add); 
@@ -106,7 +107,7 @@ public class Parser {
 	void MultiplicativeExpression(out Expr expr) {
 		bool divide; Expr rightExpr; 
 		PowerExpression(out expr);
-		while (la.kind == 5 || la.kind == 6) {
+		while (la.kind == 6 || la.kind == 7) {
 			MultiplicativeOperation(out divide);
 			PowerExpression(out rightExpr);
 			expr = builder.Binary(expr, (divide ? Expr.Inverse(rightExpr) : rightExpr), BinaryOperation.Multiply); 
@@ -115,18 +116,18 @@ public class Parser {
 
 	void AdditiveOperation(out bool minus) {
 		minus = false; 
-		if (la.kind == 3) {
+		if (la.kind == 4) {
 			Get();
-		} else if (la.kind == 4) {
+		} else if (la.kind == 5) {
 			Get();
 			minus = true; 
-		} else SynErr(11);
+		} else SynErr(12);
 	}
 
 	void PowerExpression(out Expr expr) {
 		Expr rightExpr; 
 		Terminal(out expr);
-		while (la.kind == 7) {
+		while (la.kind == 8) {
 			Get();
 			Terminal(out rightExpr);
 			expr = builder.Power(expr, rightExpr); 
@@ -135,12 +136,12 @@ public class Parser {
 
 	void MultiplicativeOperation(out bool divide) {
 		divide = false; 
-		if (la.kind == 5) {
+		if (la.kind == 6) {
 			Get();
-		} else if (la.kind == 6) {
+		} else if (la.kind == 7) {
 			Get();
 			divide = true; 
-		} else SynErr(12);
+		} else SynErr(13);
 	}
 
 	void Terminal(out Expr expr) {
@@ -148,18 +149,21 @@ public class Parser {
 		if (la.kind == 2) {
 			Get();
 			expr = Expr.Constant(Int32.Parse(t.val)); 
-		} else if (la.kind == 8) {
+		} else if (la.kind == 3) {
+			Get();
+			expr = Expr.Constant(double.Parse(t.val)); 
+		} else if (la.kind == 9) {
 			Get();
 			AdditiveExpression(out expr);
-			Expect(9);
+			Expect(10);
 		} else if (la.kind == 1) {
 			Get();
 			expr = Expr.Parameter(t.val); 
-		} else if (la.kind == 4) {
+		} else if (la.kind == 5) {
 			Get();
 			Terminal(out expr);
 			expr = builder.Minus(expr); 
-		} else SynErr(13);
+		} else SynErr(14);
 	}
 
 
@@ -183,7 +187,7 @@ public class Parser {
 */
 //parser set patch begin
 	static readonly bool[][] set = {
-		new bool[] {T,x,x,x, x,x,x,x, x,x,x,x}
+		new bool[] {T,x,x,x, x,x,x,x, x,x,x,x, x}
 
 	};
 //parser set patch end
@@ -197,17 +201,18 @@ public class Errors : ErrorsBase {
 			case 0: s = "EOF expected"; break;
 			case 1: s = "identifier expected"; break;
 			case 2: s = "number expected"; break;
-			case 3: s = "\"+\" expected"; break;
-			case 4: s = "\"-\" expected"; break;
-			case 5: s = "\"*\" expected"; break;
-			case 6: s = "\"/\" expected"; break;
-			case 7: s = "\"^\" expected"; break;
-			case 8: s = "\"(\" expected"; break;
-			case 9: s = "\")\" expected"; break;
-			case 10: s = "??? expected"; break;
-			case 11: s = "invalid AdditiveOperation"; break;
-			case 12: s = "invalid MultiplicativeOperation"; break;
-			case 13: s = "invalid Terminal"; break;
+			case 3: s = "floatNumber expected"; break;
+			case 4: s = "\"+\" expected"; break;
+			case 5: s = "\"-\" expected"; break;
+			case 6: s = "\"*\" expected"; break;
+			case 7: s = "\"/\" expected"; break;
+			case 8: s = "\"^\" expected"; break;
+			case 9: s = "\"(\" expected"; break;
+			case 10: s = "\")\" expected"; break;
+			case 11: s = "??? expected"; break;
+			case 12: s = "invalid AdditiveOperation"; break;
+			case 13: s = "invalid MultiplicativeOperation"; break;
+			case 14: s = "invalid Terminal"; break;
 
             default: s = "error " + n; break;
         }

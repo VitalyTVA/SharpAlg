@@ -14,8 +14,8 @@ namespace SharpAlg.Native.Parser {
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
-	const int maxT = 10;
-	const int noSym = 10;
+	const int maxT = 11;
+	const int noSym = 11;
 
 
 	public Buffer buffer; // scanner buffer
@@ -39,14 +39,15 @@ public class Scanner {
 		start = new Dictionary<int, int>();
 		for (int i = 65; i <= 90; ++i) start[i] = 1;
 		for (int i = 97; i <= 122; ++i) start[i] = 1;
-		for (int i = 48; i <= 57; ++i) start[i] = 2;
-		start[43] = 3; 
-		start[45] = 4; 
-		start[42] = 5; 
-		start[47] = 6; 
-		start[94] = 7; 
-		start[40] = 8; 
-		start[41] = 9; 
+		for (int i = 48; i <= 57; ++i) start[i] = 4;
+		start[46] = 2; 
+		start[43] = 5; 
+		start[45] = 6; 
+		start[42] = 7; 
+		start[47] = 8; 
+		start[94] = 9; 
+		start[40] = 10; 
+		start[41] = 11; 
 		start[Buffer.EOF] = -1;
 
 	}
@@ -150,23 +151,31 @@ old way*/
 				if (ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') { AddCh(); state = 1; break; }
 				else {t.kind = 1; done = true; break;}
 			case 2:
-				recEnd = pos; recKind = 2;
-				if (ch >= '0' && ch <= '9') { AddCh(); state = 2; break; }
-				else {t.kind = 2; done = true; break;}
+				if (ch >= '0' && ch <= '9') { AddCh(); state = 3; break; }
+				else { state = 0; break; }
 			case 3:
-				{t.kind = 3; done = true; break;}
+				recEnd = pos; recKind = 3;
+				if (ch >= '0' && ch <= '9') { AddCh(); state = 3; break; }
+				else {t.kind = 3; done = true; break;}
 			case 4:
-				{t.kind = 4; done = true; break;}
+				recEnd = pos; recKind = 2;
+				if (ch >= '0' && ch <= '9') { AddCh(); state = 4; break; }
+				else if (ch == '.') { AddCh(); state = 2; break; }
+				else {t.kind = 2; done = true; break;}
 			case 5:
-				{t.kind = 5; done = true; break;}
+				{t.kind = 4; done = true; break;}
 			case 6:
-				{t.kind = 6; done = true; break;}
+				{t.kind = 5; done = true; break;}
 			case 7:
-				{t.kind = 7; done = true; break;}
+				{t.kind = 6; done = true; break;}
 			case 8:
-				{t.kind = 8; done = true; break;}
+				{t.kind = 7; done = true; break;}
 			case 9:
+				{t.kind = 8; done = true; break;}
+			case 10:
 				{t.kind = 9; done = true; break;}
+			case 11:
+				{t.kind = 10; done = true; break;}
 
 		}
         }
