@@ -464,13 +464,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.Power = function (left, right)
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (left, right, operation)
 {
-    if (Is(right, SharpAlg.Native.ConstantExpr.ctor) && operation == 1)
-    {
-        var temp = left;
-        left = right;
-        right = temp;
-    }
-    var args = System.Linq.Enumerable.ToList$1(SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ConvolutionExprBuilder.GetArgs(left, operation), SharpAlg.Native.ConvolutionExprBuilder.GetArgs(right, operation)));
+    var args = SharpAlg.Native.ConvolutionExprBuilder.GetSortedArgs(left, right, operation);
     for (var i = 0; i < args.get_Count(); i++)
     {
         for (var j = i + 1; j < args.get_Count(); j++)
@@ -485,6 +479,20 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (le
         }
     }
     return SharpAlg.Native.Expr.Multi(args, operation);
+};
+SharpAlg.Native.ConvolutionExprBuilder.GetSortedArgs = function (left, right, operation)
+{
+    var args = System.Linq.Enumerable.ToList$1(SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ConvolutionExprBuilder.GetArgs(left, operation), SharpAlg.Native.ConvolutionExprBuilder.GetArgs(right, operation)));
+    if (operation == 1)
+    {
+        args.Sort$$Comparison$1(function (x, y)
+        {
+            var x_ = Is(x, SharpAlg.Native.ConstantExpr.ctor) ? 0 : 1;
+            var y_ = Is(y, SharpAlg.Native.ConstantExpr.ctor) ? 0 : 1;
+            return x_ - y_;
+        });
+    }
+    return args;
 };
 SharpAlg.Native.ConvolutionExprBuilder.GetArgs = function (expr, operation)
 {

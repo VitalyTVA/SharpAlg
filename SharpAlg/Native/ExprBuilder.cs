@@ -50,12 +50,7 @@ namespace SharpAlg.Native {
                 ?? Expr.Power(left, right);
         }
         Expr MultiConvolution(Expr left, Expr right, BinaryOperation operation) {
-            if(right is ConstantExpr && operation == BinaryOperation.Multiply) {
-                Expr temp = left;
-                left = right;
-                right = temp;
-            }
-            var args = GetArgs(left, operation).Concat(GetArgs(right, operation)).ToList();
+            var args = GetSortedArgs(left, right, operation);
             for(int i = 0; i < args.Count; i++) {
                 for(int j = i + 1; j < args.Count; j++) {
                     var convoluted = ConstantConvolution(args[i], args[j], operation)
@@ -69,6 +64,17 @@ namespace SharpAlg.Native {
                 }
             }
             return Expr.Multi(args, operation);
+        }
+        static List<Expr> GetSortedArgs(Expr left, Expr right, BinaryOperation operation) {
+            List<Expr> args = GetArgs(left, operation).Concat(GetArgs(right, operation)).ToList();
+            if(operation == BinaryOperation.Multiply) {
+                args.Sort(delegate(Expr x, Expr y) {
+                    int x_ = x is ConstantExpr ? 0 : 1;
+                    int y_ = y is ConstantExpr ? 0 : 1;
+                    return x_ - y_;
+                });
+            }
+            return args;
         }
         static IEnumerable<Expr> GetArgs(Expr expr, BinaryOperation operation) {
             if(expr is MultiExpr && ((MultiExpr)expr).Operation == operation)
