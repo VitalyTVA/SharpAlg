@@ -7,6 +7,19 @@ using System.Linq;
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNumberName)]
     public class Number {
+        public static bool operator >=(Number n1, Number n2) {
+            return n1.Value >= n2.Value;
+        }
+        public static bool operator <=(Number n1, Number n2) {
+            throw new NotImplementedException();
+        }
+        //public static Number operator -(Number n) {
+        //    return FromDouble(-n.Value);
+        //}
+        //public static implicit operator Number(double value) {
+        //    return FromDouble(value);
+        //}
+
         public static readonly Number Zero;
         public static readonly Number One;
         public static readonly Number MinusOne;

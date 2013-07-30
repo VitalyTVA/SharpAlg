@@ -690,7 +690,7 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.ConstantExpr.ctor, constant, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return x1.get_Value().get_Value() == x2.get_Value().get_Value();
+                return x1.get_Value().Equals$$Object(x2.get_Value());
             }));
         },
         Multi: function (multi)
@@ -943,7 +943,7 @@ SharpAlg.Native.ExpressionPrinter.prototype.ToString = function (d)
 SharpAlg.Native.ExpressionPrinter.prototype.Constant = function (constant)
 {
     var stringValue = this.ToString(constant.get_Value().get_Value());
-    return constant.get_Value().get_Value() >= 0 ? stringValue : this.Wrap(stringValue, 1);
+    return SharpAlg.Native.Number.op_GreaterThanOrEqual(constant.get_Value(), SharpAlg.Native.Number.Zero) ? stringValue : this.Wrap(stringValue, 1);
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Multi = function (multi)
 {
@@ -1060,7 +1060,7 @@ SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression = function (power)
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Constant = function (constant)
 {
-    return constant.get_Value().get_Value() >= 0 || this.operation != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(-constant.get_Value().get_Value()), 1);
+    return SharpAlg.Native.Number.op_GreaterThanOrEqual(constant.get_Value(), SharpAlg.Native.Number.Zero) || this.operation != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(-constant.get_Value().get_Value()), 1);
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Multi = function (multi)
 {

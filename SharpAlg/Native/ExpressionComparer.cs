@@ -12,7 +12,7 @@ namespace SharpAlg.Native {
             this.expr = expr;
         }
         public bool Constant(ConstantExpr constant) {
-            return DoEqualityCheck(constant, (x1, x2) => x1.Value.Value == x2.Value.Value);
+            return DoEqualityCheck(constant, (x1, x2) => x1.Value.Equals(x2.Value));
         }
         public bool Multi(MultiExpr multi) {
             return DoEqualityCheck(multi, (x1, x2) => {
