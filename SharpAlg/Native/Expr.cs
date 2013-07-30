@@ -8,11 +8,11 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     [DebuggerDisplay("Expr: {Print}")]
     public abstract class Expr {
-        public static readonly ConstantExpr Zero = new ConstantExpr(0);
-        public static readonly ConstantExpr One = new ConstantExpr(1);
-        public static readonly ConstantExpr MinusOne = new ConstantExpr(-1);
+        public static readonly ConstantExpr Zero = new ConstantExpr(Number.Zero);
+        public static readonly ConstantExpr One = new ConstantExpr(Number.One);
+        public static readonly ConstantExpr MinusOne = new ConstantExpr(Number.MinusOne);
         public static ConstantExpr Constant(double constant) {
-            return new ConstantExpr(constant);
+            return new ConstantExpr(Number.FromDouble(constant));
         }
         public static ParameterExpr Parameter(string parameterName) {
             return new ParameterExpr(parameterName);
@@ -51,10 +51,10 @@ namespace SharpAlg.Native {
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class ConstantExpr : Expr {
-        internal ConstantExpr(double value) {
+        internal ConstantExpr(Number value) {
             Value = value;
         }
-        public double Value { get; private set; }
+        public Number Value { get; private set; }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             return visitor.Constant(this);
         }

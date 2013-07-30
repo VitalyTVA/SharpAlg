@@ -12,7 +12,7 @@ namespace SharpAlg.Native {
             this.context = context;
         }
         public double Constant(ConstantExpr constant) {
-            return constant.Value;
+            return constant.Value.Value;
         }
         public double Multi(MultiExpr multi) {
             double result = 0;

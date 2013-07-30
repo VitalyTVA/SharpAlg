@@ -179,13 +179,13 @@ var SharpAlg$Native$Expr =
     {
         cctor: function ()
         {
-            SharpAlg.Native.Expr.Zero = new SharpAlg.Native.ConstantExpr.ctor(0);
-            SharpAlg.Native.Expr.One = new SharpAlg.Native.ConstantExpr.ctor(1);
-            SharpAlg.Native.Expr.MinusOne = new SharpAlg.Native.ConstantExpr.ctor(-1);
+            SharpAlg.Native.Expr.Zero = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.Zero);
+            SharpAlg.Native.Expr.One = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.One);
+            SharpAlg.Native.Expr.MinusOne = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.MinusOne);
         },
         Constant: function (constant)
         {
-            return new SharpAlg.Native.ConstantExpr.ctor(constant);
+            return new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.FromDouble(constant));
         },
         Parameter: function (parameterName)
         {
@@ -260,11 +260,11 @@ var SharpAlg$Native$ConstantExpr =
     {
         ctor: function (value)
         {
-            this._Value = 0;
+            this._Value = null;
             SharpAlg.Native.Expr.ctor.call(this);
             this.set_Value(value);
         },
-        Value$$: "System.Double",
+        Value$$: "SharpAlg.Native.Number",
         get_Value: function ()
         {
             return this._Value;
@@ -649,7 +649,7 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.ConstantExpr.ctor, constant, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return x1.get_Value() == x2.get_Value();
+                return x1.get_Value().get_Value() == x2.get_Value().get_Value();
             }));
         },
         Multi: function (multi)
@@ -729,7 +729,7 @@ SharpAlg.Native.ExpressionEvaluator = function (context)
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Constant = function (constant)
 {
-    return constant.get_Value();
+    return constant.get_Value().get_Value();
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Multi = function (multi)
 {
@@ -901,8 +901,8 @@ SharpAlg.Native.ExpressionPrinter.prototype.ToString = function (d)
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Constant = function (constant)
 {
-    var stringValue = this.ToString(constant.get_Value());
-    return constant.get_Value() >= 0 ? stringValue : this.Wrap(stringValue, 1);
+    var stringValue = this.ToString(constant.get_Value().get_Value());
+    return constant.get_Value().get_Value() >= 0 ? stringValue : this.Wrap(stringValue, 1);
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Multi = function (multi)
 {
@@ -1019,7 +1019,7 @@ SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression = function (power)
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Constant = function (constant)
 {
-    return constant.get_Value() >= 0 || this.operation != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(-constant.get_Value()), 1);
+    return constant.get_Value().get_Value() >= 0 || this.operation != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(-constant.get_Value().get_Value()), 1);
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Multi = function (multi)
 {

@@ -22,7 +22,7 @@ namespace SharpAlg.Tests {
         [Test]
         public void ConstantExprTest() {
             Expr.Constant(9)
-                .IsEqual(x => x.Value, 9)
+                .IsEqual(x => x.Value.Value, 9)
                 .IsEqual(x => x.Evaluate(), 9)
                 .IsTrue(x => x.ExprEquals(Expr.Constant(9)))
                 .IsFalse(x => x.ExprEquals(Expr.Constant(13)));

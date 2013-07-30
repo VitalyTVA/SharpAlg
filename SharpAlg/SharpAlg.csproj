@@ -73,6 +73,7 @@
     <Content Include="res\jquery-1.8.2.min.js" />
     <Content Include="res\jsclr-4.1.0.js" />
     <Content Include="res\SharpAlg.Native.js" />
+    <Content Include="res\SharpAlg.Number.js" />
     <Content Include="res\SharpAlg.Parser.js" />
     <Content Include="res\SharpAlg.Tests.js" />
     <Content Include="Web.config" />
@@ -90,6 +91,7 @@
     <Compile Include="Native\FunctionalExtensions.cs" />
     <Compile Include="Native\IExpressionVisitor.cs" />
     <Compile Include="Native\MayBe.cs" />
+    <Compile Include="Native\Number\Number.cs" />
     <Compile Include="Native\Parser\Buffer.cs" />
     <Compile Include="Native\Parser\Errors.cs" />
     <Compile Include="Native\Parser\Token.cs" />

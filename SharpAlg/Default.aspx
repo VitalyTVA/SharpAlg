@@ -6,6 +6,7 @@
     <script type="text/javascript" src="res/jquery-1.8.2.min.js"></script>
     <script type="text/javascript" src="res/jsclr-4.1.0.js"></script>
     <script type="text/javascript" src="res/SharpAlg.Parser.js"></script>
+    <script type="text/javascript" src="res/SharpAlg.Number.js"></script>
     <script type="text/javascript" src="res/SharpAlg.Native.js"></script>
     <script type="text/javascript" src="res/SharpAlg.Tests.js"></script>
     <script type="text/javascript" src="res/Default.js"></script>

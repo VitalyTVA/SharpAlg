@@ -22,8 +22,8 @@ namespace SharpAlg.Native {
             this.priority = priority;
         }
         public string Constant(ConstantExpr constant) {
-            string stringValue = ToString(constant.Value);
-            return constant.Value >= 0 ? stringValue : Wrap(stringValue, OperationPriority.Add);
+            string stringValue = ToString(constant.Value.Value);
+            return constant.Value.Value >= 0 ? stringValue : Wrap(stringValue, OperationPriority.Add);
         }
         public string Multi(MultiExpr multi) {
             OperationPriority newPriority = GetPriority(multi.Operation);
@@ -109,9 +109,9 @@ namespace SharpAlg.Native {
             this.operation = operation;
         }
         public override UnaryExpressionInfo Constant(ConstantExpr constant) {
-            return constant.Value >= 0 || operation != BinaryOperation.Add ?
-                base.Constant(constant) : 
-                new UnaryExpressionInfo(Expr.Constant(-constant.Value), BinaryOperationEx.Subtract);
+            return constant.Value.Value >= 0 || operation != BinaryOperation.Add ?
+                base.Constant(constant) :
+                new UnaryExpressionInfo(Expr.Constant(-constant.Value.Value), BinaryOperationEx.Subtract);
         }
         public override UnaryExpressionInfo Multi(MultiExpr multi) {
             if(operation == BinaryOperation.Add && IsMinusExpression(multi)) {
