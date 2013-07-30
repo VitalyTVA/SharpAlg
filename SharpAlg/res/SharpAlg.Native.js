@@ -121,10 +121,18 @@ if (typeof(SharpAlg) == "undefined")
     var SharpAlg = {};
 if (typeof(SharpAlg.Native) == "undefined")
     SharpAlg.Native = {};
-SharpAlg.Native.DiffExpressionVisitor = function (builder)
+SharpAlg.Native.DiffExpressionVisitor = function (builder, parameterName)
 {
     this.builder = null;
+    this.parameterName = null;
+    this.autoParameterName = false;
     this.builder = builder;
+    this.parameterName = parameterName;
+    this.autoParameterName = !this.get_HasParameter();
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.get_HasParameter = function ()
+{
+    return !System.String.IsNullOrEmpty(this.parameterName);
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Constant = function (constant)
 {
@@ -132,7 +140,21 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Constant = function (constant)
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Parameter = function (parameter)
 {
-    return SharpAlg.Native.Expr.One;
+    if (!this.get_HasParameter())
+    {
+        this.parameterName = parameter.get_ParameterName();
+        this.autoParameterName = true;
+    }
+    if (this.parameterName == parameter.get_ParameterName())
+    {
+        return SharpAlg.Native.Expr.One;
+    }
+    else
+    {
+        if (this.autoParameterName)
+            throw $CreateException(new SharpAlg.Native.ExpressionDefferentiationException.ctor$$String("Expression contains more than one independent variable"), new Error());
+        return SharpAlg.Native.Expr.Zero;
+    }
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Multi = function (multi)
 {
@@ -171,6 +193,25 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.VisitMultiply = function (expr)
     var expr2 = this.builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, expr.get_Args()), tail.Visit$1(SharpAlg.Native.Expr.ctor, this));
     return this.builder.Add(expr1, expr2);
 };
+var SharpAlg$Native$ExpressionDefferentiationException =
+{
+    fullname: "SharpAlg.Native.ExpressionDefferentiationException",
+    baseTypeName: "System.Exception",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Exception.ctor.call(this);
+        },
+        ctor$$String: function (message)
+        {
+            System.Exception.ctor$$String.call(this, message);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$ExpressionDefferentiationException);
 var SharpAlg$Native$Expr =
 {
     fullname: "SharpAlg.Native.Expr",
@@ -823,9 +864,9 @@ var SharpAlg$Native$ExpressionExtensions =
         {
             return expr.Visit$1(System.Double.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : new SharpAlg.Native.Context.ctor())));
         },
-        Diff: function (expr)
+        Diff: function (expr, parameterName)
         {
-            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(new SharpAlg.Native.ConvolutionExprBuilder()));
+            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(new SharpAlg.Native.ConvolutionExprBuilder(), parameterName));
         },
         ExprEquals: function (expr1, expr2)
         {

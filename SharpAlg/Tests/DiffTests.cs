@@ -51,5 +51,15 @@ namespace SharpAlg.Tests {
             "x ^ 2".Parse().Diff().AssertSimpleStringRepresentation("2 * x");
             "(x * x) ^ 3".Parse().Diff().AssertSimpleStringRepresentation("6 * x ^ 5");
         }
+        [Test]
+        public void DiffMultiParametersTest() {
+            "x".Parse().Diff("y").AssertSimpleStringRepresentation("0");
+            "x + y".Parse().Diff("y").AssertSimpleStringRepresentation("1");
+            "x * y".Parse().Diff("y").AssertSimpleStringRepresentation("x");
+            "x * y".Parse().Diff("x").AssertSimpleStringRepresentation("y");
+            "x^2 * y^3".Parse().Diff("x").AssertSimpleStringRepresentation("2 * x * y ^ 3");
+            "x^2 * y^3".Parse().Diff("y").AssertSimpleStringRepresentation("3 * x ^ 2 * y ^ 2");
+            "x + y".Parse().Fails(x => x.Diff(), typeof(ExpressionDefferentiationException));
+        }
     }
 }

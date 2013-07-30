@@ -8,14 +8,29 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class DiffExpressionVisitor : IExpressionVisitor<Expr> {
         readonly ExprBuilder builder;
-        public DiffExpressionVisitor(ExprBuilder builder) {
+        string parameterName;
+        bool autoParameterName;
+        private bool HasParameter { get { return !string.IsNullOrEmpty(parameterName); } }
+        public DiffExpressionVisitor(ExprBuilder builder, string parameterName) {
             this.builder = builder;
+            this.parameterName = parameterName;
+            autoParameterName = !HasParameter;
         }
         public Expr Constant(ConstantExpr constant) {
             return Expr.Zero;
         }
         public Expr Parameter(ParameterExpr parameter) {
-            return Expr.One;
+            if(!HasParameter) {
+                parameterName = parameter.ParameterName;
+                autoParameterName = true;
+            }
+            if(parameterName == parameter.ParameterName) {
+                return Expr.One;
+            } else {
+                if(autoParameterName)
+                    throw new ExpressionDefferentiationException("Expression contains more than one independent variable");
+                return Expr.Zero;
+            }
         }
         public Expr Multi(MultiExpr multi) {
             switch(multi.Operation) {
@@ -48,4 +63,14 @@ namespace SharpAlg.Native {
             return builder.Add(expr1, expr2);
         }
     }
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    public class ExpressionDefferentiationException : Exception {
+        public ExpressionDefferentiationException()
+            : base() {
+        }
+        public ExpressionDefferentiationException(string message)
+            : base(message) {
+        }
+    }
+
 }
