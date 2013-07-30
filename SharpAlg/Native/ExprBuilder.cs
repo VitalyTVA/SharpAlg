@@ -66,15 +66,11 @@ namespace SharpAlg.Native {
             return Expr.Multi(args, operation);
         }
         static List<Expr> GetSortedArgs(Expr left, Expr right, BinaryOperation operation) {
-            List<Expr> args = GetArgs(left, operation).Concat(GetArgs(right, operation)).ToList();
+            IEnumerable<Expr> args = GetArgs(left, operation).Concat(GetArgs(right, operation));
             if(operation == BinaryOperation.Multiply) {
-                args.Sort(delegate(Expr x, Expr y) {
-                    int x_ = x is ConstantExpr ? 0 : 1;
-                    int y_ = y is ConstantExpr ? 0 : 1;
-                    return x_ - y_;
-                });
+                args = args.Where(x => x is ConstantExpr).Concat(args.Where(x => !(x is ConstantExpr)));
             }
-            return args;
+            return args.ToList();
         }
         static IEnumerable<Expr> GetArgs(Expr expr, BinaryOperation operation) {
             if(expr is MultiExpr && ((MultiExpr)expr).Operation == operation)
