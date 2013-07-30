@@ -31,15 +31,6 @@ namespace SharpAlg.Native {
             if(UnaryExpressionExtractor.IsMinusExpression(multi)) {
                 return Wrap(String.Format("-{0}", multi.Args.ElementAt(1).Visit(nextPrinter)), OperationPriority.Add);
             }
-            if(UnaryExpressionExtractor.IsMinusExpressionCore(multi)) {
-                string right = Expr.Multi(multi.Args.Skip(1), multi.Operation).Visit(new ExpressionPrinter(OperationPriority.Multiply));
-                if(Expr.MinusOne.ExprEquals(multi.Args.ElementAt(0))) {
-                    return Wrap(String.Format("-{0}", right), OperationPriority.Multiply);
-                } else {
-                    string left = multi.Args.ElementAt(0).Print();
-                    return Wrap(String.Format("{0} * {1}", left, right), OperationPriority.Multiply);
-                }
-            }
             var sb = new StringBuilder();
             multi.Accumulate(x => {
                 sb.Append(x.Visit(nextPrinter));
@@ -50,10 +41,7 @@ namespace SharpAlg.Native {
                 sb.Append(" ");
                 sb.Append(info.Expr.Visit(nextPrinter));
             });
-            if(multi.Operation == BinaryOperation.Multiply)
-                return Wrap(sb.ToString(), OperationPriority.Power);
-            else
-                return Wrap(sb.ToString(), GetPriority(multi.Operation));
+            return Wrap(sb.ToString(), GetPriority(multi.Operation));
         }
         public string Power(PowerExpr power) {
             var nextPrinter = new ExpressionPrinter(OperationPriority.Power);
@@ -111,10 +99,6 @@ namespace SharpAlg.Native {
         }
         public static bool IsMinusExpression(MultiExpr multi) {
             return multi.Args.Count() == 2 && Expr.MinusOne.ExprEquals(multi.Args.ElementAt(0));
-        }
-        public static bool IsMinusExpressionCore(MultiExpr multi) {
-            return multi.Operation == BinaryOperation.Multiply && 
-                multi.If(x => x.Args.Count() > 1).With(x => multi.Args.ElementAt(0) as ConstantExpr).Return(x => x.Value < 0, () => false);
         }
         public static bool IsInverseExpression(PowerExpr power) {
             return Expr.MinusOne.ExprEquals(power.Right);

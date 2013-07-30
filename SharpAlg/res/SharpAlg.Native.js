@@ -912,19 +912,6 @@ SharpAlg.Native.ExpressionPrinter.prototype.Multi = function (multi)
     {
         return this.Wrap(System.String.Format$$String$$Object("-{0}", System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1).Visit$1(System.String.ctor, nextPrinter)), 1);
     }
-    if (SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpressionCore(multi))
-    {
-        var right = SharpAlg.Native.Expr.Multi(System.Linq.Enumerable.Skip$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1), multi.get_Operation()).Visit$1(System.String.ctor, new SharpAlg.Native.ExpressionPrinter(2));
-        if (SharpAlg.Native.ExpressionExtensions.ExprEquals(SharpAlg.Native.Expr.MinusOne, System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 0)))
-        {
-            return this.Wrap(System.String.Format$$String$$Object("-{0}", right), 2);
-        }
-        else
-        {
-            var left = SharpAlg.Native.ExpressionExtensions.Print(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 0));
-            return this.Wrap(System.String.Format$$String$$Object$$Object("{0} * {1}", left, right), 2);
-        }
-    }
     var sb = new System.Text.StringBuilder.ctor();
     SharpAlg.Native.ExpressionExtensions.Accumulate(multi, $CreateAnonymousDelegate(this, function (x)
     {
@@ -937,10 +924,7 @@ SharpAlg.Native.ExpressionPrinter.prototype.Multi = function (multi)
         sb.Append$$String(" ");
         sb.Append$$String(info.Expr.Visit$1(System.String.ctor, nextPrinter));
     }));
-    if (multi.get_Operation() == 1)
-        return this.Wrap(sb.toString(), 3);
-    else
-        return this.Wrap(sb.toString(), SharpAlg.Native.ExpressionPrinter.GetPriority(multi.get_Operation()));
+    return this.Wrap(sb.toString(), SharpAlg.Native.ExpressionPrinter.GetPriority(multi.get_Operation()));
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Power = function (power)
 {
@@ -1028,22 +1012,6 @@ SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo = function (expr, oper
 SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpression = function (multi)
 {
     return System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()) == 2 && SharpAlg.Native.ExpressionExtensions.ExprEquals(SharpAlg.Native.Expr.MinusOne, System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 0));
-};
-SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpressionCore = function (multi)
-{
-    return multi.get_Operation() == 1 && SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(SharpAlg.Native.MayBe.If(multi, function (x)
-    {
-        return System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, x.get_Args()) > 1;
-    }), function (x)
-    {
-        return As(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 0), SharpAlg.Native.ConstantExpr.ctor);
-    }), function (x)
-    {
-        return x.get_Value() < 0;
-    }, function ()
-    {
-        return false;
-    });
 };
 SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression = function (power)
 {
