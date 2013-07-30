@@ -13,16 +13,12 @@ namespace SharpAlg.Native {
         public static double Parse(string s) { //TODO compatibility layer
             return double.Parse(s, CultureInfo.InvariantCulture);
         }
-        [JsMethod(Code = "return d.toString();")]
-        string ToString(double d) { //TODO compatibility layer
-            return d.ToString(CultureInfo.InvariantCulture);
-        }
         readonly OperationPriority priority;
         public ExpressionPrinter(OperationPriority priority = OperationPriority.None) {
             this.priority = priority;
         }
         public string Constant(ConstantExpr constant) {
-            string stringValue = ToString(constant.Value.Value);
+            string stringValue = constant.Value.ToString();
             return constant.Value >= Number.Zero ? stringValue : Wrap(stringValue, OperationPriority.Add);
         }
         public string Multi(MultiExpr multi) {

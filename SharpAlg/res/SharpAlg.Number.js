@@ -41,6 +41,10 @@ var SharpAlg$Native$Number =
         FromDouble: function (value)
         {
             return new SharpAlg.Native.Number.ctor(value);
+        },
+        ToString$$Double: function (d)
+        {
+            return d.toString();
         }
     },
     assemblyName: "SharpAlg",
@@ -70,6 +74,10 @@ var SharpAlg$Native$Number =
         GetHashCode: function ()
         {
             return System.Object.commonPrototype.GetHashCode.call(this);
+        },
+        toString: function ()
+        {
+            return SharpAlg.Native.Number.ToString$$Double(this.get_Value());
         }
     }
 };

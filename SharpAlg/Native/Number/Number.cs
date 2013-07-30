@@ -2,6 +2,7 @@ using SharpKit.JavaScript;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 
 namespace SharpAlg.Native {
@@ -42,5 +43,13 @@ namespace SharpAlg.Native {
         public override int GetHashCode() {
             return base.GetHashCode();
         }
+        public override string ToString() {
+            return ToString(Value);
+        }
+        [JsMethod(Code = "return d.toString();")]
+        static string ToString(double d) { //TODO compatibility layer
+            return d.ToString(CultureInfo.InvariantCulture);
+        }
+
     }
 }

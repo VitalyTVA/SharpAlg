@@ -936,13 +936,9 @@ SharpAlg.Native.ExpressionPrinter.Parse = function (s)
 {
     return System.Double.Parse$$String(s);
 };
-SharpAlg.Native.ExpressionPrinter.prototype.ToString = function (d)
-{
-    return d.toString();
-};
 SharpAlg.Native.ExpressionPrinter.prototype.Constant = function (constant)
 {
-    var stringValue = this.ToString(constant.get_Value().get_Value());
+    var stringValue = constant.get_Value().toString();
     return SharpAlg.Native.Number.op_GreaterThanOrEqual(constant.get_Value(), SharpAlg.Native.Number.Zero) ? stringValue : this.Wrap(stringValue, 1);
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Multi = function (multi)
