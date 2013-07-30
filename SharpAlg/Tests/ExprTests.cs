@@ -206,16 +206,15 @@ namespace SharpAlg.Tests {
             "x ^ (z * y) + x ^ (y * z)".Parse().AssertSimpleStringRepresentation("2 * x ^ (z * y)");
             "(t * x) ^ (z * y) + (x * t) ^ (y * z)".Parse().AssertSimpleStringRepresentation("2 * (t * x) ^ (z * y)");
             "t * 2 * y".Parse().AssertSimpleStringRepresentation("2 * t * y");
-            "t * (-x)".Parse().AssertSimpleStringRepresentation("(-1) * t * x");
+            "-x + y".Parse().AssertSimpleStringRepresentation("(-x) + y"); //TODO printing
+            "t * (-x)".Parse().AssertSimpleStringRepresentation("(-1) * t * x");//TODO printing
+            "z + t * (-x)".Parse().AssertSimpleStringRepresentation("z + (-1) * t * x");//TODO printing
             "(t * (-x)) ^ (z * y) + (x * (-t)) ^ (y * z)".Parse().AssertSimpleStringRepresentation("2 * ((-1) * t * x) ^ (z * y)");
 
             //"(x * y) ^ 3 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 5 * y ^ 5");//TODO convolution
             //"(x * y) * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 3 * y ^ 3");//TODO convolution
             //"(x * y) ^ 2 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 4 * y ^ 4");//TODO convolution
             //(x * y) ^ z - ? //TODO convolution
-
-            //"-x + y".Parse().AssertSimpleStringRepresentation("- x * y"); //TODO printing
-            //"- x * y".Parse().AssertSimpleStringRepresentation("- x * y"); //TODO printing
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
