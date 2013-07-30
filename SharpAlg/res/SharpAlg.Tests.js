@@ -130,8 +130,8 @@ var SharpAlg$Tests$ExprTests =
         {
             SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ConstantExpr.ctor, SharpAlg.Native.Expr.Constant(9), $CreateAnonymousDelegate(this, function (x)
             {
-                return x.get_Value().get_Value();
-            }), 9), $CreateAnonymousDelegate(this, function (x)
+                return x.get_Value();
+            }), SharpAlg.Native.Number.FromDouble(9)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), 9), $CreateAnonymousDelegate(this, function (x)

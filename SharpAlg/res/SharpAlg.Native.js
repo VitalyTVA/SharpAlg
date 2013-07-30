@@ -690,7 +690,7 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.ConstantExpr.ctor, constant, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return x1.get_Value().Equals$$Object(x2.get_Value());
+                return System.Object.Equals$$Object$$Object(x1.get_Value(), x2.get_Value());
             }));
         },
         Multi: function (multi)

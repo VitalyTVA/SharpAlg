@@ -3025,9 +3025,10 @@ JsTypes.push(
 	}
 }, staticDefinition:
  {
-	Equals$$Object$$Object: function (x, y) {
+     Equals$$Object$$Object: function (objA, objB) {
 		//TODO: check value types for valueOf()
-		return x == y;
+	    //return x == y;
+	    return ((objA == objB) || (((objA != null) && (objB != null)) && objA.Equals$$Object(objB)));
 	}
 }
 });
