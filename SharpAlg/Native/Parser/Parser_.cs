@@ -148,10 +148,10 @@ public class Parser {
 		expr = null; 
 		if (la.kind == 2) {
 			Get();
-			expr = Expr.Constant(Int32.Parse(t.val)); 
+			expr = Expr.Constant(Number.FromString(t.val)); 
 		} else if (la.kind == 3) {
 			Get();
-			expr = Expr.Constant(ExpressionPrinter.Parse(t.val)); 
+			expr = Expr.Constant(Number.FromString(t.val)); 
 		} else if (la.kind == 9) {
 			Get();
 			AdditiveExpression(out expr);

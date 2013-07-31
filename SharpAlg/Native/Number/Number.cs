@@ -50,6 +50,9 @@ namespace SharpAlg.Native {
         public static Number FromDouble(double value) {
             return new Number(value);
         }
+        public static Number FromString(string s) {
+            return new Number(Parse(s));
+        }
 
         readonly double value;
         Number(double value) {
@@ -70,6 +73,9 @@ namespace SharpAlg.Native {
         static string ToString(double d) { //TODO compatibility layer
             return d.ToString(CultureInfo.InvariantCulture);
         }
-
+        [JsMethod(Code = "return System.Double.Parse$$String(s);")]
+        static double Parse(string s) { //TODO compatibility layer
+            return double.Parse(s, CultureInfo.InvariantCulture);
+        }
     }
 }

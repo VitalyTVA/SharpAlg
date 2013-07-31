@@ -9,10 +9,6 @@ using System.Text;
 namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ExpressionPrinter : IExpressionVisitor<string> {
-        [JsMethod(Code = "return System.Double.Parse$$String(s);")]
-        public static double Parse(string s) { //TODO compatibility layer
-            return double.Parse(s, CultureInfo.InvariantCulture);
-        }
         readonly OperationPriority priority;
         public ExpressionPrinter(OperationPriority priority = OperationPriority.None) {
             this.priority = priority;

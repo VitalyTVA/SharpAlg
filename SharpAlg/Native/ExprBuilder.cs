@@ -146,14 +146,16 @@ namespace SharpAlg.Native {
             UnaryExpressionInfo leftInfo = UnaryExpressionExtractor.ExtractUnaryInfo(left, operation);
             UnaryExpressionInfo rightInfo = UnaryExpressionExtractor.ExtractUnaryInfo(right, operation);
             if(rightInfo.Expr.ExprEquals(leftInfo.Expr)) {
-                int coeff = (ExpressionEvaluator.IsInvertedOperation(leftInfo.Operation) ? -1 : 1) +
-                    (ExpressionEvaluator.IsInvertedOperation(rightInfo.Operation) ? -1 : 1);
+                Number coeff = GetCoeff(leftInfo) + GetCoeff(rightInfo);
                 if(operation == BinaryOperation.Add)
                     return Multiply(Expr.Constant(coeff), rightInfo.Expr);
                 if(operation == BinaryOperation.Multiply)
                     return Power(left, Expr.Constant(coeff));
             }
             return null;
+        }
+        static Number GetCoeff(UnaryExpressionInfo info) {
+            return (ExpressionEvaluator.IsInvertedOperation(info.Operation) ? Number.MinusOne : Number.One);
         }
         Expr PowerConvolution(Expr left, Expr right, BinaryOperation operation) {
             if(operation == BinaryOperation.Multiply) {

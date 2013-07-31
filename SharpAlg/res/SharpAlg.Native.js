@@ -622,13 +622,17 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.EqualityConvolution = function 
     var rightInfo = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(right, operation);
     if (SharpAlg.Native.ExpressionExtensions.ExprEquals(rightInfo.Expr, leftInfo.Expr))
     {
-        var coeff = (SharpAlg.Native.ExpressionEvaluator.IsInvertedOperation(leftInfo.Operation) ? -1 : 1) + (SharpAlg.Native.ExpressionEvaluator.IsInvertedOperation(rightInfo.Operation) ? -1 : 1);
+        var coeff = SharpAlg.Native.Number.op_Addition(SharpAlg.Native.ConvolutionExprBuilder.GetCoeff(leftInfo), SharpAlg.Native.ConvolutionExprBuilder.GetCoeff(rightInfo));
         if (operation == 0)
-            return this.Multiply(SharpAlg.Native.Expr.Constant$$Double(coeff), rightInfo.Expr);
+            return this.Multiply(SharpAlg.Native.Expr.Constant$$Number(coeff), rightInfo.Expr);
         if (operation == 1)
-            return this.Power(left, SharpAlg.Native.Expr.Constant$$Double(coeff));
+            return this.Power(left, SharpAlg.Native.Expr.Constant$$Number(coeff));
     }
     return null;
+};
+SharpAlg.Native.ConvolutionExprBuilder.GetCoeff = function (info)
+{
+    return (SharpAlg.Native.ExpressionEvaluator.IsInvertedOperation(info.Operation) ? SharpAlg.Native.Number.MinusOne : SharpAlg.Native.Number.One);
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.PowerConvolution = function (left, right, operation)
 {
@@ -937,10 +941,6 @@ SharpAlg.Native.ExpressionPrinter = function (priority)
 {
     this.priority = 0;
     this.priority = priority;
-};
-SharpAlg.Native.ExpressionPrinter.Parse = function (s)
-{
-    return System.Double.Parse$$String(s);
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Constant = function (constant)
 {

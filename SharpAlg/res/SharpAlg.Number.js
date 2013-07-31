@@ -66,9 +66,17 @@ var SharpAlg$Native$Number =
         {
             return new SharpAlg.Native.Number.ctor(value);
         },
+        FromString: function (s)
+        {
+            return new SharpAlg.Native.Number.ctor(SharpAlg.Native.Number.Parse(s));
+        },
         ToString$$Double: function (d)
         {
             return d.toString();
+        },
+        Parse: function (s)
+        {
+            return System.Double.Parse$$String(s);
         }
     },
     assemblyName: "SharpAlg",
