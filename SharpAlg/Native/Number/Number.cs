@@ -17,6 +17,9 @@ namespace SharpAlg.Native {
         public static Number operator +(Number n1, Number n2) {
             return FromDouble(n1.Value + n2.Value);
         }
+        public static Number operator -(Number n1, Number n2) {
+            return FromDouble(n1.Value - n2.Value);
+        }
         public static Number operator ^(Number n1, Number n2) {
             return FromDouble(Math.Pow(n1.Value, n2.Value));
         }

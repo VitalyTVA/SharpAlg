@@ -337,12 +337,12 @@ SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
     if (this.la.kind == 2)
     {
         this.Get();
-        expr.Value = SharpAlg.Native.Expr.Constant(System.Int32.Parse$$String(this.t.val));
+        expr.Value = SharpAlg.Native.Expr.Constant$$Double(System.Int32.Parse$$String(this.t.val));
     }
     else if (this.la.kind == 3)
     {
         this.Get();
-        expr.Value = SharpAlg.Native.Expr.Constant(SharpAlg.Native.ExpressionPrinter.Parse(this.t.val));
+        expr.Value = SharpAlg.Native.Expr.Constant$$Double(SharpAlg.Native.ExpressionPrinter.Parse(this.t.val));
     }
     else if (this.la.kind == 9)
     {

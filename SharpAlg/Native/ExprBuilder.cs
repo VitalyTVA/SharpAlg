@@ -105,7 +105,7 @@ namespace SharpAlg.Native {
             }
 
             if(rightConst != null && leftConst != null) {
-                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(Number.FromDouble(leftConst.Value), Number.FromDouble(rightConst.Value)).Value);
+                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(Number.FromDouble(leftConst.Value), Number.FromDouble(rightConst.Value)));
             }
             return null;
         }

@@ -224,9 +224,13 @@ var SharpAlg$Native$Expr =
             SharpAlg.Native.Expr.One = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.One);
             SharpAlg.Native.Expr.MinusOne = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.MinusOne);
         },
-        Constant: function (constant)
+        Constant$$Double: function (constant)
         {
-            return new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.FromDouble(constant));
+            return SharpAlg.Native.Expr.Constant$$Number(SharpAlg.Native.Number.FromDouble(constant));
+        },
+        Constant$$Number: function (constant)
+        {
+            return new SharpAlg.Native.ConstantExpr.ctor(constant);
         },
         Parameter: function (parameterName)
         {
@@ -572,7 +576,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantConvolution = function 
     }
     if (rightConst != null && leftConst != null)
     {
-        return SharpAlg.Native.Expr.Constant(SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(SharpAlg.Native.Number.FromDouble(leftConst.get_Value()), SharpAlg.Native.Number.FromDouble(rightConst.get_Value())).get_Value());
+        return SharpAlg.Native.Expr.Constant$$Number(SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(SharpAlg.Native.Number.FromDouble(leftConst.get_Value()), SharpAlg.Native.Number.FromDouble(rightConst.get_Value())));
     }
     return null;
 };
@@ -597,7 +601,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantPowerConvolution = func
         return left;
     }
     if (rightConst != null && leftConst != null)
-        return SharpAlg.Native.Expr.Constant(System.Math.Pow(leftConst.get_Value(), rightConst.get_Value()));
+        return SharpAlg.Native.Expr.Constant$$Double(System.Math.Pow(leftConst.get_Value(), rightConst.get_Value()));
     return null;
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.ExpressionPowerConvolution = function (left, right)
@@ -608,7 +612,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.ExpressionPowerConvolution = fu
         var power = SharpAlg.Native.PowerExpressionExtractor.ExtractPower(left);
         var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(power.get_Right());
         if (leftConst != null)
-            return SharpAlg.Native.Expr.Power(power.get_Left(), SharpAlg.Native.Expr.Constant(rightConst.get_Value() * leftConst.get_Value()));
+            return SharpAlg.Native.Expr.Power(power.get_Left(), SharpAlg.Native.Expr.Constant$$Double(rightConst.get_Value() * leftConst.get_Value()));
     }
     return null;
 };
@@ -620,9 +624,9 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.EqualityConvolution = function 
     {
         var coeff = (SharpAlg.Native.ExpressionEvaluator.IsInvertedOperation(leftInfo.Operation) ? -1 : 1) + (SharpAlg.Native.ExpressionEvaluator.IsInvertedOperation(rightInfo.Operation) ? -1 : 1);
         if (operation == 0)
-            return this.Multiply(SharpAlg.Native.Expr.Constant(coeff), rightInfo.Expr);
+            return this.Multiply(SharpAlg.Native.Expr.Constant$$Double(coeff), rightInfo.Expr);
         if (operation == 1)
-            return this.Power(left, SharpAlg.Native.Expr.Constant(coeff));
+            return this.Power(left, SharpAlg.Native.Expr.Constant$$Double(coeff));
     }
     return null;
 };
@@ -1058,7 +1062,7 @@ SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression = function (power)
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Constant = function (constant)
 {
-    return SharpAlg.Native.Number.op_GreaterThanOrEqual(constant.get_Value(), SharpAlg.Native.Number.Zero) || this.operation != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(-constant.get_Value().get_Value()), 1);
+    return SharpAlg.Native.Number.op_GreaterThanOrEqual(constant.get_Value(), SharpAlg.Native.Number.Zero) || this.operation != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant$$Number(SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.Number.Zero, constant.get_Value())), 1);
 };
 SharpAlg.Native.UnaryExpressionExtractor.prototype.Multi = function (multi)
 {

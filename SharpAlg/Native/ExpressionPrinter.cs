@@ -107,7 +107,7 @@ namespace SharpAlg.Native {
         public override UnaryExpressionInfo Constant(ConstantExpr constant) {
             return constant.Value >= Number.Zero || operation != BinaryOperation.Add ?
                 base.Constant(constant) :
-                new UnaryExpressionInfo(Expr.Constant(-constant.Value.Value), BinaryOperationEx.Subtract);
+                new UnaryExpressionInfo(Expr.Constant(Number.Zero - constant.Value), BinaryOperationEx.Subtract);
         }
         public override UnaryExpressionInfo Multi(MultiExpr multi) {
             if(operation == BinaryOperation.Add && IsMinusExpression(multi)) {

@@ -33,6 +33,10 @@ var SharpAlg$Native$Number =
         {
             return SharpAlg.Native.Number.FromDouble(n1.get_Value() + n2.get_Value());
         },
+        op_Subtraction: function (n1, n2)
+        {
+            return SharpAlg.Native.Number.FromDouble(n1.get_Value() - n2.get_Value());
+        },
         op_ExclusiveOr: function (n1, n2)
         {
             return SharpAlg.Native.Number.FromDouble(System.Math.Pow(n1.get_Value(), n2.get_Value()));
