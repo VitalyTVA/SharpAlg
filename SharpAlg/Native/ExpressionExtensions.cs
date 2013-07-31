@@ -8,8 +8,8 @@ using System.Runtime.Serialization;
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public static class ExpressionExtensions {
-        public static double Evaluate(this Expr expr, Context context = null) {
-            return expr.Visit(new ExpressionEvaluator(context ?? new Context())).Value;
+        public static Number Evaluate(this Expr expr, Context context = null) {
+            return expr.Visit(new ExpressionEvaluator(context ?? new Context()));
         }
         public static Expr Diff(this Expr expr, string parameterName = null) {
             return expr.Visit(new DiffExpressionVisitor(new ConvolutionExprBuilder(), parameterName));

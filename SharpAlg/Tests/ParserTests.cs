@@ -120,7 +120,7 @@ namespace SharpAlg.Tests {
             return parser
                 .IsEqual(x => x.errors.Errors, string.Empty)
                 .IsEqual(x => x.errors.Count, 0)
-                .IsEqual(x => x.Expr.Evaluate(context), value)
+                .IsEqual(x => x.Expr.Evaluate(context), Number.FromDouble(value))
                 .IsTrue(x => expectedExpr == null || x.Expr.ExprEquals(expectedExpr));
         }
         public static Parser AssertSingleSyntaxError(this Parser parser, string text) {

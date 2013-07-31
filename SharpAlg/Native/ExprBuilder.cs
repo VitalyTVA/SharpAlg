@@ -177,7 +177,7 @@ namespace SharpAlg.Native {
         }
         static double? GetConstValue(Expr expr) {
             if(CanEvaluate(expr)) {
-                return expr.Evaluate(new Context());
+                return expr.Evaluate(new Context()).Value;
             }
             return null;
         }

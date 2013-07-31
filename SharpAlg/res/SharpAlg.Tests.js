@@ -134,7 +134,7 @@ var SharpAlg$Tests$ExprTests =
             }), SharpAlg.Native.Number.FromDouble(9)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), 9), $CreateAnonymousDelegate(this, function (x)
+            }), SharpAlg.Native.Number.FromDouble(9)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Constant$$Double(9));
             })), $CreateAnonymousDelegate(this, function (x)
@@ -183,23 +183,23 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Constant$$Double(9), SharpAlg.Native.Expr.Constant$$Double(13)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), 22);
+            }), SharpAlg.Native.Number.FromDouble(22));
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.Subtract(SharpAlg.Native.Expr.Constant$$Double(9), SharpAlg.Native.Expr.Constant$$Double(13)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), -4);
+            }), SharpAlg.Native.Number.FromDouble(-4));
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.Divide(SharpAlg.Native.Expr.Constant$$Double(10), SharpAlg.Native.Expr.Constant$$Double(5)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), 2);
+            }), SharpAlg.Native.Number.FromDouble(2));
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Constant$$Double(9), SharpAlg.Native.Expr.Constant$$Double(13)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), 117);
+            }), SharpAlg.Native.Number.FromDouble(117));
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.PowerExpr.ctor, SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Constant$$Double(2), SharpAlg.Native.Expr.Constant$$Double(3)), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), 8);
+            }), SharpAlg.Native.Number.FromDouble(8));
         },
         ParameterExprEvaluationTest: function ()
         {
@@ -209,20 +209,20 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ParameterExpr.ctor, SharpAlg.Native.Expr.Parameter("x"), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
-            }), 9);
+            }), SharpAlg.Native.Number.FromDouble(9));
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.ParameterExpr.ctor, SharpAlg.Native.Expr.Parameter("y"), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
-            }), 13);
+            }), SharpAlg.Native.Number.FromDouble(13));
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y")), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
-            }), 22);
+            }), SharpAlg.Native.Number.FromDouble(22));
             context.Register("y", SharpAlg.Native.Expr.Multiply(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("x")));
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.Add(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y")), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
-            }), 90);
+            }), SharpAlg.Native.Number.FromDouble(90));
         },
         ToStringTest: function ()
         {
@@ -357,10 +357,13 @@ var SharpAlg$Tests$ExprTestHelper =
         AssertEvaluatedValues: function (expr, input, expected)
         {
             var evaluator = SharpAlg.Tests.ExprTestHelper.AsEvaluator(expr);
-            SharpAlg.Tests.FluentAssert.IsSequenceEqual$1(System.Double.ctor, System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(System.Double.ctor, System.Double.ctor, input, function (x)
+            SharpAlg.Tests.FluentAssert.IsSequenceEqual$1(SharpAlg.Native.Number.ctor, System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(System.Double.ctor, SharpAlg.Native.Number.ctor, input, function (x)
             {
                 return evaluator(x);
-            }), expected);
+            }), System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(System.Double.ctor, SharpAlg.Native.Number.ctor, expected, function (x)
+            {
+                return SharpAlg.Native.Number.FromDouble(x);
+            }));
             return expr;
         },
         AsEvaluator: function (expr)
@@ -599,7 +602,7 @@ var SharpAlg$Tests$ParserTestHelper =
             }, 0), function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x.Expr, context);
-            }, value), function (x)
+            }, SharpAlg.Native.Number.FromDouble(value)), function (x)
             {
                 return expectedExpr == null || SharpAlg.Native.ExpressionExtensions.ExprEquals(x.Expr, expectedExpr);
             });

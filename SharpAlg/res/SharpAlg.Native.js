@@ -660,7 +660,7 @@ SharpAlg.Native.ConvolutionExprBuilder.GetConstValue = function (expr)
 {
     if (SharpAlg.Native.ConvolutionExprBuilder.CanEvaluate(expr))
     {
-        return SharpAlg.Native.ExpressionExtensions.Evaluate(expr, new SharpAlg.Native.Context.ctor());
+        return SharpAlg.Native.ExpressionExtensions.Evaluate(expr, new SharpAlg.Native.Context.ctor()).get_Value();
     }
     return null;
 };
@@ -868,7 +868,7 @@ var SharpAlg$Native$ExpressionExtensions =
     {
         Evaluate: function (expr, context)
         {
-            return expr.Visit$1(SharpAlg.Native.Number.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : new SharpAlg.Native.Context.ctor()))).get_Value();
+            return expr.Visit$1(SharpAlg.Native.Number.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : new SharpAlg.Native.Context.ctor())));
         },
         Diff: function (expr, parameterName)
         {

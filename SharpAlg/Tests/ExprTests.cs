@@ -23,7 +23,7 @@ namespace SharpAlg.Tests {
         public void ConstantExprTest() {
             Expr.Constant(9)
                 .IsEqual(x => x.Value, Number.FromDouble(9))
-                .IsEqual(x => x.Evaluate(), 9)
+                .IsEqual(x => x.Evaluate(), Number.FromDouble(9))
                 .IsTrue(x => x.ExprEquals(Expr.Constant(9)))
                 .IsFalse(x => x.ExprEquals(Expr.Constant(13)));
         }
@@ -50,15 +50,15 @@ namespace SharpAlg.Tests {
                 .IsFalse(x => x.ExprEquals(expr5));
 
             Expr.Add(Expr.Constant(9), Expr.Constant(13))
-                .IsEqual(x => x.Evaluate(), 22);
+                .IsEqual(x => x.Evaluate(), Number.FromDouble(22));
             Expr.Subtract(Expr.Constant(9), Expr.Constant(13))
-                .IsEqual(x => x.Evaluate(), -4);
+                .IsEqual(x => x.Evaluate(), Number.FromDouble(-4));
             Expr.Divide(Expr.Constant(10), Expr.Constant(5))
-                .IsEqual(x => x.Evaluate(), 2);
+                .IsEqual(x => x.Evaluate(), Number.FromDouble(2));
             Expr.Multiply(Expr.Constant(9), Expr.Constant(13))
-                .IsEqual(x => x.Evaluate(), 9 * 13);
+                .IsEqual(x => x.Evaluate(), Number.FromDouble(9 * 13));
             Expr.Power(Expr.Constant(2), Expr.Constant(3))
-                .IsEqual(x => x.Evaluate(), 8);
+                .IsEqual(x => x.Evaluate(), Number.FromDouble(8));
         }
         [Test]
         public void ParameterExprEvaluationTest() {
@@ -66,16 +66,16 @@ namespace SharpAlg.Tests {
             context.Register("x", Expr.Constant(9));
             context.Register("y", Expr.Constant(13));
             Expr.Parameter("x")
-                .IsEqual(x => x.Evaluate(context), 9);
+                .IsEqual(x => x.Evaluate(context), Number.FromDouble(9));
             Expr.Parameter("y")
-                .IsEqual(x => x.Evaluate(context), 13);
+                .IsEqual(x => x.Evaluate(context), Number.FromDouble(13));
 
             Expr.Add(Expr.Parameter("x"), Expr.Parameter("y"))
-                .IsEqual(x => x.Evaluate(context), 22);
+                .IsEqual(x => x.Evaluate(context), Number.FromDouble(22));
 
             context.Register("y", Expr.Multiply(Expr.Parameter("x"), Expr.Parameter("x")));
             Expr.Add(Expr.Parameter("x"), Expr.Parameter("y"))
-                .IsEqual(x => x.Evaluate(context), 90);
+                .IsEqual(x => x.Evaluate(context), Number.FromDouble(90));
         }
         [Test]
         public void ToStringTest() {
@@ -224,10 +224,10 @@ namespace SharpAlg.Tests {
         }
         public static Expr AssertEvaluatedValues(this Expr expr, double[] input, double[] expected) {
             var evaluator = expr.AsEvaluator();
-            input.Select(x => evaluator(x)).IsSequenceEqual(expected);
+            input.Select(x => evaluator(x)).IsSequenceEqual(expected.Select(x => Number.FromDouble(x)));
             return expr;
         }
-        public static Func<double, double> AsEvaluator(this Expr expr) {
+        public static Func<double, Number> AsEvaluator(this Expr expr) {
             return x => { 
                 Context context = new Context();
                 context.Register("x", Expr.Constant(x));
