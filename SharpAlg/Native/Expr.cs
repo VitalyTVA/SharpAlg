@@ -11,9 +11,6 @@ namespace SharpAlg.Native {
         public static readonly ConstantExpr Zero = new ConstantExpr(Number.Zero);
         public static readonly ConstantExpr One = new ConstantExpr(Number.One);
         public static readonly ConstantExpr MinusOne = new ConstantExpr(Number.MinusOne);
-        public static ConstantExpr Constant(double constant) {
-            return Constant(Number.FromDouble(constant));
-        }
         public static ConstantExpr Constant(Number constant) {
             return new ConstantExpr(constant);
         }
