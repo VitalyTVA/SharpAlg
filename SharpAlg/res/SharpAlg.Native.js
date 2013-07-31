@@ -571,7 +571,9 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantConvolution = function 
             return left;
     }
     if (rightConst != null && leftConst != null)
-        return SharpAlg.Native.Expr.Constant(SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.get_Value(), rightConst.get_Value()));
+    {
+        return SharpAlg.Native.Expr.Constant(SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(SharpAlg.Native.Number.FromDouble(leftConst.get_Value()), SharpAlg.Native.Number.FromDouble(rightConst.get_Value())).get_Value());
+    }
     return null;
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantPowerConvolution = function (left, right)
@@ -770,30 +772,30 @@ SharpAlg.Native.ExpressionEvaluator = function (context)
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Constant = function (constant)
 {
-    return constant.get_Value().get_Value();
+    return constant.get_Value();
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Multi = function (multi)
 {
-    var result = 0;
+    var result = SharpAlg.Native.Number.Zero;
     SharpAlg.Native.ExpressionExtensions.Accumulate(multi, $CreateAnonymousDelegate(this, function (x)
     {
-        result = x.Visit$1(System.Double.ctor, this);
+        result = x.Visit$1(SharpAlg.Native.Number.ctor, this);
     }), $CreateAnonymousDelegate(this, function (x)
     {
-        result = SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(multi.get_Operation())(result, x.Visit$1(System.Double.ctor, this));
+        result = SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(multi.get_Operation())(result, x.Visit$1(SharpAlg.Native.Number.ctor, this));
     }));
     return result;
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Power = function (power)
 {
-    return System.Math.Pow(power.get_Left().Visit$1(System.Double.ctor, this), power.get_Right().Visit$1(System.Double.ctor, this));
+    return SharpAlg.Native.Number.op_ExclusiveOr(power.get_Left().Visit$1(SharpAlg.Native.Number.ctor, this), power.get_Right().Visit$1(SharpAlg.Native.Number.ctor, this));
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Parameter = function (parameter)
 {
     var parameterValue = this.context.GetValue(parameter.get_ParameterName());
     if (parameterValue == null)
         throw $CreateException(new SharpAlg.Native.ExpressionEvaluationException.ctor$$String(System.String.Format$$String$$Object("{0} value is undefined", parameter.get_ParameterName())), new Error());
-    return parameterValue.Visit$1(System.Double.ctor, this);
+    return parameterValue.Visit$1(SharpAlg.Native.Number.ctor, this);
 };
 SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator = function (operation)
 {
@@ -802,12 +804,12 @@ SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator = function (oper
         case 0:
             return function (x1, x2)
             {
-                return x1 + x2;
+                return SharpAlg.Native.Number.op_Addition(x1, x2);
             };
         case 1:
             return function (x1, x2)
             {
-                return x1 * x2;
+                return SharpAlg.Native.Number.op_Multiply(x1, x2);
             };
         default :
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
@@ -862,7 +864,7 @@ var SharpAlg$Native$ExpressionExtensions =
     {
         Evaluate: function (expr, context)
         {
-            return expr.Visit$1(System.Double.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : new SharpAlg.Native.Context.ctor())));
+            return expr.Visit$1(SharpAlg.Native.Number.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : new SharpAlg.Native.Context.ctor()))).get_Value();
         },
         Diff: function (expr, parameterName)
         {

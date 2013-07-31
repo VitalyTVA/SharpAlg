@@ -9,7 +9,7 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public static class ExpressionExtensions {
         public static double Evaluate(this Expr expr, Context context = null) {
-            return expr.Visit(new ExpressionEvaluator(context ?? new Context()));
+            return expr.Visit(new ExpressionEvaluator(context ?? new Context())).Value;
         }
         public static Expr Diff(this Expr expr, string parameterName = null) {
             return expr.Visit(new DiffExpressionVisitor(new ConvolutionExprBuilder(), parameterName));

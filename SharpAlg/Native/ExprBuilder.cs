@@ -104,8 +104,9 @@ namespace SharpAlg.Native {
                     return left;
             }
 
-            if(rightConst != null && leftConst != null)
-                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst.Value, rightConst.Value));
+            if(rightConst != null && leftConst != null) {
+                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(Number.FromDouble(leftConst.Value), Number.FromDouble(rightConst.Value)).Value);
+            }
             return null;
         }
         Expr ConstantPowerConvolution(Expr left, Expr right) {
