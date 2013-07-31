@@ -47,7 +47,7 @@ namespace SharpAlg.Native {
             One = FromDouble(1);
             MinusOne = FromDouble(-1);
         }
-        public static Number FromDouble(double value) {
+        static Number FromDouble(double value) {
             return new Number(value);
         }
         public static Number FromString(string s) {
@@ -70,7 +70,7 @@ namespace SharpAlg.Native {
             return ToString(value);
         }
         [JsMethod(Code = "return d.toString();")]
-        static string ToString(double d) { //TODO compatibility layer
+        public static string ToString(double d) { //TODO compatibility layer
             return d.ToString(CultureInfo.InvariantCulture);
         }
         [JsMethod(Code = "return System.Double.Parse$$String(s);")]

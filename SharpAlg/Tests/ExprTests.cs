@@ -21,15 +21,15 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void ConstantExprTest() {
-            ExprTestHelper.Constant(9)
-                .IsEqual(x => x.Value, Number.FromDouble(9))
-                .IsEqual(x => x.Evaluate(), Number.FromDouble(9))
-                .IsTrue(x => x.ExprEquals(ExprTestHelper.Constant(9)))
-                .IsFalse(x => x.ExprEquals(ExprTestHelper.Constant(13)));
+            ExprTestHelper.AsConstant(9)
+                .IsEqual(x => x.Value, ExprTestHelper.AsNumber(9))
+                .IsEqual(x => x.Evaluate(), ExprTestHelper.AsNumber(9))
+                .IsTrue(x => x.ExprEquals(ExprTestHelper.AsConstant(9)))
+                .IsFalse(x => x.ExprEquals(ExprTestHelper.AsConstant(13)));
         }
         [Test]
         public void BinaryExprTest() {
-            var left = ExprTestHelper.Constant(9);
+            var left = ExprTestHelper.AsConstant(9);
             var right = Expr.Parameter("x");
             var expr = (MultiExpr)Expr.Divide(left, right);
             expr
@@ -49,33 +49,33 @@ namespace SharpAlg.Tests {
                 .IsFalse(x => x.ExprEquals(expr4))
                 .IsFalse(x => x.ExprEquals(expr5));
 
-            Expr.Add(ExprTestHelper.Constant(9), ExprTestHelper.Constant(13))
-                .IsEqual(x => x.Evaluate(), Number.FromDouble(22));
-            Expr.Subtract(ExprTestHelper.Constant(9), ExprTestHelper.Constant(13))
-                .IsEqual(x => x.Evaluate(), Number.FromDouble(-4));
-            Expr.Divide(ExprTestHelper.Constant(10), ExprTestHelper.Constant(5))
-                .IsEqual(x => x.Evaluate(), Number.FromDouble(2));
-            Expr.Multiply(ExprTestHelper.Constant(9), ExprTestHelper.Constant(13))
-                .IsEqual(x => x.Evaluate(), Number.FromDouble(9 * 13));
-            Expr.Power(ExprTestHelper.Constant(2), ExprTestHelper.Constant(3))
-                .IsEqual(x => x.Evaluate(), Number.FromDouble(8));
+            Expr.Add(ExprTestHelper.AsConstant(9), ExprTestHelper.AsConstant(13))
+                .IsEqual(x => x.Evaluate(), ExprTestHelper.AsNumber(22));
+            Expr.Subtract(ExprTestHelper.AsConstant(9), ExprTestHelper.AsConstant(13))
+                .IsEqual(x => x.Evaluate(), ExprTestHelper.AsNumber(-4));
+            Expr.Divide(ExprTestHelper.AsConstant(10), ExprTestHelper.AsConstant(5))
+                .IsEqual(x => x.Evaluate(), ExprTestHelper.AsNumber(2));
+            Expr.Multiply(ExprTestHelper.AsConstant(9), ExprTestHelper.AsConstant(13))
+                .IsEqual(x => x.Evaluate(), ExprTestHelper.AsNumber(9 * 13));
+            Expr.Power(ExprTestHelper.AsConstant(2), ExprTestHelper.AsConstant(3))
+                .IsEqual(x => x.Evaluate(), ExprTestHelper.AsNumber(8));
         }
         [Test]
         public void ParameterExprEvaluationTest() {
             var context = new Context();
-            context.Register("x", ExprTestHelper.Constant(9));
-            context.Register("y", ExprTestHelper.Constant(13));
+            context.Register("x", ExprTestHelper.AsConstant(9));
+            context.Register("y", ExprTestHelper.AsConstant(13));
             Expr.Parameter("x")
-                .IsEqual(x => x.Evaluate(context), Number.FromDouble(9));
+                .IsEqual(x => x.Evaluate(context), ExprTestHelper.AsNumber(9));
             Expr.Parameter("y")
-                .IsEqual(x => x.Evaluate(context), Number.FromDouble(13));
+                .IsEqual(x => x.Evaluate(context), ExprTestHelper.AsNumber(13));
 
             Expr.Add(Expr.Parameter("x"), Expr.Parameter("y"))
-                .IsEqual(x => x.Evaluate(context), Number.FromDouble(22));
+                .IsEqual(x => x.Evaluate(context), ExprTestHelper.AsNumber(22));
 
             context.Register("y", Expr.Multiply(Expr.Parameter("x"), Expr.Parameter("x")));
             Expr.Add(Expr.Parameter("x"), Expr.Parameter("y"))
-                .IsEqual(x => x.Evaluate(context), Number.FromDouble(90));
+                .IsEqual(x => x.Evaluate(context), ExprTestHelper.AsNumber(90));
         }
         [Test]
         public void ToStringTest() {
@@ -102,18 +102,18 @@ namespace SharpAlg.Tests {
             Expr.Minus(Expr.Parameter("x")).AssertSimpleStringRepresentation("-x");
             Expr.Inverse(Expr.Parameter("x")).AssertSimpleStringRepresentation("1 / x");
 
-            Expr.Add(ExprTestHelper.Constant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 - x");
-            Expr.Multiply(ExprTestHelper.Constant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 / x");
+            Expr.Add(ExprTestHelper.AsConstant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 - x");
+            Expr.Multiply(ExprTestHelper.AsConstant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 / x");
 
-            Expr.Add(ExprTestHelper.Constant(9), Expr.Minus(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 - (-x)");
-            Expr.Multiply(ExprTestHelper.Constant(9), Expr.Inverse(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 / (1 / x)");
+            Expr.Add(ExprTestHelper.AsConstant(9), Expr.Minus(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 - (-x)");
+            Expr.Multiply(ExprTestHelper.AsConstant(9), Expr.Inverse(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 / (1 / x)");
 
-            Expr.Add(ExprTestHelper.Constant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 + 1 / x");
-            Expr.Multiply(ExprTestHelper.Constant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 * (-x)");
-            Expr.Add(ExprTestHelper.Constant(9), Expr.Minus(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 - 1 / x");
-            Expr.Multiply(ExprTestHelper.Constant(9), Expr.Inverse(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 / (-x)");
+            Expr.Add(ExprTestHelper.AsConstant(9), Expr.Inverse(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 + 1 / x");
+            Expr.Multiply(ExprTestHelper.AsConstant(9), Expr.Minus(Expr.Parameter("x"))).AssertSimpleStringRepresentation("9 * (-x)");
+            Expr.Add(ExprTestHelper.AsConstant(9), Expr.Minus(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 - 1 / x");
+            Expr.Multiply(ExprTestHelper.AsConstant(9), Expr.Inverse(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 / (-x)");
 
-            Expr.Multi(new Expr[] { Expr.Parameter("x"), ExprTestHelper.Constant(-1) }, BinaryOperation.Multiply).AssertSimpleStringRepresentation("x * (-1)");
+            Expr.Multi(new Expr[] { Expr.Parameter("x"), ExprTestHelper.AsConstant(-1) }, BinaryOperation.Multiply).AssertSimpleStringRepresentation("x * (-1)");
         }
         [Test]
         public void ConvolutionTest() {
@@ -224,18 +224,21 @@ namespace SharpAlg.Tests {
         }
         public static Expr AssertEvaluatedValues(this Expr expr, double[] input, double[] expected) {
             var evaluator = expr.AsEvaluator();
-            input.Select(x => evaluator(x)).IsSequenceEqual(expected.Select(x => Number.FromDouble(x)));
+            input.Select(x => evaluator(x)).IsSequenceEqual(expected.Select(x => AsNumber(x)));
             return expr;
         }
         public static Func<double, Number> AsEvaluator(this Expr expr) {
             return x => { 
                 Context context = new Context();
-                context.Register("x", ExprTestHelper.Constant(x));
+                context.Register("x", ExprTestHelper.AsConstant(x));
                 return expr.Evaluate(context);
             };
         }
-        public static ConstantExpr Constant(double constant) {
-            return Expr.Constant(Number.FromDouble(constant));
+        public static ConstantExpr AsConstant(this double constant) {
+            return Expr.Constant(AsNumber(constant));
+        }
+        public static Number AsNumber(this double constant) {
+            return SharpAlg.Native.Number.FromString(Number.ToString(constant));
         }
     }
 }
