@@ -21,25 +21,33 @@ var SharpAlg$Native$Number =
     baseTypeName: "System.Object",
     staticDefinition:
     {
+        op_Equality: function (n1, n2)
+        {
+            return System.Object.Equals$$Object$$Object(n1, n2);
+        },
+        op_Inequality: function (n1, n2)
+        {
+            return !System.Object.Equals$$Object$$Object(n1, n2);
+        },
         op_GreaterThanOrEqual: function (n1, n2)
         {
-            return n1.get_Value() >= n2.get_Value();
+            return n1.value >= n2.value;
         },
         op_Multiply: function (n1, n2)
         {
-            return SharpAlg.Native.Number.FromDouble(n1.get_Value() * n2.get_Value());
+            return SharpAlg.Native.Number.FromDouble(n1.value * n2.value);
         },
         op_Addition: function (n1, n2)
         {
-            return SharpAlg.Native.Number.FromDouble(n1.get_Value() + n2.get_Value());
+            return SharpAlg.Native.Number.FromDouble(n1.value + n2.value);
         },
         op_Subtraction: function (n1, n2)
         {
-            return SharpAlg.Native.Number.FromDouble(n1.get_Value() - n2.get_Value());
+            return SharpAlg.Native.Number.FromDouble(n1.value - n2.value);
         },
         op_ExclusiveOr: function (n1, n2)
         {
-            return SharpAlg.Native.Number.FromDouble(System.Math.Pow(n1.get_Value(), n2.get_Value()));
+            return SharpAlg.Native.Number.FromDouble(System.Math.Pow(n1.value, n2.value));
         },
         op_LessThanOrEqual: function (n1, n2)
         {
@@ -69,23 +77,14 @@ var SharpAlg$Native$Number =
     {
         ctor: function (value)
         {
-            this._Value = 0;
+            this.value = 0;
             System.Object.ctor.call(this);
-            this.set_Value(value);
-        },
-        Value$$: "System.Double",
-        get_Value: function ()
-        {
-            return this._Value;
-        },
-        set_Value: function (value)
-        {
-            this._Value = value;
+            this.value = value;
         },
         Equals$$Object: function (obj)
         {
             var other = As(obj, SharpAlg.Native.Number.ctor);
-            return other != null && other.get_Value() == this.get_Value();
+            return SharpAlg.Native.Number.op_Inequality(other, null) && other.value == this.value;
         },
         GetHashCode: function ()
         {
@@ -93,7 +92,7 @@ var SharpAlg$Native$Number =
         },
         toString: function ()
         {
-            return SharpAlg.Native.Number.ToString$$Double(this.get_Value());
+            return SharpAlg.Native.Number.ToString$$Double(this.value);
         }
     }
 };

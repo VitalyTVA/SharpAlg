@@ -78,67 +78,67 @@ namespace SharpAlg.Native {
             return new[] { expr };
         }
         Expr ConstantConvolution(Expr left, Expr right, BinaryOperation operation) {
-            double? leftConst = GetConstValue(left);
+            Number leftConst = GetConstValue(left);
 
-            if(leftConst == 0) {
+            if(leftConst == Number.Zero) {
                 if(operation == BinaryOperation.Add)
                     return right;
                 if(operation == BinaryOperation.Multiply)
                     return Expr.Zero;
             }
-            if(leftConst == 1) {
+            if(leftConst == Number.One) {
                 if(operation == BinaryOperation.Multiply)
                     return right;
             }
 
-            double? rightConst = GetConstValue(right);
+            Number rightConst = GetConstValue(right);
 
-            if(rightConst == 0) {
+            if(rightConst == Number.Zero) {
                 if(operation == BinaryOperation.Add)
                     return left;
                 if(operation == BinaryOperation.Multiply)
                     return Expr.Zero;
             }
-            if(rightConst == 1) {
+            if(rightConst == Number.One) {
                 if(operation == BinaryOperation.Multiply)
                     return left;
             }
 
             if(rightConst != null && leftConst != null) {
-                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(Number.FromDouble(leftConst.Value), Number.FromDouble(rightConst.Value)));
+                return Expr.Constant(ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst, rightConst));
             }
             return null;
         }
         Expr ConstantPowerConvolution(Expr left, Expr right) {
-            double? leftConst = GetConstValue(left);
+            Number leftConst = GetConstValue(left);
 
-            if(leftConst == 0) {
+            if(leftConst == Number.Zero) {
                     return Expr.Zero;
             }
-            if(leftConst == 1) {
+            if(leftConst == Number.One) {
                 return Expr.One;
             }
 
-            double? rightConst = GetConstValue(right);
+            Number rightConst = GetConstValue(right);
 
-            if(rightConst == 0) {
+            if(rightConst == Number.Zero) {
                 return Expr.One;
             }
-            if(rightConst == 1) {
+            if(rightConst == Number.One) {
                 return left;
             }
 
             if(rightConst != null && leftConst != null)
-                return Expr.Constant(Math.Pow(leftConst.Value, rightConst.Value));
+                return Expr.Constant(leftConst ^ rightConst);
             return null;
         }
         Expr ExpressionPowerConvolution(Expr left, Expr right) {
-            double? rightConst = GetConstValue(right);
+            Number rightConst = GetConstValue(right);
             if(rightConst != null) {
                 var power = PowerExpressionExtractor.ExtractPower(left);
-                double? leftConst = GetConstValue(power.Right);
+                Number leftConst = GetConstValue(power.Right);
                 if(leftConst != null)
-                    return Expr.Power(power.Left, Expr.Constant(rightConst.Value * leftConst.Value));
+                    return Expr.Power(power.Left, Expr.Constant(rightConst * leftConst));
             }
             return null;
         }
@@ -175,9 +175,9 @@ namespace SharpAlg.Native {
             }
             return null;
         }
-        static double? GetConstValue(Expr expr) {
+        static Number GetConstValue(Expr expr) {
             if(CanEvaluate(expr)) {
-                return expr.Evaluate(new Context()).Value;
+                return expr.Evaluate(new Context());
             }
             return null;
         }

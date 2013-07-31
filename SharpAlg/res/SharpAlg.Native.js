@@ -549,70 +549,70 @@ SharpAlg.Native.ConvolutionExprBuilder.GetArgs = function (expr, operation)
 SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantConvolution = function (left, right, operation)
 {
     var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(left);
-    if (leftConst == 0)
+    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.Number.Zero))
     {
         if (operation == 0)
             return right;
         if (operation == 1)
             return SharpAlg.Native.Expr.Zero;
     }
-    if (leftConst == 1)
+    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.Number.One))
     {
         if (operation == 1)
             return right;
     }
     var rightConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(right);
-    if (rightConst == 0)
+    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.Number.Zero))
     {
         if (operation == 0)
             return left;
         if (operation == 1)
             return SharpAlg.Native.Expr.Zero;
     }
-    if (rightConst == 1)
+    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.Number.One))
     {
         if (operation == 1)
             return left;
     }
-    if (rightConst != null && leftConst != null)
+    if (SharpAlg.Native.Number.op_Inequality(rightConst, null) && SharpAlg.Native.Number.op_Inequality(leftConst, null))
     {
-        return SharpAlg.Native.Expr.Constant$$Number(SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(SharpAlg.Native.Number.FromDouble(leftConst.get_Value()), SharpAlg.Native.Number.FromDouble(rightConst.get_Value())));
+        return SharpAlg.Native.Expr.Constant$$Number(SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEvaluator(operation)(leftConst, rightConst));
     }
     return null;
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantPowerConvolution = function (left, right)
 {
     var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(left);
-    if (leftConst == 0)
+    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.Number.Zero))
     {
         return SharpAlg.Native.Expr.Zero;
     }
-    if (leftConst == 1)
+    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.Number.One))
     {
         return SharpAlg.Native.Expr.One;
     }
     var rightConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(right);
-    if (rightConst == 0)
+    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.Number.Zero))
     {
         return SharpAlg.Native.Expr.One;
     }
-    if (rightConst == 1)
+    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.Number.One))
     {
         return left;
     }
-    if (rightConst != null && leftConst != null)
-        return SharpAlg.Native.Expr.Constant$$Double(System.Math.Pow(leftConst.get_Value(), rightConst.get_Value()));
+    if (SharpAlg.Native.Number.op_Inequality(rightConst, null) && SharpAlg.Native.Number.op_Inequality(leftConst, null))
+        return SharpAlg.Native.Expr.Constant$$Number(SharpAlg.Native.Number.op_ExclusiveOr(leftConst, rightConst));
     return null;
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.ExpressionPowerConvolution = function (left, right)
 {
     var rightConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(right);
-    if (rightConst != null)
+    if (SharpAlg.Native.Number.op_Inequality(rightConst, null))
     {
         var power = SharpAlg.Native.PowerExpressionExtractor.ExtractPower(left);
         var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(power.get_Right());
-        if (leftConst != null)
-            return SharpAlg.Native.Expr.Power(power.get_Left(), SharpAlg.Native.Expr.Constant$$Double(rightConst.get_Value() * leftConst.get_Value()));
+        if (SharpAlg.Native.Number.op_Inequality(leftConst, null))
+            return SharpAlg.Native.Expr.Power(power.get_Left(), SharpAlg.Native.Expr.Constant$$Number(SharpAlg.Native.Number.op_Multiply(rightConst, leftConst)));
     }
     return null;
 };
@@ -660,7 +660,7 @@ SharpAlg.Native.ConvolutionExprBuilder.GetConstValue = function (expr)
 {
     if (SharpAlg.Native.ConvolutionExprBuilder.CanEvaluate(expr))
     {
-        return SharpAlg.Native.ExpressionExtensions.Evaluate(expr, new SharpAlg.Native.Context.ctor()).get_Value();
+        return SharpAlg.Native.ExpressionExtensions.Evaluate(expr, new SharpAlg.Native.Context.ctor());
     }
     return null;
 };

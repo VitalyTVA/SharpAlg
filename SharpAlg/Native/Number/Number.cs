@@ -8,20 +8,26 @@ using System.Linq;
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNumberName)]
     public class Number {
+        public static bool operator ==(Number n1, Number n2) {
+            return object.Equals(n1, n2);
+        }
+        public static bool operator !=(Number n1, Number n2) {
+            return !object.Equals(n1, n2);
+        }
         public static bool operator >=(Number n1, Number n2) {
-            return n1.Value >= n2.Value;
+            return n1.value >= n2.value;
         }
         public static Number operator *(Number n1, Number n2) {
-            return FromDouble(n1.Value * n2.Value);
+            return FromDouble(n1.value * n2.value);
         }
         public static Number operator +(Number n1, Number n2) {
-            return FromDouble(n1.Value + n2.Value);
+            return FromDouble(n1.value + n2.value);
         }
         public static Number operator -(Number n1, Number n2) {
-            return FromDouble(n1.Value - n2.Value);
+            return FromDouble(n1.value - n2.value);
         }
         public static Number operator ^(Number n1, Number n2) {
-            return FromDouble(Math.Pow(n1.Value, n2.Value));
+            return FromDouble(Math.Pow(n1.value, n2.value));
         }
         public static bool operator <=(Number n1, Number n2) {
             throw new NotImplementedException();
@@ -44,19 +50,21 @@ namespace SharpAlg.Native {
         public static Number FromDouble(double value) {
             return new Number(value);
         }
+
+        readonly double value;
         Number(double value) {
-            Value = value;
+            this.value = value;
         }
-        public double Value { get; private set; }
+
         public override bool Equals(object obj) {
             var other = obj as Number;
-            return other != null && other.Value == Value;
+            return other != null && other.value == value;
         }
         public override int GetHashCode() {
             return base.GetHashCode();
         }
         public override string ToString() {
-            return ToString(Value);
+            return ToString(value);
         }
         [JsMethod(Code = "return d.toString();")]
         static string ToString(double d) { //TODO compatibility layer
