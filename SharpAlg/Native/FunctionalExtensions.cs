@@ -71,6 +71,22 @@ namespace SharpAlg.Native {
             if(index > 0)
                 throw new IndexOutOfRangeException("index");
         }
+        public static void Accumulate<T>(this IEnumerable<T> source, Action<T> init, Action<T> next) {
+            var enumerator = source.GetEnumerator();
+            if(enumerator.MoveNext())
+                init(enumerator.Current);
+            else
+                throw new InvalidOperationException();
+            while(enumerator.MoveNext()) {
+                next(enumerator.Current);
+            }
+        }
+        public static void ForEach<T>(this IEnumerable<T> source, Action<T> action) {
+            var enumerator = source.GetEnumerator();
+            while(enumerator.MoveNext()) {
+                action(enumerator.Current);
+            }
+        }
         //public static bool Equal<T>(this IEnumerable<T> first, params T[] second) {
         //    return Equal(first, (IEnumerable<T>)second);
         //}

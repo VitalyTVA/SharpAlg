@@ -9,38 +9,58 @@ using System.Text;
 namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ExpressionPrinter : IExpressionVisitor<string> {
-        readonly OperationPriority priority;
-        public ExpressionPrinter(OperationPriority priority = OperationPriority.None) {
-            this.priority = priority;
+        public ExpressionPrinter() {
         }
         public string Constant(ConstantExpr constant) {
-            string stringValue = constant.Value.ToString();
-            return constant.Value >= Number.Zero ? stringValue : Wrap(stringValue, OperationPriority.Add);
+            return constant.Value.ToString();
         }
         public string Multi(MultiExpr multi) {
-            OperationPriority newPriority = GetPriority(multi.Operation);
-            var nextPrinter = new ExpressionPrinter(newPriority);
-            if(UnaryExpressionExtractor.IsMinusExpression(multi)) {
-                return Wrap(String.Format("-{0}", multi.Args.ElementAt(1).Visit(nextPrinter)), OperationPriority.Add);
+            if(multi.Operation == BinaryOperation.Multiply)
+                return Multiply(multi.Args);
+            return Add(multi.Args);
+        }
+        string Add(IEnumerable<Expr> args) {
+            var sb = new StringBuilder();
+            args.Accumulate(x => {
+                sb.Append(x.Visit(this));
+            }, x => {
+                UnaryExpressionInfo info;
+                MultiExpr multiExpr = x as MultiExpr;
+                if(multiExpr != null && multiExpr.Operation == BinaryOperation.Multiply && multiExpr.Args.First().ExprEquals(Expr.MinusOne)) {
+                    info = new UnaryExpressionInfo(Expr.Multi(multiExpr.Args.Skip(1), BinaryOperation.Multiply), BinaryOperationEx.Subtract);
+                } else if(multiExpr != null && multiExpr.Operation == BinaryOperation.Multiply && multiExpr.Args.First().With(y => y as ConstantExpr).Return(y => y.Value < Number.Zero, () => false)) {
+                    ConstantExpr exprConstant = Expr.Constant(Number.Zero - multiExpr.Args.First().With(y => y as ConstantExpr).Value);
+                    Expr expr = Expr.Multi((new Expr[] { exprConstant }).Concat(multiExpr.Args.Skip(1)), BinaryOperation.Multiply);
+                    info = new UnaryExpressionInfo(expr, BinaryOperationEx.Subtract);
+                } else {
+                    info = UnaryExpressionExtractor.ExtractUnaryInfo(x, BinaryOperation.Add);
+                }
+
+                sb.Append(GetBinaryOperationSymbol(info.Operation));
+                sb.Append(WrapFromAdd(info.Expr));
+            });
+            return sb.ToString();
+        }
+        string Multiply(IEnumerable<Expr> args) {
+            if(args.First().ExprEquals(Expr.MinusOne)) {
+                string exprText = WrapFromMultiply(Expr.Multi(args.Skip(1), BinaryOperation.Multiply), ExpressionOrder.Default);
+                return String.Format("-{0}", exprText);
             }
             var sb = new StringBuilder();
-            multi.Accumulate(x => {
-                sb.Append(x.Visit(nextPrinter));
+            args.Accumulate(x => {
+                sb.Append(WrapFromMultiply(x, ExpressionOrder.Head));
             }, x => {
-                UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(x, multi.Operation);
-                sb.Append(" ");
+                UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(x, BinaryOperation.Multiply);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
-                sb.Append(" ");
-                sb.Append(info.Expr.Visit(nextPrinter));
+                sb.Append(WrapFromMultiply(info.Expr, ExpressionOrder.Default));
             });
-            return Wrap(sb.ToString(), GetPriority(multi.Operation));
+            return sb.ToString();
         }
         public string Power(PowerExpr power) {
-            var nextPrinter = new ExpressionPrinter(OperationPriority.Power);
             if(UnaryExpressionExtractor.IsInverseExpression(power)) {
-                return Wrap(String.Format("1 / {0}", power.Left.Visit(nextPrinter)), OperationPriority.Multiply);
+                return String.Format("1 / {0}", power.Left.Visit(this));
             }
-            return Wrap(string.Format("{0} ^ {1}", power.Left.Visit(nextPrinter), power.Right.Visit(nextPrinter)), OperationPriority.Power);
+            return string.Format("{0} ^ {1}", WrapFromPower(power.Left), WrapFromPower(power.Right));
         }
         public string Parameter(ParameterExpr parameter) {
             return parameter.ParameterName;
@@ -48,18 +68,18 @@ namespace SharpAlg.Native {
         static string GetBinaryOperationSymbol(BinaryOperationEx operation) {
             switch(operation) {
                 case BinaryOperationEx.Add:
-                    return "+";
+                    return " + ";
                 case BinaryOperationEx.Subtract:
-                    return "-";
+                    return " - ";
                 case BinaryOperationEx.Multiply:
-                    return "*";
+                    return " * ";
                 case BinaryOperationEx.Divide:
-                    return "/";
+                    return " / ";
                 default:
                     throw new NotImplementedException();
             }
         }
-        static OperationPriority GetPriority(BinaryOperation operation) {
+        public static OperationPriority GetPriority(BinaryOperation operation) {
             switch(operation) {
                 case BinaryOperation.Add:
                     return OperationPriority.Add;
@@ -69,10 +89,54 @@ namespace SharpAlg.Native {
                     throw new NotImplementedException();
             }
         }
-        string Wrap(string s, OperationPriority newPriority) {
-            if(newPriority <= priority)
+        string WrapFromAdd(Expr expr) {
+            return Wrap(expr, OperationPriority.Add, ExpressionOrder.Default);
+        }
+        string WrapFromMultiply(Expr expr, ExpressionOrder order) {
+            return Wrap(expr, OperationPriority.Multiply, order);
+        }
+        string WrapFromPower(Expr expr) {
+            return Wrap(expr, OperationPriority.Power, ExpressionOrder.Default);
+        }
+        string Wrap(Expr expr, OperationPriority currentPriority, ExpressionOrder order) {
+            bool wrap = expr.Visit(new ExpressionWrapper(currentPriority, order));
+            string s = expr.Visit(this);
+            if(wrap)
                 return "(" + s + ")";
             return s;
+        }
+    }
+    public enum ExpressionOrder {
+        Head, Default
+    }
+    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
+    public class ExpressionWrapper : IExpressionVisitor<bool> {
+        readonly ExpressionOrder order;
+        readonly OperationPriority priority;
+        public ExpressionWrapper(OperationPriority priority, ExpressionOrder order) {
+            this.order = order;
+            this.priority = priority;
+        }
+        public bool Constant(ConstantExpr constant) {
+            if(order == ExpressionOrder.Head)
+                return false;
+            return constant.Value < Number.Zero;
+        }
+        public bool Parameter(ParameterExpr parameter) {
+            return false;
+        }
+        public bool Multi(MultiExpr multi) {
+            if(priority == OperationPriority.Add)
+                return UnaryExpressionExtractor.IsMinusExpression(multi);
+            if(UnaryExpressionExtractor.IsMinusExpression(multi))
+                return true;
+            return priority > ExpressionPrinter.GetPriority(multi.Operation);
+        }
+        public bool Power(PowerExpr power) {
+            if(UnaryExpressionExtractor.IsInverseExpression(power)) {
+                return priority >= OperationPriority.Multiply;
+            }
+            return priority == OperationPriority.Power;
         }
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]

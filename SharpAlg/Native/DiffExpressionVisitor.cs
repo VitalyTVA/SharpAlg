@@ -49,7 +49,7 @@ namespace SharpAlg.Native {
         }
         Expr VisitAdditive(MultiExpr multi) {
             Expr result = null;
-            multi.Accumulate(x => {
+            multi.Args.Accumulate(x => {
                 result = x.Visit(this);
             }, x => {
                 result = builder.Add(result, x.Visit(this));

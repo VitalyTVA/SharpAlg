@@ -33,6 +33,18 @@ var SharpAlg$Native$Number =
         {
             return n1.value >= n2.value;
         },
+        op_LessThanOrEqual: function (n1, n2)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        op_LessThan: function (n1, n2)
+        {
+            return n1.value < n2.value;
+        },
+        op_GreaterThan: function (n1, n2)
+        {
+            return n1.value > n2.value;
+        },
         op_Multiply: function (n1, n2)
         {
             return SharpAlg.Native.Number.FromDouble(n1.value * n2.value);
@@ -48,10 +60,6 @@ var SharpAlg$Native$Number =
         op_ExclusiveOr: function (n1, n2)
         {
             return SharpAlg.Native.Number.FromDouble(System.Math.Pow(n1.value, n2.value));
-        },
-        op_LessThanOrEqual: function (n1, n2)
-        {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
         },
         cctor: function ()
         {

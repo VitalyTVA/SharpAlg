@@ -16,7 +16,7 @@ namespace SharpAlg.Native {
         }
         public Number Multi(MultiExpr multi) {
             Number result = Number.Zero;
-            multi.Accumulate(x => {
+            multi.Args.Accumulate(x => {
                 result = x.Visit(this);
             }, x => {
                 result = GetBinaryOperationEvaluator(multi.Operation)(result, x.Visit(this));

@@ -17,6 +17,15 @@ namespace SharpAlg.Native {
         public static bool operator >=(Number n1, Number n2) {
             return n1.value >= n2.value;
         }
+        public static bool operator <=(Number n1, Number n2) {
+            throw new NotImplementedException();
+        }
+        public static bool operator <(Number n1, Number n2) {
+            return n1.value < n2.value;
+        }
+        public static bool operator >(Number n1, Number n2) {
+            return n1.value > n2.value;
+        }
         public static Number operator *(Number n1, Number n2) {
             return FromDouble(n1.value * n2.value);
         }
@@ -28,9 +37,6 @@ namespace SharpAlg.Native {
         }
         public static Number operator ^(Number n1, Number n2) {
             return FromDouble(Math.Pow(n1.value, n2.value));
-        }
-        public static bool operator <=(Number n1, Number n2) {
-            throw new NotImplementedException();
         }
         //public static Number operator -(Number n) {
         //    return FromDouble(-n.Value);
