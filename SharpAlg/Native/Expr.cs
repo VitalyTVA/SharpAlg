@@ -21,7 +21,7 @@ namespace SharpAlg.Native {
             return Multi(new Expr[] { left, right }, type);
         }
         public static Expr Multi(IEnumerable<Expr> args, BinaryOperation type) {
-            return args.Count() > 1 ? new MultiExpr(args, type) : args.First();
+            return args.Count() > 1 ? (type == BinaryOperation.Add ? (MultiExpr)new AddExpr(args) : new MultiplyExpr(args)) : args.First();
         }
         public static Expr Add(Expr left, Expr right) { //TODO use builder everywhere
             return Binary(left, right, BinaryOperation.Add);
@@ -79,15 +79,31 @@ namespace SharpAlg.Native {
         None, Add, Multiply, Power 
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    public class MultiExpr : Expr {
-        internal MultiExpr(IEnumerable<Expr> args, BinaryOperation operation) {
+    public abstract class MultiExpr : Expr {
+        internal MultiExpr(IEnumerable<Expr> args) {
             Args = args;
-            Operation = operation;
         }
-        public BinaryOperation Operation { get; private set; }
+        public abstract BinaryOperation Operation { get; }
         public IEnumerable<Expr> Args { get; private set; }
+    }
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    public class AddExpr : MultiExpr {
+        internal AddExpr(IEnumerable<Expr> args) 
+            : base(args) {
+        }
+        public override BinaryOperation Operation { get { return BinaryOperation.Add; } }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
-            return visitor.Multi(this);
+            return visitor.Add(this);
+        }
+    }
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    public class MultiplyExpr : MultiExpr {
+        internal MultiplyExpr(IEnumerable<Expr> args)
+            : base(args) {
+        }
+        public override BinaryOperation Operation { get { return BinaryOperation.Multiply; } }
+        internal override T Visit<T>(IExpressionVisitor<T> visitor) {
+            return visitor.Multiply(this);
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]

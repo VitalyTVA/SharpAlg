@@ -31,10 +31,9 @@ namespace SharpAlg.Tests {
         public void BinaryExprTest() {
             var left = ExprTestHelper.AsConstant(9);
             var right = Expr.Parameter("x");
-            var expr = (MultiExpr)Expr.Divide(left, right);
+            var expr = (MultiplyExpr)Expr.Divide(left, right);
             expr
                 .IsEqual(x => x.Args.ElementAt(0), left)
-                .IsEqual(x => x.Operation, BinaryOperation.Multiply)
                 .With(x => x.Args.ElementAt(1) as PowerExpr)
                     .IsEqual(x => x.Left, right)
                     .IsEqual(x => x.Right, Expr.MinusOne);

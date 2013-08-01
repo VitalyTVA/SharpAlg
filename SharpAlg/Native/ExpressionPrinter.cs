@@ -14,21 +14,22 @@ namespace SharpAlg.Native {
         public string Constant(ConstantExpr constant) {
             return constant.Value.ToString();
         }
-        public string Multi(MultiExpr multi) {
-            if(multi.Operation == BinaryOperation.Multiply)
-                return Multiply(multi.Args);
-            return Add(multi.Args);
+        public string Add(AddExpr multi) {
+            return AddCore(multi.Args);
         }
-        string Add(IEnumerable<Expr> args) {
+        public string Multiply(MultiplyExpr multi) {
+            return MultiplyCore(multi.Args);
+        }
+        string AddCore(IEnumerable<Expr> args) {
             var sb = new StringBuilder();
             args.Accumulate(x => {
                 sb.Append(x.Visit(this));
             }, x => {
                 UnaryExpressionInfo info;
-                MultiExpr multiExpr = x as MultiExpr;
-                if(multiExpr != null && multiExpr.Operation == BinaryOperation.Multiply && multiExpr.Args.First().ExprEquals(Expr.MinusOne)) {
+                MultiplyExpr multiExpr = x as MultiplyExpr;
+                if(multiExpr != null && multiExpr.Args.First().ExprEquals(Expr.MinusOne)) {
                     info = new UnaryExpressionInfo(Expr.Multi(multiExpr.Args.Skip(1), BinaryOperation.Multiply), BinaryOperationEx.Subtract);
-                } else if(multiExpr != null && multiExpr.Operation == BinaryOperation.Multiply && multiExpr.Args.First().With(y => y as ConstantExpr).Return(y => y.Value < Number.Zero, () => false)) {
+                } else if(multiExpr != null && multiExpr.Args.First().With(y => y as ConstantExpr).Return(y => y.Value < Number.Zero, () => false)) {
                     ConstantExpr exprConstant = Expr.Constant(Number.Zero - multiExpr.Args.First().With(y => y as ConstantExpr).Value);
                     Expr expr = Expr.Multi((new Expr[] { exprConstant }).Concat(multiExpr.Args.Skip(1)), BinaryOperation.Multiply);
                     info = new UnaryExpressionInfo(expr, BinaryOperationEx.Subtract);
@@ -41,7 +42,7 @@ namespace SharpAlg.Native {
             });
             return sb.ToString();
         }
-        string Multiply(IEnumerable<Expr> args) {
+        string MultiplyCore(IEnumerable<Expr> args) {
             if(args.First().ExprEquals(Expr.MinusOne)) {
                 string exprText = WrapFromMultiply(Expr.Multi(args.Skip(1), BinaryOperation.Multiply), ExpressionOrder.Default);
                 return String.Format("-{0}", exprText);
@@ -99,7 +100,7 @@ namespace SharpAlg.Native {
             return Wrap(expr, OperationPriority.Power, ExpressionOrder.Default);
         }
         string Wrap(Expr expr, OperationPriority currentPriority, ExpressionOrder order) {
-            bool wrap = expr.Visit(new ExpressionWrapper(currentPriority, order));
+            bool wrap = expr.Visit(new ExpressionWrapperExtractor(currentPriority, order));
             string s = expr.Visit(this);
             if(wrap)
                 return "(" + s + ")";
@@ -110,10 +111,10 @@ namespace SharpAlg.Native {
         Head, Default
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
-    public class ExpressionWrapper : IExpressionVisitor<bool> {
+    public class ExpressionWrapperExtractor : IExpressionVisitor<bool> {
         readonly ExpressionOrder order;
         readonly OperationPriority priority;
-        public ExpressionWrapper(OperationPriority priority, ExpressionOrder order) {
+        public ExpressionWrapperExtractor(OperationPriority priority, ExpressionOrder order) {
             this.order = order;
             this.priority = priority;
         }
@@ -125,12 +126,15 @@ namespace SharpAlg.Native {
         public bool Parameter(ParameterExpr parameter) {
             return false;
         }
-        public bool Multi(MultiExpr multi) {
+        public bool Add(AddExpr multi) {
+            return priority > OperationPriority.Add;
+        }
+        public bool Multiply(MultiplyExpr multi) {
             if(priority == OperationPriority.Add)
                 return UnaryExpressionExtractor.IsMinusExpression(multi);
             if(UnaryExpressionExtractor.IsMinusExpression(multi))
                 return true;
-            return priority > ExpressionPrinter.GetPriority(multi.Operation);
+            return priority > OperationPriority.Multiply;
         }
         public bool Power(PowerExpr power) {
             if(UnaryExpressionExtractor.IsInverseExpression(power)) {
@@ -169,11 +173,14 @@ namespace SharpAlg.Native {
                 base.Constant(constant) :
                 new UnaryExpressionInfo(Expr.Constant(Number.Zero - constant.Value), BinaryOperationEx.Subtract);
         }
-        public override UnaryExpressionInfo Multi(MultiExpr multi) {
+        public override UnaryExpressionInfo Add(AddExpr multi) {
+            return base.Add(multi);
+        }
+        public override UnaryExpressionInfo Multiply(MultiplyExpr multi) {
             if(operation == BinaryOperation.Add && IsMinusExpression(multi)) {
                 return new UnaryExpressionInfo(multi.Args.ElementAt(1), BinaryOperationEx.Subtract);
             }
-            return base.Multi(multi);
+            return base.Multiply(multi);
         }
         public override UnaryExpressionInfo Power(PowerExpr power) {
             if(operation == BinaryOperation.Multiply && IsInverseExpression(power)) {
@@ -205,10 +212,10 @@ namespace SharpAlg.Native {
             return expr.Visit(new MultiplyExpressionExtractor()); //TODO singleton
         }
         MultiplyExpressionExtractor() { }
-        public override Tuple<Expr, Expr> Multi(MultiExpr multi) {
-            if(multi.Operation == BinaryOperation.Multiply && multi.Args.First() is ConstantExpr)
+        public override Tuple<Expr, Expr> Multiply(MultiplyExpr multi) {
+            if(multi.Args.First() is ConstantExpr)
                 return new Tuple<Expr, Expr>(multi.Args.First(), Expr.Multi(multi.Args.Skip(1), BinaryOperation.Multiply));
-            return base.Multi(multi);
+            return base.Multiply(multi);
         }
         protected override Tuple<Expr, Expr> GetDefault(Expr expr) {
             return new Tuple<Expr, Expr>(Expr.One, expr);
@@ -224,7 +231,10 @@ namespace SharpAlg.Native {
         public virtual T Parameter(ParameterExpr parameter) {
             return GetDefault(parameter);
         }
-        public virtual T Multi(MultiExpr multi) {
+        public virtual T Add(AddExpr multi) {
+            return GetDefault(multi);
+        }
+        public virtual T Multiply(MultiplyExpr multi) {
             return GetDefault(multi);
         }
         public virtual T Power(PowerExpr power) {

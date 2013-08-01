@@ -14,10 +14,11 @@ namespace SharpAlg.Native {
         public bool Constant(ConstantExpr constant) {
             return DoEqualityCheck(constant, (x1, x2) => object.Equals(x1.Value, x2.Value));
         }
-        public bool Multi(MultiExpr multi) {
-            return DoEqualityCheck(multi, (x1, x2) => {
-                return x1.Operation == x2.Operation && GetArgsEqualComparer()(x1.Args, x2.Args);  //TODO singleton
-            });
+        public bool Add(AddExpr multi) {
+            return CompareMultiExpr(multi);
+        }
+        public bool Multiply(MultiplyExpr multi) {
+            return CompareMultiExpr(multi);
         }
         public bool Power(PowerExpr power) {
             return DoEqualityCheck(power, (x1, x2) => EqualsCore(x1.Left, x2.Left) && EqualsCore(x1.Right, x2.Right));
@@ -37,6 +38,11 @@ namespace SharpAlg.Native {
         }
         protected virtual ExpressionEqualityComparer Clone(Expr expr) {
             return new ExpressionEqualityComparer(expr);
+        }
+        bool CompareMultiExpr<T>(T multi) where T : MultiExpr {
+            return DoEqualityCheck<T>(multi, (x1, x2) => {
+                return GetArgsEqualComparer()(x1.Args, x2.Args);  //TODO singleton
+            });
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]

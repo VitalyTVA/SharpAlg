@@ -14,12 +14,18 @@ namespace SharpAlg.Native {
         public Number Constant(ConstantExpr constant) {
             return constant.Value;
         }
-        public Number Multi(MultiExpr multi) {
+        public Number Add(AddExpr multi) {
+            return EvaluateMulti(multi, (x1, x2) => x1 + x2);
+        }
+        public Number Multiply(MultiplyExpr multi) {
+            return EvaluateMulti(multi, (x1, x2) => x1 * x2);
+        }
+        Number EvaluateMulti(MultiExpr multi, Func<Number, Number, Number> evaluator) {
             Number result = Number.Zero;
             multi.Args.Accumulate(x => {
                 result = x.Visit(this);
             }, x => {
-                result = GetBinaryOperationEvaluator(multi.Operation)(result, x.Visit(this));
+                result = evaluator(result, x.Visit(this));
             });
             return result;
         }

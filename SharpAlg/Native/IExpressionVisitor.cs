@@ -9,7 +9,8 @@ namespace SharpAlg.Native {
     public interface IExpressionVisitor<T> {
         T Constant(ConstantExpr constant);
         T Parameter(ParameterExpr parameter);
-        T Multi(MultiExpr multi);
+        T Add(AddExpr multi);
+        T Multiply(MultiplyExpr multi);
         T Power(PowerExpr power);
     }
 }

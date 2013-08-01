@@ -32,22 +32,7 @@ namespace SharpAlg.Native {
                 return Expr.Zero;
             }
         }
-        public Expr Multi(MultiExpr multi) {
-            switch(multi.Operation) {
-                case BinaryOperation.Add:
-                    return VisitAdditive(multi);
-                case BinaryOperation.Multiply:
-                    return VisitMultiply(multi);
-                default:
-                    throw new NotImplementedException();
-            }
-        }
-        public Expr Power(PowerExpr power) {
-            if(!(power.Right is ConstantExpr))
-                throw new NotImplementedException(); //TODO when ln() is ready
-            return Expr.Multiply(power.Right, builder.Multiply(power.Left.Visit(this), builder.Power(power.Left, builder.Subtract(power.Right, Expr.One)))); //TODO convolution when ln() is ready
-        }
-        Expr VisitAdditive(MultiExpr multi) {
+        public Expr Add(AddExpr multi) {
             Expr result = null;
             multi.Args.Accumulate(x => {
                 result = x.Visit(this);
@@ -56,11 +41,16 @@ namespace SharpAlg.Native {
             });
             return result;
         }
-        Expr VisitMultiply(MultiExpr expr) {
-            var tail = expr.Tail();
-            var expr1 = builder.Multiply(expr.Args.First().Visit(this), tail);
-            var expr2 = builder.Multiply(expr.Args.First(), tail.Visit(this));
+        public Expr Multiply(MultiplyExpr multi) {
+            var tail = multi.Tail();
+            var expr1 = builder.Multiply(multi.Args.First().Visit(this), tail);
+            var expr2 = builder.Multiply(multi.Args.First(), tail.Visit(this));
             return builder.Add(expr1, expr2);
+        }
+        public Expr Power(PowerExpr power) {
+            if(!(power.Right is ConstantExpr))
+                throw new NotImplementedException(); //TODO when ln() is ready
+            return Expr.Multiply(power.Right, builder.Multiply(power.Left.Visit(this), builder.Power(power.Left, builder.Subtract(power.Right, Expr.One)))); //TODO convolution when ln() is ready
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
