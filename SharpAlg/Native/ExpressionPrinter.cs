@@ -28,10 +28,10 @@ namespace SharpAlg.Native {
                 UnaryExpressionInfo info;
                 MultiplyExpr multiExpr = x as MultiplyExpr;
                 if(multiExpr != null && multiExpr.Args.First().ExprEquals(Expr.MinusOne)) {
-                    info = new UnaryExpressionInfo(Expr.Multi(multiExpr.Args.Skip(1), BinaryOperation.Multiply), BinaryOperationEx.Subtract);
+                    info = new UnaryExpressionInfo(Expr.Multiply(multiExpr.Args.Skip(1)), BinaryOperationEx.Subtract);
                 } else if(multiExpr != null && multiExpr.Args.First().With(y => y as ConstantExpr).Return(y => y.Value < Number.Zero, () => false)) {
                     ConstantExpr exprConstant = Expr.Constant(Number.Zero - multiExpr.Args.First().With(y => y as ConstantExpr).Value);
-                    Expr expr = Expr.Multi((new Expr[] { exprConstant }).Concat(multiExpr.Args.Skip(1)), BinaryOperation.Multiply);
+                    Expr expr = Expr.Multiply((new Expr[] { exprConstant }).Concat(multiExpr.Args.Skip(1)));
                     info = new UnaryExpressionInfo(expr, BinaryOperationEx.Subtract);
                 } else {
                     info = UnaryExpressionExtractor.ExtractUnaryInfo(x, BinaryOperation.Add);
@@ -44,7 +44,7 @@ namespace SharpAlg.Native {
         }
         string MultiplyCore(IEnumerable<Expr> args) {
             if(args.First().ExprEquals(Expr.MinusOne)) {
-                string exprText = WrapFromAdd(Expr.Multi(args.Skip(1), BinaryOperation.Multiply));
+                string exprText = WrapFromAdd(Expr.Multiply(args.Skip(1)));
                 return String.Format("-{0}", exprText);
             }
             var sb = new StringBuilder();
@@ -211,7 +211,7 @@ namespace SharpAlg.Native {
         MultiplyExpressionExtractor() { }
         public override Tuple<Expr, Expr> Multiply(MultiplyExpr multi) {
             if(multi.Args.First() is ConstantExpr)
-                return new Tuple<Expr, Expr>(multi.Args.First(), Expr.Multi(multi.Args.Skip(1), BinaryOperation.Multiply));
+                return new Tuple<Expr, Expr>(multi.Args.First(), Expr.Multiply(multi.Args.Skip(1)));
             return base.Multiply(multi);
         }
         protected override Tuple<Expr, Expr> GetDefault(Expr expr) {

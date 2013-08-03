@@ -113,7 +113,7 @@ namespace SharpAlg.Tests {
             Expr.Add(ExprTestHelper.AsConstant(9), Expr.Minus(Expr.Inverse(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 - 1 / x");
             Expr.Multiply(ExprTestHelper.AsConstant(9), Expr.Inverse(Expr.Minus(Expr.Parameter("x")))).AssertSimpleStringRepresentation("9 / (-x)");
 
-            Expr.Multi(new Expr[] { Expr.Parameter("x"), ExprTestHelper.AsConstant(-1) }, BinaryOperation.Multiply).AssertSimpleStringRepresentation("x * (-1)");
+            Expr.Multiply(new Expr[] { Expr.Parameter("x"), ExprTestHelper.AsConstant(-1) }).AssertSimpleStringRepresentation("x * (-1)");
 
             "x ^ y ^ z".Parse().AssertSimpleStringRepresentation("(x ^ y) ^ z");
             "(-2) * x".Parse().AssertSimpleStringRepresentation("-2 * x");
@@ -132,7 +132,7 @@ namespace SharpAlg.Tests {
             "z + t * (-2) * x".Parse().AssertSimpleStringRepresentation("z - 2 * t * x");
             "(- x * t) ^ z".Parse().AssertSimpleStringRepresentation("(-x * t) ^ z");
 
-            Expr.Multi(new Expr[] { ExprTestHelper.AsConstant(2), Expr.Parameter("x"), Expr.Power(Expr.Multiply(Expr.Parameter("y"), Expr.Parameter("z")), Expr.MinusOne) }, BinaryOperation.Multiply).AssertSimpleStringRepresentation("2 * x / (y * z)");
+            Expr.Multiply(new Expr[] { ExprTestHelper.AsConstant(2), Expr.Parameter("x"), Expr.Power(Expr.Multiply(Expr.Parameter("y"), Expr.Parameter("z")), Expr.MinusOne) }).AssertSimpleStringRepresentation("2 * x / (y * z)");
             Expr.Power(Expr.Multiply(ExprTestHelper.AsConstant(3), Expr.Parameter("x")), Expr.MinusOne).AssertSimpleStringRepresentation("1 / (3 * x)");
         }
         [Test]

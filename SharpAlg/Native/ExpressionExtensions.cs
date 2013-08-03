@@ -37,10 +37,10 @@ namespace SharpAlg.Native {
             parser.Parse();
             return parser;
         }
-        public static Expr Tail(this MultiExpr multi) {
+        public static Expr Tail(this MultiplyExpr multi) {
             int count = multi.Args.Count();
             if(count > 2)
-                return Expr.Multi(multi.Args.RemoveAt(0), multi.Operation);
+                return Expr.Multiply(multi.Args.RemoveAt(0));
             if(count == 2)
                 return multi.Args.ElementAt(1);
             throw new InvalidOperationException();

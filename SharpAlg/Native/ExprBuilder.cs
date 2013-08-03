@@ -173,7 +173,7 @@ namespace SharpAlg.Native {
             if(rightConst != null) {
                 var leftMultiplyExpr = left as MultiplyExpr;
                 if(leftMultiplyExpr != null) {
-                    return Expr.Multi(leftMultiplyExpr.Args.Select(x => Power(x, Expr.Constant(rightConst))), BinaryOperation.Multiply);
+                    return Expr.Multiply(leftMultiplyExpr.Args.Select(x => Power(x, Expr.Constant(rightConst))));
                 }
                 var power = PowerExpressionExtractor.ExtractPower(left);
                 Number leftConst = GetConstValue(power.Right);
