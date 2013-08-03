@@ -257,7 +257,7 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
             rightExpr = rightExpr.Value;
             return $res;
         }).call(this);
-        expr.Value = this.builder.Binary(expr.Value, (minus ? this.builder.Minus(rightExpr) : rightExpr), 0);
+        expr.Value = this.builder.Add(expr.Value, (minus ? this.builder.Minus(rightExpr) : rightExpr));
     }
 };
 SharpAlg.Native.Parser.Parser.prototype.MultiplicativeExpression = function (expr)
@@ -281,7 +281,7 @@ SharpAlg.Native.Parser.Parser.prototype.MultiplicativeExpression = function (exp
             rightExpr = rightExpr.Value;
             return $res;
         }).call(this);
-        expr.Value = this.builder.Binary(expr.Value, (divide ? this.builder.Inverse(rightExpr) : rightExpr), 1);
+        expr.Value = this.builder.Multiply(expr.Value, (divide ? this.builder.Inverse(rightExpr) : rightExpr));
     }
 };
 SharpAlg.Native.Parser.Parser.prototype.AdditiveOperation = function (minus)

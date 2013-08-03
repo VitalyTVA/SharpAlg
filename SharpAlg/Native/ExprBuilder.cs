@@ -6,17 +6,13 @@ using System.Linq;
 namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public abstract class ExprBuilder {
-        public abstract Expr Binary(Expr left, Expr right, BinaryOperation operation);
+        //public abstract Expr Binary(Expr left, Expr right, BinaryOperation operation);
         //public abstract Expr Unary(Expr expr, UnaryOperation operation);
         public abstract Expr Power(Expr left, Expr right);
-        public Expr Add(Expr left, Expr right) {
-            return Binary(left, right, BinaryOperation.Add);
-        }
+        public abstract Expr Add(Expr left, Expr right);
+        public abstract Expr Multiply(Expr left, Expr right);
         public Expr Subtract(Expr left, Expr right) {
             return Add(left, Minus(right));
-        }
-        public Expr Multiply(Expr left, Expr right) {
-            return Binary(left, right, BinaryOperation.Multiply);
         }
         public Expr Divide(Expr left, Expr right) {
             return Multiply(left, Inverse(right));
@@ -30,8 +26,11 @@ namespace SharpAlg.Native {
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class TrivialExprBuilder : ExprBuilder {
-        public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
-            return Expr.Binary(left, right, operation);
+        public override Expr Add(Expr left, Expr right) {
+            return Expr.Add(left, right);
+        }
+        public override Expr Multiply(Expr left, Expr right) {
+            return Expr.Multiply(left, right);
         }
         public override Expr Power(Expr left, Expr right) {
             return Expr.Power(left, right);
@@ -39,14 +38,20 @@ namespace SharpAlg.Native {
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ConvolutionExprBuilder : ExprBuilder {
-        public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
-            return MultiConvolution(left, right, operation)
-                ?? Expr.Binary(left, right, operation);
+        public override Expr Add(Expr left, Expr right) {
+            return Binary(left, right, BinaryOperation.Add);
+        }
+        public override Expr Multiply(Expr left, Expr right) {
+            return Binary(left, right, BinaryOperation.Multiply);
         }
         public override Expr Power(Expr left, Expr right) {
             return ConstantPowerConvolution(left, right)
                 ?? ExpressionPowerConvolution(left, right)
                 ?? Expr.Power(left, right);
+        }
+        Expr Binary(Expr left, Expr right, BinaryOperation operation) {
+            return MultiConvolution(left, right, operation)
+                ?? Expr.Binary(left, right, operation);
         }
         IEnumerable<Expr> GetOpenParensArgs(Expr left, Expr right, BinaryOperation operation) {
             if(operation == BinaryOperation.Multiply) {

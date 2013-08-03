@@ -25,7 +25,7 @@ AdditiveExpression<out Expr expr>				(. bool minus; Expr rightExpr; .)
 = MultiplicativeExpression<out expr>
 	{
 	AdditiveOperation<out minus> 
-	MultiplicativeExpression<out rightExpr>		(. expr = builder.Binary(expr, (minus ? builder.Minus(rightExpr) : rightExpr), BinaryOperation.Add); .)
+	MultiplicativeExpression<out rightExpr>		(. expr = builder.Add(expr, (minus ? builder.Minus(rightExpr) : rightExpr)); .)
 	}
 .
 
@@ -40,7 +40,7 @@ MultiplicativeExpression<out Expr expr>			(. bool divide; Expr rightExpr; .)
 = PowerExpression<out expr>
 	{
 	MultiplicativeOperation<out divide> 
-	PowerExpression<out rightExpr>				(. expr = builder.Binary(expr, (divide ? builder.Inverse(rightExpr) : rightExpr), BinaryOperation.Multiply); .)
+	PowerExpression<out rightExpr>				(. expr = builder.Multiply(expr, (divide ? builder.Inverse(rightExpr) : rightExpr)); .)
 	}
 .
 

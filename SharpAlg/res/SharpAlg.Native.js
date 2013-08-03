@@ -488,17 +488,9 @@ JsTypes.push(SharpAlg$Native$PowerExpr);
 SharpAlg.Native.ExprBuilder = function ()
 {
 };
-SharpAlg.Native.ExprBuilder.prototype.Add = function (left, right)
-{
-    return this.Binary(left, right, 0);
-};
 SharpAlg.Native.ExprBuilder.prototype.Subtract = function (left, right)
 {
     return this.Add(left, this.Minus(right));
-};
-SharpAlg.Native.ExprBuilder.prototype.Multiply = function (left, right)
-{
-    return this.Binary(left, right, 1);
 };
 SharpAlg.Native.ExprBuilder.prototype.Divide = function (left, right)
 {
@@ -516,9 +508,13 @@ SharpAlg.Native.TrivialExprBuilder = function ()
 {
     SharpAlg.Native.ExprBuilder.call(this);
 };
-SharpAlg.Native.TrivialExprBuilder.prototype.Binary = function (left, right, operation)
+SharpAlg.Native.TrivialExprBuilder.prototype.Add = function (left, right)
 {
-    return SharpAlg.Native.Expr.Binary(left, right, operation);
+    return SharpAlg.Native.Expr.Add(left, right);
+};
+SharpAlg.Native.TrivialExprBuilder.prototype.Multiply = function (left, right)
+{
+    return SharpAlg.Native.Expr.Multiply(left, right);
 };
 SharpAlg.Native.TrivialExprBuilder.prototype.Power = function (left, right)
 {
@@ -529,13 +525,21 @@ SharpAlg.Native.ConvolutionExprBuilder = function ()
 {
     SharpAlg.Native.ExprBuilder.call(this);
 };
-SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right, operation)
+SharpAlg.Native.ConvolutionExprBuilder.prototype.Add = function (left, right)
 {
-    return (this.MultiConvolution(left, right, operation) != null ? this.MultiConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation));
+    return this.Binary(left, right, 0);
+};
+SharpAlg.Native.ConvolutionExprBuilder.prototype.Multiply = function (left, right)
+{
+    return this.Binary(left, right, 1);
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Power = function (left, right)
 {
     return (this.ConstantPowerConvolution(left, right) != null ? this.ConstantPowerConvolution(left, right) : (this.ExpressionPowerConvolution(left, right) != null ? this.ExpressionPowerConvolution(left, right) : SharpAlg.Native.Expr.Power(left, right)));
+};
+SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right, operation)
+{
+    return (this.MultiConvolution(left, right, operation) != null ? this.MultiConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation));
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.GetOpenParensArgs = function (left, right, operation)
 {
