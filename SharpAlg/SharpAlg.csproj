@@ -82,9 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Native\Builder\ConvolutionExprBuilder.cs" />
-    <Compile Include="Native\Builder\ExpressionArgumentsExtractor.cs" />
-    <Compile Include="Native\Builder\MultiplyExpressionExtractor.cs" />
-    <Compile Include="Native\Builder\PowerExpressionExtractor.cs" />
     <Compile Include="Native\Builder\TrivialExprBuilder.cs" />
     <Compile Include="Native\Context.cs" />
     <Compile Include="Native\DefaultExpressionVisitor.cs" />
