@@ -100,9 +100,6 @@
     <Compile Include="Native\Parser\Buffer.cs" />
     <Compile Include="Native\Parser\Errors.cs" />
     <Compile Include="Native\Parser\Token.cs" />
-    <Compile Include="Native\Printer\ExpressionWrapperVisitor.cs" />
-    <Compile Include="Native\Printer\UnaryExpressionExtractor.cs" />
-    <Compile Include="Native\Printer\UnaryExpressionInfo.cs" />
     <Compile Include="Native\SR.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

@@ -9,6 +9,87 @@ using System.Text;
 namespace SharpAlg.Native.Printer {
     [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
     public class ExpressionPrinter : IExpressionVisitor<string> {
+        #region inner classes
+        [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+        class ExpressionWrapperVisitor : IExpressionVisitor<bool> {
+            readonly ExpressionOrder order;
+            readonly OperationPriority priority;
+            public ExpressionWrapperVisitor(OperationPriority priority, ExpressionOrder order) {
+                this.order = order;
+                this.priority = priority;
+            }
+            public bool Constant(ConstantExpr constant) {
+                if(order == ExpressionOrder.Head)
+                    return false;
+                return constant.Value < Number.Zero;
+            }
+            public bool Parameter(ParameterExpr parameter) {
+                return false;
+            }
+            public bool Add(AddExpr multi) {
+                return priority >= OperationPriority.Add;
+            }
+            public bool Multiply(MultiplyExpr multi) {
+                if(UnaryExpressionExtractor.IsMinusExpression(multi))
+                    return true;
+                return priority >= OperationPriority.Multiply;
+            }
+            public bool Power(PowerExpr power) {
+                if(UnaryExpressionExtractor.IsInverseExpression(power))
+                    return priority >= OperationPriority.Multiply;
+                return priority == OperationPriority.Power;
+            }
+        }
+        [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+        class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
+            public static UnaryExpressionInfo ExtractUnaryInfo(Expr expr, BinaryOperation operation) {
+                return expr.Visit(new UnaryExpressionExtractor(operation));
+            }
+            public static bool IsMinusExpression(MultiplyExpr multi) {
+                return multi.Args.Count() == 2 && Expr.MinusOne.ExprEquals(multi.Args.ElementAt(0));
+            }
+            public static bool IsInverseExpression(PowerExpr power) {
+                return Expr.MinusOne.ExprEquals(power.Right);
+            }
+
+            readonly BinaryOperation operation;
+            UnaryExpressionExtractor(BinaryOperation operation) {
+                this.operation = operation;
+            }
+            public override UnaryExpressionInfo Constant(ConstantExpr constant) {
+                return constant.Value >= Number.Zero || operation != BinaryOperation.Add ?
+                    base.Constant(constant) :
+                    new UnaryExpressionInfo(Expr.Constant(Number.Zero - constant.Value), BinaryOperationEx.Subtract);
+            }
+            public override UnaryExpressionInfo Add(AddExpr multi) {
+                return base.Add(multi);
+            }
+            public override UnaryExpressionInfo Multiply(MultiplyExpr multi) {
+                if(operation == BinaryOperation.Add && IsMinusExpression(multi)) {
+                    return new UnaryExpressionInfo(multi.Args.ElementAt(1), BinaryOperationEx.Subtract);
+                }
+                return base.Multiply(multi);
+            }
+            public override UnaryExpressionInfo Power(PowerExpr power) {
+                if(operation == BinaryOperation.Multiply && IsInverseExpression(power)) {
+                    return new UnaryExpressionInfo(power.Left, BinaryOperationEx.Divide);
+                }
+                return base.Power(power);
+            }
+            protected override UnaryExpressionInfo GetDefault(Expr expr) {
+                return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(operation));
+            }
+        }
+        [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+        class UnaryExpressionInfo {
+            public UnaryExpressionInfo(Expr expr, BinaryOperationEx operation) {
+                Operation = operation;
+                Expr = expr;
+            }
+            public Expr Expr { get; private set; }
+            public BinaryOperationEx Operation { get; private set; }
+        }
+        #endregion
         public ExpressionPrinter() {
         }
         public string Constant(ConstantExpr constant) {

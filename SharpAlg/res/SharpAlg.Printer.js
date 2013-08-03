@@ -88,7 +88,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.AddCore = function (args)
         var multiExpr = As(x, SharpAlg.Native.MultiplyExpr.ctor);
         if (multiExpr != null && SharpAlg.Native.ExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multiExpr.get_Args()), SharpAlg.Native.Expr.MinusOne))
         {
-            info = new SharpAlg.Native.Printer.UnaryExpressionInfo(SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(System.Linq.Enumerable.Skip$1(SharpAlg.Native.Expr.ctor, multiExpr.get_Args(), 1)), 1);
+            info = new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo(SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(System.Linq.Enumerable.Skip$1(SharpAlg.Native.Expr.ctor, multiExpr.get_Args(), 1)), 1);
         }
         else if (multiExpr != null && SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multiExpr.get_Args()), $CreateAnonymousDelegate(this, function (y)
         {
@@ -106,11 +106,11 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.AddCore = function (args)
                 return As(y, SharpAlg.Native.ConstantExpr.ctor);
             })).get_Value()));
             var expr = SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, ([exprConstant]), System.Linq.Enumerable.Skip$1(SharpAlg.Native.Expr.ctor, multiExpr.get_Args(), 1)));
-            info = new SharpAlg.Native.Printer.UnaryExpressionInfo(expr, 1);
+            info = new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo(expr, 1);
         }
         else
         {
-            info = SharpAlg.Native.Printer.UnaryExpressionExtractor.ExtractUnaryInfo(x, 0);
+            info = SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.ExtractUnaryInfo(x, 0);
         }
         sb.Append$$String(SharpAlg.Native.Printer.ExpressionPrinter.GetBinaryOperationSymbol(info.Operation));
         sb.Append$$String(this.WrapFromAdd(info.Expr));
@@ -130,7 +130,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.MultiplyCore = function (arg
         sb.Append$$String(this.WrapFromMultiply(x, 0));
     }), $CreateAnonymousDelegate(this, function (x)
     {
-        var info = SharpAlg.Native.Printer.UnaryExpressionExtractor.ExtractUnaryInfo(x, 1);
+        var info = SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.ExtractUnaryInfo(x, 1);
         sb.Append$$String(SharpAlg.Native.Printer.ExpressionPrinter.GetBinaryOperationSymbol(info.Operation));
         sb.Append$$String(this.WrapFromMultiply(info.Expr, 1));
     }));
@@ -138,7 +138,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.MultiplyCore = function (arg
 };
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Power = function (power)
 {
-    if (SharpAlg.Native.Printer.UnaryExpressionExtractor.IsInverseExpression(power))
+    if (SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.IsInverseExpression(power))
     {
         return System.String.Format$$String$$Object("1 / {0}", this.WrapFromMultiply(power.get_Left(), 1));
     }
@@ -190,93 +190,95 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.WrapFromPower = function (ex
 };
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Wrap = function (expr, currentPriority, order)
 {
-    var wrap = expr.Visit$1(System.Boolean.ctor, new SharpAlg.Native.Printer.ExpressionWrapperVisitor(currentPriority, order));
+    var wrap = expr.Visit$1(System.Boolean.ctor, new SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor(currentPriority, order));
     var s = expr.Visit$1(System.String.ctor, this);
     if (wrap)
         return "(" + s + ")";
     return s;
 };
-SharpAlg.Native.Printer.ExpressionWrapperVisitor = function (priority, order)
+if (typeof(SharpAlg.Native.Printer.ExpressionPrinter) == "undefined")
+    SharpAlg.Native.Printer.ExpressionPrinter = {};
+SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor = function (priority, order)
 {
     this.order = 0;
     this.priority = 0;
     this.order = order;
     this.priority = priority;
 };
-SharpAlg.Native.Printer.ExpressionWrapperVisitor.prototype.Constant = function (constant)
+SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Constant = function (constant)
 {
     if (this.order == 0)
         return false;
     return SharpAlg.Native.Number.op_LessThan(constant.get_Value(), SharpAlg.Native.Number.Zero);
 };
-SharpAlg.Native.Printer.ExpressionWrapperVisitor.prototype.Parameter = function (parameter)
+SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Parameter = function (parameter)
 {
     return false;
 };
-SharpAlg.Native.Printer.ExpressionWrapperVisitor.prototype.Add = function (multi)
+SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Add = function (multi)
 {
     return this.priority >= 1;
 };
-SharpAlg.Native.Printer.ExpressionWrapperVisitor.prototype.Multiply = function (multi)
+SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Multiply = function (multi)
 {
-    if (SharpAlg.Native.Printer.UnaryExpressionExtractor.IsMinusExpression(multi))
+    if (SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.IsMinusExpression(multi))
         return true;
     return this.priority >= 2;
 };
-SharpAlg.Native.Printer.ExpressionWrapperVisitor.prototype.Power = function (power)
+SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Power = function (power)
 {
-    if (SharpAlg.Native.Printer.UnaryExpressionExtractor.IsInverseExpression(power))
+    if (SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.IsInverseExpression(power))
         return this.priority >= 2;
     return this.priority == 3;
 };
-SharpAlg.Native.Printer.UnaryExpressionExtractor = function (operation)
+SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor = function (operation)
 {
     this.operation = 0;
     SharpAlg.Native.DefaultExpressionVisitor.call(this);
     this.operation = operation;
 };
-SharpAlg.Native.Printer.UnaryExpressionExtractor.ExtractUnaryInfo = function (expr, operation)
+SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.ExtractUnaryInfo = function (expr, operation)
 {
-    return expr.Visit$1(SharpAlg.Native.Printer.UnaryExpressionInfo, new SharpAlg.Native.Printer.UnaryExpressionExtractor(operation));
+    return expr.Visit$1(SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo, new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor(operation));
 };
-SharpAlg.Native.Printer.UnaryExpressionExtractor.IsMinusExpression = function (multi)
+SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.IsMinusExpression = function (multi)
 {
     return System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()) == 2 && SharpAlg.Native.ExpressionExtensions.ExprEquals(SharpAlg.Native.Expr.MinusOne, System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 0));
 };
-SharpAlg.Native.Printer.UnaryExpressionExtractor.IsInverseExpression = function (power)
+SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.IsInverseExpression = function (power)
 {
     return SharpAlg.Native.ExpressionExtensions.ExprEquals(SharpAlg.Native.Expr.MinusOne, power.get_Right());
 };
-SharpAlg.Native.Printer.UnaryExpressionExtractor.prototype.Constant = function (constant)
+SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.prototype.Constant = function (constant)
 {
-    return SharpAlg.Native.Number.op_GreaterThanOrEqual(constant.get_Value(), SharpAlg.Native.Number.Zero) || this.operation != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.Printer.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.Number.Zero, constant.get_Value())), 1);
+    return SharpAlg.Native.Number.op_GreaterThanOrEqual(constant.get_Value(), SharpAlg.Native.Number.Zero) || this.operation != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.Number.Zero, constant.get_Value())), 1);
 };
-SharpAlg.Native.Printer.UnaryExpressionExtractor.prototype.Add = function (multi)
+SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.prototype.Add = function (multi)
 {
     return SharpAlg.Native.DefaultExpressionVisitor.prototype.Add.call(this, multi);
 };
-SharpAlg.Native.Printer.UnaryExpressionExtractor.prototype.Multiply = function (multi)
+SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.prototype.Multiply = function (multi)
 {
-    if (this.operation == 0 && SharpAlg.Native.Printer.UnaryExpressionExtractor.IsMinusExpression(multi))
+    if (this.operation == 0 && SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.IsMinusExpression(multi))
     {
-        return new SharpAlg.Native.Printer.UnaryExpressionInfo(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1), 1);
+        return new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1), 1);
     }
     return SharpAlg.Native.DefaultExpressionVisitor.prototype.Multiply.call(this, multi);
 };
-SharpAlg.Native.Printer.UnaryExpressionExtractor.prototype.Power = function (power)
+SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.prototype.Power = function (power)
 {
-    if (this.operation == 1 && SharpAlg.Native.Printer.UnaryExpressionExtractor.IsInverseExpression(power))
+    if (this.operation == 1 && SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.IsInverseExpression(power))
     {
-        return new SharpAlg.Native.Printer.UnaryExpressionInfo(power.get_Left(), 3);
+        return new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo(power.get_Left(), 3);
     }
     return SharpAlg.Native.DefaultExpressionVisitor.prototype.Power.call(this, power);
 };
-SharpAlg.Native.Printer.UnaryExpressionExtractor.prototype.GetDefault = function (expr)
+SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.prototype.GetDefault = function (expr)
 {
-    return new SharpAlg.Native.Printer.UnaryExpressionInfo(expr, SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEx(this.operation));
+    return new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo(expr, SharpAlg.Native.ExpressionEvaluator.GetBinaryOperationEx(this.operation));
 };
-$Inherit(SharpAlg.Native.Printer.UnaryExpressionExtractor, SharpAlg.Native.DefaultExpressionVisitor);
-SharpAlg.Native.Printer.UnaryExpressionInfo = function (expr, operation)
+$Inherit(SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor, SharpAlg.Native.DefaultExpressionVisitor);
+SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo = function (expr, operation)
 {
     this.Expr = null;
     this.Operation = 0;
