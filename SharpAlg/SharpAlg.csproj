@@ -72,6 +72,7 @@
     <Content Include="res\Default.js" />
     <Content Include="res\jquery-1.8.2.min.js" />
     <Content Include="res\jsclr-4.1.0.js" />
+    <Content Include="res\SharpAlg.Builder.js" />
     <Content Include="res\SharpAlg.Native.js" />
     <Content Include="res\SharpAlg.Number.js" />
     <Content Include="res\SharpAlg.Parser.js" />
@@ -80,11 +81,16 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Native\Builder\ConvolutionExprBuilder.cs" />
+    <Compile Include="Native\Builder\ExpressionArgumentsExtractor.cs" />
+    <Compile Include="Native\Builder\MultiplyExpressionExtractor.cs" />
+    <Compile Include="Native\Builder\PowerExpressionExtractor.cs" />
+    <Compile Include="Native\Builder\TrivialExprBuilder.cs" />
     <Compile Include="Native\Context.cs" />
     <Compile Include="Native\DefaultExpressionVisitor.cs" />
     <Compile Include="Native\DiffExpressionVisitor.cs" />
     <Compile Include="Native\Expr.cs" />
-    <Compile Include="Native\ExprBuilder.cs" />
+    <Compile Include="Native\Builder\ExprBuilder.cs" />
     <Compile Include="Native\ExpressionComparer.cs" />
     <Compile Include="Native\ExpressionEvaluator.cs" />
     <Compile Include="Native\ExpressionExtensions.cs" />

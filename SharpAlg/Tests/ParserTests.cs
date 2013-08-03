@@ -9,6 +9,7 @@ using SharpKit.JavaScript;
 using System.IO;
 using System.Text;
 using SharpAlg.Native.Parser;
+using SharpAlg.Native.Builder;
 
 namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

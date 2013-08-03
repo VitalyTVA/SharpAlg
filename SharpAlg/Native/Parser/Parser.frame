@@ -1,6 +1,7 @@
 -->begin
 using System;
 using SharpKit.JavaScript;
+using SharpAlg.Native.Builder;
 
 -->namespace
 [JsType(JsMode.Prototype, Filename = SR.JSParserName)]

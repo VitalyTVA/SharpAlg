@@ -4,6 +4,7 @@ SharpAlg Parser
 
 using System;
 using SharpKit.JavaScript;
+using SharpAlg.Native.Builder;
 
 namespace SharpAlg.Native.Parser {
 

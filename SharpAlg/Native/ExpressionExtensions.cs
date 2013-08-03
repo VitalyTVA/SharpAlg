@@ -1,3 +1,4 @@
+using SharpAlg.Native.Builder;
 using SharpAlg.Native.Parser;
 using SharpKit.JavaScript;
 using System;
