@@ -164,7 +164,7 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Add = function (multi)
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Multiply = function (multi)
 {
-    var tail = SharpAlg.Native.ExpressionExtensions.Tail(multi);
+    var tail = SharpAlg.Native.ExpressionExtensions.Tail$$MultiplyExpr(multi);
     var expr1 = this.builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()).Visit$1(SharpAlg.Native.Expr.ctor, this), tail);
     var expr2 = this.builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), tail.Visit$1(SharpAlg.Native.Expr.ctor, this));
     return this.builder.Add(expr1, expr2);
@@ -724,14 +724,13 @@ var SharpAlg$Native$ExpressionExtensions =
             parser.Parse();
             return parser;
         },
-        Tail: function (multi)
+        Tail$$MultiplyExpr: function (multi)
         {
-            var count = System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args());
-            if (count > 2)
-                return SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(SharpAlg.Native.FunctionalExtensions.RemoveAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 0));
-            if (count == 2)
-                return System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1);
-            throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
+            return SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, multi.get_Args()));
+        },
+        Tail$$AddExpr: function (multi)
+        {
+            return SharpAlg.Native.Expr.Add$$IEnumerable$1$Expr(SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, multi.get_Args()));
         }
     },
     assemblyName: "SharpAlg",
@@ -838,6 +837,10 @@ var SharpAlg$Native$FunctionalExtensions =
             {
                 action(enumerator.get_Current());
             }
+        },
+        Tail$1: function (T, source)
+        {
+            return System.Linq.Enumerable.Skip$1(T, source, 1);
         }
     },
     assemblyName: "SharpAlg",

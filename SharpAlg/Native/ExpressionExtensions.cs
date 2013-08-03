@@ -39,12 +39,10 @@ namespace SharpAlg.Native {
             return parser;
         }
         public static Expr Tail(this MultiplyExpr multi) {
-            int count = multi.Args.Count();
-            if(count > 2)
-                return Expr.Multiply(multi.Args.RemoveAt(0));
-            if(count == 2)
-                return multi.Args.ElementAt(1);
-            throw new InvalidOperationException();
+            return Expr.Multiply(multi.Args.Tail());
+        }
+        public static Expr Tail(this AddExpr multi) {
+            return Expr.Add(multi.Args.Tail());
         }
     }
 }

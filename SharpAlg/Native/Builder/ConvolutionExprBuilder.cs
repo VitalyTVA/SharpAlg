@@ -36,7 +36,7 @@ namespace SharpAlg.Native.Builder {
             MultiplyExpressionExtractor() { }
             public override Tuple<Expr, Expr> Multiply(MultiplyExpr multi) {
                 if(multi.Args.First() is ConstantExpr)
-                    return new Tuple<Expr, Expr>(multi.Args.First(), Expr.Multiply(multi.Args.Skip(1)));
+                    return new Tuple<Expr, Expr>(multi.Args.First(), multi.Tail());
                 return base.Multiply(multi);
             }
             protected override Tuple<Expr, Expr> GetDefault(Expr expr) {

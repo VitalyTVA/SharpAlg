@@ -30,54 +30,62 @@ namespace SharpAlg.Native.Printer {
                 return priority >= OperationPriority.Add;
             }
             public bool Multiply(MultiplyExpr multi) {
-                if(UnaryExpressionExtractor.IsMinusExpression(multi))
+                if(IsMinusExpression(multi))
                     return true;
                 return priority >= OperationPriority.Multiply;
             }
             public bool Power(PowerExpr power) {
-                if(UnaryExpressionExtractor.IsInverseExpression(power))
+                if(IsInverseExpression(power))
                     return priority >= OperationPriority.Multiply;
                 return priority == OperationPriority.Power;
             }
         }
         [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
-        class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
-            public static UnaryExpressionInfo ExtractUnaryInfo(Expr expr, BinaryOperation operation) {
-                return expr.Visit(new UnaryExpressionExtractor(operation));
-            }
-            public static bool IsMinusExpression(MultiplyExpr multi) {
-                return multi.Args.Count() == 2 && Expr.MinusOne.ExprEquals(multi.Args.ElementAt(0));
-            }
-            public static bool IsInverseExpression(PowerExpr power) {
-                return Expr.MinusOne.ExprEquals(power.Right);
-            }
-
-            readonly BinaryOperation operation;
-            UnaryExpressionExtractor(BinaryOperation operation) {
-                this.operation = operation;
+        abstract class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
+            protected abstract BinaryOperation Operation { get; }
+            protected UnaryExpressionExtractor() {
             }
             public override UnaryExpressionInfo Constant(ConstantExpr constant) {
-                return constant.Value >= Number.Zero || operation != BinaryOperation.Add ?
+                return constant.Value >= Number.Zero || Operation != BinaryOperation.Add ?
                     base.Constant(constant) :
                     new UnaryExpressionInfo(Expr.Constant(Number.Zero - constant.Value), BinaryOperationEx.Subtract);
             }
-            public override UnaryExpressionInfo Add(AddExpr multi) {
-                return base.Add(multi);
+            protected override UnaryExpressionInfo GetDefault(Expr expr) {
+                return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(Operation));
             }
-            public override UnaryExpressionInfo Multiply(MultiplyExpr multi) {
-                if(operation == BinaryOperation.Add && IsMinusExpression(multi)) {
-                    return new UnaryExpressionInfo(multi.Args.ElementAt(1), BinaryOperationEx.Subtract);
-                }
-                return base.Multiply(multi);
+        }
+        [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+        class MultiplyUnaryExpressionExtractor : UnaryExpressionExtractor {
+            public static readonly MultiplyUnaryExpressionExtractor MultiplyInstance = new MultiplyUnaryExpressionExtractor();
+            protected override BinaryOperation Operation { get { return BinaryOperation.Multiply; } }
+            protected MultiplyUnaryExpressionExtractor() {
             }
             public override UnaryExpressionInfo Power(PowerExpr power) {
-                if(operation == BinaryOperation.Multiply && IsInverseExpression(power)) {
+                if(IsInverseExpression(power)) {
                     return new UnaryExpressionInfo(power.Left, BinaryOperationEx.Divide);
                 }
                 return base.Power(power);
             }
-            protected override UnaryExpressionInfo GetDefault(Expr expr) {
-                return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(operation));
+        }
+        [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+        class AddUnaryExpressionExtractor : UnaryExpressionExtractor {
+            public static readonly AddUnaryExpressionExtractor AddInstance = new AddUnaryExpressionExtractor();
+            public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
+                return expr.Visit(new AddUnaryExpressionExtractor());
+            }
+            protected override BinaryOperation Operation { get { return BinaryOperation.Add; } }
+            AddUnaryExpressionExtractor() {
+            }
+            public override UnaryExpressionInfo Multiply(MultiplyExpr multi) {
+                ConstantExpr headConstant = multi.Args.First() as ConstantExpr;
+                if(headConstant.Return(x => x.Value < Number.Zero, () => false)) {
+                    ConstantExpr exprConstant = Expr.Constant(Number.Zero - multi.Args.First().With(y => y as ConstantExpr).Value);
+                    Expr expr = multi.Args.First().ExprEquals(Expr.MinusOne) ? 
+                        multi.Tail() : 
+                        Expr.Multiply((new Expr[] { exprConstant }).Concat(multi.Args.Tail()));
+                    return new UnaryExpressionInfo(expr, BinaryOperationEx.Subtract);
+                }
+                return base.Multiply(multi);
             }
         }
         [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
@@ -90,56 +98,45 @@ namespace SharpAlg.Native.Printer {
             public BinaryOperationEx Operation { get; private set; }
         }
         #endregion
+        static bool IsMinusExpression(MultiplyExpr multi) {
+            return multi.Args.Count() == 2 && Expr.MinusOne.ExprEquals(multi.Args.ElementAt(0));
+        }
+        static bool IsInverseExpression(PowerExpr power) {
+            return Expr.MinusOne.ExprEquals(power.Right);
+        }
         public ExpressionPrinter() {
         }
         public string Constant(ConstantExpr constant) {
             return constant.Value.ToString();
         }
         public string Add(AddExpr multi) {
-            return AddCore(multi.Args);
-        }
-        public string Multiply(MultiplyExpr multi) {
-            return MultiplyCore(multi.Args);
-        }
-        string AddCore(IEnumerable<Expr> args) {
             var sb = new StringBuilder();
-            args.Accumulate(x => {
+            multi.Args.Accumulate(x => {
                 sb.Append(x.Visit(this));
             }, x => {
-                UnaryExpressionInfo info;
-                MultiplyExpr multiExpr = x as MultiplyExpr;
-                if(multiExpr != null && multiExpr.Args.First().ExprEquals(Expr.MinusOne)) {
-                    info = new UnaryExpressionInfo(Expr.Multiply(multiExpr.Args.Skip(1)), BinaryOperationEx.Subtract);
-                } else if(multiExpr != null && multiExpr.Args.First().With(y => y as ConstantExpr).Return(y => y.Value < Number.Zero, () => false)) {
-                    ConstantExpr exprConstant = Expr.Constant(Number.Zero - multiExpr.Args.First().With(y => y as ConstantExpr).Value);
-                    Expr expr = Expr.Multiply((new Expr[] { exprConstant }).Concat(multiExpr.Args.Skip(1)));
-                    info = new UnaryExpressionInfo(expr, BinaryOperationEx.Subtract);
-                } else {
-                    info = UnaryExpressionExtractor.ExtractUnaryInfo(x, BinaryOperation.Add);
-                }
-
+                UnaryExpressionInfo info = x.Visit(AddUnaryExpressionExtractor.AddInstance);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(WrapFromAdd(info.Expr));
             });
             return sb.ToString();
         }
-        string MultiplyCore(IEnumerable<Expr> args) {
-            if(args.First().ExprEquals(Expr.MinusOne)) {
-                string exprText = WrapFromAdd(Expr.Multiply(args.Skip(1)));
+        public string Multiply(MultiplyExpr multi) {
+            if(multi.Args.First().ExprEquals(Expr.MinusOne)) {
+                string exprText = WrapFromAdd(multi.Tail());
                 return String.Format("-{0}", exprText);
             }
             var sb = new StringBuilder();
-            args.Accumulate(x => {
+            multi.Args.Accumulate(x => {
                 sb.Append(WrapFromMultiply(x, ExpressionOrder.Head));
             }, x => {
-                UnaryExpressionInfo info = UnaryExpressionExtractor.ExtractUnaryInfo(x, BinaryOperation.Multiply);
+                UnaryExpressionInfo info = x.Visit(MultiplyUnaryExpressionExtractor.MultiplyInstance);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(WrapFromMultiply(info.Expr, ExpressionOrder.Default));
             });
             return sb.ToString();
         }
         public string Power(PowerExpr power) {
-            if(UnaryExpressionExtractor.IsInverseExpression(power)) {
+            if(IsInverseExpression(power)) {
                 return String.Format("1 / {0}", WrapFromMultiply(power.Left, ExpressionOrder.Default));
             }
             return string.Format("{0} ^ {1}", WrapFromPower(power.Left), WrapFromPower(power.Right));

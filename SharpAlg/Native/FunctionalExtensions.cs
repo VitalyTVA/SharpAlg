@@ -90,5 +90,8 @@ namespace SharpAlg.Native {
         //public static bool Equal<T>(this IEnumerable<T> first, params T[] second) {
         //    return Equal(first, (IEnumerable<T>)second);
         //}
+        public static IEnumerable<T> Tail<T>(this IEnumerable<T> source) {
+            return source.Skip(1);
+        }
     }
 }
