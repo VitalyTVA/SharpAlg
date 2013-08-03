@@ -40,7 +40,7 @@ MultiplicativeExpression<out Expr expr>			(. bool divide; Expr rightExpr; .)
 = PowerExpression<out expr>
 	{
 	MultiplicativeOperation<out divide> 
-	PowerExpression<out rightExpr>				(. expr = builder.Binary(expr, (divide ? Expr.Inverse(rightExpr) : rightExpr), BinaryOperation.Multiply); .)
+	PowerExpression<out rightExpr>				(. expr = builder.Binary(expr, (divide ? builder.Inverse(rightExpr) : rightExpr), BinaryOperation.Multiply); .)
 	}
 .
 

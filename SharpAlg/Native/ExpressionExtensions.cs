@@ -24,7 +24,9 @@ namespace SharpAlg.Native {
             return expr.Visit(new ExpressionPrinter());
         }
         public static Expr Parse(this string expression) {
-            Parser.Parser parser = ParseCore(expression, new ConvolutionExprBuilder());
+            return GetExpression(ParseCore(expression, new ConvolutionExprBuilder()));
+        }
+        internal static Expr GetExpression(Parser.Parser parser) {
             if(parser.errors.Count > 0)
                 throw new InvalidOperationException("String can not be parsed"); //TODO message
             return parser.Expr;

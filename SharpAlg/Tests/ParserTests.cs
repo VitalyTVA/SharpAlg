@@ -108,7 +108,7 @@ namespace SharpAlg.Tests {
                 .AssertValue(10, null, context);
         }
         Parser Parse(string expression) {
-            return ExpressionExtensions.ParseCore(expression, new TrivialExprBuilder());
+            return ParserTestHelper.ParseNoConvolutionCore(expression);
         }
         static string GetNumberExpectedMessage(int column) {
             return ErrorsBase.GetErrorText(1, column, "invalid Terminal\r\n");
@@ -125,6 +125,12 @@ namespace SharpAlg.Tests {
         }
         public static Parser AssertSingleSyntaxError(this Parser parser, string text) {
             return parser.IsEqual(x => x.errors.Count, 1).IsEqual(x => x.errors.Errors, text);
+        }
+        public static Expr ParseNoConvolution(this string expression) {
+            return ExpressionExtensions.GetExpression(ParseNoConvolutionCore(expression));
+        }
+        public static Parser ParseNoConvolutionCore(string expression) {
+            return ExpressionExtensions.ParseCore(expression, new TrivialExprBuilder());
         }
     }
 }

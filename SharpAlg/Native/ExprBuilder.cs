@@ -40,7 +40,7 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ConvolutionExprBuilder : ExprBuilder {
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
-            return EqualityConvolution(left, right, operation) //TODO kill EqualityConvolution!!!!!!!!!!!!!
+            return OpenParensConvolution(left, right, operation)
                 ?? MultiConvolution(left, right, operation)
                 ?? Expr.Binary(left, right, operation);
         }
@@ -49,32 +49,60 @@ namespace SharpAlg.Native {
                 ?? ExpressionPowerConvolution(left, right)
                 ?? Expr.Power(left, right);
         }
-        Expr MultiConvolution(Expr left, Expr right, BinaryOperation operation) {
-            var args = GetSortedArgs(left, right, operation);
-            for(int i = 0; i < args.Count; i++) {
-                for(int j = i + 1; j < args.Count; j++) {
-                    var convoluted = ConstantConvolution(args[i], args[j], operation)
-                        ?? PowerConvolution(args[i], args[j], operation)
-                        ?? MultiplyConvolution(args[i], args[j], operation);
-                    if(convoluted != null) {
-                        args[i] = convoluted;
-                        args.RemoveAt(j);
-                        j--;
-                    }
+        Expr OpenParensConvolution(Expr left, Expr right, BinaryOperation operation) {
+            if(operation == BinaryOperation.Multiply) {
+                Number rightConst = GetConstValue(right);
+                if(rightConst != null) {
+                    Expr tmp = left;
+                    left = right;
+                    right = tmp;
+                }
+
+                Number leftConst = GetConstValue(left);
+                AddExpr rightAddExpr = right as AddExpr;
+                if(leftConst != null && rightAddExpr != null) {
+                    return MultiConvolutionCore(rightAddExpr.Args.Select(x => Multiply(Expr.Constant(leftConst), x)), BinaryOperation.Add);
                 }
             }
-            return Expr.Multi(args, operation);
+            return null;
         }
-        static List<Expr> GetSortedArgs(Expr left, Expr right, BinaryOperation operation) {
+        Expr MultiConvolution(Expr left, Expr right, BinaryOperation operation) {
+            var args = GetSortedArgs(left, right, operation);
+            return MultiConvolutionCore(args, operation);
+        }
+        Expr MultiConvolutionCore(IEnumerable<Expr> args, BinaryOperation operation) {
+            List<Expr> argsList = args.ToList();
+            for(int i = 0; i < argsList.Count; i++) {
+                bool convolutionOccured = false;
+                for(int j = i + 1; j < argsList.Count; j++) {
+                    var convoluted = ConstantConvolution(argsList[i], argsList[j], operation)
+                        ?? PowerConvolution(argsList[i], argsList[j], operation)
+                        ?? MultiplyConvolution(argsList[i], argsList[j], operation);
+                    if(convoluted != null) {
+                        argsList[i] = convoluted;
+                        argsList.RemoveAt(j);
+                        j--;
+                        convolutionOccured = true;
+                    }
+                }
+                if(convolutionOccured)
+                    i--;
+            }
+            return Expr.Multi(argsList, operation);
+        }
+        IEnumerable<Expr> GetSortedArgs(Expr left, Expr right, BinaryOperation operation) {
             IEnumerable<Expr> args = GetArgs(left, operation).Concat(GetArgs(right, operation));
             if(operation == BinaryOperation.Multiply) {
                 args = args.Where(x => x is ConstantExpr).Concat(args.Where(x => !(x is ConstantExpr)));
             }
-            return args.ToList();
+            return args;
         }
-        static IEnumerable<Expr> GetArgs(Expr expr, BinaryOperation operation) {
-            if(expr is MultiExpr && ((MultiExpr)expr).Operation == operation)
-                return ((MultiExpr)expr).Args;
+        IEnumerable<Expr> GetArgs(Expr expr, BinaryOperation operation) {
+            var multiExpr = expr as MultiExpr;
+            if(multiExpr != null) {
+                if(multiExpr.Operation == operation)
+                    return ((MultiExpr)expr).Args;
+            }
             return new[] { expr };
         }
         Expr ConstantConvolution(Expr left, Expr right, BinaryOperation operation) {
@@ -143,18 +171,6 @@ namespace SharpAlg.Native {
                 Number leftConst = GetConstValue(power.Right);
                 if(leftConst != null)
                     return Expr.Power(power.Left, Expr.Constant(rightConst * leftConst));
-            }
-            return null;
-        }
-        Expr EqualityConvolution(Expr left, Expr right, BinaryOperation operation) {
-            UnaryExpressionInfo leftInfo = UnaryExpressionExtractor.ExtractUnaryInfo(left, operation);
-            UnaryExpressionInfo rightInfo = UnaryExpressionExtractor.ExtractUnaryInfo(right, operation);
-            if(rightInfo.Expr.ExprEquals(leftInfo.Expr)) {
-                Number coeff = GetCoeff(leftInfo) + GetCoeff(rightInfo);
-                if(operation == BinaryOperation.Add)
-                    return Multiply(Expr.Constant(coeff), rightInfo.Expr);
-                if(operation == BinaryOperation.Multiply)
-                    return Power(left, Expr.Constant(coeff));
             }
             return null;
         }

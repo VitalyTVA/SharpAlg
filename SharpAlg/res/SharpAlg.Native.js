@@ -531,49 +531,85 @@ SharpAlg.Native.ConvolutionExprBuilder = function ()
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right, operation)
 {
-    return (this.EqualityConvolution(left, right, operation) != null ? this.EqualityConvolution(left, right, operation) : (this.MultiConvolution(left, right, operation) != null ? this.MultiConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation)));
+    return (this.OpenParensConvolution(left, right, operation) != null ? this.OpenParensConvolution(left, right, operation) : (this.MultiConvolution(left, right, operation) != null ? this.MultiConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation)));
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Power = function (left, right)
 {
     return (this.ConstantPowerConvolution(left, right) != null ? this.ConstantPowerConvolution(left, right) : (this.ExpressionPowerConvolution(left, right) != null ? this.ExpressionPowerConvolution(left, right) : SharpAlg.Native.Expr.Power(left, right)));
 };
-SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (left, right, operation)
+SharpAlg.Native.ConvolutionExprBuilder.prototype.OpenParensConvolution = function (left, right, operation)
 {
-    var args = SharpAlg.Native.ConvolutionExprBuilder.GetSortedArgs(left, right, operation);
-    for (var i = 0; i < args.get_Count(); i++)
-    {
-        for (var j = i + 1; j < args.get_Count(); j++)
-        {
-            var convoluted = (this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.ConstantConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : (this.PowerConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) != null ? this.PowerConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation) : this.MultiplyConvolution(args.get_Item$$Int32(i), args.get_Item$$Int32(j), operation)));
-            if (convoluted != null)
-            {
-                args.set_Item$$Int32(i, convoluted);
-                args.RemoveAt(j);
-                j--;
-            }
-        }
-    }
-    return SharpAlg.Native.Expr.Multi(args, operation);
-};
-SharpAlg.Native.ConvolutionExprBuilder.GetSortedArgs = function (left, right, operation)
-{
-    var args = System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ConvolutionExprBuilder.GetArgs(left, operation), SharpAlg.Native.ConvolutionExprBuilder.GetArgs(right, operation));
     if (operation == 1)
     {
-        args = System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.Where$1$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, args, function (x)
+        var rightConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(right);
+        if (SharpAlg.Native.Number.op_Inequality(rightConst, null))
+        {
+            var tmp = left;
+            left = right;
+            right = tmp;
+        }
+        var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(left);
+        var rightAddExpr = As(right, SharpAlg.Native.AddExpr.ctor);
+        if (SharpAlg.Native.Number.op_Inequality(leftConst, null) && rightAddExpr != null)
+        {
+            return this.MultiConvolutionCore(System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, rightAddExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
+            {
+                return this.Multiply(SharpAlg.Native.Expr.Constant(leftConst), x);
+            })), 0);
+        }
+    }
+    return null;
+};
+SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (left, right, operation)
+{
+    var args = this.GetSortedArgs(left, right, operation);
+    return this.MultiConvolutionCore(args, operation);
+};
+SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolutionCore = function (args, operation)
+{
+    var argsList = System.Linq.Enumerable.ToList$1(SharpAlg.Native.Expr.ctor, args);
+    for (var i = 0; i < argsList.get_Count(); i++)
+    {
+        var convolutionOccured = false;
+        for (var j = i + 1; j < argsList.get_Count(); j++)
+        {
+            var convoluted = (this.ConstantConvolution(argsList.get_Item$$Int32(i), argsList.get_Item$$Int32(j), operation) != null ? this.ConstantConvolution(argsList.get_Item$$Int32(i), argsList.get_Item$$Int32(j), operation) : (this.PowerConvolution(argsList.get_Item$$Int32(i), argsList.get_Item$$Int32(j), operation) != null ? this.PowerConvolution(argsList.get_Item$$Int32(i), argsList.get_Item$$Int32(j), operation) : this.MultiplyConvolution(argsList.get_Item$$Int32(i), argsList.get_Item$$Int32(j), operation)));
+            if (convoluted != null)
+            {
+                argsList.set_Item$$Int32(i, convoluted);
+                argsList.RemoveAt(j);
+                j--;
+                convolutionOccured = true;
+            }
+        }
+        if (convolutionOccured)
+            i--;
+    }
+    return SharpAlg.Native.Expr.Multi(argsList, operation);
+};
+SharpAlg.Native.ConvolutionExprBuilder.prototype.GetSortedArgs = function (left, right, operation)
+{
+    var args = System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, this.GetArgs(left, operation), this.GetArgs(right, operation));
+    if (operation == 1)
+    {
+        args = System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.Where$1$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, args, $CreateAnonymousDelegate(this, function (x)
         {
             return Is(x, SharpAlg.Native.ConstantExpr.ctor);
-        }), System.Linq.Enumerable.Where$1$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, args, function (x)
+        })), System.Linq.Enumerable.Where$1$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, args, $CreateAnonymousDelegate(this, function (x)
         {
             return !(Is(x, SharpAlg.Native.ConstantExpr.ctor));
-        }));
+        })));
     }
-    return System.Linq.Enumerable.ToList$1(SharpAlg.Native.Expr.ctor, args);
+    return args;
 };
-SharpAlg.Native.ConvolutionExprBuilder.GetArgs = function (expr, operation)
+SharpAlg.Native.ConvolutionExprBuilder.prototype.GetArgs = function (expr, operation)
 {
-    if (Is(expr, SharpAlg.Native.MultiExpr.ctor) && (Cast(expr, SharpAlg.Native.MultiExpr.ctor)).get_Operation() == operation)
-        return (Cast(expr, SharpAlg.Native.MultiExpr.ctor)).get_Args();
+    var multiExpr = As(expr, SharpAlg.Native.MultiExpr.ctor);
+    if (multiExpr != null)
+    {
+        if (multiExpr.get_Operation() == operation)
+            return (Cast(expr, SharpAlg.Native.MultiExpr.ctor)).get_Args();
+    }
     return [expr];
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantConvolution = function (left, right, operation)
@@ -651,20 +687,6 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.ExpressionPowerConvolution = fu
         var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(power.get_Right());
         if (SharpAlg.Native.Number.op_Inequality(leftConst, null))
             return SharpAlg.Native.Expr.Power(power.get_Left(), SharpAlg.Native.Expr.Constant(SharpAlg.Native.Number.op_Multiply(rightConst, leftConst)));
-    }
-    return null;
-};
-SharpAlg.Native.ConvolutionExprBuilder.prototype.EqualityConvolution = function (left, right, operation)
-{
-    var leftInfo = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(left, operation);
-    var rightInfo = SharpAlg.Native.UnaryExpressionExtractor.ExtractUnaryInfo(right, operation);
-    if (SharpAlg.Native.ExpressionExtensions.ExprEquals(rightInfo.Expr, leftInfo.Expr))
-    {
-        var coeff = SharpAlg.Native.Number.op_Addition(SharpAlg.Native.ConvolutionExprBuilder.GetCoeff(leftInfo), SharpAlg.Native.ConvolutionExprBuilder.GetCoeff(rightInfo));
-        if (operation == 0)
-            return this.Multiply(SharpAlg.Native.Expr.Constant(coeff), rightInfo.Expr);
-        if (operation == 1)
-            return this.Power(left, SharpAlg.Native.Expr.Constant(coeff));
     }
     return null;
 };
@@ -952,7 +974,10 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         Parse: function (expression)
         {
-            var parser = SharpAlg.Native.ExpressionExtensions.ParseCore(expression, new SharpAlg.Native.ConvolutionExprBuilder());
+            return SharpAlg.Native.ExpressionExtensions.GetExpression(SharpAlg.Native.ExpressionExtensions.ParseCore(expression, new SharpAlg.Native.ConvolutionExprBuilder()));
+        },
+        GetExpression: function (parser)
+        {
             if (parser.errors.Count > 0)
                 throw $CreateException(new System.InvalidOperationException.ctor$$String("String can not be parsed"), new Error());
             return parser.Expr;

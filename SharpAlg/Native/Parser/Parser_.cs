@@ -110,7 +110,7 @@ public class Parser {
 		while (la.kind == 6 || la.kind == 7) {
 			MultiplicativeOperation(out divide);
 			PowerExpression(out rightExpr);
-			expr = builder.Binary(expr, (divide ? Expr.Inverse(rightExpr) : rightExpr), BinaryOperation.Multiply); 
+			expr = builder.Binary(expr, (divide ? builder.Inverse(rightExpr) : rightExpr), BinaryOperation.Multiply); 
 		}
 	}
 
