@@ -10,7 +10,7 @@ namespace SharpAlg.Native.Builder {
         [JsType(JsMode.Prototype, Filename = SR.JSBuilderName)]
         class ExpressionArgumentsExtractor : DefaultExpressionVisitor<IEnumerable<Expr>> {
             public static IEnumerable<Expr> ExtractArguments(Expr expr, BinaryOperation operation) {
-                return expr.Visit(new ExpressionArgumentsExtractor(operation)); //TODO singleton
+                return expr.Visit(new ExpressionArgumentsExtractor(operation));
             }
             readonly BinaryOperation operation;
             ExpressionArgumentsExtractor(BinaryOperation operation) { this.operation = operation; }
@@ -30,8 +30,9 @@ namespace SharpAlg.Native.Builder {
         }
         [JsType(JsMode.Prototype, Filename = SR.JSBuilderName)]
         class MultiplyExpressionExtractor : DefaultExpressionVisitor<Tuple<Expr, Expr>> {
+            static readonly MultiplyExpressionExtractor Instance = new MultiplyExpressionExtractor();
             public static Tuple<Expr, Expr> ExtractMultiply(Expr expr) {
-                return expr.Visit(new MultiplyExpressionExtractor()); //TODO singleton
+                return expr.Visit(Instance);
             }
             MultiplyExpressionExtractor() { }
             public override Tuple<Expr, Expr> Multiply(MultiplyExpr multi) {
@@ -45,8 +46,9 @@ namespace SharpAlg.Native.Builder {
         }
         [JsType(JsMode.Prototype, Filename = SR.JSBuilderName)]
         class PowerExpressionExtractor : DefaultExpressionVisitor<PowerExpr> {
+            static readonly PowerExpressionExtractor Instance = new PowerExpressionExtractor();
             public static PowerExpr ExtractPower(Expr expr) {
-                return expr.Visit(new PowerExpressionExtractor()); //TODO singleton
+                return expr.Visit(Instance);
             }
             PowerExpressionExtractor() { }
             public override PowerExpr Power(PowerExpr power) {
@@ -57,6 +59,8 @@ namespace SharpAlg.Native.Builder {
             }
         }
         #endregion
+        public static ConvolutionExprBuilder Instance = new ConvolutionExprBuilder();
+        ConvolutionExprBuilder() { }
 
         public override Expr Add(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Add);

@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace SharpAlg.Native.Parser {
 
-[JsType(JsMode.Clr, Filename = SR.JSParserName)]//TODO prototype
+[JsType(JsMode.Clr, Filename = SR.JSParserName)]
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
@@ -93,10 +93,8 @@ public class Scanner {
 		}
 	}
 
-    //TODO move to compatibility layer
-    [JsMethod(Code = "return String.fromCharCode(this.ch);")]
-    char GetCurrentChar() { //TODO
-        return (char)ch;
+    char GetCurrentChar() {
+        return PlatformHelper.IntToChar(ch);
     }
 
 

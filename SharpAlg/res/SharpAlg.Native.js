@@ -693,7 +693,7 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         Diff: function (expr, parameterName)
         {
-            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(new SharpAlg.Native.Builder.ConvolutionExprBuilder(), parameterName));
+            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ConvolutionExprBuilder.Instance, parameterName));
         },
         ExprEquals: function (expr1, expr2)
         {
@@ -705,11 +705,11 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         Print: function (expr)
         {
-            return expr.Visit$1(System.String.ctor, new SharpAlg.Native.Printer.ExpressionPrinter());
+            return expr.Visit$1(System.String.ctor, SharpAlg.Native.Printer.ExpressionPrinter.Instance);
         },
         Parse: function (expression)
         {
-            return SharpAlg.Native.ExpressionExtensions.GetExpression(SharpAlg.Native.ExpressionExtensions.ParseCore(expression, new SharpAlg.Native.Builder.ConvolutionExprBuilder()));
+            return SharpAlg.Native.ExpressionExtensions.GetExpression(SharpAlg.Native.ExpressionExtensions.ParseCore(expression, SharpAlg.Native.Builder.ConvolutionExprBuilder.Instance));
         },
         GetExpression: function (parser)
         {
@@ -744,6 +744,21 @@ var SharpAlg$Native$ExpressionExtensions =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionExtensions);
+SharpAlg.Native.PlatformHelper = function ()
+{
+};
+SharpAlg.Native.PlatformHelper.ToString = function (d)
+{
+    return d.toString();
+};
+SharpAlg.Native.PlatformHelper.Parse = function (s)
+{
+    return System.Double.Parse$$String(s);
+};
+SharpAlg.Native.PlatformHelper.IntToChar = function (n)
+{
+    return String.fromCharCode(n);
+};
 var SharpAlg$Native$FunctionalExtensions =
 {
     fullname: "SharpAlg.Native.FunctionalExtensions",

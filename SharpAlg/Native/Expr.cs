@@ -29,7 +29,7 @@ namespace SharpAlg.Native {
         public static Expr Multiply(IEnumerable<Expr> args) {
             return Multi(args, BinaryOperation.Multiply);
         }
-        public static Expr Add(Expr left, Expr right) { //TODO use builder everywhere
+        public static Expr Add(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Add);
         }
         public static Expr Subtract(Expr left, Expr right) {

@@ -546,7 +546,7 @@ var SharpAlg$Native$Parser$Scanner =
         },
         GetCurrentChar: function ()
         {
-            return String.fromCharCode(this.ch);
+            return SharpAlg.Native.PlatformHelper.IntToChar(this.ch);
         },
         CheckLiteral: function ()
         {

@@ -263,7 +263,7 @@ namespace SharpAlg.Tests {
             return Expr.Constant(AsNumber(constant));
         }
         public static Number AsNumber(this double constant) {
-            return SharpAlg.Native.Number.FromString(Number.ToString(constant));
+            return SharpAlg.Native.Number.FromString(PlatformHelper.ToString(constant));
         }
     }
 }

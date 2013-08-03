@@ -64,6 +64,7 @@ if (typeof(SharpAlg.Native.Printer) == "undefined")
 SharpAlg.Native.Printer.ExpressionPrinter = function ()
 {
 };
+SharpAlg.Native.Printer.ExpressionPrinter.Instance = new SharpAlg.Native.Printer.ExpressionPrinter();
 SharpAlg.Native.Printer.ExpressionPrinter.IsMinusExpression = function (multi)
 {
     return System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()) == 2 && SharpAlg.Native.ExpressionExtensions.ExprEquals(SharpAlg.Native.Expr.MinusOne, System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 0));

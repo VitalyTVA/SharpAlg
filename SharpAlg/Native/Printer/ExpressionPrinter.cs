@@ -104,7 +104,8 @@ namespace SharpAlg.Native.Printer {
         static bool IsInverseExpression(PowerExpr power) {
             return Expr.MinusOne.ExprEquals(power.Right);
         }
-        public ExpressionPrinter() {
+        public static ExpressionPrinter Instance = new ExpressionPrinter();
+        ExpressionPrinter() {
         }
         public string Constant(ConstantExpr constant) {
             return constant.Value.ToString();

@@ -76,15 +76,7 @@ var SharpAlg$Native$Number =
         },
         FromString: function (s)
         {
-            return new SharpAlg.Native.Number.ctor(SharpAlg.Native.Number.Parse(s));
-        },
-        ToString$$Double: function (d)
-        {
-            return d.toString();
-        },
-        Parse: function (s)
-        {
-            return System.Double.Parse$$String(s);
+            return new SharpAlg.Native.Number.ctor(SharpAlg.Native.PlatformHelper.Parse(s));
         }
     },
     assemblyName: "SharpAlg",
@@ -108,7 +100,7 @@ var SharpAlg$Native$Number =
         },
         toString: function ()
         {
-            return SharpAlg.Native.Number.ToString$$Double(this.value);
+            return SharpAlg.Native.PlatformHelper.ToString(this.value);
         }
     }
 };

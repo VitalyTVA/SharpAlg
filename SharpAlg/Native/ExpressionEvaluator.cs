@@ -36,7 +36,7 @@ namespace SharpAlg.Native {
             var parameterValue = context.GetValue(parameter.ParameterName);
             if(parameterValue == null)
                 throw new ExpressionEvaluationException(string.Format("{0} value is undefined", parameter.ParameterName));
-            return parameterValue.Visit(this); //TODO recursion
+            return parameterValue.Visit(this);
         }
         public static Func<Number, Number, Number> GetBinaryOperationEvaluator(BinaryOperation operation) {
             switch(operation) {
@@ -48,20 +48,6 @@ namespace SharpAlg.Native {
                     throw new NotImplementedException();
             }
         }
-        //static Func<double, double, double> GetBinaryOperationEvaluatorEx(BinaryOperationEx operation) {
-        //    switch(operation) {
-        //        case BinaryOperationEx.Add:
-        //            return (x1, x2) => x1 + x2;
-        //        case BinaryOperationEx.Subtract:
-        //            return (x1, x2) => x1 - x2;
-        //        case BinaryOperationEx.Multiply:
-        //            return (x1, x2) => x1 * x2;
-        //        case BinaryOperationEx.Divide:
-        //            return (x1, x2) => x1 / x2;
-        //        default:
-        //            throw new NotImplementedException();
-        //    }
-        //}
         public static BinaryOperationEx GetBinaryOperationEx(BinaryOperation operation) {
             switch(operation) {
                 case BinaryOperation.Add:

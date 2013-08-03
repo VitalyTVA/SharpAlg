@@ -408,7 +408,7 @@ var SharpAlg$Tests$ExprTestHelper =
         },
         AsNumber: function (constant)
         {
-            return SharpAlg.Native.Number.FromString(SharpAlg.Native.Number.ToString$$Double(constant));
+            return SharpAlg.Native.Number.FromString(SharpAlg.Native.PlatformHelper.ToString(constant));
         }
     },
     assemblyName: "SharpAlg",

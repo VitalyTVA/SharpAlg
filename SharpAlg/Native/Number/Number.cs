@@ -57,7 +57,7 @@ namespace SharpAlg.Native {
             return new Number(value);
         }
         public static Number FromString(string s) {
-            return new Number(Parse(s));
+            return new Number(PlatformHelper.Parse(s));
         }
 
         readonly double value;
@@ -73,15 +73,7 @@ namespace SharpAlg.Native {
             return base.GetHashCode();
         }
         public override string ToString() {
-            return ToString(value);
-        }
-        [JsMethod(Code = "return d.toString();")]
-        public static string ToString(double d) { //TODO compatibility layer
-            return d.ToString(CultureInfo.InvariantCulture);
-        }
-        [JsMethod(Code = "return System.Double.Parse$$String(s);")]
-        static double Parse(string s) { //TODO compatibility layer
-            return double.Parse(s, CultureInfo.InvariantCulture);
+            return PlatformHelper.ToString(value);
         }
     }
 }
