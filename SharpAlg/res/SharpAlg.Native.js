@@ -531,13 +531,13 @@ SharpAlg.Native.ConvolutionExprBuilder = function ()
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Binary = function (left, right, operation)
 {
-    return (this.OpenParensConvolution(left, right, operation) != null ? this.OpenParensConvolution(left, right, operation) : (this.MultiConvolution(left, right, operation) != null ? this.MultiConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation)));
+    return (this.MultiConvolution(left, right, operation) != null ? this.MultiConvolution(left, right, operation) : SharpAlg.Native.Expr.Binary(left, right, operation));
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.Power = function (left, right)
 {
     return (this.ConstantPowerConvolution(left, right) != null ? this.ConstantPowerConvolution(left, right) : (this.ExpressionPowerConvolution(left, right) != null ? this.ExpressionPowerConvolution(left, right) : SharpAlg.Native.Expr.Power(left, right)));
 };
-SharpAlg.Native.ConvolutionExprBuilder.prototype.OpenParensConvolution = function (left, right, operation)
+SharpAlg.Native.ConvolutionExprBuilder.prototype.GetOpenParensArgs = function (left, right, operation)
 {
     if (operation == 1)
     {
@@ -552,17 +552,22 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.OpenParensConvolution = functio
         var rightAddExpr = As(right, SharpAlg.Native.AddExpr.ctor);
         if (SharpAlg.Native.Number.op_Inequality(leftConst, null) && rightAddExpr != null)
         {
-            return this.MultiConvolutionCore(System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, rightAddExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
+            return System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, rightAddExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
             {
                 return this.Multiply(SharpAlg.Native.Expr.Constant(leftConst), x);
-            })), 0);
+            }));
         }
     }
     return null;
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolution = function (left, right, operation)
 {
-    var args = this.GetSortedArgs(left, right, operation);
+    var openParensArgs = this.GetOpenParensArgs(left, right, operation);
+    if (openParensArgs != null)
+    {
+        operation = 0;
+    }
+    var args = (openParensArgs != null ? openParensArgs : this.GetSortedArgs(left, right, operation));
     return this.MultiConvolutionCore(args, operation);
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiConvolutionCore = function (args, operation)

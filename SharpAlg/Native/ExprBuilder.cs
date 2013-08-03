@@ -40,8 +40,7 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class ConvolutionExprBuilder : ExprBuilder {
         public override Expr Binary(Expr left, Expr right, BinaryOperation operation) {
-            return OpenParensConvolution(left, right, operation)
-                ?? MultiConvolution(left, right, operation)
+            return MultiConvolution(left, right, operation)
                 ?? Expr.Binary(left, right, operation);
         }
         public override Expr Power(Expr left, Expr right) {
@@ -49,7 +48,7 @@ namespace SharpAlg.Native {
                 ?? ExpressionPowerConvolution(left, right)
                 ?? Expr.Power(left, right);
         }
-        Expr OpenParensConvolution(Expr left, Expr right, BinaryOperation operation) {
+        IEnumerable<Expr> GetOpenParensArgs(Expr left, Expr right, BinaryOperation operation) {
             if(operation == BinaryOperation.Multiply) {
                 Number rightConst = GetConstValue(right);
                 if(rightConst != null) {
@@ -61,13 +60,17 @@ namespace SharpAlg.Native {
                 Number leftConst = GetConstValue(left);
                 AddExpr rightAddExpr = right as AddExpr;
                 if(leftConst != null && rightAddExpr != null) {
-                    return MultiConvolutionCore(rightAddExpr.Args.Select(x => Multiply(Expr.Constant(leftConst), x)), BinaryOperation.Add);
+                    return rightAddExpr.Args.Select(x => Multiply(Expr.Constant(leftConst), x));
                 }
             }
             return null;
         }
         Expr MultiConvolution(Expr left, Expr right, BinaryOperation operation) {
-            var args = GetSortedArgs(left, right, operation);
+            IEnumerable<Expr> openParensArgs = GetOpenParensArgs(left, right, operation);
+            if(openParensArgs != null) {
+                operation = BinaryOperation.Add;
+            }
+            var args = openParensArgs ?? GetSortedArgs(left, right, operation);
             return MultiConvolutionCore(args, operation);
         }
         Expr MultiConvolutionCore(IEnumerable<Expr> args, BinaryOperation operation) {
