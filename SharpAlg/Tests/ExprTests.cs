@@ -134,8 +134,6 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void ConvolutionTest() {
-            //correct printing of first element in multi expression
-
             "9 + 13".Parse().AssertSimpleStringRepresentation("22");
             "9 - 13".Parse().AssertSimpleStringRepresentation("-4");
             "9 * 13".Parse().AssertSimpleStringRepresentation("117");
@@ -216,7 +214,7 @@ namespace SharpAlg.Tests {
 
             "(x + 1) ^ 2 * (x + 1) ^ 3".Parse().AssertSimpleStringRepresentation("(x + 1) ^ 5");
             "(x + 1 - y) ^ 2 * (-y + 1 + x) ^ 3".Parse().AssertSimpleStringRepresentation("(x + 1 - y) ^ 5");
-            "(x + y) ^ 2 * (x * y) ^ 3".Parse().AssertSimpleStringRepresentation("(x + y) ^ 2 * (x * y) ^ 3");
+            "(x + y) ^ 2 * (x * y) ^ 3".Parse().AssertSimpleStringRepresentation("(x + y) ^ 2 * x ^ 3 * y ^ 3");
             "(x * y + 1) ^ 2 * (1 + y * x) ^ 3".Parse().AssertSimpleStringRepresentation("(x * y + 1) ^ 5");
             "y ^ 2 * x + 3 * x * y ^ 2".Parse().AssertSimpleStringRepresentation("4 * y ^ 2 * x");
             "x / y  / z + 3 * x / z / y".Parse().AssertSimpleStringRepresentation("4 * x / y / z");
@@ -228,10 +226,12 @@ namespace SharpAlg.Tests {
             "z + t * (-x)".Parse().AssertSimpleStringRepresentation("z - t * x");
             "(t * (-x)) ^ (z * y) + (x * (-t)) ^ (y * z)".Parse().AssertSimpleStringRepresentation("2 * (-t * x) ^ (z * y)");
 
-            //"(x * y) ^ 3 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 5 * y ^ 5");//TODO convolution
-            //"(x * y) * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 3 * y ^ 3");//TODO convolution
-            //"(x * y) ^ 2 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 4 * y ^ 4");//TODO convolution
-            //(x * y) ^ z - ? //TODO convolution
+            "(x * y) ^ 3 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 5 * y ^ 5");
+            "(x * y) ^ 3 * (x ^ 2 * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 7 * y ^ 5");
+            "(x * y) * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 3 * y ^ 3");
+            "(x * y) ^ 2 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 4 * y ^ 4");
+            "(x * y) ^ z".Parse().AssertSimpleStringRepresentation("(x * y) ^ z");
+            "(x * y) ^ z * (y * x) ^ t".Parse().AssertSimpleStringRepresentation("(x * y) ^ (z + t)");
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

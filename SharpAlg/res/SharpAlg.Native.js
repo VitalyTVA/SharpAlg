@@ -639,6 +639,14 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.ExpressionPowerConvolution = fu
     var rightConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(right);
     if (SharpAlg.Native.Number.op_Inequality(rightConst, null))
     {
+        var leftMultiplyExpr = As(left, SharpAlg.Native.MultiplyExpr.ctor);
+        if (leftMultiplyExpr != null)
+        {
+            return SharpAlg.Native.Expr.Multi(System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, leftMultiplyExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
+            {
+                return this.Power(x, SharpAlg.Native.Expr.Constant(rightConst));
+            })), 1);
+        }
         var power = SharpAlg.Native.PowerExpressionExtractor.ExtractPower(left);
         var leftConst = SharpAlg.Native.ConvolutionExprBuilder.GetConstValue(power.get_Right());
         if (SharpAlg.Native.Number.op_Inequality(leftConst, null))

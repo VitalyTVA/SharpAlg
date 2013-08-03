@@ -135,6 +135,10 @@ namespace SharpAlg.Native {
         Expr ExpressionPowerConvolution(Expr left, Expr right) {
             Number rightConst = GetConstValue(right);
             if(rightConst != null) {
+                var leftMultiplyExpr = left as MultiplyExpr;
+                if(leftMultiplyExpr != null) {
+                    return Expr.Multi(leftMultiplyExpr.Args.Select(x => Power(x, Expr.Constant(rightConst))), BinaryOperation.Multiply);
+                }
                 var power = PowerExpressionExtractor.ExtractPower(left);
                 Number leftConst = GetConstValue(power.Right);
                 if(leftConst != null)
