@@ -201,21 +201,7 @@ namespace SharpAlg.Native {
             return null;
         }
         static Number GetConstValue(Expr expr) {
-            if(CanEvaluate(expr)) {
-                return expr.Evaluate(new Context());
-            }
-            return null;
-        }
-        static bool CanEvaluate(Expr expr) {//TODO use evaluator itself instead??
-            if(expr is ConstantExpr)
-                return true;
-            PowerExpr power = expr as PowerExpr;
-            if(power != null && power.Left is ConstantExpr && UnaryExpressionExtractor.IsInverseExpression(power))
-                return true;
-            MultiExpr multi = expr as MultiExpr;
-            if(multi != null && UnaryExpressionExtractor.IsMinusExpression(multi) && multi.Args.ElementAt(1) is ConstantExpr)
-                return true;
-            return false;
+            return (expr as ConstantExpr).With(x => x.Value);
         }
     }
 }

@@ -722,23 +722,10 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.MultiplyConvolution = function 
 };
 SharpAlg.Native.ConvolutionExprBuilder.GetConstValue = function (expr)
 {
-    if (SharpAlg.Native.ConvolutionExprBuilder.CanEvaluate(expr))
+    return SharpAlg.Native.MayBe.With((As(expr, SharpAlg.Native.ConstantExpr.ctor)), function (x)
     {
-        return SharpAlg.Native.ExpressionExtensions.Evaluate(expr, new SharpAlg.Native.Context.ctor());
-    }
-    return null;
-};
-SharpAlg.Native.ConvolutionExprBuilder.CanEvaluate = function (expr)
-{
-    if (Is(expr, SharpAlg.Native.ConstantExpr.ctor))
-        return true;
-    var power = As(expr, SharpAlg.Native.PowerExpr.ctor);
-    if (power != null && Is(power.get_Left(), SharpAlg.Native.ConstantExpr.ctor) && SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression(power))
-        return true;
-    var multi = As(expr, SharpAlg.Native.MultiExpr.ctor);
-    if (multi != null && SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpression(multi) && Is(System.Linq.Enumerable.ElementAt$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), 1), SharpAlg.Native.ConstantExpr.ctor))
-        return true;
-    return false;
+        return x.get_Value();
+    });
 };
 $Inherit(SharpAlg.Native.ConvolutionExprBuilder, SharpAlg.Native.ExprBuilder);
 var SharpAlg$Native$ExpressionEqualityComparer =

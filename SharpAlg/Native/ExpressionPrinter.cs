@@ -154,7 +154,7 @@ namespace SharpAlg.Native {
         public static UnaryExpressionInfo ExtractUnaryInfo(Expr expr, BinaryOperation operation) {
             return expr.Visit(new UnaryExpressionExtractor(operation));
         }
-        public static bool IsMinusExpression(MultiExpr multi) {
+        public static bool IsMinusExpression(MultiplyExpr multi) {
             return multi.Args.Count() == 2 && Expr.MinusOne.ExprEquals(multi.Args.ElementAt(0));
         }
         public static bool IsInverseExpression(PowerExpr power) {
