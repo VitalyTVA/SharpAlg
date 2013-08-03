@@ -44,7 +44,7 @@ namespace SharpAlg.Native {
         }
         string MultiplyCore(IEnumerable<Expr> args) {
             if(args.First().ExprEquals(Expr.MinusOne)) {
-                string exprText = WrapFromMultiply(Expr.Multi(args.Skip(1), BinaryOperation.Multiply), ExpressionOrder.Default);
+                string exprText = WrapFromAdd(Expr.Multi(args.Skip(1), BinaryOperation.Multiply));
                 return String.Format("-{0}", exprText);
             }
             var sb = new StringBuilder();
@@ -59,7 +59,7 @@ namespace SharpAlg.Native {
         }
         public string Power(PowerExpr power) {
             if(UnaryExpressionExtractor.IsInverseExpression(power)) {
-                return String.Format("1 / {0}", power.Left.Visit(this));
+                return String.Format("1 / {0}", WrapFromMultiply(power.Left, ExpressionOrder.Default));
             }
             return string.Format("{0} ^ {1}", WrapFromPower(power.Left), WrapFromPower(power.Right));
         }
@@ -127,14 +127,14 @@ namespace SharpAlg.Native {
             return false;
         }
         public bool Add(AddExpr multi) {
-            return priority > OperationPriority.Add;
+            return priority >= OperationPriority.Add;
         }
         public bool Multiply(MultiplyExpr multi) {
             if(priority == OperationPriority.Add)
                 return UnaryExpressionExtractor.IsMinusExpression(multi);
             if(UnaryExpressionExtractor.IsMinusExpression(multi))
                 return true;
-            return priority > OperationPriority.Multiply;
+            return priority >= OperationPriority.Multiply;
         }
         public bool Power(PowerExpr power) {
             if(UnaryExpressionExtractor.IsInverseExpression(power)) {

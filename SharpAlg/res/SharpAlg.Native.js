@@ -1037,7 +1037,7 @@ SharpAlg.Native.ExpressionPrinter.prototype.MultiplyCore = function (args)
 {
     if (SharpAlg.Native.ExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), SharpAlg.Native.Expr.MinusOne))
     {
-        var exprText = this.WrapFromMultiply(SharpAlg.Native.Expr.Multi(System.Linq.Enumerable.Skip$1(SharpAlg.Native.Expr.ctor, args, 1), 1), 1);
+        var exprText = this.WrapFromAdd(SharpAlg.Native.Expr.Multi(System.Linq.Enumerable.Skip$1(SharpAlg.Native.Expr.ctor, args, 1), 1));
         return System.String.Format$$String$$Object("-{0}", exprText);
     }
     var sb = new System.Text.StringBuilder.ctor();
@@ -1056,7 +1056,7 @@ SharpAlg.Native.ExpressionPrinter.prototype.Power = function (power)
 {
     if (SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression(power))
     {
-        return System.String.Format$$String$$Object("1 / {0}", power.get_Left().Visit$1(System.String.ctor, this));
+        return System.String.Format$$String$$Object("1 / {0}", this.WrapFromMultiply(power.get_Left(), 1));
     }
     return System.String.Format$$String$$Object$$Object("{0} ^ {1}", this.WrapFromPower(power.get_Left()), this.WrapFromPower(power.get_Right()));
 };
@@ -1131,7 +1131,7 @@ SharpAlg.Native.ExpressionWrapperExtractor.prototype.Parameter = function (param
 };
 SharpAlg.Native.ExpressionWrapperExtractor.prototype.Add = function (multi)
 {
-    return this.priority > 1;
+    return this.priority >= 1;
 };
 SharpAlg.Native.ExpressionWrapperExtractor.prototype.Multiply = function (multi)
 {
@@ -1139,7 +1139,7 @@ SharpAlg.Native.ExpressionWrapperExtractor.prototype.Multiply = function (multi)
         return SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpression(multi);
     if (SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpression(multi))
         return true;
-    return this.priority > 2;
+    return this.priority >= 2;
 };
 SharpAlg.Native.ExpressionWrapperExtractor.prototype.Power = function (power)
 {
