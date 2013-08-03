@@ -106,12 +106,7 @@ namespace SharpAlg.Native {
             return args;
         }
         IEnumerable<Expr> GetArgs(Expr expr, BinaryOperation operation) {
-            var multiExpr = expr as MultiExpr;
-            if(multiExpr != null) {
-                if(multiExpr.Operation == operation)
-                    return ((MultiExpr)expr).Args;
-            }
-            return new[] { expr };
+            return ExpressionArgumentsExtractor.ExtractArguments(expr, operation);
         }
         Expr ConstantConvolution(Expr left, Expr right, BinaryOperation operation) {
             Number leftConst = GetConstValue(left);

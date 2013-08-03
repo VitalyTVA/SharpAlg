@@ -89,7 +89,6 @@ namespace SharpAlg.Native {
         internal MultiExpr(IEnumerable<Expr> args) {
             Args = args;
         }
-        public abstract BinaryOperation Operation { get; }
         public IEnumerable<Expr> Args { get; private set; }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
@@ -97,7 +96,6 @@ namespace SharpAlg.Native {
         internal AddExpr(IEnumerable<Expr> args) 
             : base(args) {
         }
-        public override BinaryOperation Operation { get { return BinaryOperation.Add; } }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             return visitor.Add(this);
         }
@@ -107,7 +105,6 @@ namespace SharpAlg.Native {
         internal MultiplyExpr(IEnumerable<Expr> args)
             : base(args) {
         }
-        public override BinaryOperation Operation { get { return BinaryOperation.Multiply; } }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             return visitor.Multiply(this);
         }

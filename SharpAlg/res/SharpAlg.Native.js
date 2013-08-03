@@ -373,7 +373,6 @@ var SharpAlg$Native$MultiExpr =
             SharpAlg.Native.Expr.ctor.call(this);
             this.set_Args(args);
         },
-        Operation$$: "SharpAlg.Native.BinaryOperation",
         Args$$: "System.Collections.Generic.IEnumerable`1[[SharpAlg.Native.Expr]]",
         get_Args: function ()
         {
@@ -404,11 +403,6 @@ var SharpAlg$Native$AddExpr =
         {
             SharpAlg.Native.MultiExpr.ctor.call(this, args);
         },
-        Operation$$: "SharpAlg.Native.BinaryOperation",
-        get_Operation: function ()
-        {
-            return 0;
-        },
         Visit$1: function (T, visitor)
         {
             return visitor.Add(this);
@@ -433,11 +427,6 @@ var SharpAlg$Native$MultiplyExpr =
         ctor: function (args)
         {
             SharpAlg.Native.MultiExpr.ctor.call(this, args);
-        },
-        Operation$$: "SharpAlg.Native.BinaryOperation",
-        get_Operation: function ()
-        {
-            return 1;
         },
         Visit$1: function (T, visitor)
         {
@@ -621,13 +610,7 @@ SharpAlg.Native.ConvolutionExprBuilder.prototype.GetSortedArgs = function (left,
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.GetArgs = function (expr, operation)
 {
-    var multiExpr = As(expr, SharpAlg.Native.MultiExpr.ctor);
-    if (multiExpr != null)
-    {
-        if (multiExpr.get_Operation() == operation)
-            return (Cast(expr, SharpAlg.Native.MultiExpr.ctor)).get_Args();
-    }
-    return [expr];
+    return SharpAlg.Native.ExpressionArgumentsExtractor.ExtractArguments(expr, operation);
 };
 SharpAlg.Native.ConvolutionExprBuilder.prototype.ConstantConvolution = function (left, right, operation)
 {
@@ -1308,6 +1291,33 @@ SharpAlg.Native.MultiplyExpressionExtractor.prototype.GetDefault = function (exp
     return new System.Tuple$2.ctor(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.One, expr);
 };
 $Inherit(SharpAlg.Native.MultiplyExpressionExtractor, SharpAlg.Native.DefaultExpressionVisitor);
+SharpAlg.Native.ExpressionArgumentsExtractor = function (operation)
+{
+    this.operation = 0;
+    SharpAlg.Native.DefaultExpressionVisitor.call(this);
+    this.operation = operation;
+};
+SharpAlg.Native.ExpressionArgumentsExtractor.ExtractArguments = function (expr, operation)
+{
+    return expr.Visit$1(System.Collections.Generic.IEnumerable$1.ctor, new SharpAlg.Native.ExpressionArgumentsExtractor(operation));
+};
+SharpAlg.Native.ExpressionArgumentsExtractor.prototype.Add = function (multi)
+{
+    if (this.operation == 0)
+        return multi.get_Args();
+    return SharpAlg.Native.DefaultExpressionVisitor.prototype.Add.call(this, multi);
+};
+SharpAlg.Native.ExpressionArgumentsExtractor.prototype.Multiply = function (multi)
+{
+    if (this.operation == 1)
+        return multi.get_Args();
+    return SharpAlg.Native.DefaultExpressionVisitor.prototype.Multiply.call(this, multi);
+};
+SharpAlg.Native.ExpressionArgumentsExtractor.prototype.GetDefault = function (expr)
+{
+    return [expr];
+};
+$Inherit(SharpAlg.Native.ExpressionArgumentsExtractor, SharpAlg.Native.DefaultExpressionVisitor);
 var SharpAlg$Native$FunctionalExtensions =
 {
     fullname: "SharpAlg.Native.FunctionalExtensions",
