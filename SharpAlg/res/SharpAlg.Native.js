@@ -1106,47 +1106,43 @@ SharpAlg.Native.ExpressionPrinter.prototype.WrapFromPower = function (expr)
 };
 SharpAlg.Native.ExpressionPrinter.prototype.Wrap = function (expr, currentPriority, order)
 {
-    var wrap = expr.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionWrapperExtractor(currentPriority, order));
+    var wrap = expr.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionWrapperVisitor(currentPriority, order));
     var s = expr.Visit$1(System.String.ctor, this);
     if (wrap)
         return "(" + s + ")";
     return s;
 };
-SharpAlg.Native.ExpressionWrapperExtractor = function (priority, order)
+SharpAlg.Native.ExpressionWrapperVisitor = function (priority, order)
 {
     this.order = 0;
     this.priority = 0;
     this.order = order;
     this.priority = priority;
 };
-SharpAlg.Native.ExpressionWrapperExtractor.prototype.Constant = function (constant)
+SharpAlg.Native.ExpressionWrapperVisitor.prototype.Constant = function (constant)
 {
     if (this.order == 0)
         return false;
     return SharpAlg.Native.Number.op_LessThan(constant.get_Value(), SharpAlg.Native.Number.Zero);
 };
-SharpAlg.Native.ExpressionWrapperExtractor.prototype.Parameter = function (parameter)
+SharpAlg.Native.ExpressionWrapperVisitor.prototype.Parameter = function (parameter)
 {
     return false;
 };
-SharpAlg.Native.ExpressionWrapperExtractor.prototype.Add = function (multi)
+SharpAlg.Native.ExpressionWrapperVisitor.prototype.Add = function (multi)
 {
     return this.priority >= 1;
 };
-SharpAlg.Native.ExpressionWrapperExtractor.prototype.Multiply = function (multi)
+SharpAlg.Native.ExpressionWrapperVisitor.prototype.Multiply = function (multi)
 {
-    if (this.priority == 1)
-        return SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpression(multi);
     if (SharpAlg.Native.UnaryExpressionExtractor.IsMinusExpression(multi))
         return true;
     return this.priority >= 2;
 };
-SharpAlg.Native.ExpressionWrapperExtractor.prototype.Power = function (power)
+SharpAlg.Native.ExpressionWrapperVisitor.prototype.Power = function (power)
 {
     if (SharpAlg.Native.UnaryExpressionExtractor.IsInverseExpression(power))
-    {
         return this.priority >= 2;
-    }
     return this.priority == 3;
 };
 SharpAlg.Native.UnaryExpressionInfo = function (expr, operation)

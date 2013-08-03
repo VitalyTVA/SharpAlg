@@ -100,7 +100,7 @@ namespace SharpAlg.Native {
             return Wrap(expr, OperationPriority.Power, ExpressionOrder.Default);
         }
         string Wrap(Expr expr, OperationPriority currentPriority, ExpressionOrder order) {
-            bool wrap = expr.Visit(new ExpressionWrapperExtractor(currentPriority, order));
+            bool wrap = expr.Visit(new ExpressionWrapperVisitor(currentPriority, order));
             string s = expr.Visit(this);
             if(wrap)
                 return "(" + s + ")";
@@ -111,10 +111,10 @@ namespace SharpAlg.Native {
         Head, Default
     }
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
-    public class ExpressionWrapperExtractor : IExpressionVisitor<bool> {
+    public class ExpressionWrapperVisitor : IExpressionVisitor<bool> {
         readonly ExpressionOrder order;
         readonly OperationPriority priority;
-        public ExpressionWrapperExtractor(OperationPriority priority, ExpressionOrder order) {
+        public ExpressionWrapperVisitor(OperationPriority priority, ExpressionOrder order) {
             this.order = order;
             this.priority = priority;
         }
@@ -130,16 +130,13 @@ namespace SharpAlg.Native {
             return priority >= OperationPriority.Add;
         }
         public bool Multiply(MultiplyExpr multi) {
-            if(priority == OperationPriority.Add)
-                return UnaryExpressionExtractor.IsMinusExpression(multi);
             if(UnaryExpressionExtractor.IsMinusExpression(multi))
                 return true;
             return priority >= OperationPriority.Multiply;
         }
         public bool Power(PowerExpr power) {
-            if(UnaryExpressionExtractor.IsInverseExpression(power)) {
+            if(UnaryExpressionExtractor.IsInverseExpression(power))
                 return priority >= OperationPriority.Multiply;
-            }
             return priority == OperationPriority.Power;
         }
     }
