@@ -75,11 +75,13 @@
     <Content Include="res\SharpAlg.Native.js" />
     <Content Include="res\SharpAlg.Number.js" />
     <Content Include="res\SharpAlg.Parser.js" />
+    <Content Include="res\SharpAlg.Printer.js" />
     <Content Include="res\SharpAlg.Tests.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Native\Context.cs" />
+    <Compile Include="Native\DefaultExpressionVisitor.cs" />
     <Compile Include="Native\DiffExpressionVisitor.cs" />
     <Compile Include="Native\Expr.cs" />
     <Compile Include="Native\ExprBuilder.cs" />
@@ -87,7 +89,7 @@
     <Compile Include="Native\ExpressionEvaluator.cs" />
     <Compile Include="Native\ExpressionExtensions.cs" />
     <Compile Include="Native\ExpressionFactory.cs" />
-    <Compile Include="Native\ExpressionPrinter.cs" />
+    <Compile Include="Native\Printer\ExpressionPrinter.cs" />
     <Compile Include="Native\FunctionalExtensions.cs" />
     <Compile Include="Native\IExpressionVisitor.cs" />
     <Compile Include="Native\MayBe.cs" />
@@ -95,6 +97,9 @@
     <Compile Include="Native\Parser\Buffer.cs" />
     <Compile Include="Native\Parser\Errors.cs" />
     <Compile Include="Native\Parser\Token.cs" />
+    <Compile Include="Native\Printer\ExpressionWrapperVisitor.cs" />
+    <Compile Include="Native\Printer\UnaryExpressionExtractor.cs" />
+    <Compile Include="Native\Printer\UnaryExpressionInfo.cs" />
     <Compile Include="Native\SR.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>

@@ -8,6 +8,7 @@
     <script type="text/javascript" src="res/SharpAlg.Parser.js"></script>
     <script type="text/javascript" src="res/SharpAlg.Number.js"></script>
     <script type="text/javascript" src="res/SharpAlg.Native.js"></script>
+    <script type="text/javascript" src="res/SharpAlg.Printer.js"></script>
     <script type="text/javascript" src="res/SharpAlg.Tests.js"></script>
     <script type="text/javascript" src="res/Default.js"></script>
     <script type="text/javascript">$(DefaultClient_Load);</script>

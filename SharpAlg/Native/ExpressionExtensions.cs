@@ -21,7 +21,7 @@ namespace SharpAlg.Native {
             return expr1.Visit(new ExpressionEquivalenceComparer(expr2));
         }
         public static string Print(this Expr expr) {
-            return expr.Visit(new ExpressionPrinter());
+            return expr.Visit(new SharpAlg.Native.Printer.ExpressionPrinter());
         }
         public static Expr Parse(this string expression) {
             return GetExpression(ParseCore(expression, new ConvolutionExprBuilder()));
