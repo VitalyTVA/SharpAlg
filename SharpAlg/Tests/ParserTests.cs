@@ -85,6 +85,13 @@ namespace SharpAlg.Tests {
                 .AssertSingleSyntaxError("Error at line 1 column 5: \")\" expected\r\n");
         }
         [Test]
+        public void FactorialTest() {
+            Parse("x!")
+                .AssertValue(null, Expr.Function(Expr.STR_Factorial, Expr.Parameter("x")));
+            Parse("x ^ y!")
+                .AssertValue(null, Expr.Power(Expr.Parameter("x"), Expr.Function(Expr.STR_Factorial, Expr.Parameter("y"))));
+        }
+        [Test]
         public void ParenthesesTest() {
             Parse("(1 + 2) * 3")
                 .AssertValue(9, Expr.Multiply(Expr.Add(Expr.One, ExprTestHelper.AsConstant(2)), ExprTestHelper.AsConstant(3)));

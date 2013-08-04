@@ -52,11 +52,18 @@ MultiplicativeOperation<out bool divide>
 .
 
 PowerExpression<out Expr expr>					(. Expr rightExpr; .)			
-= Terminal<out expr>
+= FactorialExpression<out expr>
 	{
 	'^' 
-	Terminal<out rightExpr>						(. expr = builder.Power(expr, rightExpr); .)
+	FactorialExpression<out rightExpr>			(. expr = builder.Power(expr, rightExpr); .)
 	}
+.
+
+FactorialExpression<out Expr expr>
+= Terminal<out expr>
+	{ 
+		'!'										(. expr = Expr.Factorial(expr); .)			
+	}										
 .
 
 Terminal<out Expr expr>							(. expr = null; .)

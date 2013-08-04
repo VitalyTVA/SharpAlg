@@ -632,6 +632,11 @@ var SharpAlg$Tests$ParserTests =
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("ln()"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(4));
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("ln(1, 2)"), "Error at line 1 column 5: \")\" expected\r\n");
         },
+        FactorialTest: function ()
+        {
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x!"), null , SharpAlg.Native.Expr.Function("factorial", SharpAlg.Native.Expr.Parameter("x")), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x ^ y!"), null , SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Function("factorial", SharpAlg.Native.Expr.Parameter("y"))), null);
+        },
         ParenthesesTest: function ()
         {
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("(1 + 2) * 3"), 9, SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Add$$Expr$$Expr(SharpAlg.Native.Expr.One, SharpAlg.Tests.ExprTestHelper.AsConstant(2)), SharpAlg.Tests.ExprTestHelper.AsConstant(3)), null);

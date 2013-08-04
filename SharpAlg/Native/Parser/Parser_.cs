@@ -15,7 +15,7 @@ public class Parser {
 	public const int _identifier = 1;
 	public const int _number = 2;
 	public const int _floatNumber = 3;
-	public const int maxT = 11;
+	public const int maxT = 12;
 
 	const bool T = true;
 	const bool x = false;
@@ -122,15 +122,15 @@ public class Parser {
 		} else if (la.kind == 5) {
 			Get();
 			minus = true; 
-		} else SynErr(12);
+		} else SynErr(13);
 	}
 
 	void PowerExpression(out Expr expr) {
 		Expr rightExpr; 
-		Terminal(out expr);
+		FactorialExpression(out expr);
 		while (la.kind == 8) {
 			Get();
-			Terminal(out rightExpr);
+			FactorialExpression(out rightExpr);
 			expr = builder.Power(expr, rightExpr); 
 		}
 	}
@@ -142,7 +142,15 @@ public class Parser {
 		} else if (la.kind == 7) {
 			Get();
 			divide = true; 
-		} else SynErr(13);
+		} else SynErr(14);
+	}
+
+	void FactorialExpression(out Expr expr) {
+		Terminal(out expr);
+		while (la.kind == 9) {
+			Get();
+			expr = Expr.Factorial(expr); 
+		}
 	}
 
 	void Terminal(out Expr expr) {
@@ -153,27 +161,27 @@ public class Parser {
 		} else if (la.kind == 3) {
 			Get();
 			expr = Expr.Constant(Number.FromString(t.val)); 
-		} else if (la.kind == 9) {
+		} else if (la.kind == 10) {
 			Get();
 			AdditiveExpression(out expr);
-			Expect(10);
+			Expect(11);
 		} else if (la.kind == 1) {
 			FunctionCall(out expr);
 		} else if (la.kind == 5) {
 			Get();
 			Terminal(out expr);
 			expr = builder.Minus(expr); 
-		} else SynErr(14);
+		} else SynErr(15);
 	}
 
 	void FunctionCall(out Expr expr) {
 		string name; Expr arg = null; 
 		Expect(1);
 		name = t.val; 
-		while (la.kind == 9) {
+		while (la.kind == 10) {
 			Get();
 			AdditiveExpression(out arg);
-			Expect(10);
+			Expect(11);
 		}
 		expr = arg != null ? (Expr)Expr.Function(name, arg) : Expr.Parameter(name); 
 	}
@@ -199,7 +207,7 @@ public class Parser {
 */
 //parser set patch begin
 	static readonly bool[][] set = {
-		new bool[] {T,x,x,x, x,x,x,x, x,x,x,x, x}
+		new bool[] {T,x,x,x, x,x,x,x, x,x,x,x, x,x}
 
 	};
 //parser set patch end
@@ -219,12 +227,13 @@ public class Errors : ErrorsBase {
 			case 6: s = "\"*\" expected"; break;
 			case 7: s = "\"/\" expected"; break;
 			case 8: s = "\"^\" expected"; break;
-			case 9: s = "\"(\" expected"; break;
-			case 10: s = "\")\" expected"; break;
-			case 11: s = "??? expected"; break;
-			case 12: s = "invalid AdditiveOperation"; break;
-			case 13: s = "invalid MultiplicativeOperation"; break;
-			case 14: s = "invalid Terminal"; break;
+			case 9: s = "\"!\" expected"; break;
+			case 10: s = "\"(\" expected"; break;
+			case 11: s = "\")\" expected"; break;
+			case 12: s = "??? expected"; break;
+			case 13: s = "invalid AdditiveOperation"; break;
+			case 14: s = "invalid MultiplicativeOperation"; break;
+			case 15: s = "invalid Terminal"; break;
 
             default: s = "error " + n; break;
         }

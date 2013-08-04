@@ -210,6 +210,7 @@ var SharpAlg$Native$Expr =
     {
         cctor: function ()
         {
+            SharpAlg.Native.Expr.STR_Factorial = "factorial";
             SharpAlg.Native.Expr.Zero = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.Zero);
             SharpAlg.Native.Expr.One = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.One);
             SharpAlg.Native.Expr.MinusOne = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.MinusOne);
@@ -269,6 +270,10 @@ var SharpAlg$Native$Expr =
         Function: function (functionName, argument)
         {
             return new SharpAlg.Native.FunctionExpr.ctor(functionName, argument);
+        },
+        Factorial: function (argument)
+        {
+            return new SharpAlg.Native.FunctionExpr.ctor("factorial", argument);
         }
     },
     assemblyName: "SharpAlg",
