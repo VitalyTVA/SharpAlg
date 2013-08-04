@@ -39,6 +39,9 @@ namespace SharpAlg.Native.Printer {
                     return priority >= OperationPriority.Multiply;
                 return priority == OperationPriority.Power;
             }
+            public bool Function(FunctionExpr functionExpr) {
+                throw new NotImplementedException();
+            }
         }
         [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
         abstract class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
@@ -144,6 +147,9 @@ namespace SharpAlg.Native.Printer {
         }
         public string Parameter(ParameterExpr parameter) {
             return parameter.ParameterName;
+        }
+        public string Function(FunctionExpr functionExpr) {
+            throw new NotImplementedException();
         }
         static string GetBinaryOperationSymbol(BinaryOperationEx operation) {
             switch(operation) {

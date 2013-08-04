@@ -158,13 +158,24 @@ public class Parser {
 			AdditiveExpression(out expr);
 			Expect(10);
 		} else if (la.kind == 1) {
-			Get();
-			expr = Expr.Parameter(t.val); 
+			FunctionCall(out expr);
 		} else if (la.kind == 5) {
 			Get();
 			Terminal(out expr);
 			expr = builder.Minus(expr); 
 		} else SynErr(14);
+	}
+
+	void FunctionCall(out Expr expr) {
+		string name; bool isFunction = false; 
+		Expect(1);
+		name = t.val; 
+		while (la.kind == 9) {
+			Get();
+			Expect(10);
+			isFunction = true; 
+		}
+		expr = isFunction ? (Expr)Expr.Function(name) : Expr.Parameter(name); 
 	}
 
 

@@ -20,6 +20,14 @@ namespace SharpAlg.Tests {
                 .IsFalse(x => x.ExprEquals(Expr.Parameter("y")));
         }
         [Test]
+        public void FunctionExprTest() {
+            Expr.Function("ln")
+                .IsEqual(x => x.FunctionName, "ln")
+                //.Fails(x => x.Evaluate(), typeof(ExpressionEvaluationException), e => e.IsEqual(x => x.Message, "x value is undefined"))
+                .IsTrue(x => x.ExprEquals(Expr.Function("ln")))
+                .IsFalse(x => x.ExprEquals(Expr.Function("sin")));
+        }
+        [Test]
         public void ConstantExprTest() {
             ExprTestHelper.AsConstant(9)
                 .IsEqual(x => x.Value, ExprTestHelper.AsNumber(9))

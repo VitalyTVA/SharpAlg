@@ -50,6 +50,9 @@ namespace SharpAlg.Native {
         public static Expr Inverse(Expr expr) {
             return Power(expr, Expr.MinusOne);
         }
+        public static FunctionExpr Function(string functionName) {
+            return new FunctionExpr(functionName);
+        }
         internal abstract T Visit<T>(IExpressionVisitor<T> visitor);
 #if DEBUG
         public string Print { get { return this.Print(); } }
@@ -119,6 +122,16 @@ namespace SharpAlg.Native {
         public Expr Right { get; private set; }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             return visitor.Power(this);
+        }
+    }
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    public class FunctionExpr : Expr {
+        internal FunctionExpr(string functionName) {
+            FunctionName = functionName;
+        }
+        public string FunctionName { get; private set; }
+        internal override T Visit<T>(IExpressionVisitor<T> visitor) {
+            return visitor.Function(this);
         }
     }
 }

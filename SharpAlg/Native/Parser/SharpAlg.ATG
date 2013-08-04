@@ -64,9 +64,17 @@ Terminal<out Expr expr>							(. expr = null; .)
 	(number										(. expr = Expr.Constant(Number.FromString(t.val)); .)
 	| floatNumber								(. expr = Expr.Constant(Number.FromString(t.val)); .)
 	| '('AdditiveExpression<out expr>')'
-	| identifier								(. expr = Expr.Parameter(t.val); .)
+	| FunctionCall<out expr>			
 	| '-' Terminal<out expr>					(. expr = builder.Minus(expr); .)
 	)
+.
+
+FunctionCall<out Expr expr>						(. string name; bool isFunction = false; .)
+= 
+	identifier									(. name = t.val; .)
+	{
+	'('')'										(. isFunction = true; .)
+	}											(. expr = isFunction ? (Expr)Expr.Function(name) : Expr.Parameter(name); .)
 .
 
 END SharpAlg.

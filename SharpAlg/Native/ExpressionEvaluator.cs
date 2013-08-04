@@ -66,6 +66,9 @@ namespace SharpAlg.Native {
             }
             return false;
         }
+        public Number Function(FunctionExpr functionExpr) {
+            throw new NotImplementedException();
+        }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class ExpressionEvaluationException : Exception {

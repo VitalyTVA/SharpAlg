@@ -74,6 +74,11 @@ namespace SharpAlg.Tests {
                 .AssertValue(10, Expr.Add(ExprTestHelper.AsConstant(2), Expr.Power(ExprTestHelper.AsConstant(2), ExprTestHelper.AsConstant(3))));
         }
         [Test]
+        public void FunctionTest() {
+            Parse("ln()")
+                .AssertValue(null, Expr.Function("ln"));
+        }
+        [Test]
         public void ParenthesesTest() {
             Parse("(1 + 2) * 3")
                 .AssertValue(9, Expr.Multiply(Expr.Add(Expr.One, ExprTestHelper.AsConstant(2)), ExprTestHelper.AsConstant(3)));
@@ -117,11 +122,11 @@ namespace SharpAlg.Tests {
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ParserTestHelper {
-        public static Parser AssertValue(this Parser parser, double value, Expr expectedExpr = null, Context context = null) {
+        public static Parser AssertValue(this Parser parser, double? value, Expr expectedExpr = null, Context context = null) {
             return parser
                 .IsEqual(x => x.errors.Errors, string.Empty)
                 .IsEqual(x => x.errors.Count, 0)
-                .IsEqual(x => x.Expr.Evaluate(context), ExprTestHelper.AsNumber(value))
+                .IsEqual(x => value != null ? x.Expr.Evaluate(context) : null, value != null ? ExprTestHelper.AsNumber(value.Value) : null)
                 .IsTrue(x => expectedExpr == null || x.Expr.ExprEquals(expectedExpr));
         }
         public static Parser AssertSingleSyntaxError(this Parser parser, string text) {

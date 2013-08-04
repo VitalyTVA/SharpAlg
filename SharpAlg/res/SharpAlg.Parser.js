@@ -352,8 +352,7 @@ SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
     }
     else if (this.la.kind == 1)
     {
-        this.Get();
-        expr.Value = SharpAlg.Native.Expr.Parameter(this.t.val);
+        this.FunctionCall(expr);
     }
     else if (this.la.kind == 5)
     {
@@ -363,6 +362,20 @@ SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
     }
     else
         this.SynErr(14);
+};
+SharpAlg.Native.Parser.Parser.prototype.FunctionCall = function (expr)
+{
+    var name;
+    var isFunction = false;
+    this.Expect(1);
+    name = this.t.val;
+    while (this.la.kind == 9)
+    {
+        this.Get();
+        this.Expect(10);
+        isFunction = true;
+    }
+    expr.Value = isFunction ? SharpAlg.Native.Expr.Function(name) : SharpAlg.Native.Expr.Parameter(name);
 };
 SharpAlg.Native.Parser.Parser.prototype.Parse = function ()
 {

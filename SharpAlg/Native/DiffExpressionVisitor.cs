@@ -53,6 +53,9 @@ namespace SharpAlg.Native {
                 throw new NotImplementedException(); //TODO when ln() is ready
             return Expr.Multiply(power.Right, builder.Multiply(power.Left.Visit(this), builder.Power(power.Left, builder.Subtract(power.Right, Expr.One)))); //TODO convolution when ln() is ready
         }
+        public Expr Function(FunctionExpr functionExpr) {
+            throw new NotImplementedException();
+        }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class ExpressionDefferentiationException : Exception {

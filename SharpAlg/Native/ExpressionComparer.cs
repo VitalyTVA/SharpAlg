@@ -26,6 +26,9 @@ namespace SharpAlg.Native {
         public bool Parameter(ParameterExpr parameter) {
             return DoEqualityCheck(parameter, (x1, x2) => x1.ParameterName == x2.ParameterName);
         }
+        public bool Function(FunctionExpr functionExpr) {
+            return DoEqualityCheck(functionExpr, (x1, x2) => x1.FunctionName == x2.FunctionName);
+        }
         protected bool DoEqualityCheck<T>(T expr2, Func<T, T, bool> equalityCheck) where T : Expr {
             var other = expr as T;
             return other != null && equalityCheck(other, expr2);
