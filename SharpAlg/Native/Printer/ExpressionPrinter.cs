@@ -159,7 +159,17 @@ namespace SharpAlg.Native.Printer {
         public string Function(FunctionExpr functionExpr) {
             if(IsFactorial(functionExpr))
                 return string.Format("{0}!", WrapFromFactorial(functionExpr.Arguments.First()));
-            return string.Format("{0}({1})", functionExpr.FunctionName, functionExpr.Arguments.First().Visit(this));
+
+            var sb = new StringBuilder(functionExpr.FunctionName);
+            sb.Append("(");
+            functionExpr.Arguments.Accumulate(x => {
+                sb.Append(x.Visit(this));
+            }, x => {
+                sb.Append(", ");
+                sb.Append(x.Visit(this));
+            });
+            sb.Append(")");
+            return sb.ToString();
         }
         static string GetBinaryOperationSymbol(BinaryOperationEx operation) {
             switch(operation) {
