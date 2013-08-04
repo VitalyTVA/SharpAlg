@@ -67,6 +67,9 @@ namespace SharpAlg.Native {
             return false;
         }
         public Number Function(FunctionExpr functionExpr) {
+            if(functionExpr.FunctionName == Expr.STR_Factorial) {
+                return Number.Factorial(functionExpr.Argument.Visit(this));
+            }
             throw new NotImplementedException();
         }
     }

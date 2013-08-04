@@ -61,6 +61,18 @@ var SharpAlg$Native$Number =
         {
             return SharpAlg.Native.Number.FromDouble(System.Math.Pow(n1.value, n2.value));
         },
+        Factorial: function (n)
+        {
+            var intValue = Cast(n.value, System.Int32.ctor);
+            if (intValue != n.value)
+                throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            var result = 1;
+            for (var i = 2; i <= intValue; i++)
+            {
+                result *= i;
+            }
+            return SharpAlg.Native.Number.FromDouble(result);
+        },
         cctor: function ()
         {
             SharpAlg.Native.Number.Zero = null;

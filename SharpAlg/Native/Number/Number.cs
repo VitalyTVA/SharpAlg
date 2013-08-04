@@ -38,6 +38,16 @@ namespace SharpAlg.Native {
         public static Number operator ^(Number n1, Number n2) {
             return FromDouble(Math.Pow(n1.value, n2.value));
         }
+        public static Number Factorial(Number n) {
+            int intValue = (int)n.value;
+            if(intValue != n.value)
+                throw new NotImplementedException();
+            double result = 1;
+            for(int i = 2; i <= intValue; i++) {
+                result *= i;
+            }
+            return FromDouble(result);
+        }
         //public static Number operator -(Number n) {
         //    return FromDouble(-n.Value);
         //}

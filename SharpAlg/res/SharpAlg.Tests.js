@@ -244,6 +244,10 @@ var SharpAlg$Tests$ExprTests =
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
             }), SharpAlg.Tests.ExprTestHelper.AsNumber(22));
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("(y - x)!"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
+            }), SharpAlg.Tests.ExprTestHelper.AsNumber(24));
             context.Register("y", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("x")));
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.Add$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y")), $CreateAnonymousDelegate(this, function (x)
             {
@@ -640,9 +644,11 @@ var SharpAlg$Tests$ParserTests =
         },
         FactorialTest: function ()
         {
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x!"), null , SharpAlg.Native.Expr.Function("factorial", SharpAlg.Native.Expr.Parameter("x")), null);
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x ^ y!"), null , SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Function("factorial", SharpAlg.Native.Expr.Parameter("y"))), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x!"), null , SharpAlg.Native.Expr.Factorial(SharpAlg.Native.Expr.Parameter("x")), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x ^ y!"), null , SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Factorial(SharpAlg.Native.Expr.Parameter("y"))), null);
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("!x"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1));
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("3!"), 6, SharpAlg.Native.Expr.Factorial(SharpAlg.Tests.ExprTestHelper.AsConstant(3)), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 ^ 3!"), 64, null, null);
         },
         ParenthesesTest: function ()
         {

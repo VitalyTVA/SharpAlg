@@ -87,6 +87,8 @@ namespace SharpAlg.Tests {
 
             Expr.Add(Expr.Parameter("x"), Expr.Parameter("y"))
                 .IsEqual(x => x.Evaluate(context), ExprTestHelper.AsNumber(22));
+            "(y - x)!".Parse()
+                .IsEqual(x => x.Evaluate(context), ExprTestHelper.AsNumber(24));
 
             context.Register("y", Expr.Multiply(Expr.Parameter("x"), Expr.Parameter("x")));
             Expr.Add(Expr.Parameter("x"), Expr.Parameter("y"))

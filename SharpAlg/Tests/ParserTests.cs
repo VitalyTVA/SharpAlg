@@ -87,11 +87,15 @@ namespace SharpAlg.Tests {
         [Test]
         public void FactorialTest() {
             Parse("x!")
-                .AssertValue(null, Expr.Function(Expr.STR_Factorial, Expr.Parameter("x")));
+                .AssertValue(null, Expr.Factorial(Expr.Parameter("x")));
             Parse("x ^ y!")
-                .AssertValue(null, Expr.Power(Expr.Parameter("x"), Expr.Function(Expr.STR_Factorial, Expr.Parameter("y"))));
+                .AssertValue(null, Expr.Power(Expr.Parameter("x"), Expr.Factorial(Expr.Parameter("y"))));
             Parse("!x")
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(1));
+            Parse("3!")
+                .AssertValue(6, Expr.Factorial(ExprTestHelper.AsConstant(3)));
+            Parse("2 ^ 3!")
+                .AssertValue(64);
         }
         [Test]
         public void ParenthesesTest() {

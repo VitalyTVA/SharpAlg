@@ -735,6 +735,10 @@ SharpAlg.Native.ExpressionEvaluator.IsInvertedOperation = function (operation)
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Function = function (functionExpr)
 {
+    if (functionExpr.get_FunctionName() == "factorial")
+    {
+        return SharpAlg.Native.Number.Factorial(functionExpr.get_Argument().Visit$1(SharpAlg.Native.Number.ctor, this));
+    }
     throw $CreateException(new System.NotImplementedException.ctor(), new Error());
 };
 var SharpAlg$Native$ExpressionEvaluationException =
