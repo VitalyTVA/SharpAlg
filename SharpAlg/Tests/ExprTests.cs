@@ -259,6 +259,8 @@ namespace SharpAlg.Tests {
             "(x * y) ^ 2 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 4 * y ^ 4");
             "(x * y) ^ z".Parse().AssertSimpleStringRepresentation("(x * y) ^ z");
             "(x * y) ^ z * (y * x) ^ t".Parse().AssertSimpleStringRepresentation("(x * y) ^ (z + t)");
+
+            "ln(y * x) + ln(x * y)".Parse().AssertSimpleStringRepresentation("2 * ln(y * x)");
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

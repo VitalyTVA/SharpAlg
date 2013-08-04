@@ -395,6 +395,7 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(x * y) ^ 2 * (x * y) ^ 2"), "x ^ 4 * y ^ 4");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(x * y) ^ z"), "(x * y) ^ z");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(x * y) ^ z * (y * x) ^ t"), "(x * y) ^ (z + t)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(y * x) + ln(x * y)"), "2 * ln(y * x)");
         }
     }
 };
