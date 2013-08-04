@@ -81,8 +81,11 @@ namespace SharpAlg.Tests {
                 .AssertValue(null, Expr.Function("ln", "x ^ 2 + y * z".Parse()));
             Parse("ln()")
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(4));
-            Parse("ln(1, 2)")
-                .AssertSingleSyntaxError("Error at line 1 column 5: \")\" expected\r\n");
+        }
+        [Test]
+        public void FunctionMultiArgsTest() {
+            Parse("someFunc(x, 2, y + x)")
+                .AssertValue(null, Expr.Function("someFunc", new Expr[] { "x".Parse(), "2".Parse(), "y + x".Parse() }));
         }
         [Test]
         public void FactorialTest() {

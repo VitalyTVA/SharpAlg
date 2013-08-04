@@ -3,19 +3,24 @@ SharpAlg Parser
 -----------------------------------------------------------------------*/
 
 using System;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using SharpKit.JavaScript;
 using SharpAlg.Native.Builder;
 
 namespace SharpAlg.Native.Parser {
 
 
+[JsType(JsMode.Clr, Filename = SR.JSParserName)]
+class ArgsList : List<Expr> { }
 [JsType(JsMode.Prototype, Filename = SR.JSParserName)]
 public class Parser {
 	public const int _EOF = 0;
 	public const int _identifier = 1;
 	public const int _number = 2;
 	public const int _floatNumber = 3;
-	public const int maxT = 12;
+	public const int maxT = 13;
 
 	const bool T = true;
 	const bool x = false;
@@ -122,7 +127,7 @@ public class Parser {
 		} else if (la.kind == 5) {
 			Get();
 			minus = true; 
-		} else SynErr(13);
+		} else SynErr(14);
 	}
 
 	void PowerExpression(out Expr expr) {
@@ -142,7 +147,7 @@ public class Parser {
 		} else if (la.kind == 7) {
 			Get();
 			divide = true; 
-		} else SynErr(14);
+		} else SynErr(15);
 	}
 
 	void FactorialExpression(out Expr expr) {
@@ -171,23 +176,29 @@ public class Parser {
 			Get();
 			Terminal(out expr);
 			expr = builder.Minus(expr); 
-		} else SynErr(15);
+		} else SynErr(16);
 	}
 
 	void FunctionCall(out Expr expr) {
-		string name; Expr arg = null; 
+		string name; ArgsList args = new ArgsList(); 
 		Expect(1);
 		name = t.val; 
 		while (la.kind == 10) {
 			Get();
-			ArgumentList(out arg);
+			ArgumentList(args);
 			Expect(11);
 		}
-		expr = arg != null ? (Expr)Expr.Function(name, arg) : Expr.Parameter(name); 
+		expr = args.Count > 0 ? (Expr)Expr.Function(name, args) : Expr.Parameter(name); 
 	}
 
-	void ArgumentList(out Expr arg) {
-		AdditiveExpression(out arg);
+	void ArgumentList(ArgsList args) {
+		Expr first; 
+		AdditiveExpression(out first);
+		args.Add(first); 
+		while (la.kind == 12) {
+			Get();
+			ArgumentList(args);
+		}
 	}
 
 
@@ -211,7 +222,7 @@ public class Parser {
 */
 //parser set patch begin
 	static readonly bool[][] set = {
-		new bool[] {T,x,x,x, x,x,x,x, x,x,x,x, x,x}
+		new bool[] {T,x,x,x, x,x,x,x, x,x,x,x, x,x,x}
 
 	};
 //parser set patch end
@@ -234,10 +245,11 @@ public class Errors : ErrorsBase {
 			case 9: s = "\"!\" expected"; break;
 			case 10: s = "\"(\" expected"; break;
 			case 11: s = "\")\" expected"; break;
-			case 12: s = "??? expected"; break;
-			case 13: s = "invalid AdditiveOperation"; break;
-			case 14: s = "invalid MultiplicativeOperation"; break;
-			case 15: s = "invalid Terminal"; break;
+			case 12: s = "\",\" expected"; break;
+			case 13: s = "??? expected"; break;
+			case 14: s = "invalid AdditiveOperation"; break;
+			case 15: s = "invalid MultiplicativeOperation"; break;
+			case 16: s = "invalid Terminal"; break;
 
             default: s = "error " + n; break;
         }

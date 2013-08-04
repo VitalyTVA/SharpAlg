@@ -34,6 +34,13 @@ namespace SharpAlg.Tests {
                 .IsFalse(x => x.ExprEquals(Expr.Function("ln", Expr.Multiply(Expr.Parameter("y"), Expr.Parameter("x")))))
                 .IsTrue(x => x.ExprEquivalent(Expr.Function("ln", Expr.Multiply(Expr.Parameter("x"), Expr.Parameter("y")))))
                 .IsTrue(x => x.ExprEquivalent(Expr.Function("ln", Expr.Multiply(Expr.Parameter("y"), Expr.Parameter("x")))));
+
+            Expr.Function("someFunc", new Expr[] { Expr.Parameter("x"), Expr.Parameter("y") })
+                //.AssertSimpleStringRepresentation("ln(x * y)")
+                .IsTrue(x => x.ExprEquals(Expr.Function("someFunc", new Expr[] { Expr.Parameter("x"), Expr.Parameter("y") })))
+                .IsFalse(x => x.ExprEquals(Expr.Function("someFunc", new Expr[] { Expr.Parameter("x"), Expr.Parameter("z") })))
+                .IsTrue(x => x.ExprEquivalent(Expr.Function("someFunc", new Expr[] { Expr.Parameter("x"), Expr.Parameter("y") })))
+                .IsFalse(x => x.ExprEquivalent(Expr.Function("someFunc", new Expr[] { Expr.Parameter("y"), Expr.Parameter("x") })));
         }
         [Test]
         public void ConstantExprTest() {

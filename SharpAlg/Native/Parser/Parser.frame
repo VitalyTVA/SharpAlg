@@ -1,9 +1,14 @@
 -->begin
 using System;
+using System.Linq;
+using System.Collections;
+using System.Collections.Generic;
 using SharpKit.JavaScript;
 using SharpAlg.Native.Builder;
 
 -->namespace
+[JsType(JsMode.Clr, Filename = SR.JSParserName)]
+class ArgsList : List<Expr> { }
 [JsType(JsMode.Prototype, Filename = SR.JSParserName)]
 public class Parser {
 -->constants

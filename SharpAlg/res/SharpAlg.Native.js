@@ -592,7 +592,7 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.FunctionExpr.ctor, functionExpr, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return x1.get_FunctionName() == x2.get_FunctionName() && this.EqualsCore(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, x1.get_Arguments()), System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, x2.get_Arguments()));
+                return x1.get_FunctionName() == x2.get_FunctionName() && SharpAlg.Native.FunctionalExtensions.EnumerableEqual$1(SharpAlg.Native.Expr.ctor, x1.get_Arguments(), x2.get_Arguments(), $CreateDelegate(this, this.EqualsCore));
             }));
         },
         DoEqualityCheck$1: function (T, expr2, equalityCheck)

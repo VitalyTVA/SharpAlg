@@ -14,8 +14,8 @@ namespace SharpAlg.Native.Parser {
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
-	const int maxT = 12;
-	const int noSym = 12;
+	const int maxT = 13;
+	const int noSym = 13;
 
 
 	public Buffer buffer; // scanner buffer
@@ -49,6 +49,7 @@ public class Scanner {
 		start[33] = 10; 
 		start[40] = 11; 
 		start[41] = 12; 
+		start[44] = 13; 
 		start[Buffer.EOF] = -1;
 
 	}
@@ -177,6 +178,8 @@ old way*/
 				{t.kind = 10; done = true; break;}
 			case 12:
 				{t.kind = 11; done = true; break;}
+			case 13:
+				{t.kind = 12; done = true; break;}
 
 		}
         }
