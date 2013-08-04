@@ -21,11 +21,18 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void FunctionExprTest() {
-            Expr.Function("ln")
+            Expr.Function("ln", ExprTestHelper.AsConstant(3))
                 .IsEqual(x => x.FunctionName, "ln")
                 //.Fails(x => x.Evaluate(), typeof(ExpressionEvaluationException), e => e.IsEqual(x => x.Message, "x value is undefined"))
-                .IsTrue(x => x.ExprEquals(Expr.Function("ln")))
-                .IsFalse(x => x.ExprEquals(Expr.Function("sin")));
+                .IsTrue(x => x.ExprEquals(Expr.Function("ln", ExprTestHelper.AsConstant(3))))
+                .IsFalse(x => x.ExprEquals(Expr.Function("ln", ExprTestHelper.AsConstant(4))))
+                .IsFalse(x => x.ExprEquals(Expr.Function("sin", ExprTestHelper.AsConstant(3))));
+
+            Expr.Function("ln", Expr.Multiply(Expr.Parameter("x"), Expr.Parameter("y")))
+                .IsTrue(x => x.ExprEquals(Expr.Function("ln", Expr.Multiply(Expr.Parameter("x"), Expr.Parameter("y")))))
+                .IsFalse(x => x.ExprEquals(Expr.Function("ln", Expr.Multiply(Expr.Parameter("y"), Expr.Parameter("x")))))
+                .IsTrue(x => x.ExprEquivalent(Expr.Function("ln", Expr.Multiply(Expr.Parameter("x"), Expr.Parameter("y")))))
+                .IsTrue(x => x.ExprEquivalent(Expr.Function("ln", Expr.Multiply(Expr.Parameter("y"), Expr.Parameter("x")))));
         }
         [Test]
         public void ConstantExprTest() {

@@ -167,15 +167,15 @@ public class Parser {
 	}
 
 	void FunctionCall(out Expr expr) {
-		string name; bool isFunction = false; 
+		string name; Expr arg = null; 
 		Expect(1);
 		name = t.val; 
 		while (la.kind == 9) {
 			Get();
+			AdditiveExpression(out arg);
 			Expect(10);
-			isFunction = true; 
 		}
-		expr = isFunction ? (Expr)Expr.Function(name) : Expr.Parameter(name); 
+		expr = arg != null ? (Expr)Expr.Function(name, arg) : Expr.Parameter(name); 
 	}
 
 

@@ -75,8 +75,10 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void FunctionTest() {
-            Parse("ln()")
-                .AssertValue(null, Expr.Function("ln"));
+            Parse("ln(1)")
+                .AssertValue(null, Expr.Function("ln", Expr.One));
+            Parse("ln(x ^ 2 + y * z)")
+                .AssertValue(null, Expr.Function("ln", "x ^ 2 + y * z".Parse()));
         }
         [Test]
         public void ParenthesesTest() {

@@ -366,16 +366,22 @@ SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
 SharpAlg.Native.Parser.Parser.prototype.FunctionCall = function (expr)
 {
     var name;
-    var isFunction = false;
+    var arg = null;
     this.Expect(1);
     name = this.t.val;
     while (this.la.kind == 9)
     {
         this.Get();
+        (function ()
+        {
+            arg = {Value: arg};
+            var $res = this.AdditiveExpression(arg);
+            arg = arg.Value;
+            return $res;
+        }).call(this);
         this.Expect(10);
-        isFunction = true;
     }
-    expr.Value = isFunction ? SharpAlg.Native.Expr.Function(name) : SharpAlg.Native.Expr.Parameter(name);
+    expr.Value = arg != null ? SharpAlg.Native.Expr.Function(name, arg) : SharpAlg.Native.Expr.Parameter(name);
 };
 SharpAlg.Native.Parser.Parser.prototype.Parse = function ()
 {

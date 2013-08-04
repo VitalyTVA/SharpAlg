@@ -266,9 +266,9 @@ var SharpAlg$Native$Expr =
         {
             return SharpAlg.Native.Expr.Power(expr, SharpAlg.Native.Expr.MinusOne);
         },
-        Function: function (functionName)
+        Function: function (functionName, argument)
         {
-            return new SharpAlg.Native.FunctionExpr.ctor(functionName);
+            return new SharpAlg.Native.FunctionExpr.ctor(functionName, argument);
         }
     },
     assemblyName: "SharpAlg",
@@ -502,10 +502,12 @@ var SharpAlg$Native$FunctionExpr =
     Kind: "Class",
     definition:
     {
-        ctor: function (functionName)
+        ctor: function (functionName, argument)
         {
             this._FunctionName = null;
+            this._Argument = null;
             SharpAlg.Native.Expr.ctor.call(this);
+            this.set_Argument(argument);
             this.set_FunctionName(functionName);
         },
         FunctionName$$: "System.String",
@@ -516,6 +518,15 @@ var SharpAlg$Native$FunctionExpr =
         set_FunctionName: function (value)
         {
             this._FunctionName = value;
+        },
+        Argument$$: "SharpAlg.Native.Expr",
+        get_Argument: function ()
+        {
+            return this._Argument;
+        },
+        set_Argument: function (value)
+        {
+            this._Argument = value;
         },
         Visit$1: function (T, visitor)
         {
@@ -572,7 +583,7 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.FunctionExpr.ctor, functionExpr, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return x1.get_FunctionName() == x2.get_FunctionName();
+                return x1.get_FunctionName() == x2.get_FunctionName() && this.EqualsCore(x1.get_Argument(), x2.get_Argument());
             }));
         },
         DoEqualityCheck$1: function (T, expr2, equalityCheck)
