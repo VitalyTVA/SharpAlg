@@ -89,7 +89,7 @@ namespace SharpAlg.Native {
         Add, Subtract, Multiply, Divide
     }
     public enum OperationPriority { 
-        None, Add, Multiply, Power 
+        None, Add, Multiply, Power, Factorial 
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public abstract class MultiExpr : Expr {

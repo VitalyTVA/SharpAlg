@@ -303,6 +303,11 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Tests.ExprTestHelper.AsConstant(3), SharpAlg.Native.Expr.Parameter("x")), SharpAlg.Native.Expr.MinusOne), "1 / (3 * x)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x * ln(2)"), "x * ln(2)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(x + y) * ln(x * ln(x)) ^ 2"), "ln(x + y) * ln(x * ln(x)) ^ 2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x! + factorial(y)"), "x! + y!");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x * y!"), "x * y!");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x ^ (y + z)!"), "x ^ (y + z)!");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(y ^ z)!"), "(y ^ z)!");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("y! ^ z!"), "y! ^ z!");
         },
         ConvolutionTest: function ()
         {
@@ -396,6 +401,7 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(x * y) ^ z"), "(x * y) ^ z");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(x * y) ^ z * (y * x) ^ t"), "(x * y) ^ (z + t)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(y * x) + ln(x * y)"), "2 * ln(y * x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(y * x)! + (x * y)!"), "2 * (y * x)!");
         }
     }
 };
@@ -636,6 +642,7 @@ var SharpAlg$Tests$ParserTests =
         {
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x!"), null , SharpAlg.Native.Expr.Function("factorial", SharpAlg.Native.Expr.Parameter("x")), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x ^ y!"), null , SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Function("factorial", SharpAlg.Native.Expr.Parameter("y"))), null);
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("!x"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1));
         },
         ParenthesesTest: function ()
         {

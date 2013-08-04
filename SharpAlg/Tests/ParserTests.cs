@@ -90,6 +90,8 @@ namespace SharpAlg.Tests {
                 .AssertValue(null, Expr.Function(Expr.STR_Factorial, Expr.Parameter("x")));
             Parse("x ^ y!")
                 .AssertValue(null, Expr.Power(Expr.Parameter("x"), Expr.Function(Expr.STR_Factorial, Expr.Parameter("y"))));
+            Parse("!x")
+                .AssertSingleSyntaxError(GetNumberExpectedMessage(1));
         }
         [Test]
         public void ParenthesesTest() {

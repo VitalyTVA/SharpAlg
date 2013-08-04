@@ -73,6 +73,10 @@ SharpAlg.Native.Printer.ExpressionPrinter.IsInverseExpression = function (power)
 {
     return SharpAlg.Native.ExpressionExtensions.ExprEquals(SharpAlg.Native.Expr.MinusOne, power.get_Right());
 };
+SharpAlg.Native.Printer.ExpressionPrinter.IsFactorial = function (functionExpr)
+{
+    return functionExpr.get_FunctionName() == "factorial";
+};
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Constant = function (constant)
 {
     return constant.get_Value().toString();
@@ -124,6 +128,8 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Parameter = function (parame
 };
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Function = function (functionExpr)
 {
+    if (SharpAlg.Native.Printer.ExpressionPrinter.IsFactorial(functionExpr))
+        return System.String.Format$$String$$Object("{0}!", this.WrapFromFactorial(functionExpr.get_Argument()));
     return System.String.Format$$String$$Object$$Object("{0}({1})", functionExpr.get_FunctionName(), functionExpr.get_Argument().Visit$1(System.String.ctor, this));
 };
 SharpAlg.Native.Printer.ExpressionPrinter.GetBinaryOperationSymbol = function (operation)
@@ -166,6 +172,10 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.WrapFromPower = function (ex
 {
     return this.Wrap(expr, 3, 1);
 };
+SharpAlg.Native.Printer.ExpressionPrinter.prototype.WrapFromFactorial = function (expr)
+{
+    return this.Wrap(expr, 4, 1);
+};
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Wrap = function (expr, currentPriority, order)
 {
     var wrap = expr.Visit$1(System.Boolean.ctor, new SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor(currentPriority, order));
@@ -195,23 +205,29 @@ SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Par
 };
 SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Add = function (multi)
 {
-    return this.priority >= 1;
+    return this.ShouldWrap(1);
 };
 SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Multiply = function (multi)
 {
     if (SharpAlg.Native.Printer.ExpressionPrinter.IsMinusExpression(multi))
         return true;
-    return this.priority >= 2;
+    return this.ShouldWrap(2);
 };
 SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Power = function (power)
 {
     if (SharpAlg.Native.Printer.ExpressionPrinter.IsInverseExpression(power))
         return this.priority >= 2;
-    return this.priority == 3;
+    return this.ShouldWrap(3);
 };
 SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Function = function (functionExpr)
 {
+    if (SharpAlg.Native.Printer.ExpressionPrinter.IsFactorial(functionExpr))
+        return this.ShouldWrap(4);
     return false;
+};
+SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.ShouldWrap = function (exprPriority)
+{
+    return this.priority >= exprPriority;
 };
 SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor = function ()
 {

@@ -153,6 +153,11 @@ namespace SharpAlg.Tests {
 
             "x * ln(2)".Parse().AssertSimpleStringRepresentation("x * ln(2)");
             "ln(x + y) * ln(x * ln(x)) ^ 2".Parse().AssertSimpleStringRepresentation("ln(x + y) * ln(x * ln(x)) ^ 2");
+            "x! + factorial(y)".Parse().AssertSimpleStringRepresentation("x! + y!");
+            "x * y!".Parse().AssertSimpleStringRepresentation("x * y!");
+            "x ^ (y + z)!".Parse().AssertSimpleStringRepresentation("x ^ (y + z)!");
+            "(y ^ z)!".Parse().AssertSimpleStringRepresentation("(y ^ z)!");
+            "y! ^ z!".Parse().AssertSimpleStringRepresentation("y! ^ z!");
         }
         [Test]
         public void ConvolutionTest() {
@@ -261,6 +266,7 @@ namespace SharpAlg.Tests {
             "(x * y) ^ z * (y * x) ^ t".Parse().AssertSimpleStringRepresentation("(x * y) ^ (z + t)");
 
             "ln(y * x) + ln(x * y)".Parse().AssertSimpleStringRepresentation("2 * ln(y * x)");
+            "(y * x)! + (x * y)!".Parse().AssertSimpleStringRepresentation("2 * (y * x)!");
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

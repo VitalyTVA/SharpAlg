@@ -27,20 +27,25 @@ namespace SharpAlg.Native.Printer {
                 return false;
             }
             public bool Add(AddExpr multi) {
-                return priority >= OperationPriority.Add;
+                return ShouldWrap(OperationPriority.Add);
             }
             public bool Multiply(MultiplyExpr multi) {
                 if(IsMinusExpression(multi))
                     return true;
-                return priority >= OperationPriority.Multiply;
+                return ShouldWrap(OperationPriority.Multiply);
             }
             public bool Power(PowerExpr power) {
                 if(IsInverseExpression(power))
                     return priority >= OperationPriority.Multiply;
-                return priority == OperationPriority.Power;
+                return ShouldWrap(OperationPriority.Power);
             }
             public bool Function(FunctionExpr functionExpr) {
+                if(IsFactorial(functionExpr))
+                    return ShouldWrap(OperationPriority.Factorial);
                 return false;
+            }
+            bool ShouldWrap(OperationPriority exprPriority) {
+                return priority >= exprPriority;
             }
         }
         [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
@@ -107,6 +112,9 @@ namespace SharpAlg.Native.Printer {
         static bool IsInverseExpression(PowerExpr power) {
             return Expr.MinusOne.ExprEquals(power.Right);
         }
+        static bool IsFactorial(FunctionExpr functionExpr) {
+            return functionExpr.FunctionName == Expr.STR_Factorial;
+        }
         public static ExpressionPrinter Instance = new ExpressionPrinter();
         ExpressionPrinter() {
         }
@@ -149,6 +157,8 @@ namespace SharpAlg.Native.Printer {
             return parameter.ParameterName;
         }
         public string Function(FunctionExpr functionExpr) {
+            if(IsFactorial(functionExpr))
+                return string.Format("{0}!", WrapFromFactorial(functionExpr.Argument));
             return string.Format("{0}({1})", functionExpr.FunctionName, functionExpr.Argument.Visit(this));
         }
         static string GetBinaryOperationSymbol(BinaryOperationEx operation) {
@@ -183,6 +193,9 @@ namespace SharpAlg.Native.Printer {
         }
         string WrapFromPower(Expr expr) {
             return Wrap(expr, OperationPriority.Power, ExpressionOrder.Default);
+        }
+        string WrapFromFactorial(Expr expr) {
+            return Wrap(expr, OperationPriority.Factorial, ExpressionOrder.Default);
         }
         string Wrap(Expr expr, OperationPriority currentPriority, ExpressionOrder order) {
             bool wrap = expr.Visit(new ExpressionWrapperVisitor(currentPriority, order));
