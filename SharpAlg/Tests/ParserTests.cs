@@ -79,6 +79,10 @@ namespace SharpAlg.Tests {
                 .AssertValue(null, Expr.Function("ln", Expr.One));
             Parse("ln(x ^ 2 + y * z)")
                 .AssertValue(null, Expr.Function("ln", "x ^ 2 + y * z".Parse()));
+            Parse("ln()")
+                .AssertSingleSyntaxError(GetNumberExpectedMessage(4));
+            Parse("ln(1, 2)")
+                .AssertSingleSyntaxError("Error at line 1 column 5: \")\" expected\r\n");
         }
         [Test]
         public void ParenthesesTest() {

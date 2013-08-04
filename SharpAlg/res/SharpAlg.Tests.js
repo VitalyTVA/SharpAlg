@@ -626,6 +626,8 @@ var SharpAlg$Tests$ParserTests =
         {
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln(1)"), null , SharpAlg.Native.Expr.Function("ln", SharpAlg.Native.Expr.One), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln(x ^ 2 + y * z)"), null , SharpAlg.Native.Expr.Function("ln", SharpAlg.Native.ExpressionExtensions.Parse("x ^ 2 + y * z")), null);
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("ln()"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(4));
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("ln(1, 2)"), "Error at line 1 column 5: \")\" expected\r\n");
         },
         ParenthesesTest: function ()
         {
