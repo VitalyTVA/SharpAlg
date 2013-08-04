@@ -117,7 +117,7 @@ SharpAlg.Native.DefaultExpressionVisitor.prototype.Power = function (power)
 };
 SharpAlg.Native.DefaultExpressionVisitor.prototype.Function = function (functionExpr)
 {
-    throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    return this.GetDefault(functionExpr);
 };
 SharpAlg.Native.DiffExpressionVisitor = function (builder, parameterName)
 {

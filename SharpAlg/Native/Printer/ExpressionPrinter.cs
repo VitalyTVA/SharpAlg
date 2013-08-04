@@ -40,7 +40,7 @@ namespace SharpAlg.Native.Printer {
                 return priority == OperationPriority.Power;
             }
             public bool Function(FunctionExpr functionExpr) {
-                throw new NotImplementedException();
+                return false;
             }
         }
         [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]

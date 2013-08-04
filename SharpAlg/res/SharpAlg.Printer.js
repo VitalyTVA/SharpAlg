@@ -28,6 +28,19 @@ if (typeof ($Inherit) == 'undefined') {
 
 	}
 };
+if (typeof ($CreateAnonymousDelegate) == 'undefined') {
+    var $CreateAnonymousDelegate = function (target, func) {
+        if (target == null || func == null)
+            return func;
+        var delegate = function () {
+            return func.apply(target, arguments);
+        };
+        delegate.func = func;
+        delegate.target = target;
+        delegate.isDelegate = true;
+        return delegate;
+    }
+}
 if (typeof($CreateException)=='undefined') 
 {
     var $CreateException = function(ex, error) 
@@ -40,19 +53,6 @@ if (typeof($CreateException)=='undefined')
         for (var p in ex)
            error[p] = ex[p];
         return error;
-    }
-}
-if (typeof ($CreateAnonymousDelegate) == 'undefined') {
-    var $CreateAnonymousDelegate = function (target, func) {
-        if (target == null || func == null)
-            return func;
-        var delegate = function () {
-            return func.apply(target, arguments);
-        };
-        delegate.func = func;
-        delegate.target = target;
-        delegate.isDelegate = true;
-        return delegate;
     }
 }
 if (typeof(SharpAlg) == "undefined")
@@ -211,7 +211,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Pow
 };
 SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Function = function (functionExpr)
 {
-    throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    return false;
 };
 SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor = function ()
 {

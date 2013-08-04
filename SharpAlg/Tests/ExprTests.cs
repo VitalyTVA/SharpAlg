@@ -150,6 +150,9 @@ namespace SharpAlg.Tests {
 
             Expr.Multiply(new Expr[] { ExprTestHelper.AsConstant(2), Expr.Parameter("x"), Expr.Power(Expr.Multiply(Expr.Parameter("y"), Expr.Parameter("z")), Expr.MinusOne) }).AssertSimpleStringRepresentation("2 * x / (y * z)");
             Expr.Power(Expr.Multiply(ExprTestHelper.AsConstant(3), Expr.Parameter("x")), Expr.MinusOne).AssertSimpleStringRepresentation("1 / (3 * x)");
+
+            "x * ln(2)".Parse().AssertSimpleStringRepresentation("x * ln(2)");
+            "ln(x + y) * ln(x * ln(x)) ^ 2".Parse().AssertSimpleStringRepresentation("ln(x + y) * ln(x * ln(x)) ^ 2");
         }
         [Test]
         public void ConvolutionTest() {

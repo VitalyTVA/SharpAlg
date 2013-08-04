@@ -26,7 +26,7 @@ namespace SharpAlg.Native {
             return GetDefault(power);
         }
         public virtual T Function(FunctionExpr functionExpr) {
-            throw new NotImplementedException();
+            return GetDefault(functionExpr);
         }
         protected abstract T GetDefault(Expr expr);
     }

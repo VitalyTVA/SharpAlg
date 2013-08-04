@@ -301,6 +301,8 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(- x * t) ^ z"), "(-x * t) ^ z");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr([SharpAlg.Tests.ExprTestHelper.AsConstant(2), SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("y"), SharpAlg.Native.Expr.Parameter("z")), SharpAlg.Native.Expr.MinusOne)]), "2 * x / (y * z)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Tests.ExprTestHelper.AsConstant(3), SharpAlg.Native.Expr.Parameter("x")), SharpAlg.Native.Expr.MinusOne), "1 / (3 * x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x * ln(2)"), "x * ln(2)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(x + y) * ln(x * ln(x)) ^ 2"), "ln(x + y) * ln(x * ln(x)) ^ 2");
         },
         ConvolutionTest: function ()
         {
