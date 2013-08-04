@@ -149,7 +149,7 @@ namespace SharpAlg.Native.Printer {
             return parameter.ParameterName;
         }
         public string Function(FunctionExpr functionExpr) {
-            throw new NotImplementedException();
+            return string.Format("{0}({1})", functionExpr.FunctionName, functionExpr.Argument.Visit(this));
         }
         static string GetBinaryOperationSymbol(BinaryOperationEx operation) {
             switch(operation) {

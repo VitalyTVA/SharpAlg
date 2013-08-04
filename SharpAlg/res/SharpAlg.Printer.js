@@ -124,7 +124,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Parameter = function (parame
 };
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Function = function (functionExpr)
 {
-    throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    return System.String.Format$$String$$Object$$Object("{0}({1})", functionExpr.get_FunctionName(), functionExpr.get_Argument().Visit$1(System.String.ctor, this));
 };
 SharpAlg.Native.Printer.ExpressionPrinter.GetBinaryOperationSymbol = function (operation)
 {

@@ -72,9 +72,8 @@ Terminal<out Expr expr>							(. expr = null; .)
 FunctionCall<out Expr expr>						(. string name; Expr arg = null; .)
 = 
 	identifier									(. name = t.val; .)
-	{
-	'('AdditiveExpression<out arg>')'			
-	}											(. expr = arg != null ? (Expr)Expr.Function(name, arg) : Expr.Parameter(name); .)
+	{ '('AdditiveExpression<out arg>')' }											
+												(. expr = arg != null ? (Expr)Expr.Function(name, arg) : Expr.Parameter(name); .)
 .
 
 END SharpAlg.
