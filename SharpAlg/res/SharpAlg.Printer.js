@@ -129,8 +129,8 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Parameter = function (parame
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Function = function (functionExpr)
 {
     if (SharpAlg.Native.Printer.ExpressionPrinter.IsFactorial(functionExpr))
-        return System.String.Format$$String$$Object("{0}!", this.WrapFromFactorial(functionExpr.get_Argument()));
-    return System.String.Format$$String$$Object$$Object("{0}({1})", functionExpr.get_FunctionName(), functionExpr.get_Argument().Visit$1(System.String.ctor, this));
+        return System.String.Format$$String$$Object("{0}!", this.WrapFromFactorial(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Arguments())));
+    return System.String.Format$$String$$Object$$Object("{0}({1})", functionExpr.get_FunctionName(), System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Arguments()).Visit$1(System.String.ctor, this));
 };
 SharpAlg.Native.Printer.ExpressionPrinter.GetBinaryOperationSymbol = function (operation)
 {

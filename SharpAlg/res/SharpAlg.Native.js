@@ -267,13 +267,17 @@ var SharpAlg$Native$Expr =
         {
             return SharpAlg.Native.Expr.Power(expr, SharpAlg.Native.Expr.MinusOne);
         },
-        Function: function (functionName, argument)
+        Function$$String$$Expr: function (functionName, argument)
+        {
+            return SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr(functionName, [argument]);
+        },
+        Function$$String$$IEnumerable$1$Expr: function (functionName, argument)
         {
             return new SharpAlg.Native.FunctionExpr.ctor(functionName, argument);
         },
         Factorial: function (argument)
         {
-            return new SharpAlg.Native.FunctionExpr.ctor("factorial", argument);
+            return SharpAlg.Native.Expr.Function$$String$$Expr("factorial", argument);
         }
     },
     assemblyName: "SharpAlg",
@@ -507,12 +511,12 @@ var SharpAlg$Native$FunctionExpr =
     Kind: "Class",
     definition:
     {
-        ctor: function (functionName, argument)
+        ctor: function (functionName, arguments)
         {
             this._FunctionName = null;
-            this._Argument = null;
+            this._Arguments = null;
             SharpAlg.Native.Expr.ctor.call(this);
-            this.set_Argument(argument);
+            this.set_Arguments(arguments);
             this.set_FunctionName(functionName);
         },
         FunctionName$$: "System.String",
@@ -524,14 +528,14 @@ var SharpAlg$Native$FunctionExpr =
         {
             this._FunctionName = value;
         },
-        Argument$$: "SharpAlg.Native.Expr",
-        get_Argument: function ()
+        Arguments$$: "System.Collections.Generic.IEnumerable`1[[SharpAlg.Native.Expr]]",
+        get_Arguments: function ()
         {
-            return this._Argument;
+            return this._Arguments;
         },
-        set_Argument: function (value)
+        set_Arguments: function (value)
         {
-            this._Argument = value;
+            this._Arguments = value;
         },
         Visit$1: function (T, visitor)
         {
@@ -588,7 +592,7 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.FunctionExpr.ctor, functionExpr, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return x1.get_FunctionName() == x2.get_FunctionName() && this.EqualsCore(x1.get_Argument(), x2.get_Argument());
+                return x1.get_FunctionName() == x2.get_FunctionName() && this.EqualsCore(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, x1.get_Arguments()), System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, x2.get_Arguments()));
             }));
         },
         DoEqualityCheck$1: function (T, expr2, equalityCheck)
@@ -737,7 +741,7 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Function = function (functionExpr)
 {
     if (functionExpr.get_FunctionName() == "factorial")
     {
-        return SharpAlg.Native.Number.Factorial(functionExpr.get_Argument().Visit$1(SharpAlg.Native.Number.ctor, this));
+        return SharpAlg.Native.Number.Factorial(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Arguments()).Visit$1(SharpAlg.Native.Number.ctor, this));
     }
     throw $CreateException(new System.NotImplementedException.ctor(), new Error());
 };

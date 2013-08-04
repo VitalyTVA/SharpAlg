@@ -384,13 +384,17 @@ SharpAlg.Native.Parser.Parser.prototype.FunctionCall = function (expr)
         (function ()
         {
             arg = {Value: arg};
-            var $res = this.AdditiveExpression(arg);
+            var $res = this.ArgumentList(arg);
             arg = arg.Value;
             return $res;
         }).call(this);
         this.Expect(11);
     }
-    expr.Value = arg != null ? SharpAlg.Native.Expr.Function(name, arg) : SharpAlg.Native.Expr.Parameter(name);
+    expr.Value = arg != null ? SharpAlg.Native.Expr.Function$$String$$Expr(name, arg) : SharpAlg.Native.Expr.Parameter(name);
+};
+SharpAlg.Native.Parser.Parser.prototype.ArgumentList = function (arg)
+{
+    this.AdditiveExpression(arg);
 };
 SharpAlg.Native.Parser.Parser.prototype.Parse = function ()
 {

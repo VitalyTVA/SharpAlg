@@ -180,10 +180,14 @@ public class Parser {
 		name = t.val; 
 		while (la.kind == 10) {
 			Get();
-			AdditiveExpression(out arg);
+			ArgumentList(out arg);
 			Expect(11);
 		}
 		expr = arg != null ? (Expr)Expr.Function(name, arg) : Expr.Parameter(name); 
+	}
+
+	void ArgumentList(out Expr arg) {
+		AdditiveExpression(out arg);
 	}
 
 

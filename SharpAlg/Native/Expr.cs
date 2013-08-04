@@ -52,10 +52,13 @@ namespace SharpAlg.Native {
             return Power(expr, Expr.MinusOne);
         }
         public static FunctionExpr Function(string functionName, Expr argument) {
+            return Function(functionName, new Expr[] { argument });
+        }
+        public static FunctionExpr Function(string functionName, IEnumerable<Expr> argument) {
             return new FunctionExpr(functionName, argument);
         }
         public static FunctionExpr Factorial(Expr argument) {
-            return new FunctionExpr(STR_Factorial, argument);
+            return Function(STR_Factorial, argument);
         }
         internal abstract T Visit<T>(IExpressionVisitor<T> visitor);
 #if DEBUG
@@ -130,12 +133,12 @@ namespace SharpAlg.Native {
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class FunctionExpr : Expr {
-        internal FunctionExpr(string functionName, Expr argument) {
-            Argument = argument;
+        internal FunctionExpr(string functionName, IEnumerable<Expr> arguments) {
+            Arguments = arguments;
             FunctionName = functionName;
         }
         public string FunctionName { get; private set; }
-        public Expr Argument { get; private set; }
+        public IEnumerable<Expr> Arguments { get; private set; }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             return visitor.Function(this);
         }

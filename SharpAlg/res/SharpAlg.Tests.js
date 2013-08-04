@@ -128,31 +128,31 @@ var SharpAlg$Tests$ExprTests =
         },
         FunctionExprTest: function ()
         {
-            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.FunctionExpr.ctor, SharpAlg.Native.Expr.Function("ln", SharpAlg.Tests.ExprTestHelper.AsConstant(3)), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.FunctionExpr.ctor, SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Tests.ExprTestHelper.AsConstant(3)), $CreateAnonymousDelegate(this, function (x)
             {
                 return x.get_FunctionName();
             }), "ln"), "ln(3)"), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Function("ln", SharpAlg.Tests.ExprTestHelper.AsConstant(3)));
+                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Tests.ExprTestHelper.AsConstant(3)));
             })), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Function("ln", SharpAlg.Tests.ExprTestHelper.AsConstant(4)));
+                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Tests.ExprTestHelper.AsConstant(4)));
             })), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Function("sin", SharpAlg.Tests.ExprTestHelper.AsConstant(3)));
+                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Function$$String$$Expr("sin", SharpAlg.Tests.ExprTestHelper.AsConstant(3)));
             }));
-            SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Function("ln", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y"))), "ln(x * y)"), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y"))), "ln(x * y)"), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Function("ln", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y"))));
+                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y"))));
             })), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Function("ln", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("y"), SharpAlg.Native.Expr.Parameter("x"))));
+                return SharpAlg.Native.ExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("y"), SharpAlg.Native.Expr.Parameter("x"))));
             })), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.ExprEquivalent(x, SharpAlg.Native.Expr.Function("ln", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y"))));
+                return SharpAlg.Native.ExpressionExtensions.ExprEquivalent(x, SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.Expr.Parameter("y"))));
             })), $CreateAnonymousDelegate(this, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.ExprEquivalent(x, SharpAlg.Native.Expr.Function("ln", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("y"), SharpAlg.Native.Expr.Parameter("x"))));
+                return SharpAlg.Native.ExpressionExtensions.ExprEquivalent(x, SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.Parameter("y"), SharpAlg.Native.Expr.Parameter("x"))));
             }));
         },
         ConstantExprTest: function ()
@@ -637,8 +637,8 @@ var SharpAlg$Tests$ParserTests =
         },
         FunctionTest: function ()
         {
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln(1)"), null , SharpAlg.Native.Expr.Function("ln", SharpAlg.Native.Expr.One), null);
-            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln(x ^ 2 + y * z)"), null , SharpAlg.Native.Expr.Function("ln", SharpAlg.Native.ExpressionExtensions.Parse("x ^ 2 + y * z")), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln(1)"), null , SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.Expr.One), null);
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln(x ^ 2 + y * z)"), null , SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.ExpressionExtensions.Parse("x ^ 2 + y * z")), null);
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("ln()"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(4));
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("ln(1, 2)"), "Error at line 1 column 5: \")\" expected\r\n");
         },
