@@ -134,11 +134,11 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class FunctionExpr : Expr {
         internal FunctionExpr(string functionName, IEnumerable<Expr> arguments) {
-            Arguments = arguments;
+            Args = arguments;
             FunctionName = functionName;
         }
         public string FunctionName { get; private set; }
-        public IEnumerable<Expr> Arguments { get; private set; }
+        public IEnumerable<Expr> Args { get; private set; }
         internal override T Visit<T>(IExpressionVisitor<T> visitor) {
             return visitor.Function(this);
         }

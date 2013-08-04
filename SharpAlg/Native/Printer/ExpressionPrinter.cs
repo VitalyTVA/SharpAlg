@@ -158,11 +158,11 @@ namespace SharpAlg.Native.Printer {
         }
         public string Function(FunctionExpr functionExpr) {
             if(IsFactorial(functionExpr))
-                return string.Format("{0}!", WrapFromFactorial(functionExpr.Arguments.First()));
+                return string.Format("{0}!", WrapFromFactorial(functionExpr.Args.First()));
 
             var sb = new StringBuilder(functionExpr.FunctionName);
             sb.Append("(");
-            functionExpr.Arguments.Accumulate(x => {
+            functionExpr.Args.Accumulate(x => {
                 sb.Append(x.Visit(this));
             }, x => {
                 sb.Append(", ");

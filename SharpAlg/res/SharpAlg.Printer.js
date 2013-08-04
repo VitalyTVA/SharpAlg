@@ -129,10 +129,10 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Parameter = function (parame
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Function = function (functionExpr)
 {
     if (SharpAlg.Native.Printer.ExpressionPrinter.IsFactorial(functionExpr))
-        return System.String.Format$$String$$Object("{0}!", this.WrapFromFactorial(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Arguments())));
+        return System.String.Format$$String$$Object("{0}!", this.WrapFromFactorial(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args())));
     var sb = new System.Text.StringBuilder.ctor$$String(functionExpr.get_FunctionName());
     sb.Append$$String("(");
-    SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Arguments(), $CreateAnonymousDelegate(this, function (x)
+    SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
     {
         sb.Append$$String(x.Visit$1(System.String.ctor, this));
     }), $CreateAnonymousDelegate(this, function (x)

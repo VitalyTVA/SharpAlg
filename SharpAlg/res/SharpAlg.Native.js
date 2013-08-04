@@ -514,9 +514,9 @@ var SharpAlg$Native$FunctionExpr =
         ctor: function (functionName, arguments)
         {
             this._FunctionName = null;
-            this._Arguments = null;
+            this._Args = null;
             SharpAlg.Native.Expr.ctor.call(this);
-            this.set_Arguments(arguments);
+            this.set_Args(arguments);
             this.set_FunctionName(functionName);
         },
         FunctionName$$: "System.String",
@@ -528,14 +528,14 @@ var SharpAlg$Native$FunctionExpr =
         {
             this._FunctionName = value;
         },
-        Arguments$$: "System.Collections.Generic.IEnumerable`1[[SharpAlg.Native.Expr]]",
-        get_Arguments: function ()
+        Args$$: "System.Collections.Generic.IEnumerable`1[[SharpAlg.Native.Expr]]",
+        get_Args: function ()
         {
-            return this._Arguments;
+            return this._Args;
         },
-        set_Arguments: function (value)
+        set_Args: function (value)
         {
-            this._Arguments = value;
+            this._Args = value;
         },
         Visit$1: function (T, visitor)
         {
@@ -592,7 +592,7 @@ var SharpAlg$Native$ExpressionEqualityComparer =
         {
             return this.DoEqualityCheck$1(SharpAlg.Native.FunctionExpr.ctor, functionExpr, $CreateAnonymousDelegate(this, function (x1, x2)
             {
-                return x1.get_FunctionName() == x2.get_FunctionName() && SharpAlg.Native.FunctionalExtensions.EnumerableEqual$1(SharpAlg.Native.Expr.ctor, x1.get_Arguments(), x2.get_Arguments(), $CreateDelegate(this, this.EqualsCore));
+                return x1.get_FunctionName() == x2.get_FunctionName() && SharpAlg.Native.FunctionalExtensions.EnumerableEqual$1(SharpAlg.Native.Expr.ctor, x1.get_Args(), x2.get_Args(), $CreateDelegate(this, this.EqualsCore));
             }));
         },
         DoEqualityCheck$1: function (T, expr2, equalityCheck)
@@ -741,7 +741,7 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Function = function (functionExpr)
 {
     if (functionExpr.get_FunctionName() == "factorial")
     {
-        return SharpAlg.Native.Number.Factorial(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Arguments()).Visit$1(SharpAlg.Native.Number.ctor, this));
+        return SharpAlg.Native.Number.Factorial(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args()).Visit$1(SharpAlg.Native.Number.ctor, this));
     }
     throw $CreateException(new System.NotImplementedException.ctor(), new Error());
 };
