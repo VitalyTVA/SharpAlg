@@ -38,6 +38,9 @@ namespace SharpAlg.Native {
         public static Number operator ^(Number n1, Number n2) {
             return FromDouble(Math.Pow(n1.value, n2.value));
         }
+        public static Number Ln(Number n) {
+            return FromDouble(Math.Log(n.value)); //TODO make external
+        }
 
         public static readonly Number Zero;
         public static readonly Number One;
@@ -69,7 +72,7 @@ namespace SharpAlg.Native {
             return base.GetHashCode();
         }
         public override string ToString() {
-            return PlatformHelper.ToString(value);
+            return PlatformHelper.ToInvariantString(value);
         }
     }
 }

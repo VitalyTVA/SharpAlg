@@ -12,6 +12,7 @@ namespace SharpAlg.Native {
         public static Context CreateDefault() {
             Context context = new Context();
             context.Register(Functions.Factorial);
+            context.Register(Functions.Ln);
             return context;
 
         }

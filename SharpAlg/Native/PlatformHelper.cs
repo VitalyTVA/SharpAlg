@@ -9,7 +9,7 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public static class PlatformHelper {
         [JsMethod(Code = "return d.toString();")]
-        public static string ToString(double d) {
+        public static string ToInvariantString(this double d) {
             return d.ToString(CultureInfo.InvariantCulture);
         }
         [JsMethod(Code = "return System.Double.Parse$$String(s);")]

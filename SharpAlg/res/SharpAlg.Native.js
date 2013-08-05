@@ -70,6 +70,7 @@ var SharpAlg$Native$Context =
         {
             var context = new SharpAlg.Native.Context.ctor();
             context.Register$$Function(SharpAlg.Native.Functions.get_Factorial());
+            context.Register$$Function(SharpAlg.Native.Functions.get_Ln());
             return context;
         },
         cctor: function ()
@@ -918,13 +919,6 @@ var SharpAlg$Native$FactorialFunction =
 {
     fullname: "SharpAlg.Native.FactorialFunction",
     baseTypeName: "SharpAlg.Native.SingleArgumentFunction",
-    staticDefinition:
-    {
-        cctor: function ()
-        {
-            SharpAlg.Native.FactorialFunction.NameCore = "factorial";
-        }
-    },
     assemblyName: "SharpAlg",
     Kind: "Class",
     definition:
@@ -945,6 +939,25 @@ var SharpAlg$Native$FactorialFunction =
     }
 };
 JsTypes.push(SharpAlg$Native$FactorialFunction);
+var SharpAlg$Native$LnFunction =
+{
+    fullname: "SharpAlg.Native.LnFunction",
+    baseTypeName: "SharpAlg.Native.SingleArgumentFunction",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            SharpAlg.Native.SingleArgumentFunction.ctor.call(this, "ln");
+        },
+        Evaluate$$Number: function (arg)
+        {
+            return SharpAlg.Native.Number.Ln(arg);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$LnFunction);
 var SharpAlg$Native$Functions =
 {
     fullname: "SharpAlg.Native.Functions",
@@ -954,11 +967,17 @@ var SharpAlg$Native$Functions =
         cctor: function ()
         {
             SharpAlg.Native.Functions.factorial = null;
+            SharpAlg.Native.Functions.ln = null;
         },
         Factorial$$: "SharpAlg.Native.Function",
         get_Factorial: function ()
         {
             return (SharpAlg.Native.Functions.factorial != null ? SharpAlg.Native.Functions.factorial : (SharpAlg.Native.Functions.factorial = new SharpAlg.Native.FactorialFunction.ctor()));
+        },
+        Ln$$: "SharpAlg.Native.Function",
+        get_Ln: function ()
+        {
+            return (SharpAlg.Native.Functions.ln != null ? SharpAlg.Native.Functions.ln : (SharpAlg.Native.Functions.ln = new SharpAlg.Native.LnFunction.ctor()));
         }
     },
     assemblyName: "SharpAlg",
@@ -975,7 +994,7 @@ JsTypes.push(SharpAlg$Native$Functions);
 SharpAlg.Native.PlatformHelper = function ()
 {
 };
-SharpAlg.Native.PlatformHelper.ToString = function (d)
+SharpAlg.Native.PlatformHelper.ToInvariantString = function (d)
 {
     return d.toString();
 };

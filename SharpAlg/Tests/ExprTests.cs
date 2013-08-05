@@ -139,7 +139,10 @@ namespace SharpAlg.Tests {
             context.Register("x", "3".Parse());
             "CustomFunc(1, x + 2, 2)".Parse()
                 .IsEqual(x => x.Evaluate(context), 30.0.AsNumber());
-
+            "ln(1)".Parse()
+                .IsEqual(x => x.Evaluate(), 0.0.AsNumber());
+            "ln(3)".Parse()
+                .IsFloatEqual(x => x.Evaluate(), "1.098612");
         }
         [Test]
         public void ToStringTest() {
@@ -342,7 +345,15 @@ namespace SharpAlg.Tests {
             return Expr.Constant(AsNumber(constant));
         }
         public static Number AsNumber(this double constant) {
-            return SharpAlg.Native.Number.FromString(PlatformHelper.ToString(constant));
+            return SharpAlg.Native.Number.FromString(PlatformHelper.ToInvariantString(constant));
+        }
+        public static TInput IsFloatEqual<TInput>(this TInput obj, Func<TInput, object> valueEvaluator, string expected) {
+            int floatSignCount = expected.Length - expected.IndexOf(".");
+            return obj.IsEqual(x => {
+                var res = valueEvaluator(x).ToString();
+                res = res.Substring(0, res.IndexOf(".") + floatSignCount);
+                return res;
+            }, expected);
         }
     }
 }

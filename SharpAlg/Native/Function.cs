@@ -27,9 +27,8 @@ namespace SharpAlg.Native {
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class FactorialFunction : SingleArgumentFunction {
-        const string NameCore = "factorial";
         public FactorialFunction()
-            : base(NameCore) {
+            : base("factorial") {
         }
         protected override Number Evaluate(Number arg) {
             Number result = Number.One;
@@ -41,9 +40,22 @@ namespace SharpAlg.Native {
     }
 
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    public class LnFunction : SingleArgumentFunction {
+        public LnFunction()
+            : base("ln") {
+        }
+        protected override Number Evaluate(Number arg) {
+            return Number.Ln(arg);
+        }
+    }
+
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public static class Functions {
-        //public static readonly Function Ln = new LnFunction();
         static Function factorial;
         public static Function Factorial { get { return factorial ?? (factorial = new FactorialFunction()); } }
+
+        static Function ln;
+        public static Function Ln { get { return ln ?? (ln = new LnFunction()); } }
+
     }
 }

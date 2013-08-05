@@ -317,6 +317,14 @@ var SharpAlg$Tests$ExprTests =
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
             }), SharpAlg.Tests.ExprTestHelper.AsNumber(30));
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("ln(1)"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), SharpAlg.Tests.ExprTestHelper.AsNumber(0));
+            SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("ln(3)"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "1.098612");
         },
         ToStringTest: function ()
         {
@@ -540,7 +548,17 @@ var SharpAlg$Tests$ExprTestHelper =
         },
         AsNumber: function (constant)
         {
-            return SharpAlg.Native.Number.FromString(SharpAlg.Native.PlatformHelper.ToString(constant));
+            return SharpAlg.Native.Number.FromString(SharpAlg.Native.PlatformHelper.ToInvariantString(constant));
+        },
+        IsFloatEqual$1: function (TInput, obj, valueEvaluator, expected)
+        {
+            var floatSignCount = expected.length - expected.indexOf(".");
+            return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(TInput, obj, function (x)
+            {
+                var res = valueEvaluator(x).toString();
+                res = res.substr(0, res.indexOf(".") + floatSignCount);
+                return res;
+            }, expected);
         }
     },
     assemblyName: "SharpAlg",

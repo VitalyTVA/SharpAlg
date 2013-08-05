@@ -47,6 +47,10 @@ var SharpAlg$Native$Number =
         {
             return SharpAlg.Native.Number.FromDouble(System.Math.Pow(n1.value, n2.value));
         },
+        Ln: function (n)
+        {
+            return SharpAlg.Native.Number.FromDouble(System.Math.Log$$Double(n.value));
+        },
         cctor: function ()
         {
             SharpAlg.Native.Number.Zero = null;
@@ -88,7 +92,7 @@ var SharpAlg$Native$Number =
         },
         toString: function ()
         {
-            return SharpAlg.Native.PlatformHelper.ToString(this.value);
+            return SharpAlg.Native.PlatformHelper.ToInvariantString(this.value);
         }
     }
 };
