@@ -75,7 +75,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.IsInverseExpression = function (power)
 };
 SharpAlg.Native.Printer.ExpressionPrinter.IsFactorial = function (functionExpr)
 {
-    return functionExpr.get_FunctionName() == SharpAlg.Native.Functions.Factorial.get_Name();
+    return functionExpr.get_FunctionName() == SharpAlg.Native.Functions.get_Factorial().get_Name();
 };
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Constant = function (constant)
 {
@@ -84,7 +84,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Constant = function (constan
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Add = function (multi)
 {
     var sb = new System.Text.StringBuilder.ctor();
-    SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
+    SharpAlg.Native.FunctionalExtensions.Accumulate$1$$IEnumerable$1$$Action$1$$Action$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
     {
         sb.Append$$String(x.Visit$1(System.String.ctor, this));
     }), $CreateAnonymousDelegate(this, function (x)
@@ -103,7 +103,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Multiply = function (multi)
         return System.String.Format$$String$$Object("-{0}", exprText);
     }
     var sb = new System.Text.StringBuilder.ctor();
-    SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
+    SharpAlg.Native.FunctionalExtensions.Accumulate$1$$IEnumerable$1$$Action$1$$Action$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
     {
         sb.Append$$String(this.WrapFromMultiply(x, 0));
     }), $CreateAnonymousDelegate(this, function (x)
@@ -132,7 +132,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Function = function (functio
         return System.String.Format$$String$$Object("{0}!", this.WrapFromFactorial(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args())));
     var sb = new System.Text.StringBuilder.ctor$$String(functionExpr.get_FunctionName());
     sb.Append$$String("(");
-    SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
+    SharpAlg.Native.FunctionalExtensions.Accumulate$1$$IEnumerable$1$$Action$1$$Action$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
     {
         sb.Append$$String(x.Visit$1(System.String.ctor, this));
     }), $CreateAnonymousDelegate(this, function (x)

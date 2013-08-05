@@ -1775,6 +1775,23 @@ var System$NotImplementedException =
     }
 };
 JsTypes.push(System$NotImplementedException);
+var System$InvalidOperationException =
+{
+    fullname: "System.InvalidOperationException",
+    baseTypeName: "System.Exception",
+    assemblyName: "SharpKit.JsClr",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function () {
+            System.Exception.ctor$$String.call(this, "InvalidOperationException");
+        },
+        ctor$$String: function (s) {
+            System.Exception.ctor$$String.call(this, "InvalidOperationException: " + s);
+        }
+    }
+};
+JsTypes.push(System$InvalidOperationException);
 var System$SystemException =
 {
     fullname: "System.SystemException",

@@ -43,6 +43,7 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public static class Functions {
         //public static readonly Function Ln = new LnFunction();
-        public static readonly Function Factorial = new FactorialFunction();
+        static Function factorial;
+        public static Function Factorial { get { return factorial ?? (factorial = new FactorialFunction()); } }
     }
 }

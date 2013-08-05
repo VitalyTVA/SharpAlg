@@ -60,6 +60,25 @@ var SharpAlg$Native$Context =
 {
     fullname: "SharpAlg.Native.Context",
     baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        CreateEmpty: function ()
+        {
+            return new SharpAlg.Native.Context.ctor();
+        },
+        CreateDefault: function ()
+        {
+            var context = new SharpAlg.Native.Context.ctor();
+            context.Register$$Function(SharpAlg.Native.Functions.get_Factorial());
+            return context;
+        },
+        cctor: function ()
+        {
+            SharpAlg.Native.Context.Default = null;
+            SharpAlg.Native.Context.Default = SharpAlg.Native.Context.CreateDefault();
+            SharpAlg.Native.Context.Default.set_ReadOnly(true);
+        }
+    },
     assemblyName: "SharpAlg",
     Kind: "Class",
     definition:
@@ -67,10 +86,39 @@ var SharpAlg$Native$Context =
         ctor: function ()
         {
             this.names = new System.Collections.Generic.Dictionary$2.ctor(System.String.ctor, SharpAlg.Native.Expr.ctor);
+            this.functions = new System.Collections.Generic.Dictionary$2.ctor(System.String.ctor, SharpAlg.Native.Function.ctor);
+            this._ReadOnly = false;
             System.Object.ctor.call(this);
         },
-        Register: function (name, value)
+        ReadOnly$$: "System.Boolean",
+        get_ReadOnly: function ()
         {
+            return this._ReadOnly;
+        },
+        set_ReadOnly: function (value)
+        {
+            this._ReadOnly = value;
+        },
+        Register$$Function: function (func)
+        {
+            this.CheckReadonly();
+            this.functions.set_Item$$TKey(func.get_Name(), func);
+        },
+        GetFunction: function (name)
+        {
+            var result;
+            (function ()
+            {
+                result = {Value: result};
+                var $res = this.functions.TryGetValue(name, result);
+                result = result.Value;
+                return $res;
+            }).call(this);
+            return result;
+        },
+        Register$$String$$Expr: function (name, value)
+        {
+            this.CheckReadonly();
             this.names.set_Item$$TKey(name, value);
         },
         GetValue: function (name)
@@ -84,6 +132,11 @@ var SharpAlg$Native$Context =
                 return $res;
             }).call(this);
             return result;
+        },
+        CheckReadonly: function ()
+        {
+            if (this.get_ReadOnly())
+                throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
         }
     }
 };
@@ -157,7 +210,7 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Parameter = function (parameter)
 SharpAlg.Native.DiffExpressionVisitor.prototype.Add = function (multi)
 {
     var result = null;
-    SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
+    SharpAlg.Native.FunctionalExtensions.Accumulate$1$$IEnumerable$1$$Action$1$$Action$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
     {
         result = x.Visit$1(SharpAlg.Native.Expr.ctor, this);
     }), $CreateAnonymousDelegate(this, function (x)
@@ -276,7 +329,7 @@ var SharpAlg$Native$Expr =
         },
         Factorial: function (argument)
         {
-            return SharpAlg.Native.Expr.Function$$String$$Expr(SharpAlg.Native.Functions.Factorial.get_Name(), argument);
+            return SharpAlg.Native.Expr.Function$$String$$Expr(SharpAlg.Native.Functions.get_Factorial().get_Name(), argument);
         }
     },
     assemblyName: "SharpAlg",
@@ -676,7 +729,7 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Multiply = function (multi)
 SharpAlg.Native.ExpressionEvaluator.prototype.EvaluateMulti = function (multi, evaluator)
 {
     var result = SharpAlg.Native.Number.Zero;
-    SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
+    SharpAlg.Native.FunctionalExtensions.Accumulate$1$$IEnumerable$1$$Action$1$$Action$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
     {
         result = x.Visit$1(SharpAlg.Native.Number.ctor, this);
     }), $CreateAnonymousDelegate(this, function (x)
@@ -738,9 +791,10 @@ SharpAlg.Native.ExpressionEvaluator.IsInvertedOperation = function (operation)
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Function = function (functionExpr)
 {
-    if (functionExpr.get_FunctionName() == SharpAlg.Native.Functions.Factorial.get_Name())
+    var func = this.context.GetFunction(functionExpr.get_FunctionName());
+    if (func != null)
     {
-        return SharpAlg.Native.Functions.Factorial.Evaluate(System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Number.ctor, functionExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
+        return func.Evaluate(System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Number.ctor, functionExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
         {
             return x.Visit$1(SharpAlg.Native.Number.ctor, this);
         })));
@@ -774,7 +828,7 @@ var SharpAlg$Native$ExpressionExtensions =
     {
         Evaluate: function (expr, context)
         {
-            return expr.Visit$1(SharpAlg.Native.Number.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : new SharpAlg.Native.Context.ctor())));
+            return expr.Visit$1(SharpAlg.Native.Number.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : SharpAlg.Native.Context.Default)));
         },
         Diff: function (expr, parameterName)
         {
@@ -915,7 +969,12 @@ var SharpAlg$Native$Functions =
     {
         cctor: function ()
         {
-            SharpAlg.Native.Functions.Factorial = new SharpAlg.Native.FactorialFunction.ctor();
+            SharpAlg.Native.Functions.factorial = null;
+        },
+        Factorial$$: "SharpAlg.Native.Function",
+        get_Factorial: function ()
+        {
+            return (SharpAlg.Native.Functions.factorial != null ? SharpAlg.Native.Functions.factorial : (SharpAlg.Native.Functions.factorial = new SharpAlg.Native.FactorialFunction.ctor()));
         }
     },
     assemblyName: "SharpAlg",
@@ -1018,7 +1077,7 @@ var SharpAlg$Native$FunctionalExtensions =
                 throw $CreateException(new System.IndexOutOfRangeException.ctor$$String("index"), new Error());
             return $yield;
         },
-        Accumulate$1: function (T, source, init, next)
+        Accumulate$1$$IEnumerable$1$$Action$1$$Action$1: function (T, source, init, next)
         {
             var enumerator = source.GetEnumerator();
             if (enumerator.MoveNext())
@@ -1029,6 +1088,15 @@ var SharpAlg$Native$FunctionalExtensions =
             {
                 next(enumerator.get_Current());
             }
+        },
+        Accumulate$2$$IEnumerable$1$$TAccumulate$$Func$3: function (TSource, TAccumulate, source, seed, func)
+        {
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext())
+            {
+                seed = func(seed, enumerator.get_Current());
+            }
+            return seed;
         },
         ForEach$1: function (T, source, action)
         {

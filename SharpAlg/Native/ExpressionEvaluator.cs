@@ -67,10 +67,11 @@ namespace SharpAlg.Native {
             return false;
         }
         public Number Function(FunctionExpr functionExpr) {
-            if(functionExpr.FunctionName == Functions.Factorial.Name) {
-                return Functions.Factorial.Evaluate(functionExpr.Args.Select(x => x.Visit(this)));
+            var func = context.GetFunction(functionExpr.FunctionName);
+            if(func != null) {
+                return func.Evaluate(functionExpr.Args.Select(x => x.Visit(this)));
             }
-            throw new NotImplementedException();
+            throw new NotImplementedException(); //TODO correct exception
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]

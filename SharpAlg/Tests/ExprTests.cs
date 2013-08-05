@@ -11,6 +11,37 @@ namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     [TestFixture]
     public class ExprTests {
+        [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
+        class CustomFunction : Function {
+            public CustomFunction()
+                : base("CustomFunc") {
+            }
+            public override Number Evaluate(IEnumerable<Number> args) {
+                Number result = args.Accumulate(Number.Zero, (res, x) => res + x * x);
+                return result;
+            }
+        }
+        [Test]
+        public void ContextTest() {
+            var context = Context.CreateEmpty();
+            CustomFunction func = new CustomFunction();
+
+            Context.CreateEmpty()
+                .Do(x => x.Register(func))
+                .Do(x => x.Register("x", "3".Parse()))
+                .IsEqual(x => x.GetFunction("CustomFunc"), func)
+                .IsTrue(x => x.GetValue("x").ExprEquals("3".Parse()));
+
+            Context.CreateDefault()
+                .Do(x => x.Register(func))
+                .Do(x => x.Register("x", "3".Parse()))
+                .IsEqual(x => x.GetFunction(Functions.Factorial.Name), Functions.Factorial)
+                .IsEqual(x => x.GetFunction("CustomFunc"), func)
+                .IsTrue(x => x.GetValue("x").ExprEquals("3".Parse()));
+            Context.Default
+                .Fails(x => x.Register(func), typeof(InvalidOperationException))
+                .Fails(x => x.Register("x", "3".Parse()), typeof(InvalidOperationException));
+        }
         [Test]
         public void ParameterExprTest() {
             Expr.Parameter("x")
@@ -84,7 +115,7 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void ParameterExprEvaluationTest() {
-            var context = new Context();
+            var context = Context.CreateDefault();
             context.Register("x", ExprTestHelper.AsConstant(9));
             context.Register("y", ExprTestHelper.AsConstant(13));
             Expr.Parameter("x")
@@ -100,6 +131,15 @@ namespace SharpAlg.Tests {
             context.Register("y", Expr.Multiply(Expr.Parameter("x"), Expr.Parameter("x")));
             Expr.Add(Expr.Parameter("x"), Expr.Parameter("y"))
                 .IsEqual(x => x.Evaluate(context), ExprTestHelper.AsNumber(90));
+        }
+        [Test]
+        public void FunctionEvaluationTest() {
+            var context = Context.CreateEmpty();
+            context.Register(new CustomFunction());
+            context.Register("x", "3".Parse());
+            "CustomFunc(1, x + 2, 2)".Parse()
+                .IsEqual(x => x.Evaluate(context), 30.0.AsNumber());
+
         }
         [Test]
         public void ToStringTest() {
@@ -292,8 +332,8 @@ namespace SharpAlg.Tests {
             return expr;
         }
         public static Func<double, Number> AsEvaluator(this Expr expr) {
-            return x => { 
-                Context context = new Context();
+            return x => {
+                Context context = Context.CreateEmpty();
                 context.Register("x", ExprTestHelper.AsConstant(x));
                 return expr.Evaluate(context);
             };
