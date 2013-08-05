@@ -60,13 +60,9 @@ SharpAlg.Native.Parser.Buffer.prototype.Read = function ()
     if (this.get_Pos() < this.source.length)
     {
         this.set_Pos(this.get_Pos() + 1);
-        return SharpAlg.Native.Parser.Buffer.GetIntFromChar(this.source.charAt(this.get_Pos() - 1));
+        return SharpAlg.Native.PlatformHelper.CharToInt(this.source.charAt(this.get_Pos() - 1));
     }
     return 65536;
-};
-SharpAlg.Native.Parser.Buffer.GetIntFromChar = function (c)
-{
-    return c.charCodeAt();
 };
 SharpAlg.Native.Parser.Buffer.prototype.Peek = function ()
 {

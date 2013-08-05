@@ -34,9 +34,7 @@ namespace SharpAlg.Native {
             functions[func.Name] = func;
         }
         public Function GetFunction(string name) {
-            Function result;
-            functions.TryGetValue(name, out result); //TODO duplicated TryGetValue
-            return result;
+            return functions.TryGetValue(name); ;
         }
 
         public void Register(string name, Expr value) {
@@ -44,9 +42,7 @@ namespace SharpAlg.Native {
             names[name] = value;
         }
         public Expr GetValue(string name) {
-            Expr result;
-            names.TryGetValue(name, out result);
-            return result;
+            return names.TryGetValue(name);
         }
         void CheckReadonly() {
             if(ReadOnly)

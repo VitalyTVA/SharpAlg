@@ -491,7 +491,7 @@ var SharpAlg$Tests$ExprTests$CustomFunction =
         },
         Evaluate: function (args)
         {
-            var result = SharpAlg.Native.FunctionalExtensions.Accumulate$2$$IEnumerable$1$$TAccumulate$$Func$3(SharpAlg.Native.Number.ctor, SharpAlg.Native.Number.ctor, args, SharpAlg.Native.Number.Zero, $CreateAnonymousDelegate(this, function (res, x)
+            var result = System.Linq.Enumerable.Aggregate$2$$IEnumerable$1$$TAccumulate$$Func$3(SharpAlg.Native.Number.ctor, SharpAlg.Native.Number.ctor, args, SharpAlg.Native.Number.Zero, $CreateAnonymousDelegate(this, function (res, x)
             {
                 return SharpAlg.Native.Number.op_Addition(res, SharpAlg.Native.Number.op_Multiply(x, x));
             }));

@@ -106,15 +106,7 @@ var SharpAlg$Native$Context =
         },
         GetFunction: function (name)
         {
-            var result;
-            (function ()
-            {
-                result = {Value: result};
-                var $res = this.functions.TryGetValue(name, result);
-                result = result.Value;
-                return $res;
-            }).call(this);
-            return result;
+            return SharpAlg.Native.FunctionalExtensions.TryGetValue$2(System.String.ctor, SharpAlg.Native.Function.ctor, this.functions, name);
         },
         Register$$String$$Expr: function (name, value)
         {
@@ -123,15 +115,7 @@ var SharpAlg$Native$Context =
         },
         GetValue: function (name)
         {
-            var result;
-            (function ()
-            {
-                result = {Value: result};
-                var $res = this.names.TryGetValue(name, result);
-                result = result.Value;
-                return $res;
-            }).call(this);
-            return result;
+            return SharpAlg.Native.FunctionalExtensions.TryGetValue$2(System.String.ctor, SharpAlg.Native.Expr.ctor, this.names, name);
         },
         CheckReadonly: function ()
         {
@@ -210,7 +194,7 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Parameter = function (parameter)
 SharpAlg.Native.DiffExpressionVisitor.prototype.Add = function (multi)
 {
     var result = null;
-    SharpAlg.Native.FunctionalExtensions.Accumulate$1$$IEnumerable$1$$Action$1$$Action$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
+    SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
     {
         result = x.Visit$1(SharpAlg.Native.Expr.ctor, this);
     }), $CreateAnonymousDelegate(this, function (x)
@@ -729,7 +713,7 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Multiply = function (multi)
 SharpAlg.Native.ExpressionEvaluator.prototype.EvaluateMulti = function (multi, evaluator)
 {
     var result = SharpAlg.Native.Number.Zero;
-    SharpAlg.Native.FunctionalExtensions.Accumulate$1$$IEnumerable$1$$Action$1$$Action$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
+    SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
     {
         result = x.Visit$1(SharpAlg.Native.Number.ctor, this);
     }), $CreateAnonymousDelegate(this, function (x)
@@ -1003,6 +987,10 @@ SharpAlg.Native.PlatformHelper.IntToChar = function (n)
 {
     return String.fromCharCode(n);
 };
+SharpAlg.Native.PlatformHelper.CharToInt = function (c)
+{
+    return c.charCodeAt();
+};
 var SharpAlg$Native$FunctionalExtensions =
 {
     fullname: "SharpAlg.Native.FunctionalExtensions",
@@ -1077,7 +1065,7 @@ var SharpAlg$Native$FunctionalExtensions =
                 throw $CreateException(new System.IndexOutOfRangeException.ctor$$String("index"), new Error());
             return $yield;
         },
-        Accumulate$1$$IEnumerable$1$$Action$1$$Action$1: function (T, source, init, next)
+        Accumulate$1: function (T, source, init, next)
         {
             var enumerator = source.GetEnumerator();
             if (enumerator.MoveNext())
@@ -1088,15 +1076,6 @@ var SharpAlg$Native$FunctionalExtensions =
             {
                 next(enumerator.get_Current());
             }
-        },
-        Accumulate$2$$IEnumerable$1$$TAccumulate$$Func$3: function (TSource, TAccumulate, source, seed, func)
-        {
-            var enumerator = source.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                seed = func(seed, enumerator.get_Current());
-            }
-            return seed;
         },
         ForEach$1: function (T, source, action)
         {
@@ -1109,6 +1088,19 @@ var SharpAlg$Native$FunctionalExtensions =
         Tail$1: function (T, source)
         {
             return System.Linq.Enumerable.Skip$1(T, source, 1);
+        },
+        TryGetValue$2: function (TKey, TVal, source, key)
+        {
+            var result;
+            if ((function ()
+            {
+                result = {Value: result};
+                var $res = source.TryGetValue(key, result);
+                result = result.Value;
+                return $res;
+            })())
+                return result;
+            return null;
         }
     },
     assemblyName: "SharpAlg",

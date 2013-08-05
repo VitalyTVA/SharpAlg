@@ -44,7 +44,7 @@ namespace SharpAlg.Native {
         }
         bool CompareMultiExpr<T>(T multi) where T : MultiExpr {
             return DoEqualityCheck<T>(multi, (x1, x2) => {
-                return GetArgsEqualComparer()(x1.Args, x2.Args);  //TODO singleton
+                return GetArgsEqualComparer()(x1.Args, x2.Args);
             });
         }
     }

@@ -20,5 +20,9 @@ namespace SharpAlg.Native {
         public static char IntToChar(int n) {
             return (char)n;
         }
+        [JsMethod(Code = "return c.charCodeAt();")]
+        public static int CharToInt(char c) {
+            return c;
+        }
     }
 }

@@ -17,14 +17,9 @@ namespace SharpAlg.Native.Parser {
         public virtual int Read() {
             if(Pos < source.Length) {
                 Pos++;
-                return GetIntFromChar(source[Pos - 1]);
+                return PlatformHelper.CharToInt(source[Pos - 1]);
             }
             return EOF;
-        }
-        //TODO move to compatibility layer
-        [JsMethod(Code = "return c.charCodeAt();")]
-        static int GetIntFromChar(char c) {
-            return c;
         }
         public int Peek() {
             int curPos = Pos;

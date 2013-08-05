@@ -81,13 +81,6 @@ namespace SharpAlg.Native {
                 next(enumerator.Current);
             }
         }
-        public static TAccumulate Accumulate<TSource, TAccumulate>(this IEnumerable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> func) { //TODO implement in jsclr
-            var enumerator = source.GetEnumerator();
-            while(enumerator.MoveNext()) {
-                seed = func(seed, enumerator.Current);
-            }
-            return seed;
-        }
         public static void ForEach<T>(this IEnumerable<T> source, Action<T> action) {
             var enumerator = source.GetEnumerator();
             while(enumerator.MoveNext()) {
@@ -99,6 +92,12 @@ namespace SharpAlg.Native {
         //}
         public static IEnumerable<T> Tail<T>(this IEnumerable<T> source) {
             return source.Skip(1);
+        }
+        public static TVal TryGetValue<TKey, TVal>(this IDictionary<TKey, TVal> source, TKey key) where TVal : class {
+            TVal result;
+            if(source.TryGetValue(key, out result))
+                return result;
+            return null;
         }
     }
 }

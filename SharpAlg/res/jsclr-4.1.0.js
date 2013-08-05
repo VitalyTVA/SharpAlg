@@ -4428,6 +4428,13 @@ var System$Linq$Enumerable =
             }
             return local;
         },
+        Aggregate$2$$IEnumerable$1$$TAccumulate$$Func$3: function (TSource, TAccumulate, source, seed, func) {
+            var enumerator = source.GetEnumerator();
+            while (enumerator.MoveNext()) {
+                seed = func(seed, enumerator.get_Current());
+            }
+            return seed;
+        },
         Where$1$$IEnumerable$1$$Func$2: function (TSource, source, predicate)
         {
             if (source == null)

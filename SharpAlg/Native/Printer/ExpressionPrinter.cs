@@ -113,7 +113,7 @@ namespace SharpAlg.Native.Printer {
             return Expr.MinusOne.ExprEquals(power.Right);
         }
         static bool IsFactorial(FunctionExpr functionExpr) {
-            return functionExpr.FunctionName == Functions.Factorial.Name; //TODO print with Context - factorial may be another function
+            return functionExpr.FunctionName == Functions.Factorial.Name;
         }
         public static ExpressionPrinter Instance = new ExpressionPrinter();
         ExpressionPrinter() {
