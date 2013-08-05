@@ -49,11 +49,13 @@ namespace SharpAlg.Native {
             return builder.Add(expr1, expr2);
         }
         public Expr Power(PowerExpr power) {
-            if(!(power.Right is ConstantExpr))
-                throw new NotImplementedException(); //TODO when ln() is ready
-            return Expr.Multiply(power.Right, builder.Multiply(power.Left.Visit(this), builder.Power(power.Left, builder.Subtract(power.Right, Expr.One)))); //TODO convolution when ln() is ready
+            Expr sum1 = builder.Multiply(power.Right.Visit(this), Expr.Ln(power.Left));
+            Expr sum2 = builder.Divide(builder.Multiply(power.Right, power.Left.Visit(this)), power.Left);
+            Expr sum = builder.Add(sum1, sum2);
+            return builder.Multiply(power, sum);
         }
         public Expr Function(FunctionExpr functionExpr) {
+            //TODO function differentiation
             throw new NotImplementedException(); //TODO factorial differentiation
         }
     }

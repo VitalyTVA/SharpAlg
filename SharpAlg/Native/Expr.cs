@@ -59,6 +59,9 @@ namespace SharpAlg.Native {
         public static FunctionExpr Factorial(Expr argument) {
             return Function(Functions.Factorial.Name, argument);
         }
+        public static FunctionExpr Ln(Expr argument) {
+            return Function(Functions.Ln.Name, argument);
+        }
         internal abstract T Visit<T>(IExpressionVisitor<T> visitor);
 #if DEBUG
         public string Print { get { return this.Print(); } }

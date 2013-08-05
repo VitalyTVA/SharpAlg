@@ -213,9 +213,10 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Multiply = function (multi)
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Power = function (power)
 {
-    if (!(Is(power.get_Right(), SharpAlg.Native.ConstantExpr.ctor)))
-        throw $CreateException(new System.NotImplementedException.ctor(), new Error());
-    return SharpAlg.Native.Expr.Multiply$$Expr$$Expr(power.get_Right(), this.builder.Multiply(power.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this), this.builder.Power(power.get_Left(), this.builder.Subtract(power.get_Right(), SharpAlg.Native.Expr.One))));
+    var sum1 = this.builder.Multiply(power.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), SharpAlg.Native.Expr.Ln(power.get_Left()));
+    var sum2 = this.builder.Divide(this.builder.Multiply(power.get_Right(), power.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this)), power.get_Left());
+    var sum = this.builder.Add(sum1, sum2);
+    return this.builder.Multiply(power, sum);
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Function = function (functionExpr)
 {
@@ -315,6 +316,10 @@ var SharpAlg$Native$Expr =
         Factorial: function (argument)
         {
             return SharpAlg.Native.Expr.Function$$String$$Expr(SharpAlg.Native.Functions.get_Factorial().get_Name(), argument);
+        },
+        Ln: function (argument)
+        {
+            return SharpAlg.Native.Expr.Function$$String$$Expr(SharpAlg.Native.Functions.get_Ln().get_Name(), argument);
         }
     },
     assemblyName: "SharpAlg",
