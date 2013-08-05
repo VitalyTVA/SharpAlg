@@ -33,7 +33,15 @@ function RunTest(jQuery, fixture, method)
 {
     var status = "OK";
     var success = true;
-    method.Invoke$$Object$$Object$Array(fixture, null);
+    try
+    {
+        method.Invoke$$Object$$Object$Array(fixture, null);
+    }
+    catch (e)
+    {
+        status = "Failure: " + e;
+        success = false;
+    }
     jQuery.append(fixture.GetType().get_Name() + "." + method.get_Name() + ": " + status + "<br/>");
     return success;
 };

@@ -92,6 +92,7 @@
     <Compile Include="Native\ExpressionEvaluator.cs" />
     <Compile Include="Native\ExpressionExtensions.cs" />
     <Compile Include="Native\ExpressionFactory.cs" />
+    <Compile Include="Native\Function.cs" />
     <Compile Include="Native\PlatformHelper.cs" />
     <Compile Include="Native\Printer\ExpressionPrinter.cs" />
     <Compile Include="Native\FunctionalExtensions.cs" />

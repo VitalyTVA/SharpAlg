@@ -41,12 +41,12 @@ namespace SharpAlg {
         static bool RunTest(jQuery jQuery, object fixture, MethodInfo method) {
             string status = "OK";
             bool success = true;
-            //try {
+            try {
                 method.Invoke(fixture, null);
-            //} catch(Exception e) {
-            //    status = "Failure: " + e;
-            //    success = false;
-            //}
+            } catch(Exception e) {
+                status = "Failure: " + e;
+                success = false;
+            }
             jQuery.append(fixture.GetType().Name + "." + method.Name + ": " + status + "<br/>");
             return success;
         }

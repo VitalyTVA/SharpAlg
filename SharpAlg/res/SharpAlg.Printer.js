@@ -75,7 +75,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.IsInverseExpression = function (power)
 };
 SharpAlg.Native.Printer.ExpressionPrinter.IsFactorial = function (functionExpr)
 {
-    return functionExpr.get_FunctionName() == "factorial";
+    return functionExpr.get_FunctionName() == SharpAlg.Native.Functions.Factorial.get_Name();
 };
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Constant = function (constant)
 {

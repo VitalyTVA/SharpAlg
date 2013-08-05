@@ -8,7 +8,6 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     [DebuggerDisplay("Expr: {Print}")]
     public abstract class Expr {
-        public const string STR_Factorial = "factorial";
         public static readonly ConstantExpr Zero = new ConstantExpr(Number.Zero);
         public static readonly ConstantExpr One = new ConstantExpr(Number.One);
         public static readonly ConstantExpr MinusOne = new ConstantExpr(Number.MinusOne);
@@ -58,7 +57,7 @@ namespace SharpAlg.Native {
             return new FunctionExpr(functionName, argument);
         }
         public static FunctionExpr Factorial(Expr argument) {
-            return Function(STR_Factorial, argument);
+            return Function(Functions.Factorial.Name, argument);
         }
         internal abstract T Visit<T>(IExpressionVisitor<T> visitor);
 #if DEBUG

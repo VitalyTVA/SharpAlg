@@ -210,7 +210,6 @@ var SharpAlg$Native$Expr =
     {
         cctor: function ()
         {
-            SharpAlg.Native.Expr.STR_Factorial = "factorial";
             SharpAlg.Native.Expr.Zero = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.Zero);
             SharpAlg.Native.Expr.One = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.One);
             SharpAlg.Native.Expr.MinusOne = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.MinusOne);
@@ -277,7 +276,7 @@ var SharpAlg$Native$Expr =
         },
         Factorial: function (argument)
         {
-            return SharpAlg.Native.Expr.Function$$String$$Expr("factorial", argument);
+            return SharpAlg.Native.Expr.Function$$String$$Expr(SharpAlg.Native.Functions.Factorial.get_Name(), argument);
         }
     },
     assemblyName: "SharpAlg",
@@ -739,9 +738,12 @@ SharpAlg.Native.ExpressionEvaluator.IsInvertedOperation = function (operation)
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Function = function (functionExpr)
 {
-    if (functionExpr.get_FunctionName() == "factorial")
+    if (functionExpr.get_FunctionName() == SharpAlg.Native.Functions.Factorial.get_Name())
     {
-        return SharpAlg.Native.Number.Factorial(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args()).Visit$1(SharpAlg.Native.Number.ctor, this));
+        return SharpAlg.Native.Functions.Factorial.Evaluate(System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Number.ctor, functionExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
+        {
+            return x.Visit$1(SharpAlg.Native.Number.ctor, this);
+        })));
     }
     throw $CreateException(new System.NotImplementedException.ctor(), new Error());
 };
@@ -827,6 +829,106 @@ var SharpAlg$Native$ExpressionExtensions =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionExtensions);
+var SharpAlg$Native$Function =
+{
+    fullname: "SharpAlg.Native.Function",
+    baseTypeName: "System.Object",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (name)
+        {
+            this._Name = null;
+            System.Object.ctor.call(this);
+            this.set_Name(name);
+        },
+        Name$$: "System.String",
+        get_Name: function ()
+        {
+            return this._Name;
+        },
+        set_Name: function (value)
+        {
+            this._Name = value;
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$Function);
+var SharpAlg$Native$SingleArgumentFunction =
+{
+    fullname: "SharpAlg.Native.SingleArgumentFunction",
+    baseTypeName: "SharpAlg.Native.Function",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (name)
+        {
+            SharpAlg.Native.Function.ctor.call(this, name);
+        },
+        Evaluate: function (args)
+        {
+            if (System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Number.ctor, args) != 1)
+                throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
+            return this.Evaluate$$Number(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Number.ctor, args));
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$SingleArgumentFunction);
+var SharpAlg$Native$FactorialFunction =
+{
+    fullname: "SharpAlg.Native.FactorialFunction",
+    baseTypeName: "SharpAlg.Native.SingleArgumentFunction",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+            SharpAlg.Native.FactorialFunction.NameCore = "factorial";
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            SharpAlg.Native.SingleArgumentFunction.ctor.call(this, "factorial");
+        },
+        Evaluate$$Number: function (arg)
+        {
+            var result = SharpAlg.Native.Number.One;
+            for (var i = SharpAlg.Native.Number.Two; SharpAlg.Native.Number.op_LessThanOrEqual(i, arg); i = SharpAlg.Native.Number.op_Addition(i, SharpAlg.Native.Number.One))
+            {
+                result = SharpAlg.Native.Number.op_Multiply(result, i);
+            }
+            return result;
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$FactorialFunction);
+var SharpAlg$Native$Functions =
+{
+    fullname: "SharpAlg.Native.Functions",
+    baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+            SharpAlg.Native.Functions.Factorial = new SharpAlg.Native.FactorialFunction.ctor();
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Object.ctor.call(this);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$Functions);
 SharpAlg.Native.PlatformHelper = function ()
 {
 };
