@@ -13,7 +13,7 @@ namespace SharpAlg.Native {
             return expr.Visit(new ExpressionEvaluator(context ?? Context.Default));
         }
         public static Expr Diff(this Expr expr, string parameterName = null) {
-            return expr.Visit(new DiffExpressionVisitor(ConvolutionExprBuilder.Instance, parameterName));
+            return expr.Visit(new DiffExpressionVisitor(ConvolutionExprBuilder.CreateDefault(), Context.Default, parameterName));
         }
         public static bool ExprEquals(this Expr expr1, Expr expr2) {
             return expr1.Visit(new ExpressionEqualityComparer(expr2));
@@ -24,15 +24,15 @@ namespace SharpAlg.Native {
         public static string Print(this Expr expr) {
             return expr.Visit(SharpAlg.Native.Printer.ExpressionPrinter.Instance);
         }
-        public static Expr Parse(this string expression) {
-            return GetExpression(ParseCore(expression, ConvolutionExprBuilder.Instance));
+        public static Expr Parse(this string expression, ExprBuilder builder = null) {
+            return GetExpression(ParseCore(expression, builder ?? ConvolutionExprBuilder.CreateDefault()));
         }
         internal static Expr GetExpression(Parser.Parser parser) {
             if(parser.errors.Count > 0)
                 throw new InvalidOperationException("String can not be parsed"); //TODO message
             return parser.Expr;
         }
-        internal static Parser.Parser ParseCore(string expression, ExprBuilder builder) {
+        internal static Parser.Parser ParseCore(this string expression, ExprBuilder builder) {
             Scanner scanner = new Scanner(expression);
             Parser.Parser parser = new Parser.Parser(scanner, builder);
             parser.Parse();

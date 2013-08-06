@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using SharpAlg;
 using SharpAlg.Native;
 using SharpKit.JavaScript;
+using SharpAlg.Native.Builder;
 
 namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
@@ -29,6 +30,10 @@ namespace SharpAlg.Tests {
 
             "(x * x) ^ 3".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 6, 6 * 2 * 2 * 2 * 2 * 2 });
             "(x * x) ^ (1 + 2)".Parse().Diff().AssertEvaluatedValues(new double[] { 0, 1, 2 }, new double[] { 0, 6, 6 * 2 * 2 * 2 * 2 * 2 });
+
+            "ln(x)".Parse().Diff().AssertSimpleStringRepresentation("1 / x");
+            "ln(x ^ 2 + 1)".Parse().Diff().AssertSimpleStringRepresentation("2 * x / (x ^ 2 + 1)");
+            "ln(x ^ 3)".Parse().Diff().AssertSimpleStringRepresentation("3 / x");
         }
         [Test]
         public void DiffSimplifyTest() {
@@ -64,6 +69,7 @@ namespace SharpAlg.Tests {
             "x^2 * y^3".Parse().Diff("y").AssertSimpleStringRepresentation("3 * x ^ 2 * y ^ 2");
             "x + y".Parse().Fails(x => x.Diff(), typeof(ExpressionDefferentiationException));
             "(x ^ 2 + x * y) ^ (x ^ 2)".Parse().Diff("x").AssertSimpleStringRepresentation("(x ^ 2 + x * y) ^ (x ^ 2) * (2 * x * ln(x ^ 2 + x * y) + x ^ 2 * (2 * x + y) / (x ^ 2 + x * y))");
+            "ln(x, x)".Parse(ConvolutionExprBuilder.CreateEmpty()).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));
         }
     }
 }

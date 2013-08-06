@@ -28,6 +28,20 @@ if (typeof ($Inherit) == 'undefined') {
 
 	}
 };
+if (typeof($CreateException)=='undefined') 
+{
+    var $CreateException = function(ex, error) 
+    {
+        if(error==null)
+            error = new Error();
+        if(ex==null)
+            ex = new System.Exception.ctor();       
+        error.message = ex.message;
+        for (var p in ex)
+           error[p] = ex[p];
+        return error;
+    }
+}
 if (typeof ($CreateAnonymousDelegate) == 'undefined') {
     var $CreateAnonymousDelegate = function (target, func) {
         if (target == null || func == null)
@@ -66,11 +80,33 @@ SharpAlg.Native.Builder.ExprBuilder.prototype.Inverse = function (expr)
 {
     return this.Power(expr, SharpAlg.Native.Expr.MinusOne);
 };
-SharpAlg.Native.Builder.ConvolutionExprBuilder = function ()
+SharpAlg.Native.Builder.ConvolutionExprBuilder = function (context)
 {
+    this.context = null;
     SharpAlg.Native.Builder.ExprBuilder.call(this);
+    this.context = context;
 };
-SharpAlg.Native.Builder.ConvolutionExprBuilder.Instance = new SharpAlg.Native.Builder.ConvolutionExprBuilder();
+SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault = function ()
+{
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.Context.Default);
+};
+SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateEmpty = function ()
+{
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.Context.Empty);
+};
+SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Function = function (functionName, args)
+{
+    var checkArgs = SharpAlg.Native.MayBe.With(SharpAlg.Native.MayBe.With(this.context.GetFunction(functionName), $CreateAnonymousDelegate(this, function (x)
+    {
+        return As(x, SharpAlg.Native.ISupportCheckArgs.ctor);
+    })), $CreateAnonymousDelegate(this, function (x)
+    {
+        return x.Check(args);
+    }));
+    if (!System.String.IsNullOrEmpty(checkArgs))
+        throw $CreateException(new SharpAlg.Native.InvalidArgumentCountException.ctor$$String(checkArgs), new Error());
+    return SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr(functionName, args);
+};
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Add = function (left, right)
 {
     return this.Binary(left, right, 0);
@@ -355,5 +391,9 @@ SharpAlg.Native.Builder.TrivialExprBuilder.prototype.Multiply = function (left, 
 SharpAlg.Native.Builder.TrivialExprBuilder.prototype.Power = function (left, right)
 {
     return SharpAlg.Native.Expr.Power(left, right);
+};
+SharpAlg.Native.Builder.TrivialExprBuilder.prototype.Function = function (functionName, arguments)
+{
+    return SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr(functionName, arguments);
 };
 $Inherit(SharpAlg.Native.Builder.TrivialExprBuilder, SharpAlg.Native.Builder.ExprBuilder);

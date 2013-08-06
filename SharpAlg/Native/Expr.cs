@@ -53,8 +53,8 @@ namespace SharpAlg.Native {
         public static FunctionExpr Function(string functionName, Expr argument) {
             return Function(functionName, new Expr[] { argument });
         }
-        public static FunctionExpr Function(string functionName, IEnumerable<Expr> argument) {
-            return new FunctionExpr(functionName, argument);
+        public static FunctionExpr Function(string functionName, IEnumerable<Expr> arguments) {
+            return new FunctionExpr(functionName, arguments);
         }
         public static FunctionExpr Factorial(Expr argument) {
             return Function(Functions.Factorial.Name, argument);

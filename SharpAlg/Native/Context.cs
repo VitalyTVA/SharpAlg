@@ -16,10 +16,14 @@ namespace SharpAlg.Native {
             return context;
 
         }
+        public static readonly Context Empty;
         public static readonly Context Default;
         static Context() {
             Default = CreateDefault();
             Default.ReadOnly = true;
+
+            Empty = CreateEmpty();
+            Empty.ReadOnly = true;
         }
 
         Dictionary<string, Expr> names = new Dictionary<string, Expr>();

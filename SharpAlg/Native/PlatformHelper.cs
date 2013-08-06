@@ -24,5 +24,9 @@ namespace SharpAlg.Native {
         public static int CharToInt(char c) {
             return c;
         }
+        [JsMethod(Code = "return e.toString();")]
+        public static string GetMessage(this Exception e) {
+            return e.Message;
+        }
     }
 }

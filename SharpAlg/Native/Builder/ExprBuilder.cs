@@ -11,6 +11,7 @@ namespace SharpAlg.Native.Builder {
         public abstract Expr Power(Expr left, Expr right);
         public abstract Expr Add(Expr left, Expr right);
         public abstract Expr Multiply(Expr left, Expr right);
+        public abstract Expr Function(string functionName, IEnumerable<Expr> arguments);
         public Expr Subtract(Expr left, Expr right) {
             return Add(left, Minus(right));
         }

@@ -8,12 +8,14 @@ using System.Runtime.Serialization;
 namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
     public class DiffExpressionVisitor : IExpressionVisitor<Expr> {
-        readonly ExprBuilder builder;
+        readonly Context context;
         string parameterName;
         bool autoParameterName;
         private bool HasParameter { get { return !string.IsNullOrEmpty(parameterName); } }
-        public DiffExpressionVisitor(ExprBuilder builder, string parameterName) {
-            this.builder = builder;
+        public ExprBuilder Builder { get; private set; }
+        public DiffExpressionVisitor(ExprBuilder builder, Context context, string parameterName) {
+            this.Builder = builder;
+            this.context = context;
             this.parameterName = parameterName;
             autoParameterName = !HasParameter;
         }
@@ -38,25 +40,27 @@ namespace SharpAlg.Native {
             multi.Args.Accumulate(x => {
                 result = x.Visit(this);
             }, x => {
-                result = builder.Add(result, x.Visit(this));
+                result = Builder.Add(result, x.Visit(this));
             });
             return result;
         }
         public Expr Multiply(MultiplyExpr multi) {
             var tail = multi.Tail();
-            var expr1 = builder.Multiply(multi.Args.First().Visit(this), tail);
-            var expr2 = builder.Multiply(multi.Args.First(), tail.Visit(this));
-            return builder.Add(expr1, expr2);
+            var expr1 = Builder.Multiply(multi.Args.First().Visit(this), tail);
+            var expr2 = Builder.Multiply(multi.Args.First(), tail.Visit(this));
+            return Builder.Add(expr1, expr2);
         }
         public Expr Power(PowerExpr power) {
-            Expr sum1 = builder.Multiply(power.Right.Visit(this), Expr.Ln(power.Left));
-            Expr sum2 = builder.Divide(builder.Multiply(power.Right, power.Left.Visit(this)), power.Left);
-            Expr sum = builder.Add(sum1, sum2);
-            return builder.Multiply(power, sum);
+            Expr sum1 = Builder.Multiply(power.Right.Visit(this), Expr.Ln(power.Left));
+            Expr sum2 = Builder.Divide(Builder.Multiply(power.Right, power.Left.Visit(this)), power.Left);
+            Expr sum = Builder.Add(sum1, sum2);
+            return Builder.Multiply(power, sum);
         }
         public Expr Function(FunctionExpr functionExpr) {
-            //TODO function differentiation
-            throw new NotImplementedException(); //TODO factorial differentiation
+            return context.GetFunction(functionExpr.FunctionName)
+                .With(x => x as ISupportDiff).Return(
+                x => x.Diff(this, functionExpr.Args),
+                () => { throw new InvalidOperationException(); }); //TODO exception and message
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]

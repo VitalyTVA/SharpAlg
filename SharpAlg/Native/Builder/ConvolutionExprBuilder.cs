@@ -59,9 +59,22 @@ namespace SharpAlg.Native.Builder {
             }
         }
         #endregion
-        public static ConvolutionExprBuilder Instance = new ConvolutionExprBuilder();
-        ConvolutionExprBuilder() { }
-
+        public static ExprBuilder CreateDefault() {
+            return new ConvolutionExprBuilder(Context.Default);
+        }
+        public static ExprBuilder CreateEmpty() {
+            return new ConvolutionExprBuilder(Context.Empty);
+        }
+        readonly Context context;
+        ConvolutionExprBuilder(Context context) { 
+            this.context = context; 
+        }
+        public override Expr Function(string functionName, IEnumerable<Expr> args) {
+            string checkArgs = context.GetFunction(functionName).With(x => x as ISupportCheckArgs).With(x => x.Check(args));
+            if(!string.IsNullOrEmpty(checkArgs))
+                throw new InvalidArgumentCountException(checkArgs);
+            return Expr.Function(functionName, args);
+        }
         public override Expr Add(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Add);
         }

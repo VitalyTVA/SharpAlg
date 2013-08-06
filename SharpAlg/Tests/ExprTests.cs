@@ -6,6 +6,7 @@ using System.Linq.Expressions;
 using SharpAlg;
 using SharpAlg.Native;
 using SharpKit.JavaScript;
+using SharpAlg.Native.Builder;
 
 namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
@@ -39,6 +40,9 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.GetFunction("CustomFunc"), func)
                 .IsTrue(x => x.GetValue("x").ExprEquals("3".Parse()));
             Context.Default
+                .Fails(x => x.Register(func), typeof(InvalidOperationException))
+                .Fails(x => x.Register("x", "3".Parse()), typeof(InvalidOperationException));
+            Context.Empty
                 .Fails(x => x.Register(func), typeof(InvalidOperationException))
                 .Fails(x => x.Register("x", "3".Parse()), typeof(InvalidOperationException));
         }
@@ -143,6 +147,12 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.Evaluate(), 0.0.AsNumber());
             "ln(3)".Parse()
                 .IsFloatEqual(x => x.Evaluate(), "1.098612");
+            Expr.Function("ln", new Expr[] { "1".Parse(), "2".Parse() }).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));
+        }
+        [Test]
+        public void SemanticErrorsTest() {
+            "ln(3, x)".ParseCore(ConvolutionExprBuilder.CreateDefault()).AssertSingleSyntaxError("Error, (in ln) expecting 1 argument, got 2\r\n");
+            "factorial(3, x, 1)".ParseCore(ConvolutionExprBuilder.CreateDefault()).AssertSingleSyntaxError("Error, (in factorial) expecting 1 argument, got 3\r\n");
         }
         [Test]
         public void ToStringTest() {
@@ -322,6 +332,7 @@ namespace SharpAlg.Tests {
             "(y * x)! + (x * y)!".Parse().AssertSimpleStringRepresentation("2 * (y * x)!");
             "someFunc(x, y * x) + someFunc(x, x * y)".Parse().AssertSimpleStringRepresentation("2 * someFunc(x, y * x)");
             "someFunc(x, y * x)! + 2 * someFunc(x, x * y)!".Parse().AssertSimpleStringRepresentation("3 * someFunc(x, y * x)!");
+            "ln(x * x) + ln(x + x)".Parse().AssertSimpleStringRepresentation("ln(x ^ 2) + ln(2 * x)");
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

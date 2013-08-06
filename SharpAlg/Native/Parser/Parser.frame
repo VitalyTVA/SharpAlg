@@ -93,7 +93,7 @@ public class Parser {
 		try {
 -->parseRoot
 		} catch(Exception e) {
-			SemErr(e.ToString());
+			errors.SemErr(e.GetMessage());
 		}
 	}
 /*original set	

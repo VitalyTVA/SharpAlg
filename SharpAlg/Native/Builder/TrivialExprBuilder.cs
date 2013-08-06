@@ -15,5 +15,8 @@ namespace SharpAlg.Native.Builder {
         public override Expr Power(Expr left, Expr right) {
             return Expr.Power(left, right);
         }
+        public override Expr Function(string functionName, IEnumerable<Expr> arguments) {
+            return Expr.Function(functionName, arguments);
+        }
     }
 }

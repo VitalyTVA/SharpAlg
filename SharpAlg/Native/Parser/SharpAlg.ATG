@@ -80,7 +80,7 @@ FunctionCall<out Expr expr>						(. string name; ArgsList args = new ArgsList();
 = 
 	identifier									(. name = t.val; .)
 	{ '('ArgumentList<args>')' }											
-												(. expr = args.Count > 0 ? (Expr)Expr.Function(name, args) : Expr.Parameter(name); .)
+												(. expr = args.Count > 0 ? (Expr)builder.Function(name, args) : Expr.Parameter(name); .)
 .
 
 ArgumentList<ArgsList args>					(. Expr first; .)				

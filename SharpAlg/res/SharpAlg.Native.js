@@ -75,9 +75,12 @@ var SharpAlg$Native$Context =
         },
         cctor: function ()
         {
+            SharpAlg.Native.Context.Empty = null;
             SharpAlg.Native.Context.Default = null;
             SharpAlg.Native.Context.Default = SharpAlg.Native.Context.CreateDefault();
             SharpAlg.Native.Context.Default.set_ReadOnly(true);
+            SharpAlg.Native.Context.Empty = SharpAlg.Native.Context.CreateEmpty();
+            SharpAlg.Native.Context.Empty.set_ReadOnly(true);
         }
     },
     assemblyName: "SharpAlg",
@@ -157,12 +160,14 @@ SharpAlg.Native.DefaultExpressionVisitor.prototype.Function = function (function
 {
     return this.GetDefault(functionExpr);
 };
-SharpAlg.Native.DiffExpressionVisitor = function (builder, parameterName)
+SharpAlg.Native.DiffExpressionVisitor = function (builder, context, parameterName)
 {
-    this.builder = null;
+    this.context = null;
     this.parameterName = null;
     this.autoParameterName = false;
-    this.builder = builder;
+    this.Builder = null;
+    this.Builder = builder;
+    this.context = context;
     this.parameterName = parameterName;
     this.autoParameterName = !this.get_HasParameter();
 };
@@ -200,27 +205,36 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Add = function (multi)
         result = x.Visit$1(SharpAlg.Native.Expr.ctor, this);
     }), $CreateAnonymousDelegate(this, function (x)
     {
-        result = this.builder.Add(result, x.Visit$1(SharpAlg.Native.Expr.ctor, this));
+        result = this.Builder.Add(result, x.Visit$1(SharpAlg.Native.Expr.ctor, this));
     }));
     return result;
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Multiply = function (multi)
 {
     var tail = SharpAlg.Native.ExpressionExtensions.Tail$$MultiplyExpr(multi);
-    var expr1 = this.builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()).Visit$1(SharpAlg.Native.Expr.ctor, this), tail);
-    var expr2 = this.builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), tail.Visit$1(SharpAlg.Native.Expr.ctor, this));
-    return this.builder.Add(expr1, expr2);
+    var expr1 = this.Builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()).Visit$1(SharpAlg.Native.Expr.ctor, this), tail);
+    var expr2 = this.Builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), tail.Visit$1(SharpAlg.Native.Expr.ctor, this));
+    return this.Builder.Add(expr1, expr2);
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Power = function (power)
 {
-    var sum1 = this.builder.Multiply(power.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), SharpAlg.Native.Expr.Ln(power.get_Left()));
-    var sum2 = this.builder.Divide(this.builder.Multiply(power.get_Right(), power.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this)), power.get_Left());
-    var sum = this.builder.Add(sum1, sum2);
-    return this.builder.Multiply(power, sum);
+    var sum1 = this.Builder.Multiply(power.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), SharpAlg.Native.Expr.Ln(power.get_Left()));
+    var sum2 = this.Builder.Divide(this.Builder.Multiply(power.get_Right(), power.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this)), power.get_Left());
+    var sum = this.Builder.Add(sum1, sum2);
+    return this.Builder.Multiply(power, sum);
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Function = function (functionExpr)
 {
-    throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(this.context.GetFunction(functionExpr.get_FunctionName()), $CreateAnonymousDelegate(this, function (x)
+    {
+        return As(x, SharpAlg.Native.ISupportDiff.ctor);
+    })), $CreateAnonymousDelegate(this, function (x)
+    {
+        return x.Diff(this, functionExpr.get_Args());
+    }), $CreateAnonymousDelegate(this, function ()
+    {
+        throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
+    }));
 };
 var SharpAlg$Native$ExpressionDefferentiationException =
 {
@@ -309,9 +323,9 @@ var SharpAlg$Native$Expr =
         {
             return SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr(functionName, [argument]);
         },
-        Function$$String$$IEnumerable$1$Expr: function (functionName, argument)
+        Function$$String$$IEnumerable$1$Expr: function (functionName, arguments)
         {
-            return new SharpAlg.Native.FunctionExpr.ctor(functionName, argument);
+            return new SharpAlg.Native.FunctionExpr.ctor(functionName, arguments);
         },
         Factorial: function (argument)
         {
@@ -822,7 +836,7 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         Diff: function (expr, parameterName)
         {
-            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ConvolutionExprBuilder.Instance, parameterName));
+            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault(), SharpAlg.Native.Context.Default, parameterName));
         },
         ExprEquals: function (expr1, expr2)
         {
@@ -836,9 +850,9 @@ var SharpAlg$Native$ExpressionExtensions =
         {
             return expr.Visit$1(System.String.ctor, SharpAlg.Native.Printer.ExpressionPrinter.Instance);
         },
-        Parse: function (expression)
+        Parse: function (expression, builder)
         {
-            return SharpAlg.Native.ExpressionExtensions.GetExpression(SharpAlg.Native.ExpressionExtensions.ParseCore(expression, SharpAlg.Native.Builder.ConvolutionExprBuilder.Instance));
+            return SharpAlg.Native.ExpressionExtensions.GetExpression(SharpAlg.Native.ExpressionExtensions.ParseCore(expression, (builder != null ? builder : SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault())));
         },
         GetExpression: function (parser)
         {
@@ -899,11 +913,43 @@ var SharpAlg$Native$Function =
     }
 };
 JsTypes.push(SharpAlg$Native$Function);
+var SharpAlg$Native$InvalidArgumentCountException =
+{
+    fullname: "SharpAlg.Native.InvalidArgumentCountException",
+    baseTypeName: "System.Exception",
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Exception.ctor.call(this);
+        },
+        ctor$$String: function (message)
+        {
+            System.Exception.ctor$$String.call(this, message);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$InvalidArgumentCountException);
 var SharpAlg$Native$SingleArgumentFunction =
 {
     fullname: "SharpAlg.Native.SingleArgumentFunction",
     baseTypeName: "SharpAlg.Native.Function",
+    staticDefinition:
+    {
+        IsValidArgsCount$1: function (T, args)
+        {
+            return System.Linq.Enumerable.Count$1$$IEnumerable$1(T, args) == 1;
+        },
+        CheckArgsCount$1: function (T, args)
+        {
+            if (!SharpAlg.Native.SingleArgumentFunction.IsValidArgsCount$1(T, args))
+                throw $CreateException(new SharpAlg.Native.InvalidArgumentCountException.ctor(), new Error());
+        }
+    },
     assemblyName: "SharpAlg",
+    interfaceNames: ["SharpAlg.Native.ISupportCheckArgs"],
     Kind: "Class",
     definition:
     {
@@ -913,13 +959,38 @@ var SharpAlg$Native$SingleArgumentFunction =
         },
         Evaluate: function (args)
         {
-            if (System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Number.ctor, args) != 1)
-                throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
+            SharpAlg.Native.SingleArgumentFunction.CheckArgsCount$1(SharpAlg.Native.Number.ctor, args);
             return this.Evaluate$$Number(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Number.ctor, args));
+        },
+        Check: function (args)
+        {
+            return SharpAlg.Native.SingleArgumentFunction.IsValidArgsCount$1(SharpAlg.Native.Expr.ctor, args) ? System.String.Empty : System.String.Format$$String$$Object$$Object("Error, (in {0}) expecting 1 argument, got {1}", this.get_Name(), System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args));
         }
     }
 };
 JsTypes.push(SharpAlg$Native$SingleArgumentFunction);
+var SharpAlg$Native$SingleArgumentDifferentiableFunction =
+{
+    fullname: "SharpAlg.Native.SingleArgumentDifferentiableFunction",
+    baseTypeName: "SharpAlg.Native.SingleArgumentFunction",
+    assemblyName: "SharpAlg",
+    interfaceNames: ["SharpAlg.Native.ISupportDiff"],
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (name)
+        {
+            SharpAlg.Native.SingleArgumentFunction.ctor.call(this, name);
+        },
+        Diff: function (diffVisitor, args)
+        {
+            SharpAlg.Native.SingleArgumentFunction.CheckArgsCount$1(SharpAlg.Native.Expr.ctor, args);
+            var arg = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
+            return diffVisitor.Builder.Multiply(arg.Visit$1(SharpAlg.Native.Expr.ctor, diffVisitor), this.DiffCore(diffVisitor.Builder, arg));
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$SingleArgumentDifferentiableFunction);
 var SharpAlg$Native$FactorialFunction =
 {
     fullname: "SharpAlg.Native.FactorialFunction",
@@ -947,18 +1018,22 @@ JsTypes.push(SharpAlg$Native$FactorialFunction);
 var SharpAlg$Native$LnFunction =
 {
     fullname: "SharpAlg.Native.LnFunction",
-    baseTypeName: "SharpAlg.Native.SingleArgumentFunction",
+    baseTypeName: "SharpAlg.Native.SingleArgumentDifferentiableFunction",
     assemblyName: "SharpAlg",
     Kind: "Class",
     definition:
     {
         ctor: function ()
         {
-            SharpAlg.Native.SingleArgumentFunction.ctor.call(this, "ln");
+            SharpAlg.Native.SingleArgumentDifferentiableFunction.ctor.call(this, "ln");
         },
         Evaluate$$Number: function (arg)
         {
             return SharpAlg.Native.Number.Ln(arg);
+        },
+        DiffCore: function (builder, arg)
+        {
+            return builder.Inverse(arg);
         }
     }
 };
@@ -996,6 +1071,10 @@ var SharpAlg$Native$Functions =
     }
 };
 JsTypes.push(SharpAlg$Native$Functions);
+var SharpAlg$Native$ISupportDiff = {fullname: "SharpAlg.Native.ISupportDiff", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
+JsTypes.push(SharpAlg$Native$ISupportDiff);
+var SharpAlg$Native$ISupportCheckArgs = {fullname: "SharpAlg.Native.ISupportCheckArgs", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
+JsTypes.push(SharpAlg$Native$ISupportCheckArgs);
 SharpAlg.Native.PlatformHelper = function ()
 {
 };
@@ -1014,6 +1093,10 @@ SharpAlg.Native.PlatformHelper.IntToChar = function (n)
 SharpAlg.Native.PlatformHelper.CharToInt = function (c)
 {
     return c.charCodeAt();
+};
+SharpAlg.Native.PlatformHelper.GetMessage = function (e)
+{
+    return e.toString();
 };
 var SharpAlg$Native$FunctionalExtensions =
 {

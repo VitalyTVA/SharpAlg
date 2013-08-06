@@ -397,7 +397,7 @@ SharpAlg.Native.Parser.Parser.prototype.FunctionCall = function (expr)
         this.ArgumentList(args);
         this.Expect(11);
     }
-    expr.Value = args.get_Count() > 0 ? SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr(name, args) : SharpAlg.Native.Expr.Parameter(name);
+    expr.Value = args.get_Count() > 0 ? this.builder.Function(name, args) : SharpAlg.Native.Expr.Parameter(name);
 };
 SharpAlg.Native.Parser.Parser.prototype.ArgumentList = function (args)
 {
@@ -428,7 +428,7 @@ SharpAlg.Native.Parser.Parser.prototype.Parse = function ()
     }
     catch (e)
     {
-        this.SemErr(e.toString());
+        this.errors.SemErr(SharpAlg.Native.PlatformHelper.GetMessage(e));
     }
 };
 SharpAlg.Native.Parser.Errors = function ()
