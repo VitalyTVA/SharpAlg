@@ -58,7 +58,7 @@ namespace SharpAlg.Native {
         }
         public Expr Function(FunctionExpr functionExpr) {
             return context.GetFunction(functionExpr.FunctionName)
-                .With(x => x as ISupportDiff).Return(
+                .Convert<ISupportDiff>().Return(
                 x => x.Diff(this, functionExpr.Args),
                 () => { throw new InvalidOperationException(); }); //TODO exception and message
         }

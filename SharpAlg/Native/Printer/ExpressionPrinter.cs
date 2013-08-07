@@ -90,7 +90,7 @@ namespace SharpAlg.Native.Printer {
                     ConstantExpr exprConstant = Expr.Constant(Number.Zero - multi.Args.First().With(y => y as ConstantExpr).Value);
                     Expr expr = multi.Args.First().ExprEquals(Expr.MinusOne) ? 
                         multi.Tail() : 
-                        Expr.Multiply((new Expr[] { exprConstant }).Concat(multi.Args.Tail()));
+                        Expr.Multiply(exprConstant.AsEnumerable().Concat(multi.Args.Tail()));
                     return new UnaryExpressionInfo(expr, BinaryOperationEx.Subtract);
                 }
                 return base.Multiply(multi);

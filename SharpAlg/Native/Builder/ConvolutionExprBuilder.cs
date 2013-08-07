@@ -25,7 +25,7 @@ namespace SharpAlg.Native.Builder {
                 return base.Multiply(multi);
             }
             protected override IEnumerable<Expr> GetDefault(Expr expr) {
-                return new Expr[] { expr };
+                return expr.AsEnumerable();
             }
         }
         [JsType(JsMode.Prototype, Filename = SR.JSBuilderName)]
@@ -71,12 +71,12 @@ namespace SharpAlg.Native.Builder {
         }
         public override Expr Function(string functionName, IEnumerable<Expr> args) {
             var func = context.GetFunction(functionName);
-            string checkArgs = func.With(x => x as ISupportCheckArgs).With(x => x.Check(args));
+            string checkArgs = func.Convert<ISupportCheckArgs>().With(x => x.Check(args));
             if(!string.IsNullOrEmpty(checkArgs))
                 throw new InvalidArgumentCountException(checkArgs);
 
             return func
-                .With(x => x as ISupportConvolution)
+                .Convert<ISupportConvolution>()
                 .With(x => x.Convolute(args))
                 .Return(x => x, () => Expr.Function(functionName, args)); //TODO As extension
         }

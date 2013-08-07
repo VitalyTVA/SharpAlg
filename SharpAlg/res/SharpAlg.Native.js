@@ -225,10 +225,7 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Power = function (power)
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Function = function (functionExpr)
 {
-    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(this.context.GetFunction(functionExpr.get_FunctionName()), $CreateAnonymousDelegate(this, function (x)
-    {
-        return As(x, SharpAlg.Native.ISupportDiff.ctor);
-    })), $CreateAnonymousDelegate(this, function (x)
+    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.ISupportDiff.ctor, this.context.GetFunction(functionExpr.get_FunctionName())), $CreateAnonymousDelegate(this, function (x)
     {
         return x.Diff(this, functionExpr.get_Args());
     }), $CreateAnonymousDelegate(this, function ()
@@ -277,7 +274,7 @@ var SharpAlg$Native$Expr =
         },
         Binary: function (left, right, type)
         {
-            return SharpAlg.Native.Expr.Multi([left, right], type);
+            return SharpAlg.Native.Expr.Multi(SharpAlg.Native.FunctionalExtensions.Combine$1(SharpAlg.Native.Expr.ctor, left, right), type);
         },
         Multi: function (args, type)
         {
@@ -321,7 +318,7 @@ var SharpAlg$Native$Expr =
         },
         Function$$String$$Expr: function (functionName, argument)
         {
-            return SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr(functionName, [argument]);
+            return SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr(functionName, SharpAlg.Native.FunctionalExtensions.AsEnumerable$1(SharpAlg.Native.Expr.ctor, argument));
         },
         Function$$String$$IEnumerable$1$Expr: function (functionName, arguments)
         {
@@ -1217,6 +1214,27 @@ var SharpAlg$Native$FunctionalExtensions =
             })())
                 return result;
             return null;
+        },
+        Convert$1: function (TOut, source)
+        {
+            return As(source, TOut);
+        },
+        Cast$1: function (TOut, source)
+        {
+            return Cast(source, TOut);
+        },
+        AsEnumerable$1: function (T, source)
+        {
+            var $yield = [];
+            $yield.push(source);
+            return $yield;
+        },
+        Combine$1: function (T, first, next)
+        {
+            var $yield = [];
+            $yield.push(first);
+            $yield.push(next);
+            return $yield;
         }
     },
     assemblyName: "SharpAlg",

@@ -18,7 +18,7 @@ namespace SharpAlg.Native {
             return new ParameterExpr(parameterName);
         }
         public static Expr Binary(Expr left, Expr right, BinaryOperation type) {
-            return Multi(new Expr[] { left, right }, type);
+            return Multi(left.Combine(right), type);
         }
         public static Expr Multi(IEnumerable<Expr> args, BinaryOperation type) {
             return args.Count() > 1 ? (type == BinaryOperation.Add ? (MultiExpr)new AddExpr(args) : new MultiplyExpr(args)) : args.First();
@@ -51,7 +51,7 @@ namespace SharpAlg.Native {
             return Power(expr, Expr.MinusOne);
         }
         public static FunctionExpr Function(string functionName, Expr argument) {
-            return Function(functionName, new Expr[] { argument });
+            return Function(functionName, argument.AsEnumerable());
         }
         public static FunctionExpr Function(string functionName, IEnumerable<Expr> arguments) {
             return new FunctionExpr(functionName, arguments);

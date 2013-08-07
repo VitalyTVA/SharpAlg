@@ -97,19 +97,13 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateEmpty = function ()
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Function = function (functionName, args)
 {
     var func = this.context.GetFunction(functionName);
-    var checkArgs = SharpAlg.Native.MayBe.With(SharpAlg.Native.MayBe.With(func, $CreateAnonymousDelegate(this, function (x)
-    {
-        return As(x, SharpAlg.Native.ISupportCheckArgs.ctor);
-    })), $CreateAnonymousDelegate(this, function (x)
+    var checkArgs = SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.ISupportCheckArgs.ctor, func), $CreateAnonymousDelegate(this, function (x)
     {
         return x.Check(args);
     }));
     if (!System.String.IsNullOrEmpty(checkArgs))
         throw $CreateException(new SharpAlg.Native.InvalidArgumentCountException.ctor$$String(checkArgs), new Error());
-    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(SharpAlg.Native.MayBe.With(func, $CreateAnonymousDelegate(this, function (x)
-    {
-        return As(x, SharpAlg.Native.ISupportConvolution.ctor);
-    })), $CreateAnonymousDelegate(this, function (x)
+    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.ISupportConvolution.ctor, func), $CreateAnonymousDelegate(this, function (x)
     {
         return x.Convolute(args);
     })), $CreateAnonymousDelegate(this, function (x)
@@ -348,7 +342,7 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.ExpressionArgumentsExtractor.prot
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.ExpressionArgumentsExtractor.prototype.GetDefault = function (expr)
 {
-    return [expr];
+    return SharpAlg.Native.FunctionalExtensions.AsEnumerable$1(SharpAlg.Native.Expr.ctor, expr);
 };
 $Inherit(SharpAlg.Native.Builder.ConvolutionExprBuilder.ExpressionArgumentsExtractor, SharpAlg.Native.DefaultExpressionVisitor);
 SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor = function ()
