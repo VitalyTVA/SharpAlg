@@ -1020,6 +1020,7 @@ var SharpAlg$Native$LnFunction =
     fullname: "SharpAlg.Native.LnFunction",
     baseTypeName: "SharpAlg.Native.SingleArgumentDifferentiableFunction",
     assemblyName: "SharpAlg",
+    interfaceNames: ["SharpAlg.Native.ISupportConvolution"],
     Kind: "Class",
     definition:
     {
@@ -1034,6 +1035,12 @@ var SharpAlg$Native$LnFunction =
         DiffCore: function (builder, arg)
         {
             return builder.Inverse(arg);
+        },
+        Convolute: function (args)
+        {
+            if (SharpAlg.Native.ExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), SharpAlg.Native.Expr.One))
+                return SharpAlg.Native.Expr.Zero;
+            return null;
         }
     }
 };
@@ -1075,6 +1082,8 @@ var SharpAlg$Native$ISupportDiff = {fullname: "SharpAlg.Native.ISupportDiff", ba
 JsTypes.push(SharpAlg$Native$ISupportDiff);
 var SharpAlg$Native$ISupportCheckArgs = {fullname: "SharpAlg.Native.ISupportCheckArgs", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$ISupportCheckArgs);
+var SharpAlg$Native$ISupportConvolution = {fullname: "SharpAlg.Native.ISupportConvolution", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
+JsTypes.push(SharpAlg$Native$ISupportConvolution);
 SharpAlg.Native.PlatformHelper = function ()
 {
 };

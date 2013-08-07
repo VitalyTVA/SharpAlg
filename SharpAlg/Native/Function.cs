@@ -76,7 +76,7 @@ namespace SharpAlg.Native {
     }
 
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    public class LnFunction : SingleArgumentDifferentiableFunction {
+    public class LnFunction : SingleArgumentDifferentiableFunction, ISupportConvolution {
         public LnFunction()
             : base("ln") {
         }
@@ -85,6 +85,12 @@ namespace SharpAlg.Native {
         }
         protected override Expr DiffCore(ExprBuilder builder, Expr arg) {
             return builder.Inverse(arg);
+        }
+
+        public Expr Convolute(IEnumerable<Expr> args) {
+            if(args.First().ExprEquals(Expr.One))
+                return Expr.Zero;
+            return null;
         }
     }
 
@@ -104,5 +110,9 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public interface ISupportCheckArgs {
         string Check(IEnumerable<Expr> args);
+    }
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    public interface ISupportConvolution {
+        Expr Convolute(IEnumerable<Expr> args);
     }
 }

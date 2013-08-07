@@ -333,6 +333,8 @@ namespace SharpAlg.Tests {
             "someFunc(x, y * x) + someFunc(x, x * y)".Parse().AssertSimpleStringRepresentation("2 * someFunc(x, y * x)");
             "someFunc(x, y * x)! + 2 * someFunc(x, x * y)!".Parse().AssertSimpleStringRepresentation("3 * someFunc(x, y * x)!");
             "ln(x * x) + ln(x + x)".Parse().AssertSimpleStringRepresentation("ln(x ^ 2) + ln(2 * x)");
+
+            "ln(1)".Parse().AssertSimpleStringRepresentation("0");
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
