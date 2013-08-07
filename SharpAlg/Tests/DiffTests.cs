@@ -69,13 +69,10 @@ namespace SharpAlg.Tests {
             "diff(x ^ 3, x)"
                 .ParseCore(ConvolutionExprBuilder.Create(Context.CreateDefault().Register("x", "y + 1".Parse())))
                 .AssertSingleSyntaxError("All diff arguments should be parameters\r\n");
+            "diff(x ^ 3)"
+                .ParseNoConvolution()
+                .IsEqual(x => x.Evaluate(Context.CreateDefault().Register("x", "2".Parse())), 12.0.AsNumber());
         }
-        //[Test]
-        //public void DiffFunctionEvaluateTest() {
-        //    "diff(x ^ 3)"
-        //        .ParseNoConvolution()
-        //        .IsEqual(x => x.Evaluate(Context.CreateDefault().Register("x", "2".Parse())), 12.0.AsNumber());
-        //}
         [Test]
         public void DiffMultiParametersTest() {
             "x".Parse().Diff("y").AssertSimpleStringRepresentation("0");

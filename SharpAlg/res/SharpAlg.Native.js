@@ -794,10 +794,7 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Function = function (functionExpr)
     var func = this.context.GetFunction(functionExpr.get_FunctionName());
     if (func != null)
     {
-        return func.Evaluate(System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Number.ctor, functionExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
-        {
-            return x.Visit$1(SharpAlg.Native.Number.ctor, this);
-        })));
+        return func.Evaluate(this, functionExpr.get_Args());
     }
     throw $CreateException(new System.NotImplementedException.ctor(), new Error());
 };
@@ -953,7 +950,14 @@ var SharpAlg$Native$SingleArgumentFunction =
         {
             SharpAlg.Native.Function.ctor.call(this, name);
         },
-        Evaluate: function (args)
+        Evaluate: function (evaluator, args)
+        {
+            return this.EvaluateCore(System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Number.ctor, args, $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.Visit$1(SharpAlg.Native.Number.ctor, evaluator);
+            })));
+        },
+        EvaluateCore: function (args)
         {
             SharpAlg.Native.SingleArgumentFunction.CheckArgsCount$1(SharpAlg.Native.Number.ctor, args);
             return this.Evaluate$$Number(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Number.ctor, args));
@@ -1032,7 +1036,7 @@ var SharpAlg$Native$LnFunction =
         {
             return builder.Inverse(arg);
         },
-        Convolute: function (builder, args)
+        Convolute: function (args)
         {
             if (SharpAlg.Native.ExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), SharpAlg.Native.Expr.One))
                 return SharpAlg.Native.Expr.Zero;
@@ -1054,11 +1058,11 @@ var SharpAlg$Native$DiffFunction =
         {
             SharpAlg.Native.Function.ctor.call(this, "diff");
         },
-        Evaluate: function (args)
+        Evaluate: function (evaluator, args)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            return this.Convolute(args).Visit$1(SharpAlg.Native.Number.ctor, evaluator);
         },
-        Convolute: function (builder, args)
+        Convolute: function (args)
         {
             var argsTail = SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, args);
             if (!System.Linq.Enumerable.All$1(SharpAlg.Native.Expr.ctor, argsTail, $CreateAnonymousDelegate(this, function (x)

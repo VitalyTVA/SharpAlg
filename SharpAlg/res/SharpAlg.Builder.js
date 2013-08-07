@@ -109,7 +109,7 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Function = function (fu
         throw $CreateException(new SharpAlg.Native.InvalidArgumentCountException.ctor$$String(checkArgs), new Error());
     return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.ISupportConvolution.ctor, func), $CreateAnonymousDelegate(this, function (x)
     {
-        return x.Convolute(this, args);
+        return x.Convolute(args);
     })), $CreateAnonymousDelegate(this, function (x)
     {
         return x;

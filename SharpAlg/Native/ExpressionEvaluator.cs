@@ -69,7 +69,7 @@ namespace SharpAlg.Native {
         public Number Function(FunctionExpr functionExpr) {
             var func = context.GetFunction(functionExpr.FunctionName);
             if(func != null) {
-                return func.Evaluate(functionExpr.Args.Select(x => x.Visit(this)));
+                return func.Evaluate(this, functionExpr.Args);
             }
             throw new NotImplementedException(); //TODO correct exception
         }

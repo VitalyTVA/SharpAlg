@@ -86,6 +86,10 @@ var SharpAlg$Tests$DiffTests =
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("diff(x ^ 3 * y ^ 2)"), "Expression contains more than one independent variable\r\n");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("diff(x ^ 3, x + 1)"), "All diff arguments should be parameters\r\n");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Native.ExpressionExtensions.ParseCore("diff(x ^ 3, x)", SharpAlg.Native.Builder.ConvolutionExprBuilder.Create(SharpAlg.Native.Context.CreateDefault().Register$$String$$Expr("x", SharpAlg.Native.ExpressionExtensions.Parse("y + 1", null)))), "All diff arguments should be parameters\r\n");
+            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.ParserTestHelper.ParseNoConvolution("diff(x ^ 3)"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, SharpAlg.Native.Context.CreateDefault().Register$$String$$Expr("x", SharpAlg.Native.ExpressionExtensions.Parse("2", null)));
+            }), SharpAlg.Tests.ExprTestHelper.AsNumber(12));
         },
         DiffMultiParametersTest: function ()
         {
@@ -521,9 +525,12 @@ var SharpAlg$Tests$ExprTests$CustomFunction =
         {
             SharpAlg.Native.Function.ctor.call(this, "CustomFunc");
         },
-        Evaluate: function (args)
+        Evaluate: function (evaluator, args)
         {
-            var result = System.Linq.Enumerable.Aggregate$2$$IEnumerable$1$$TAccumulate$$Func$3(SharpAlg.Native.Number.ctor, SharpAlg.Native.Number.ctor, args, SharpAlg.Native.Number.Zero, $CreateAnonymousDelegate(this, function (res, x)
+            var result = System.Linq.Enumerable.Aggregate$2$$IEnumerable$1$$TAccumulate$$Func$3(SharpAlg.Native.Number.ctor, SharpAlg.Native.Number.ctor, System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Number.ctor, args, $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.Visit$1(SharpAlg.Native.Number.ctor, evaluator);
+            })), SharpAlg.Native.Number.Zero, $CreateAnonymousDelegate(this, function (res, x)
             {
                 return SharpAlg.Native.Number.op_Addition(res, SharpAlg.Native.Number.op_Multiply(x, x));
             }));
