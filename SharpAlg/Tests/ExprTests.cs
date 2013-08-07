@@ -337,6 +337,15 @@ namespace SharpAlg.Tests {
 
             "ln(1)".Parse().AssertSimpleStringRepresentation("0");
         }
+        [Test]
+        public void SubsitutionTest() {
+            var context = Context.CreateDefault();
+            context.Register("x", "y + 1".Parse());
+            var builder = ConvolutionExprBuilder.Create(context);
+            "x ^ 3".Parse(builder).AssertSimpleStringRepresentation("(y + 1) ^ 3");
+
+            //TODO recursive substitution x => x + 1
+        }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ExprTestHelper {

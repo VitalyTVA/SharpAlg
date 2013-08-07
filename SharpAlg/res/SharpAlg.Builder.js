@@ -94,6 +94,10 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateEmpty = function ()
 {
     return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.Context.Empty);
 };
+SharpAlg.Native.Builder.ConvolutionExprBuilder.Create = function (context)
+{
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(context);
+};
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Function = function (functionName, args)
 {
     var func = this.context.GetFunction(functionName);
@@ -105,7 +109,7 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Function = function (fu
         throw $CreateException(new SharpAlg.Native.InvalidArgumentCountException.ctor$$String(checkArgs), new Error());
     return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.ISupportConvolution.ctor, func), $CreateAnonymousDelegate(this, function (x)
     {
-        return x.Convolute(args);
+        return x.Convolute(this, args);
     })), $CreateAnonymousDelegate(this, function (x)
     {
         return x;
@@ -113,6 +117,10 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Function = function (fu
     {
         return SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr(functionName, args);
     }));
+};
+SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Parameter = function (parameterName)
+{
+    return (this.context.GetValue(parameterName) != null ? this.context.GetValue(parameterName) : SharpAlg.Native.Expr.Parameter(parameterName));
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Add = function (left, right)
 {
@@ -386,6 +394,10 @@ $Inherit(SharpAlg.Native.Builder.ConvolutionExprBuilder.PowerExpressionExtractor
 SharpAlg.Native.Builder.TrivialExprBuilder = function ()
 {
     SharpAlg.Native.Builder.ExprBuilder.call(this);
+};
+SharpAlg.Native.Builder.TrivialExprBuilder.prototype.Parameter = function (parameterName)
+{
+    return SharpAlg.Native.Expr.Parameter(parameterName);
 };
 SharpAlg.Native.Builder.TrivialExprBuilder.prototype.Add = function (left, right)
 {

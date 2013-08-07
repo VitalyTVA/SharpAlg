@@ -85,6 +85,10 @@ var SharpAlg$Tests$DiffTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("diff(x ^ 3 * y ^ 2, x, y)", null), "6 * x ^ 2 * y");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("diff(x ^ 3 * y ^ 2)"), "Expression contains more than one independent variable\r\n");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("diff(x ^ 3, x + 1)"), "All diff arguments should be parameters\r\n");
+            var context = SharpAlg.Native.Context.CreateDefault();
+            context.Register$$String$$Expr("x", SharpAlg.Native.ExpressionExtensions.Parse("y + 1", null));
+            var builder = SharpAlg.Native.Builder.ConvolutionExprBuilder.Create(context);
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Native.ExpressionExtensions.ParseCore("diff(x ^ 3, x)", builder), "All diff arguments should be parameters\r\n");
         },
         DiffMultiParametersTest: function ()
         {
@@ -514,6 +518,13 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("someFunc(x, y * x)! + 2 * someFunc(x, x * y)!", null), "3 * someFunc(x, y * x)!");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(x * x) + ln(x + x)", null), "ln(x ^ 2) + ln(2 * x)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(1)", null), "0");
+        },
+        SubsitutionTest: function ()
+        {
+            var context = SharpAlg.Native.Context.CreateDefault();
+            context.Register$$String$$Expr("x", SharpAlg.Native.ExpressionExtensions.Parse("y + 1", null));
+            var builder = SharpAlg.Native.Builder.ConvolutionExprBuilder.Create(context);
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x ^ 3", builder), "(y + 1) ^ 3");
         }
     }
 };

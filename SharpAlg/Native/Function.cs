@@ -87,7 +87,7 @@ namespace SharpAlg.Native {
             return builder.Inverse(arg);
         }
 
-        public Expr Convolute(IEnumerable<Expr> args) {
+        public Expr Convolute(ExprBuilder builder, IEnumerable<Expr> args) {
             if(args.First().ExprEquals(Expr.One))
                 return Expr.Zero;
             return null;
@@ -101,7 +101,7 @@ namespace SharpAlg.Native {
         public override Number Evaluate(IEnumerable<Number> args) {
             throw new NotImplementedException();
         }
-        public Expr Convolute(IEnumerable<Expr> args) {
+        public Expr Convolute(ExprBuilder builder, IEnumerable<Expr> args) {
             var argsTail = args.Tail();
             if(!argsTail.All(x => x is ParameterExpr))
                 throw new ExpressionDefferentiationException("All diff arguments should be parameters");//TODO correct message, go to constant
@@ -135,6 +135,6 @@ namespace SharpAlg.Native {
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public interface ISupportConvolution {
-        Expr Convolute(IEnumerable<Expr> args);
+        Expr Convolute(ExprBuilder builder, IEnumerable<Expr> args);
     }
 }

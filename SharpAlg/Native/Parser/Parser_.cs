@@ -188,7 +188,7 @@ public class Parser {
 			ArgumentList(args);
 			Expect(11);
 		}
-		expr = args.Count > 0 ? (Expr)builder.Function(name, args) : Expr.Parameter(name); 
+		expr = args.Count > 0 ? (Expr)builder.Function(name, args) : builder.Parameter(name); 
 	}
 
 	void ArgumentList(ArgsList args) {

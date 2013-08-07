@@ -1034,7 +1034,7 @@ var SharpAlg$Native$LnFunction =
         {
             return builder.Inverse(arg);
         },
-        Convolute: function (args)
+        Convolute: function (builder, args)
         {
             if (SharpAlg.Native.ExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), SharpAlg.Native.Expr.One))
                 return SharpAlg.Native.Expr.Zero;
@@ -1060,7 +1060,7 @@ var SharpAlg$Native$DiffFunction =
         {
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
         },
-        Convolute: function (args)
+        Convolute: function (builder, args)
         {
             var argsTail = SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, args);
             if (!System.Linq.Enumerable.All$1(SharpAlg.Native.Expr.ctor, argsTail, $CreateAnonymousDelegate(this, function (x)

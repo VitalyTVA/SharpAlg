@@ -65,7 +65,11 @@ namespace SharpAlg.Native.Builder {
         public static ExprBuilder CreateEmpty() {
             return new ConvolutionExprBuilder(Context.Empty);
         }
+        public static ExprBuilder Create(Context context) {
+            return new ConvolutionExprBuilder(context);
+        }
         readonly Context context;
+        //public override Context Context { get { return context; } }
         ConvolutionExprBuilder(Context context) { 
             this.context = context; 
         }
@@ -77,8 +81,11 @@ namespace SharpAlg.Native.Builder {
 
             return func
                 .Convert<ISupportConvolution>()
-                .With(x => x.Convolute(args))
+                .With(x => x.Convolute(this, args))
                 .Return(x => x, () => Expr.Function(functionName, args)); //TODO As extension
+        }
+        public override Expr Parameter(string parameterName) {
+            return context.GetValue(parameterName) ?? Expr.Parameter(parameterName);
         }
         public override Expr Add(Expr left, Expr right) {
             return Binary(left, right, BinaryOperation.Add);

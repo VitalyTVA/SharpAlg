@@ -397,7 +397,7 @@ SharpAlg.Native.Parser.Parser.prototype.FunctionCall = function (expr)
         this.ArgumentList(args);
         this.Expect(11);
     }
-    expr.Value = args.get_Count() > 0 ? this.builder.Function(name, args) : SharpAlg.Native.Expr.Parameter(name);
+    expr.Value = args.get_Count() > 0 ? this.builder.Function(name, args) : this.builder.Parameter(name);
 };
 SharpAlg.Native.Parser.Parser.prototype.ArgumentList = function (args)
 {
