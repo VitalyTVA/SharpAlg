@@ -68,11 +68,7 @@ var SharpAlg$Native$Context =
         },
         CreateDefault: function ()
         {
-            var context = new SharpAlg.Native.Context.ctor();
-            context.Register$$Function(SharpAlg.Native.Functions.get_Factorial());
-            context.Register$$Function(SharpAlg.Native.Functions.get_Ln());
-            context.Register$$Function(SharpAlg.Native.Functions.get_Diff());
-            return context;
+            return new SharpAlg.Native.Context.ctor().Register$$Function(SharpAlg.Native.Functions.get_Factorial()).Register$$Function(SharpAlg.Native.Functions.get_Factorial()).Register$$Function(SharpAlg.Native.Functions.get_Ln()).Register$$Function(SharpAlg.Native.Functions.get_Diff());
         },
         cctor: function ()
         {
@@ -108,6 +104,7 @@ var SharpAlg$Native$Context =
         {
             this.CheckReadonly();
             this.functions.set_Item$$TKey(func.get_Name(), func);
+            return this;
         },
         GetFunction: function (name)
         {
@@ -117,6 +114,7 @@ var SharpAlg$Native$Context =
         {
             this.CheckReadonly();
             this.names.set_Item$$TKey(name, value);
+            return this;
         },
         GetValue: function (name)
         {

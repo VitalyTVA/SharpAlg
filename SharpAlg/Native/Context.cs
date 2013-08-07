@@ -10,12 +10,11 @@ namespace SharpAlg.Native {
             return new Context();
         }
         public static Context CreateDefault() {
-            Context context = new Context();
-            context.Register(Functions.Factorial);
-            context.Register(Functions.Ln);
-            context.Register(Functions.Diff);
-            return context;
-
+            return new Context()
+                .Register(Functions.Factorial)
+                .Register(Functions.Factorial)
+                .Register(Functions.Ln)
+                .Register(Functions.Diff);
         }
         public static readonly Context Empty;
         public static readonly Context Default;
@@ -35,17 +34,19 @@ namespace SharpAlg.Native {
         }
         Context() { }
 
-        public void Register(Function func) {
+        public Context Register(Function func) {
             CheckReadonly();
             functions[func.Name] = func;
+            return this;
         }
         public Function GetFunction(string name) {
             return functions.TryGetValue(name); ;
         }
 
-        public void Register(string name, Expr value) {
+        public Context Register(string name, Expr value) {
             CheckReadonly();
             names[name] = value;
+            return this;
         }
         public Expr GetValue(string name) {
             return names.TryGetValue(name);

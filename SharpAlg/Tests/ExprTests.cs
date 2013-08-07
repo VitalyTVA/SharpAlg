@@ -29,14 +29,14 @@ namespace SharpAlg.Tests {
             CustomFunction func = new CustomFunction();
 
             Context.CreateEmpty()
-                .Do(x => x.Register(func))
-                .Do(x => x.Register("x", "3".Parse()))
+                .Register(func)
+                .Register("x", "3".Parse())
                 .IsEqual(x => x.GetFunction("CustomFunc"), func)
                 .IsTrue(x => x.GetValue("x").ExprEquals("3".Parse()));
 
             Context.CreateDefault()
-                .Do(x => x.Register(func))
-                .Do(x => x.Register("x", "3".Parse()))
+                .Register(func)
+                .Register("x", "3".Parse())
                 .IsEqual(x => x.GetFunction(Functions.Factorial.Name), Functions.Factorial)
                 .IsEqual(x => x.GetFunction("CustomFunc"), func)
                 .IsTrue(x => x.GetValue("x").ExprEquals("3".Parse()));
@@ -120,9 +120,9 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void ParameterExprEvaluationTest() {
-            var context = Context.CreateDefault();
-            context.Register("x", ExprTestHelper.AsConstant(9));
-            context.Register("y", ExprTestHelper.AsConstant(13));
+            var context = Context.CreateDefault()
+                .Register("x", ExprTestHelper.AsConstant(9))
+                .Register("y", ExprTestHelper.AsConstant(13));
             Expr.Parameter("x")
                 .IsEqual(x => x.Evaluate(context), ExprTestHelper.AsNumber(9));
             Expr.Parameter("y")
@@ -139,9 +139,9 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void FunctionEvaluationTest() {
-            var context = Context.CreateEmpty();
-            context.Register(new CustomFunction());
-            context.Register("x", "3".Parse());
+            var context = Context.CreateEmpty()
+                .Register(new CustomFunction())
+                .Register("x", "3".Parse());
             "CustomFunc(1, x + 2, 2)".Parse()
                 .IsEqual(x => x.Evaluate(context), 30.0.AsNumber());
             "ln(1)".Parse()
@@ -339,8 +339,8 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void SubsitutionTest() {
-            var context = Context.CreateDefault();
-            context.Register("x", "y + 1".Parse());
+            var context = Context.CreateDefault()
+                .Register("x", "y + 1".Parse());
             var builder = ConvolutionExprBuilder.Create(context);
             "x ^ 3".Parse(builder).AssertSimpleStringRepresentation("(y + 1) ^ 3");
 
@@ -362,9 +362,7 @@ namespace SharpAlg.Tests {
         }
         public static Func<double, Number> AsEvaluator(this Expr expr) {
             return x => {
-                Context context = Context.CreateEmpty();
-                context.Register("x", ExprTestHelper.AsConstant(x));
-                return expr.Evaluate(context);
+                return expr.Evaluate(Context.CreateEmpty().Register("x", ExprTestHelper.AsConstant(x)));
             };
         }
         public static ConstantExpr AsConstant(this double constant) {

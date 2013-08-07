@@ -65,11 +65,17 @@ namespace SharpAlg.Tests {
             "diff(x ^ 3 * y ^ 2)".GetParser().AssertSingleSyntaxError("Expression contains more than one independent variable\r\n");
             "diff(x ^ 3, x + 1)".GetParser().AssertSingleSyntaxError("All diff arguments should be parameters\r\n");
 
-            var context = Context.CreateDefault();
-            context.Register("x", "y + 1".Parse());
-            var builder = ConvolutionExprBuilder.Create(context);
-            "diff(x ^ 3, x)".ParseCore(builder).AssertSingleSyntaxError("All diff arguments should be parameters\r\n");
+            
+            "diff(x ^ 3, x)"
+                .ParseCore(ConvolutionExprBuilder.Create(Context.CreateDefault().Register("x", "y + 1".Parse())))
+                .AssertSingleSyntaxError("All diff arguments should be parameters\r\n");
         }
+        //[Test]
+        //public void DiffFunctionEvaluateTest() {
+        //    "diff(x ^ 3)"
+        //        .ParseNoConvolution()
+        //        .IsEqual(x => x.Evaluate(Context.CreateDefault().Register("x", "2".Parse())), 12.0.AsNumber());
+        //}
         [Test]
         public void DiffMultiParametersTest() {
             "x".Parse().Diff("y").AssertSimpleStringRepresentation("0");
