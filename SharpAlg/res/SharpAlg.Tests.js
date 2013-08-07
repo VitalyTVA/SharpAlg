@@ -80,6 +80,11 @@ var SharpAlg$Tests$DiffTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("(x * x) ^ 3", null), null), "6 * x ^ 5");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("2 ^ x", null), null), "2 ^ x * ln(2)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("x ^ x", null), null), "x ^ x * (ln(x) + 1)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("diff(x ^ 3)", null), "3 * x ^ 2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("diff(x ^ 3 * y ^ 2, x)", null), "3 * x ^ 2 * y ^ 2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("diff(x ^ 3 * y ^ 2, x, y)", null), "6 * x ^ 2 * y");
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("diff(x ^ 3 * y ^ 2)"), "Expression contains more than one independent variable\r\n");
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("diff(x ^ 3, x + 1)"), "All diff arguments should be parameters\r\n");
         },
         DiffMultiParametersTest: function ()
         {
@@ -349,8 +354,8 @@ var SharpAlg$Tests$ExprTests =
         },
         SemanticErrorsTest: function ()
         {
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Native.ExpressionExtensions.ParseCore("ln(3, x)", SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault()), "Error, (in ln) expecting 1 argument, got 2\r\n");
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Native.ExpressionExtensions.ParseCore("factorial(3, x, 1)", SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault()), "Error, (in factorial) expecting 1 argument, got 3\r\n");
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("ln(3, x)"), "Error, (in ln) expecting 1 argument, got 2\r\n");
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("factorial(3, x, 1)"), "Error, (in factorial) expecting 1 argument, got 3\r\n");
         },
         ToStringTest: function ()
         {
@@ -542,6 +547,10 @@ var SharpAlg$Tests$ExprTestHelper =
     baseTypeName: "System.Object",
     staticDefinition:
     {
+        GetParser: function (expression)
+        {
+            return SharpAlg.Native.ExpressionExtensions.ParseCore(expression, SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault());
+        },
         AssertSimpleStringRepresentation: function (expr, value)
         {
             return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, expr, function (x)

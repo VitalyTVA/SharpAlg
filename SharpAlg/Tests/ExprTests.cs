@@ -7,6 +7,7 @@ using SharpAlg;
 using SharpAlg.Native;
 using SharpKit.JavaScript;
 using SharpAlg.Native.Builder;
+using SharpAlg.Native.Parser;
 
 namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
@@ -151,8 +152,8 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void SemanticErrorsTest() {
-            "ln(3, x)".ParseCore(ConvolutionExprBuilder.CreateDefault()).AssertSingleSyntaxError("Error, (in ln) expecting 1 argument, got 2\r\n");
-            "factorial(3, x, 1)".ParseCore(ConvolutionExprBuilder.CreateDefault()).AssertSingleSyntaxError("Error, (in factorial) expecting 1 argument, got 3\r\n");
+            "ln(3, x)".GetParser().AssertSingleSyntaxError("Error, (in ln) expecting 1 argument, got 2\r\n");
+            "factorial(3, x, 1)".GetParser().AssertSingleSyntaxError("Error, (in factorial) expecting 1 argument, got 3\r\n");
         }
         [Test]
         public void ToStringTest() {
@@ -339,6 +340,9 @@ namespace SharpAlg.Tests {
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ExprTestHelper {
+        public static Parser GetParser(this string expression) {
+            return expression.ParseCore(ConvolutionExprBuilder.CreateDefault());
+        }
         public static Expr AssertSimpleStringRepresentation(this Expr expr, string value) {
             return expr.IsEqual(x => x.Print(), value);
         }

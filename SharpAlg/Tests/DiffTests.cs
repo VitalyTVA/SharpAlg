@@ -58,6 +58,14 @@ namespace SharpAlg.Tests {
 
             "2 ^ x".Parse().Diff().AssertSimpleStringRepresentation("2 ^ x * ln(2)");
             "x ^ x".Parse().Diff().AssertSimpleStringRepresentation("x ^ x * (ln(x) + 1)");
+
+            "diff(x ^ 3)".Parse().AssertSimpleStringRepresentation("3 * x ^ 2");
+            "diff(x ^ 3 * y ^ 2, x)".Parse().AssertSimpleStringRepresentation("3 * x ^ 2 * y ^ 2");
+            "diff(x ^ 3 * y ^ 2, x, y)".Parse().AssertSimpleStringRepresentation("6 * x ^ 2 * y");
+            "diff(x ^ 3 * y ^ 2)".GetParser().AssertSingleSyntaxError("Expression contains more than one independent variable\r\n");
+            "diff(x ^ 3, x + 1)".GetParser().AssertSingleSyntaxError("All diff arguments should be parameters\r\n");
+
+            //"diff(x ^ 3)".Parse().AssertSimpleStringRepresentation("3 * x ^ 2");
         }
         [Test]
         public void DiffMultiParametersTest() {

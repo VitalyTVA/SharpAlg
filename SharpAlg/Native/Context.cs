@@ -13,6 +13,7 @@ namespace SharpAlg.Native {
             Context context = new Context();
             context.Register(Functions.Factorial);
             context.Register(Functions.Ln);
+            context.Register(Functions.Diff);
             return context;
 
         }

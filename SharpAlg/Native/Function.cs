@@ -93,6 +93,26 @@ namespace SharpAlg.Native {
             return null;
         }
     }
+    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    public class DiffFunction : Function, ISupportConvolution {
+        public DiffFunction()
+            : base("diff") {
+        }
+        public override Number Evaluate(IEnumerable<Number> args) {
+            throw new NotImplementedException();
+        }
+        public Expr Convolute(IEnumerable<Expr> args) {
+            var argsTail = args.Tail();
+            if(!argsTail.All(x => x is ParameterExpr))
+                throw new ExpressionDefferentiationException("All diff arguments should be parameters");//TODO correct message, go to constant
+            var diffList = argsTail.Cast<ParameterExpr>();
+            if(!diffList.Any())
+                return args.First().Diff();
+            Expr result = args.First();
+            diffList.ForEach(x => result = result.Diff(x.ParameterName));
+            return result;
+        }
+    }
 
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public static class Functions {
@@ -102,6 +122,8 @@ namespace SharpAlg.Native {
         static Function ln;
         public static Function Ln { get { return ln ?? (ln = new LnFunction()); } }
 
+        static Function diff;
+        public static Function Diff { get { return diff ?? (diff = new DiffFunction()); } }
     }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public interface ISupportDiff {

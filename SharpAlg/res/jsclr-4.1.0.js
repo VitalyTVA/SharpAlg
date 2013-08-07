@@ -4369,6 +4369,18 @@ var System$Linq$Enumerable =
             }
             return local;
         },
+        Cast$1: function (T, source) {
+            return source;
+        },
+        All$1: function (T, source, predicate) {
+            var $it3 = source.GetEnumerator();
+            while ($it3.MoveNext()) {
+                var item = $it3.get_Current();
+                if (!predicate(item))
+                    return false;
+            }
+            return true;
+        },
         LastOrDefault$1$$IEnumerable$1: function (TSource, source)
         {
             if (source == null)

@@ -71,6 +71,7 @@ var SharpAlg$Native$Context =
             var context = new SharpAlg.Native.Context.ctor();
             context.Register$$Function(SharpAlg.Native.Functions.get_Factorial());
             context.Register$$Function(SharpAlg.Native.Functions.get_Ln());
+            context.Register$$Function(SharpAlg.Native.Functions.get_Diff());
             return context;
         },
         cctor: function ()
@@ -1042,6 +1043,44 @@ var SharpAlg$Native$LnFunction =
     }
 };
 JsTypes.push(SharpAlg$Native$LnFunction);
+var SharpAlg$Native$DiffFunction =
+{
+    fullname: "SharpAlg.Native.DiffFunction",
+    baseTypeName: "SharpAlg.Native.Function",
+    assemblyName: "SharpAlg",
+    interfaceNames: ["SharpAlg.Native.ISupportConvolution"],
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            SharpAlg.Native.Function.ctor.call(this, "diff");
+        },
+        Evaluate: function (args)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Convolute: function (args)
+        {
+            var argsTail = SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, args);
+            if (!System.Linq.Enumerable.All$1(SharpAlg.Native.Expr.ctor, argsTail, $CreateAnonymousDelegate(this, function (x)
+            {
+                return Is(x, SharpAlg.Native.ParameterExpr.ctor);
+            })))
+                throw $CreateException(new SharpAlg.Native.ExpressionDefferentiationException.ctor$$String("All diff arguments should be parameters"), new Error());
+            var diffList = System.Linq.Enumerable.Cast$1(SharpAlg.Native.ParameterExpr.ctor, argsTail);
+            if (!System.Linq.Enumerable.Any$1$$IEnumerable$1(SharpAlg.Native.ParameterExpr.ctor, diffList))
+                return SharpAlg.Native.ExpressionExtensions.Diff(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), null);
+            var result = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
+            SharpAlg.Native.FunctionalExtensions.ForEach$1(SharpAlg.Native.ParameterExpr.ctor, diffList, $CreateAnonymousDelegate(this, function (x)
+            {
+                result = SharpAlg.Native.ExpressionExtensions.Diff(result, x.get_ParameterName());
+            }));
+            return result;
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$DiffFunction);
 var SharpAlg$Native$Functions =
 {
     fullname: "SharpAlg.Native.Functions",
@@ -1052,6 +1091,7 @@ var SharpAlg$Native$Functions =
         {
             SharpAlg.Native.Functions.factorial = null;
             SharpAlg.Native.Functions.ln = null;
+            SharpAlg.Native.Functions.diff = null;
         },
         Factorial$$: "SharpAlg.Native.Function",
         get_Factorial: function ()
@@ -1062,6 +1102,11 @@ var SharpAlg$Native$Functions =
         get_Ln: function ()
         {
             return (SharpAlg.Native.Functions.ln != null ? SharpAlg.Native.Functions.ln : (SharpAlg.Native.Functions.ln = new SharpAlg.Native.LnFunction.ctor()));
+        },
+        Diff$$: "SharpAlg.Native.Function",
+        get_Diff: function ()
+        {
+            return (SharpAlg.Native.Functions.diff != null ? SharpAlg.Native.Functions.diff : (SharpAlg.Native.Functions.diff = new SharpAlg.Native.DiffFunction.ctor()));
         }
     },
     assemblyName: "SharpAlg",
@@ -1218,10 +1263,6 @@ var SharpAlg$Native$FunctionalExtensions =
         Convert$1: function (TOut, source)
         {
             return As(source, TOut);
-        },
-        Cast$1: function (TOut, source)
-        {
-            return Cast(source, TOut);
         },
         AsEnumerable$1: function (T, source)
         {
