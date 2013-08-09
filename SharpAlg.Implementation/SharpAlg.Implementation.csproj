@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context.cs" />
+    <Compile Include="DefaultExpressionVisitor.cs" />
     <Compile Include="DiffExpressionVisitor.cs" />
     <Compile Include="ExpressionComparer.cs" />
     <Compile Include="ExpressionEvaluator.cs" />

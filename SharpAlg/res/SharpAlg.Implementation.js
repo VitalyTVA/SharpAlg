@@ -113,6 +113,33 @@ if (typeof(SharpAlg) == "undefined")
     var SharpAlg = {};
 if (typeof(SharpAlg.Native) == "undefined")
     SharpAlg.Native = {};
+SharpAlg.Native.DefaultExpressionVisitor = function ()
+{
+};
+SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant = function (constant)
+{
+    return this.GetDefault(constant);
+};
+SharpAlg.Native.DefaultExpressionVisitor.prototype.Parameter = function (parameter)
+{
+    return this.GetDefault(parameter);
+};
+SharpAlg.Native.DefaultExpressionVisitor.prototype.Add = function (multi)
+{
+    return this.GetDefault(multi);
+};
+SharpAlg.Native.DefaultExpressionVisitor.prototype.Multiply = function (multi)
+{
+    return this.GetDefault(multi);
+};
+SharpAlg.Native.DefaultExpressionVisitor.prototype.Power = function (power)
+{
+    return this.GetDefault(power);
+};
+SharpAlg.Native.DefaultExpressionVisitor.prototype.Function = function (functionExpr)
+{
+    return this.GetDefault(functionExpr);
+};
 SharpAlg.Native.DiffExpressionVisitor = function (builder, context, parameterName)
 {
     this.context = null;
