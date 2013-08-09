@@ -43,6 +43,7 @@
     <Reference Include="SharpKit.JsClr" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CoreExpressionExtensions.cs" />
     <Compile Include="Expr.cs" />
     <Compile Include="ExprBuilder.cs" />
     <Compile Include="Function.cs" />

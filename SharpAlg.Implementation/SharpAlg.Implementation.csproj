@@ -44,8 +44,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Context.cs" />
+    <Compile Include="DiffExpressionVisitor.cs" />
     <Compile Include="ExpressionComparer.cs" />
     <Compile Include="ExpressionEvaluator.cs" />
+    <Compile Include="ExprFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SR.cs" />
   </ItemGroup>

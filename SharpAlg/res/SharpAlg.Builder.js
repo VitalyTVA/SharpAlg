@@ -346,7 +346,7 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.Extra
 SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.prototype.Multiply = function (multi)
 {
     if (Is(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.ConstantExpr.ctor))
-        return new System.Tuple$2.ctor(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.ExpressionExtensions.Tail$$MultiplyExpr(multi));
+        return new System.Tuple$2.ctor(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.CoreExpressionExtensions.Tail$$MultiplyExpr(multi));
     return SharpAlg.Native.DefaultExpressionVisitor.prototype.Multiply.call(this, multi);
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.prototype.GetDefault = function (expr)

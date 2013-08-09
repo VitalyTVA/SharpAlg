@@ -99,7 +99,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Multiply = function (multi)
 {
     if (SharpAlg.Native.ExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.Expr.MinusOne))
     {
-        var exprText = this.WrapFromAdd(SharpAlg.Native.ExpressionExtensions.Tail$$MultiplyExpr(multi));
+        var exprText = this.WrapFromAdd(SharpAlg.Native.CoreExpressionExtensions.Tail$$MultiplyExpr(multi));
         return System.String.Format$$String$$Object("-{0}", exprText);
     }
     var sb = new System.Text.StringBuilder.ctor();
@@ -299,7 +299,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor.prototype.
         {
             return As(y, SharpAlg.Native.ConstantExpr.ctor);
         })).get_Value()));
-        var expr = SharpAlg.Native.ExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.Expr.MinusOne) ? SharpAlg.Native.ExpressionExtensions.Tail$$MultiplyExpr(multi) : SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.FunctionalExtensions.AsEnumerable$1(SharpAlg.Native.ConstantExpr.ctor, exprConstant), SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, multi.get_Args())));
+        var expr = SharpAlg.Native.ExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.Expr.MinusOne) ? SharpAlg.Native.CoreExpressionExtensions.Tail$$MultiplyExpr(multi) : SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.FunctionalExtensions.AsEnumerable$1(SharpAlg.Native.ConstantExpr.ctor, exprConstant), SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, multi.get_Args())));
         return new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo(expr, 1);
     }
     return SharpAlg.Native.DefaultExpressionVisitor.prototype.Multiply.call(this, multi);

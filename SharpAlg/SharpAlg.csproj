@@ -88,8 +88,6 @@
     <Compile Include="Native\Builder\TrivialExprBuilder.cs" />
     <Compile Include="Native\ContextFactory.cs" />
     <Compile Include="Native\DefaultExpressionVisitor.cs" />
-    <Compile Include="Native\DiffExpressionVisitor.cs" />
-    <Compile Include="Native\Expr.cs" />
     <Compile Include="Native\ExpressionExtensions.cs" />
     <Compile Include="Native\ExpressionFactory.cs" />
     <Compile Include="Native\Function.cs" />

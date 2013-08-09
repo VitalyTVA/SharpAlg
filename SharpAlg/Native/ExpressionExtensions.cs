@@ -38,11 +38,5 @@ namespace SharpAlg.Native {
             parser.Parse();
             return parser;
         }
-        public static Expr Tail(this MultiplyExpr multi) {
-            return Expr.Multiply(multi.Args.Tail());
-        }
-        public static Expr Tail(this AddExpr multi) {
-            return Expr.Add(multi.Args.Tail());
-        }
     }
 }

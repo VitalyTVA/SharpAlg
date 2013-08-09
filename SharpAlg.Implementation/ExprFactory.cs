@@ -5,13 +5,15 @@ using System.Diagnostics;
 using System.Linq;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
     public static class ExprFactory {
+        public const string FactorialName = "factorial";
+        public const string LnName = "ln";
         public static FunctionExpr Factorial(Expr argument) {
-            return Expr.Function(Functions.Factorial.Name, argument);
+            return Expr.Function(FactorialName, argument);
         }
         public static FunctionExpr Ln(Expr argument) {
-            return Expr.Function(Functions.Ln.Name, argument);
+            return Expr.Function(LnName, argument);
         }
     }
 }
