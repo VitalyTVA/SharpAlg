@@ -43,4 +43,16 @@ namespace SharpAlg.Native {
             return IsValidArgsCount(args) ? string.Empty : string.Format("Error, (in {0}) expecting 1 argument, got {1}", Name, args.Count());
         }
     }
+    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
+    public abstract class SingleArgumentDifferentiableFunction : SingleArgumentFunction, ISupportDiff {
+        protected SingleArgumentDifferentiableFunction(string name)
+            : base(name) {
+        }
+        public Expr Diff(IDiffExpressionVisitor diffVisitor, IEnumerable<Expr> args) {
+            CheckArgsCount(args);
+            Expr arg = args.First();
+            return diffVisitor.Builder.Multiply(arg.Visit(diffVisitor), DiffCore(diffVisitor.Builder, arg)); //TODO use builder
+        }
+        protected abstract Expr DiffCore(ExprBuilder builder, Expr arg);
+    }
 }

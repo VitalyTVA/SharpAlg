@@ -118,28 +118,6 @@ var SharpAlg$Native$ExpressionExtensions =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionExtensions);
-var SharpAlg$Native$SingleArgumentDifferentiableFunction =
-{
-    fullname: "SharpAlg.Native.SingleArgumentDifferentiableFunction",
-    baseTypeName: "SharpAlg.Native.SingleArgumentFunction",
-    assemblyName: "SharpAlg",
-    interfaceNames: ["SharpAlg.Native.ISupportDiff"],
-    Kind: "Class",
-    definition:
-    {
-        ctor: function (name)
-        {
-            SharpAlg.Native.SingleArgumentFunction.ctor.call(this, name);
-        },
-        Diff: function (diffVisitor, args)
-        {
-            SharpAlg.Native.SingleArgumentFunction.CheckArgsCount$1(SharpAlg.Native.Expr.ctor, args);
-            var arg = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
-            return diffVisitor.get_Builder().Multiply(arg.Visit$1(SharpAlg.Native.Expr.ctor, diffVisitor), this.DiffCore(diffVisitor.get_Builder(), arg));
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$SingleArgumentDifferentiableFunction);
 var SharpAlg$Native$FactorialFunction =
 {
     fullname: "SharpAlg.Native.FactorialFunction",
