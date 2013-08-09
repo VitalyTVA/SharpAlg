@@ -25,25 +25,25 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void ContextTest() {
-            var context = Context.CreateEmpty();
+            var context = ContextFactory.CreateEmpty();
             CustomFunction func = new CustomFunction();
 
-            Context.CreateEmpty()
+            ContextFactory.CreateEmpty()
                 .Register(func)
                 .Register("x", "3".Parse())
                 .IsEqual(x => x.GetFunction("CustomFunc"), func)
                 .IsTrue(x => x.GetValue("x").ExprEquals("3".Parse()));
 
-            Context.CreateDefault()
+            ContextFactory.CreateDefault()
                 .Register(func)
                 .Register("x", "3".Parse())
                 .IsEqual(x => x.GetFunction(Functions.Factorial.Name), Functions.Factorial)
                 .IsEqual(x => x.GetFunction("CustomFunc"), func)
                 .IsTrue(x => x.GetValue("x").ExprEquals("3".Parse()));
-            Context.Default
+            ContextFactory.Default
                 .Fails(x => x.Register(func), typeof(InvalidOperationException))
                 .Fails(x => x.Register("x", "3".Parse()), typeof(InvalidOperationException));
-            Context.Empty
+            ContextFactory.Empty
                 .Fails(x => x.Register(func), typeof(InvalidOperationException))
                 .Fails(x => x.Register("x", "3".Parse()), typeof(InvalidOperationException));
         }
@@ -120,7 +120,7 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void ParameterExprEvaluationTest() {
-            var context = Context.CreateDefault()
+            var context = ContextFactory.CreateDefault()
                 .Register("x", ExprTestHelper.AsConstant(9))
                 .Register("y", ExprTestHelper.AsConstant(13));
             Expr.Parameter("x")
@@ -139,7 +139,7 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void FunctionEvaluationTest() {
-            var context = Context.CreateEmpty()
+            var context = ContextFactory.CreateEmpty()
                 .Register(new CustomFunction())
                 .Register("x", "3".Parse());
             "CustomFunc(1, x + 2, 2)".Parse()
@@ -339,7 +339,7 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void SubsitutionTest() {
-            var context = Context.CreateDefault()
+            var context = ContextFactory.CreateDefault()
                 .Register("x", "y + 1".Parse());
             var builder = ConvolutionExprBuilder.Create(context);
             "x ^ 3".Parse(builder).AssertSimpleStringRepresentation("(y + 1) ^ 3");
@@ -362,7 +362,7 @@ namespace SharpAlg.Tests {
         }
         public static Func<double, Number> AsEvaluator(this Expr expr) {
             return x => {
-                return expr.Evaluate(Context.CreateEmpty().Register("x", ExprTestHelper.AsConstant(x)));
+                return expr.Evaluate(ContextFactory.CreateEmpty().Register("x", ExprTestHelper.AsConstant(x)));
             };
         }
         public static ConstantExpr AsConstant(this double constant) {

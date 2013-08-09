@@ -69,11 +69,11 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder = function (context)
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault = function ()
 {
-    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.Context.Default);
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.ContextFactory.Default);
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateEmpty = function ()
 {
-    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.Context.Empty);
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.ContextFactory.Empty);
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.Create = function (context)
 {

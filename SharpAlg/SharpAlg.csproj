@@ -75,6 +75,7 @@
     <Content Include="res\SharpAlg.Core.js" />
     <Content Include="res\SharpAlg.Core.Number.js" />
     <Content Include="res\SharpAlg.Core.Utils.js" />
+    <Content Include="res\SharpAlg.Implementation.js" />
     <Content Include="res\SharpAlg.Native.js" />
     <Content Include="res\SharpAlg.Number.js" />
     <Content Include="res\SharpAlg.Parser.js" />
@@ -85,7 +86,7 @@
   <ItemGroup>
     <Compile Include="Native\Builder\ConvolutionExprBuilder.cs" />
     <Compile Include="Native\Builder\TrivialExprBuilder.cs" />
-    <Compile Include="Native\Context.cs" />
+    <Compile Include="Native\ContextFactory.cs" />
     <Compile Include="Native\DefaultExpressionVisitor.cs" />
     <Compile Include="Native\DiffExpressionVisitor.cs" />
     <Compile Include="Native\Expr.cs" />
@@ -121,6 +122,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Implementation.csproj">
+      <Project>{06bd00af-1f46-4df4-a61e-e05d412d90b4}</Project>
+      <Name>SharpAlg.Implementation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Parser.csproj">
       <Project>{a20747c7-601e-454a-83d5-d53fc6724f71}</Project>
       <Name>SharpAlg.Parser</Name>

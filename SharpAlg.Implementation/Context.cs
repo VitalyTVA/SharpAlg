@@ -4,35 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
     public class Context : IContext {
-        public static Context CreateEmpty() {
-            return new Context();
-        }
-        public static Context CreateDefault() {
-            return new Context()
-                .Register(Functions.Factorial)
-                .Register(Functions.Factorial)
-                .Register(Functions.Ln)
-                .Register(Functions.Diff);
-        }
-        public static readonly Context Empty;
-        public static readonly Context Default;
-        static Context() {
-            Default = CreateDefault();
-            Default.ReadOnly = true;
-
-            Empty = CreateEmpty();
-            Empty.ReadOnly = true;
-        }
-
         Dictionary<string, Expr> names = new Dictionary<string, Expr>();
         Dictionary<string, Function> functions = new Dictionary<string, Function>();
 
         public bool ReadOnly {
-            get; private set;
+            get; set;
         }
-        Context() { }
+        public Context() { }
 
         public Context Register(Function func) {
             CheckReadonly();

@@ -56,9 +56,9 @@ if (typeof($CreateDelegate)=='undefined'){
 }
 if (typeof(JsTypes) == "undefined")
     var JsTypes = [];
-var SharpAlg$Native$Context =
+var SharpAlg$Native$ContextFactory =
 {
-    fullname: "SharpAlg.Native.Context",
+    fullname: "SharpAlg.Native.ContextFactory",
     baseTypeName: "System.Object",
     staticDefinition:
     {
@@ -72,63 +72,25 @@ var SharpAlg$Native$Context =
         },
         cctor: function ()
         {
-            SharpAlg.Native.Context.Empty = null;
-            SharpAlg.Native.Context.Default = null;
-            SharpAlg.Native.Context.Default = SharpAlg.Native.Context.CreateDefault();
-            SharpAlg.Native.Context.Default.set_ReadOnly(true);
-            SharpAlg.Native.Context.Empty = SharpAlg.Native.Context.CreateEmpty();
-            SharpAlg.Native.Context.Empty.set_ReadOnly(true);
+            SharpAlg.Native.ContextFactory.Empty = null;
+            SharpAlg.Native.ContextFactory.Default = null;
+            SharpAlg.Native.ContextFactory.Default = SharpAlg.Native.ContextFactory.CreateDefault();
+            SharpAlg.Native.ContextFactory.Default.set_ReadOnly(true);
+            SharpAlg.Native.ContextFactory.Empty = SharpAlg.Native.ContextFactory.CreateEmpty();
+            SharpAlg.Native.ContextFactory.Empty.set_ReadOnly(true);
         }
     },
     assemblyName: "SharpAlg",
-    interfaceNames: ["SharpAlg.Native.IContext"],
     Kind: "Class",
     definition:
     {
         ctor: function ()
         {
-            this.names = new System.Collections.Generic.Dictionary$2.ctor(System.String.ctor, SharpAlg.Native.Expr.ctor);
-            this.functions = new System.Collections.Generic.Dictionary$2.ctor(System.String.ctor, SharpAlg.Native.Function.ctor);
-            this._ReadOnly = false;
             System.Object.ctor.call(this);
-        },
-        ReadOnly$$: "System.Boolean",
-        get_ReadOnly: function ()
-        {
-            return this._ReadOnly;
-        },
-        set_ReadOnly: function (value)
-        {
-            this._ReadOnly = value;
-        },
-        Register$$Function: function (func)
-        {
-            this.CheckReadonly();
-            this.functions.set_Item$$TKey(func.get_Name(), func);
-            return this;
-        },
-        GetFunction: function (name)
-        {
-            return SharpAlg.Native.FunctionalExtensions.TryGetValue$2(System.String.ctor, SharpAlg.Native.Function.ctor, this.functions, name);
-        },
-        Register$$String$$Expr: function (name, value)
-        {
-            this.CheckReadonly();
-            this.names.set_Item$$TKey(name, value);
-            return this;
-        },
-        GetValue: function (name)
-        {
-            return SharpAlg.Native.FunctionalExtensions.TryGetValue$2(System.String.ctor, SharpAlg.Native.Expr.ctor, this.names, name);
-        },
-        CheckReadonly: function ()
-        {
-            if (this.get_ReadOnly())
-                throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
         }
     }
 };
-JsTypes.push(SharpAlg$Native$Context);
+JsTypes.push(SharpAlg$Native$ContextFactory);
 if (typeof(SharpAlg) == "undefined")
     var SharpAlg = {};
 if (typeof(SharpAlg.Native) == "undefined")
@@ -511,11 +473,11 @@ var SharpAlg$Native$ExpressionExtensions =
     {
         Evaluate: function (expr, context)
         {
-            return expr.Visit$1(SharpAlg.Native.Number.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : SharpAlg.Native.Context.Default)));
+            return expr.Visit$1(SharpAlg.Native.Number.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : SharpAlg.Native.ContextFactory.Default)));
         },
         Diff: function (expr, parameterName)
         {
-            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault(), SharpAlg.Native.Context.Default, parameterName));
+            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault(), SharpAlg.Native.ContextFactory.Default, parameterName));
         },
         ExprEquals: function (expr1, expr2)
         {

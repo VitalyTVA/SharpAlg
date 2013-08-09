@@ -60,10 +60,10 @@ namespace SharpAlg.Native.Builder {
         }
         #endregion
         public static ExprBuilder CreateDefault() {
-            return new ConvolutionExprBuilder(Context.Default);
+            return new ConvolutionExprBuilder(ContextFactory.Default);
         }
         public static ExprBuilder CreateEmpty() {
-            return new ConvolutionExprBuilder(Context.Empty);
+            return new ConvolutionExprBuilder(ContextFactory.Empty);
         }
         public static ExprBuilder Create(Context context) {
             return new ConvolutionExprBuilder(context);

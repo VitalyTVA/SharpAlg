@@ -109,7 +109,7 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void ExpressionsWithParameterTest() {
-            var context = Context.CreateEmpty()
+            var context = ContextFactory.CreateEmpty()
                 .Register("x", ExprTestHelper.AsConstant(9))
                 .Register("someName", ExprTestHelper.AsConstant(13));
 

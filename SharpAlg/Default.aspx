@@ -10,6 +10,8 @@
     <script type="text/javascript" src="res/SharpAlg.Core.Number.js"></script>
     <script type="text/javascript" src="res/SharpAlg.Core.js"></script>
 
+    <script type="text/javascript" src="res/SharpAlg.Implementation.js"></script>
+
     <script type="text/javascript" src="res/SharpAlg.Parser.js"></script>
     <script type="text/javascript" src="res/SharpAlg.Number.js"></script>
     <script type="text/javascript" src="res/SharpAlg.Native.js"></script>

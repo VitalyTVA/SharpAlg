@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg", "SharpAlg\SharpAlg.csproj", "{01DEE02A-1F6C-46A9-B945-65E9DE87498E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3} = {CE855CA7-ECAE-445B-A33E-4D35702F66B3}
+		{06BD00AF-1F46-4DF4-A61E-E05D412D90B4} = {06BD00AF-1F46-4DF4-A61E-E05D412D90B4}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Preprocess", "SharpAlg.Preprocess\SharpAlg.Preprocess.csproj", "{CE855CA7-ECAE-445B-A33E-4D35702F66B3}"
@@ -13,6 +14,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Parser", "SharpAlg.Parser\SharpAlg.Parser.csproj", "{A20747C7-601E-454A-83D5-D53FC6724F71}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3} = {CE855CA7-ECAE-445B-A33E-4D35702F66B3}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Implementation", "SharpAlg.Implementation\SharpAlg.Implementation.csproj", "{06BD00AF-1F46-4DF4-A61E-E05D412D90B4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A823E596-E03F-4896-8946-5CAE2BA1C65D} = {A823E596-E03F-4896-8946-5CAE2BA1C65D}
 	EndProjectSection
 EndProject
 Global
@@ -37,6 +43,10 @@ Global
 		{A20747C7-601E-454A-83D5-D53FC6724F71}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A20747C7-601E-454A-83D5-D53FC6724F71}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A20747C7-601E-454A-83D5-D53FC6724F71}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06BD00AF-1F46-4DF4-A61E-E05D412D90B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06BD00AF-1F46-4DF4-A61E-E05D412D90B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06BD00AF-1F46-4DF4-A61E-E05D412D90B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06BD00AF-1F46-4DF4-A61E-E05D412D90B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
