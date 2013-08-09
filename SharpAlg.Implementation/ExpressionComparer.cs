@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
     public class ExpressionEqualityComparer : IExpressionVisitor<bool> {
         protected readonly Expr expr;
         public ExpressionEqualityComparer(Expr expr) {
@@ -48,7 +48,7 @@ namespace SharpAlg.Native {
             });
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
     public class ExpressionEquivalenceComparer : ExpressionEqualityComparer {
         public ExpressionEquivalenceComparer(Expr expr)
             : base(expr) {
