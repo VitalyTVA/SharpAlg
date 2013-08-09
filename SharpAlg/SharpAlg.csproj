@@ -73,6 +73,7 @@
     <Content Include="res\jquery-1.8.2.min.js" />
     <Content Include="res\jsclr-4.1.0.js" />
     <Content Include="res\SharpAlg.Builder.js" />
+    <Content Include="res\SharpAlg.Core.Utils.js" />
     <Content Include="res\SharpAlg.Native.js" />
     <Content Include="res\SharpAlg.Number.js" />
     <Content Include="res\SharpAlg.Parser.js" />
@@ -93,7 +94,6 @@
     <Compile Include="Native\ExpressionExtensions.cs" />
     <Compile Include="Native\ExpressionFactory.cs" />
     <Compile Include="Native\Function.cs" />
-    <Compile Include="Native\PlatformHelper.cs" />
     <Compile Include="Native\Printer\ExpressionPrinter.cs" />
     <Compile Include="Native\FunctionalExtensions.cs" />
     <Compile Include="Native\IExpressionVisitor.cs" />
@@ -145,7 +145,12 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\SharpArg.Core\SharpArg.Core.csproj">
+      <Project>{a823e596-e03f-4896-8946-5cae2ba1c65d}</Project>
+      <Name>SharpArg.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

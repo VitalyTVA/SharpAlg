@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Prototype, Filename = SR.JS_Core_Utils)]
     public static class PlatformHelper {
         [JsMethod(Code = "return d.toString();")]
         public static string ToInvariantString(this double d) {

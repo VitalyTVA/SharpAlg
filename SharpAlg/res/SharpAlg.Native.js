@@ -1128,29 +1128,6 @@ var SharpAlg$Native$ISupportCheckArgs = {fullname: "SharpAlg.Native.ISupportChec
 JsTypes.push(SharpAlg$Native$ISupportCheckArgs);
 var SharpAlg$Native$ISupportConvolution = {fullname: "SharpAlg.Native.ISupportConvolution", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$ISupportConvolution);
-SharpAlg.Native.PlatformHelper = function ()
-{
-};
-SharpAlg.Native.PlatformHelper.ToInvariantString = function (d)
-{
-    return d.toString();
-};
-SharpAlg.Native.PlatformHelper.Parse = function (s)
-{
-    return System.Double.Parse$$String(s);
-};
-SharpAlg.Native.PlatformHelper.IntToChar = function (n)
-{
-    return String.fromCharCode(n);
-};
-SharpAlg.Native.PlatformHelper.CharToInt = function (c)
-{
-    return c.charCodeAt();
-};
-SharpAlg.Native.PlatformHelper.GetMessage = function (e)
-{
-    return e.toString();
-};
 var SharpAlg$Native$FunctionalExtensions =
 {
     fullname: "SharpAlg.Native.FunctionalExtensions",

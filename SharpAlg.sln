@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg", "SharpAlg\SharpA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Preprocess", "SharpAlg.Preprocess\SharpAlg.Preprocess.csproj", "{CE855CA7-ECAE-445B-A33E-4D35702F66B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpArg.Core", "SharpArg.Core\SharpArg.Core.csproj", "{A823E596-E03F-4896-8946-5CAE2BA1C65D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -22,6 +24,10 @@ Global
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE855CA7-ECAE-445B-A33E-4D35702F66B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A823E596-E03F-4896-8946-5CAE2BA1C65D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
