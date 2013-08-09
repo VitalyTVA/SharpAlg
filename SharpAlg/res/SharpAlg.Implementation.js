@@ -457,6 +457,69 @@ var SharpAlg$Native$ExpressionEvaluationException =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionEvaluationException);
+var SharpAlg$Native$InvalidArgumentCountException =
+{
+    fullname: "SharpAlg.Native.InvalidArgumentCountException",
+    baseTypeName: "System.Exception",
+    assemblyName: "SharpAlg.Implementation",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Exception.ctor.call(this);
+        },
+        ctor$$String: function (message)
+        {
+            System.Exception.ctor$$String.call(this, message);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$InvalidArgumentCountException);
+var SharpAlg$Native$SingleArgumentFunction =
+{
+    fullname: "SharpAlg.Native.SingleArgumentFunction",
+    baseTypeName: "SharpAlg.Native.Function",
+    staticDefinition:
+    {
+        IsValidArgsCount$1: function (T, args)
+        {
+            return System.Linq.Enumerable.Count$1$$IEnumerable$1(T, args) == 1;
+        },
+        CheckArgsCount$1: function (T, args)
+        {
+            if (!SharpAlg.Native.SingleArgumentFunction.IsValidArgsCount$1(T, args))
+                throw $CreateException(new SharpAlg.Native.InvalidArgumentCountException.ctor(), new Error());
+        }
+    },
+    assemblyName: "SharpAlg.Implementation",
+    interfaceNames: ["SharpAlg.Native.ISupportCheckArgs"],
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (name)
+        {
+            SharpAlg.Native.Function.ctor.call(this, name);
+        },
+        Evaluate: function (evaluator, args)
+        {
+            return this.EvaluateCore(System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Number.ctor, args, $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.Visit$1(SharpAlg.Native.Number.ctor, evaluator);
+            })));
+        },
+        EvaluateCore: function (args)
+        {
+            SharpAlg.Native.SingleArgumentFunction.CheckArgsCount$1(SharpAlg.Native.Number.ctor, args);
+            return this.Evaluate$$Number(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Number.ctor, args));
+        },
+        Check: function (args)
+        {
+            return SharpAlg.Native.SingleArgumentFunction.IsValidArgsCount$1(SharpAlg.Native.Expr.ctor, args) ? System.String.Empty : System.String.Format$$String$$Object$$Object("Error, (in {0}) expecting 1 argument, got {1}", this.get_Name(), System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args));
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$SingleArgumentFunction);
 var SharpAlg$Native$FunctionFactory =
 {
     fullname: "SharpAlg.Native.FunctionFactory",

@@ -9,41 +9,6 @@ using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    public class InvalidArgumentCountException : Exception {
-        public InvalidArgumentCountException() {
-            
-        }
-        public InvalidArgumentCountException(string message)
-            : base(message) {
-            
-        }
-    }
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    public abstract class SingleArgumentFunction : Function, ISupportCheckArgs {
-        static bool IsValidArgsCount<T>(IEnumerable<T> args) {
-            return args.Count() == 1;
-        }
-        public override Number Evaluate(IExpressionVisitor<Number> evaluator, IEnumerable<Expr> args) {
-            return EvaluateCore(args.Select(x => x.Visit(evaluator)));
-        }
-        protected static void CheckArgsCount<T>(IEnumerable<T> args) {
-            if(!IsValidArgsCount<T>(args))
-                throw new InvalidArgumentCountException(); //TODO message
-        }
-        protected SingleArgumentFunction(string name)
-            : base(name) {
-        }
-        Number EvaluateCore(IEnumerable<Number> args) {
-            CheckArgsCount(args);
-            return Evaluate(args.First());
-        }
-        protected abstract Number Evaluate(Number arg);
-
-        public string Check(IEnumerable<Expr> args) {
-            return IsValidArgsCount(args) ? string.Empty : string.Format("Error, (in {0}) expecting 1 argument, got {1}", Name, args.Count());
-        }
-    }
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public abstract class SingleArgumentDifferentiableFunction : SingleArgumentFunction, ISupportDiff {
         protected SingleArgumentDifferentiableFunction(string name)
             : base(name) {
