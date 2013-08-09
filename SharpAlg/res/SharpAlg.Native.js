@@ -81,6 +81,7 @@ var SharpAlg$Native$Context =
         }
     },
     assemblyName: "SharpAlg",
+    interfaceNames: ["SharpAlg.Native.IContext"],
     Kind: "Class",
     definition:
     {

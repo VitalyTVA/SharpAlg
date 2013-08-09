@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    public class Context {
+    public class Context : IContext {
         public static Context CreateEmpty() {
             return new Context();
         }

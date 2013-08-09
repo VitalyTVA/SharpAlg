@@ -14,4 +14,5 @@ namespace SharpAlg.Native {
         T Power(PowerExpr power);
         T Function(FunctionExpr functionExpr);
     }
+
 }
