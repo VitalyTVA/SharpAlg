@@ -5,10 +5,16 @@ using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
+    public enum BinaryOperationEx {
+        Add, Subtract, Multiply, Divide
+    }
+    public enum OperationPriority {
+        None, Add, Multiply, Power, Factorial
+    }
+    [JsType(JsMode.Prototype, Filename = SR.JS_Implementation)]
     public class ExpressionEvaluator : IExpressionVisitor<Number> {
-        readonly Context context;
-        public ExpressionEvaluator(Context context) {
+        readonly IContext context;
+        public ExpressionEvaluator(IContext context) {
             this.context = context;
         }
         public Number Constant(ConstantExpr constant) {
@@ -74,7 +80,7 @@ namespace SharpAlg.Native {
             throw new NotImplementedException(); //TODO correct exception
         }
     }
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
     public class ExpressionEvaluationException : Exception {
         public ExpressionEvaluationException()
             : base() {

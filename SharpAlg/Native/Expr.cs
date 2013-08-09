@@ -5,12 +5,6 @@ using System.Diagnostics;
 using System.Linq;
 
 namespace SharpAlg.Native {
-    public enum BinaryOperationEx {
-        Add, Subtract, Multiply, Divide
-    }
-    public enum OperationPriority { 
-        None, Add, Multiply, Power, Factorial 
-    }
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public static class ExprFactory {
         public static FunctionExpr Factorial(Expr argument) {
