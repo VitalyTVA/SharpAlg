@@ -71,7 +71,7 @@ var SharpAlg$Native$Number =
             return new SharpAlg.Native.Number.ctor(SharpAlg.Native.PlatformHelper.Parse(s));
         }
     },
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {

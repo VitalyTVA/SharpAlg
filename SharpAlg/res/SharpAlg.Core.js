@@ -74,7 +74,7 @@ var SharpAlg$Native$Expr =
             return new SharpAlg.Native.FunctionExpr.ctor(functionName, arguments);
         }
     },
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {
@@ -95,7 +95,7 @@ var SharpAlg$Native$ConstantExpr =
         {
         }
     },
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {
@@ -131,7 +131,7 @@ var SharpAlg$Native$ParameterExpr =
         {
         }
     },
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {
@@ -167,7 +167,7 @@ var SharpAlg$Native$MultiExpr =
         {
         }
     },
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {
@@ -199,7 +199,7 @@ var SharpAlg$Native$AddExpr =
         {
         }
     },
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {
@@ -224,7 +224,7 @@ var SharpAlg$Native$MultiplyExpr =
         {
         }
     },
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {
@@ -249,7 +249,7 @@ var SharpAlg$Native$PowerExpr =
         {
         }
     },
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {
@@ -296,7 +296,7 @@ var SharpAlg$Native$FunctionExpr =
         {
         }
     },
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {
@@ -362,7 +362,7 @@ var SharpAlg$Native$Function =
 {
     fullname: "SharpAlg.Native.Function",
     baseTypeName: "System.Object",
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {
@@ -384,15 +384,15 @@ var SharpAlg$Native$Function =
     }
 };
 JsTypes.push(SharpAlg$Native$Function);
-var SharpAlg$Native$IDiffExpressionVisitor = {fullname: "SharpAlg.Native.IDiffExpressionVisitor", baseTypeName: "System.Object", assemblyName: "SharpArg.Core", interfaceNames: ["SharpAlg.Native.IExpressionVisitor$1"], Kind: "Interface"};
+var SharpAlg$Native$IDiffExpressionVisitor = {fullname: "SharpAlg.Native.IDiffExpressionVisitor", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", interfaceNames: ["SharpAlg.Native.IExpressionVisitor$1"], Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IDiffExpressionVisitor);
-var SharpAlg$Native$ISupportDiff = {fullname: "SharpAlg.Native.ISupportDiff", baseTypeName: "System.Object", assemblyName: "SharpArg.Core", Kind: "Interface"};
+var SharpAlg$Native$ISupportDiff = {fullname: "SharpAlg.Native.ISupportDiff", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$ISupportDiff);
-var SharpAlg$Native$ISupportCheckArgs = {fullname: "SharpAlg.Native.ISupportCheckArgs", baseTypeName: "System.Object", assemblyName: "SharpArg.Core", Kind: "Interface"};
+var SharpAlg$Native$ISupportCheckArgs = {fullname: "SharpAlg.Native.ISupportCheckArgs", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$ISupportCheckArgs);
-var SharpAlg$Native$ISupportConvolution = {fullname: "SharpAlg.Native.ISupportConvolution", baseTypeName: "System.Object", assemblyName: "SharpArg.Core", Kind: "Interface"};
+var SharpAlg$Native$ISupportConvolution = {fullname: "SharpAlg.Native.ISupportConvolution", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$ISupportConvolution);
-var SharpAlg$Native$IContext = {fullname: "SharpAlg.Native.IContext", baseTypeName: "System.Object", assemblyName: "SharpArg.Core", Kind: "Interface"};
+var SharpAlg$Native$IContext = {fullname: "SharpAlg.Native.IContext", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IContext);
-var SharpAlg$Native$IExpressionVisitor$1 = {fullname: "SharpAlg.Native.IExpressionVisitor$1", baseTypeName: "System.Object", assemblyName: "SharpArg.Core", Kind: "Interface"};
+var SharpAlg$Native$IExpressionVisitor$1 = {fullname: "SharpAlg.Native.IExpressionVisitor$1", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IExpressionVisitor$1);

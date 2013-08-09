@@ -144,7 +144,7 @@ var SharpAlg$Native$FunctionalExtensions =
             return $yield;
         }
     },
-    assemblyName: "SharpArg.Core",
+    assemblyName: "SharpAlg.Core",
     Kind: "Class",
     definition:
     {

@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg", "SharpAlg\SharpA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Preprocess", "SharpAlg.Preprocess\SharpAlg.Preprocess.csproj", "{CE855CA7-ECAE-445B-A33E-4D35702F66B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpArg.Core", "SharpArg.Core\SharpArg.Core.csproj", "{A823E596-E03F-4896-8946-5CAE2BA1C65D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Core", "SharpAlg.Core\SharpAlg.Core.csproj", "{A823E596-E03F-4896-8946-5CAE2BA1C65D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Parser", "SharpAlg.Parser\SharpAlg.Parser.csproj", "{A20747C7-601E-454A-83D5-D53FC6724F71}"
 	ProjectSection(ProjectDependencies) = postProject

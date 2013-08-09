@@ -7,8 +7,8 @@
     <ProjectGuid>{A823E596-E03F-4896-8946-5CAE2BA1C65D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpArg.Core</RootNamespace>
-    <AssemblyName>SharpArg.Core</AssemblyName>
+    <RootNamespace>SharpAlg.Core</RootNamespace>
+    <AssemblyName>SharpAlg.Core</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
