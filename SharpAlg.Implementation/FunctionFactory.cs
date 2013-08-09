@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
-    public static class ExprFactory {
+    public static class FunctionFactory {
         public const string FactorialName = "factorial";
         public const string LnName = "ln";
         public static FunctionExpr Factorial(Expr argument) {

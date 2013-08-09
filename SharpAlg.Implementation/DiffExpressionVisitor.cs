@@ -56,7 +56,7 @@ namespace SharpAlg.Native {
             return Builder.Add(expr1, expr2);
         }
         public Expr Power(PowerExpr power) {
-            Expr sum1 = Builder.Multiply(power.Right.Visit(this), ExprFactory.Ln(power.Left));
+            Expr sum1 = Builder.Multiply(power.Right.Visit(this), FunctionFactory.Ln(power.Left));
             Expr sum2 = Builder.Divide(Builder.Multiply(power.Right, power.Left.Visit(this)), power.Left);
             Expr sum = Builder.Add(sum1, sum2);
             return Builder.Multiply(power, sum);

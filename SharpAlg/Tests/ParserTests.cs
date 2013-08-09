@@ -90,13 +90,13 @@ namespace SharpAlg.Tests {
         [Test]
         public void FactorialTest() {
             Parse("x!")
-                .AssertValue(null, ExprFactory.Factorial(Expr.Parameter("x")));
+                .AssertValue(null, FunctionFactory.Factorial(Expr.Parameter("x")));
             Parse("x ^ y!")
-                .AssertValue(null, Expr.Power(Expr.Parameter("x"), ExprFactory.Factorial(Expr.Parameter("y"))));
+                .AssertValue(null, Expr.Power(Expr.Parameter("x"), FunctionFactory.Factorial(Expr.Parameter("y"))));
             Parse("!x")
                 .AssertSingleSyntaxError(GetNumberExpectedMessage(1));
             Parse("3!")
-                .AssertValue(6, ExprFactory.Factorial(ExprTestHelper.AsConstant(3)));
+                .AssertValue(6, FunctionFactory.Factorial(ExprTestHelper.AsConstant(3)));
             Parse("2 ^ 3!")
                 .AssertValue(64);
         }

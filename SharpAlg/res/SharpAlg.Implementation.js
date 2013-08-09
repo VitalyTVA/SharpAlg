@@ -175,7 +175,7 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Multiply = function (multi)
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Power = function (power)
 {
-    var sum1 = this.get_Builder().Multiply(power.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), SharpAlg.Native.ExprFactory.Ln(power.get_Left()));
+    var sum1 = this.get_Builder().Multiply(power.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), SharpAlg.Native.FunctionFactory.Ln(power.get_Left()));
     var sum2 = this.get_Builder().Divide(this.get_Builder().Multiply(power.get_Right(), power.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this)), power.get_Left());
     var sum = this.get_Builder().Add(sum1, sum2);
     return this.get_Builder().Multiply(power, sum);
@@ -430,16 +430,16 @@ var SharpAlg$Native$ExpressionEvaluationException =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionEvaluationException);
-var SharpAlg$Native$ExprFactory =
+var SharpAlg$Native$FunctionFactory =
 {
-    fullname: "SharpAlg.Native.ExprFactory",
+    fullname: "SharpAlg.Native.FunctionFactory",
     baseTypeName: "System.Object",
     staticDefinition:
     {
         cctor: function ()
         {
-            SharpAlg.Native.ExprFactory.FactorialName = "factorial";
-            SharpAlg.Native.ExprFactory.LnName = "ln";
+            SharpAlg.Native.FunctionFactory.FactorialName = "factorial";
+            SharpAlg.Native.FunctionFactory.LnName = "ln";
         },
         Factorial: function (argument)
         {
@@ -460,4 +460,4 @@ var SharpAlg$Native$ExprFactory =
         }
     }
 };
-JsTypes.push(SharpAlg$Native$ExprFactory);
+JsTypes.push(SharpAlg$Native$FunctionFactory);

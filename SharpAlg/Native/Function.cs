@@ -58,7 +58,7 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class FactorialFunction : SingleArgumentFunction {
         public FactorialFunction()
-            : base(ExprFactory.FactorialName) {
+            : base(FunctionFactory.FactorialName) {
         }
         protected override Number Evaluate(Number arg) {
             Number result = Number.One;
@@ -73,7 +73,7 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class LnFunction : SingleArgumentDifferentiableFunction, ISupportConvolution {
         public LnFunction()
-            : base(ExprFactory.LnName) {
+            : base(FunctionFactory.LnName) {
         }
         protected override Number Evaluate(Number arg) {
             return Number.Ln(arg);
