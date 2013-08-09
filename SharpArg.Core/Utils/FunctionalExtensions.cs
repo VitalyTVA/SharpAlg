@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Clr, Filename = SR.JS_Core_Utils)]
     public static class FunctionalExtensions {
         const string STR_InputSequencesHaveDifferentLength = "Input sequences have different length.";
         //public static IEnumerable<TOut> Map<TIn, TOut>(this Func<TIn, TOut> function, IEnumerable<TIn> input) {

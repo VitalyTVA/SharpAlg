@@ -154,7 +154,7 @@ public class Parser {
 		Terminal(out expr);
 		while (la.kind == 9) {
 			Get();
-			expr = Expr.Factorial(expr); 
+			expr = ExprFactory.Factorial(expr); 
 		}
 	}
 

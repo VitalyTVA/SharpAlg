@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 namespace SharpAlg.Native {
     public static class SR {
-        public const string STR_InputSequencesHaveDifferentLength = "Input sequences have different length.";
-
         public const string JSNumberName = "../../res/SharpAlg.Number.js";
         public const string JSPrinterName = "../../res/SharpAlg.Printer.js";
         public const string JSBuilderName = "../../res/SharpAlg.Builder.js";

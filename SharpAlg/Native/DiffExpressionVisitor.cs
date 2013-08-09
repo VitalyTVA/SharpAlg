@@ -7,14 +7,19 @@ using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JSNativeName)]
-    public class DiffExpressionVisitor : IExpressionVisitor<Expr> {
+    public class DiffExpressionVisitor : IDiffExpressionVisitor {
         readonly Context context;
         string parameterName;
         bool autoParameterName;
         private bool HasParameter { get { return !string.IsNullOrEmpty(parameterName); } }
-        public ExprBuilder Builder { get; private set; }
+        readonly ExprBuilder builder;
+        public ExprBuilder Builder {
+            get {
+                return builder;
+            }
+        }
         public DiffExpressionVisitor(ExprBuilder builder, Context context, string parameterName) {
-            this.Builder = builder;
+            this.builder = builder;
             this.context = context;
             this.parameterName = parameterName;
             autoParameterName = !HasParameter;
@@ -51,7 +56,7 @@ namespace SharpAlg.Native {
             return Builder.Add(expr1, expr2);
         }
         public Expr Power(PowerExpr power) {
-            Expr sum1 = Builder.Multiply(power.Right.Visit(this), Expr.Ln(power.Left));
+            Expr sum1 = Builder.Multiply(power.Right.Visit(this), ExprFactory.Ln(power.Left));
             Expr sum2 = Builder.Divide(Builder.Multiply(power.Right, power.Left.Visit(this)), power.Left);
             Expr sum = Builder.Add(sum1, sum2);
             return Builder.Multiply(power, sum);

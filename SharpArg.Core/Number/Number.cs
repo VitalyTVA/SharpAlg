@@ -6,7 +6,7 @@ using System.Globalization;
 using System.Linq;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JSNumberName)]
+    [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
     public class Number {
         public static bool operator ==(Number n1, Number n2) {
             return object.Equals(n1, n2);

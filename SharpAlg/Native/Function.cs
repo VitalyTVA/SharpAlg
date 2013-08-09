@@ -9,15 +9,6 @@ using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    public abstract class Function {
-        protected Function(string name) {
-            Name = name;
-        }
-        public abstract Number Evaluate(ExpressionEvaluator evaluator, IEnumerable<Expr> args);
-        
-        public string Name { get; private set; }
-    }
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public class InvalidArgumentCountException : Exception {
         public InvalidArgumentCountException() {
             
@@ -32,7 +23,7 @@ namespace SharpAlg.Native {
         static bool IsValidArgsCount<T>(IEnumerable<T> args) {
             return args.Count() == 1;
         }
-        public override Number Evaluate(ExpressionEvaluator evaluator, IEnumerable<Expr> args) {
+        public override Number Evaluate(IExpressionVisitor<Number> evaluator, IEnumerable<Expr> args) {
             return EvaluateCore(args.Select(x => x.Visit(evaluator)));
         }
         protected static void CheckArgsCount<T>(IEnumerable<T> args) {
@@ -57,7 +48,7 @@ namespace SharpAlg.Native {
         protected SingleArgumentDifferentiableFunction(string name)
             : base(name) {
         }
-        public Expr Diff(DiffExpressionVisitor diffVisitor, IEnumerable<Expr> args) {
+        public Expr Diff(IDiffExpressionVisitor diffVisitor, IEnumerable<Expr> args) {
             CheckArgsCount(args);
             Expr arg = args.First();
             return diffVisitor.Builder.Multiply(arg.Visit(diffVisitor), DiffCore(diffVisitor.Builder, arg)); //TODO use builder
@@ -102,7 +93,7 @@ namespace SharpAlg.Native {
         public DiffFunction()
             : base("diff") {
         }
-        public override Number Evaluate(ExpressionEvaluator evaluator, IEnumerable<Expr> args) {
+        public override Number Evaluate(IExpressionVisitor<Number> evaluator, IEnumerable<Expr> args) {
             return Convolute(args).Visit(evaluator);
         }
         public Expr Convolute(IEnumerable<Expr> args) {
@@ -128,17 +119,5 @@ namespace SharpAlg.Native {
 
         static Function diff;
         public static Function Diff { get { return diff ?? (diff = new DiffFunction()); } }
-    }
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    public interface ISupportDiff {
-        Expr Diff(DiffExpressionVisitor diffVisitor, IEnumerable<Expr> args);
-    }
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    public interface ISupportCheckArgs {
-        string Check(IEnumerable<Expr> args);
-    }
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
-    public interface ISupportConvolution {
-        Expr Convolute(IEnumerable<Expr> args);
     }
 }

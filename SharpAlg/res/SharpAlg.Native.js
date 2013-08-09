@@ -164,8 +164,8 @@ SharpAlg.Native.DiffExpressionVisitor = function (builder, context, parameterNam
     this.context = null;
     this.parameterName = null;
     this.autoParameterName = false;
-    this.Builder = null;
-    this.Builder = builder;
+    this.builder = null;
+    this.builder = builder;
     this.context = context;
     this.parameterName = parameterName;
     this.autoParameterName = !this.get_HasParameter();
@@ -173,6 +173,10 @@ SharpAlg.Native.DiffExpressionVisitor = function (builder, context, parameterNam
 SharpAlg.Native.DiffExpressionVisitor.prototype.get_HasParameter = function ()
 {
     return !System.String.IsNullOrEmpty(this.parameterName);
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.get_Builder = function ()
+{
+    return this.builder;
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Constant = function (constant)
 {
@@ -204,23 +208,23 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Add = function (multi)
         result = x.Visit$1(SharpAlg.Native.Expr.ctor, this);
     }), $CreateAnonymousDelegate(this, function (x)
     {
-        result = this.Builder.Add(result, x.Visit$1(SharpAlg.Native.Expr.ctor, this));
+        result = this.get_Builder().Add(result, x.Visit$1(SharpAlg.Native.Expr.ctor, this));
     }));
     return result;
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Multiply = function (multi)
 {
     var tail = SharpAlg.Native.ExpressionExtensions.Tail$$MultiplyExpr(multi);
-    var expr1 = this.Builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()).Visit$1(SharpAlg.Native.Expr.ctor, this), tail);
-    var expr2 = this.Builder.Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), tail.Visit$1(SharpAlg.Native.Expr.ctor, this));
-    return this.Builder.Add(expr1, expr2);
+    var expr1 = this.get_Builder().Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()).Visit$1(SharpAlg.Native.Expr.ctor, this), tail);
+    var expr2 = this.get_Builder().Multiply(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), tail.Visit$1(SharpAlg.Native.Expr.ctor, this));
+    return this.get_Builder().Add(expr1, expr2);
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Power = function (power)
 {
-    var sum1 = this.Builder.Multiply(power.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), SharpAlg.Native.Expr.Ln(power.get_Left()));
-    var sum2 = this.Builder.Divide(this.Builder.Multiply(power.get_Right(), power.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this)), power.get_Left());
-    var sum = this.Builder.Add(sum1, sum2);
-    return this.Builder.Multiply(power, sum);
+    var sum1 = this.get_Builder().Multiply(power.get_Right().Visit$1(SharpAlg.Native.Expr.ctor, this), SharpAlg.Native.ExprFactory.Ln(power.get_Left()));
+    var sum2 = this.get_Builder().Divide(this.get_Builder().Multiply(power.get_Right(), power.get_Left().Visit$1(SharpAlg.Native.Expr.ctor, this)), power.get_Left());
+    var sum = this.get_Builder().Add(sum1, sum2);
+    return this.get_Builder().Multiply(power, sum);
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Function = function (functionExpr)
 {
@@ -251,78 +255,12 @@ var SharpAlg$Native$ExpressionDefferentiationException =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionDefferentiationException);
-var SharpAlg$Native$Expr =
+var SharpAlg$Native$ExprFactory =
 {
-    fullname: "SharpAlg.Native.Expr",
+    fullname: "SharpAlg.Native.ExprFactory",
     baseTypeName: "System.Object",
     staticDefinition:
     {
-        cctor: function ()
-        {
-            SharpAlg.Native.Expr.Zero = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.Zero);
-            SharpAlg.Native.Expr.One = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.One);
-            SharpAlg.Native.Expr.MinusOne = new SharpAlg.Native.ConstantExpr.ctor(SharpAlg.Native.Number.MinusOne);
-        },
-        Constant: function (constant)
-        {
-            return new SharpAlg.Native.ConstantExpr.ctor(constant);
-        },
-        Parameter: function (parameterName)
-        {
-            return new SharpAlg.Native.ParameterExpr.ctor(parameterName);
-        },
-        Binary: function (left, right, type)
-        {
-            return SharpAlg.Native.Expr.Multi(SharpAlg.Native.FunctionalExtensions.Combine$1(SharpAlg.Native.Expr.ctor, left, right), type);
-        },
-        Multi: function (args, type)
-        {
-            return System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args) > 1 ? (type == 0 ? new SharpAlg.Native.AddExpr.ctor(args) : new SharpAlg.Native.MultiplyExpr.ctor(args)) : System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
-        },
-        Add$$IEnumerable$1$Expr: function (args)
-        {
-            return SharpAlg.Native.Expr.Multi(args, 0);
-        },
-        Multiply$$IEnumerable$1$Expr: function (args)
-        {
-            return SharpAlg.Native.Expr.Multi(args, 1);
-        },
-        Add$$Expr$$Expr: function (left, right)
-        {
-            return SharpAlg.Native.Expr.Binary(left, right, 0);
-        },
-        Subtract: function (left, right)
-        {
-            return SharpAlg.Native.Expr.Add$$Expr$$Expr(left, SharpAlg.Native.Expr.Minus(right));
-        },
-        Multiply$$Expr$$Expr: function (left, right)
-        {
-            return SharpAlg.Native.Expr.Binary(left, right, 1);
-        },
-        Divide: function (left, right)
-        {
-            return SharpAlg.Native.Expr.Multiply$$Expr$$Expr(left, SharpAlg.Native.Expr.Inverse(right));
-        },
-        Power: function (left, right)
-        {
-            return new SharpAlg.Native.PowerExpr.ctor(left, right);
-        },
-        Minus: function (expr)
-        {
-            return SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Native.Expr.MinusOne, expr);
-        },
-        Inverse: function (expr)
-        {
-            return SharpAlg.Native.Expr.Power(expr, SharpAlg.Native.Expr.MinusOne);
-        },
-        Function$$String$$Expr: function (functionName, argument)
-        {
-            return SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr(functionName, SharpAlg.Native.FunctionalExtensions.AsEnumerable$1(SharpAlg.Native.Expr.ctor, argument));
-        },
-        Function$$String$$IEnumerable$1$Expr: function (functionName, arguments)
-        {
-            return new SharpAlg.Native.FunctionExpr.ctor(functionName, arguments);
-        },
         Factorial: function (argument)
         {
             return SharpAlg.Native.Expr.Function$$String$$Expr(SharpAlg.Native.Functions.get_Factorial().get_Name(), argument);
@@ -339,263 +277,10 @@ var SharpAlg$Native$Expr =
         ctor: function ()
         {
             System.Object.ctor.call(this);
-        },
-        Print$$: "System.String",
-        get_Print: function ()
-        {
-            return SharpAlg.Native.ExpressionExtensions.Print(this);
         }
     }
 };
-JsTypes.push(SharpAlg$Native$Expr);
-var SharpAlg$Native$ConstantExpr =
-{
-    fullname: "SharpAlg.Native.ConstantExpr",
-    baseTypeName: "SharpAlg.Native.Expr",
-    staticDefinition:
-    {
-        cctor: function ()
-        {
-        }
-    },
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function (value)
-        {
-            this._Value = null;
-            SharpAlg.Native.Expr.ctor.call(this);
-            this.set_Value(value);
-        },
-        Value$$: "SharpAlg.Native.Number",
-        get_Value: function ()
-        {
-            return this._Value;
-        },
-        set_Value: function (value)
-        {
-            this._Value = value;
-        },
-        Visit$1: function (T, visitor)
-        {
-            return visitor.Constant(this);
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$ConstantExpr);
-var SharpAlg$Native$ParameterExpr =
-{
-    fullname: "SharpAlg.Native.ParameterExpr",
-    baseTypeName: "SharpAlg.Native.Expr",
-    staticDefinition:
-    {
-        cctor: function ()
-        {
-        }
-    },
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function (parameterName)
-        {
-            this._ParameterName = null;
-            SharpAlg.Native.Expr.ctor.call(this);
-            this.set_ParameterName(parameterName);
-        },
-        ParameterName$$: "System.String",
-        get_ParameterName: function ()
-        {
-            return this._ParameterName;
-        },
-        set_ParameterName: function (value)
-        {
-            this._ParameterName = value;
-        },
-        Visit$1: function (T, visitor)
-        {
-            return visitor.Parameter(this);
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$ParameterExpr);
-var SharpAlg$Native$MultiExpr =
-{
-    fullname: "SharpAlg.Native.MultiExpr",
-    baseTypeName: "SharpAlg.Native.Expr",
-    staticDefinition:
-    {
-        cctor: function ()
-        {
-        }
-    },
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function (args)
-        {
-            this._Args = null;
-            SharpAlg.Native.Expr.ctor.call(this);
-            this.set_Args(args);
-        },
-        Args$$: "System.Collections.Generic.IEnumerable`1[[SharpAlg.Native.Expr]]",
-        get_Args: function ()
-        {
-            return this._Args;
-        },
-        set_Args: function (value)
-        {
-            this._Args = value;
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$MultiExpr);
-var SharpAlg$Native$AddExpr =
-{
-    fullname: "SharpAlg.Native.AddExpr",
-    baseTypeName: "SharpAlg.Native.MultiExpr",
-    staticDefinition:
-    {
-        cctor: function ()
-        {
-        }
-    },
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function (args)
-        {
-            SharpAlg.Native.MultiExpr.ctor.call(this, args);
-        },
-        Visit$1: function (T, visitor)
-        {
-            return visitor.Add(this);
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$AddExpr);
-var SharpAlg$Native$MultiplyExpr =
-{
-    fullname: "SharpAlg.Native.MultiplyExpr",
-    baseTypeName: "SharpAlg.Native.MultiExpr",
-    staticDefinition:
-    {
-        cctor: function ()
-        {
-        }
-    },
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function (args)
-        {
-            SharpAlg.Native.MultiExpr.ctor.call(this, args);
-        },
-        Visit$1: function (T, visitor)
-        {
-            return visitor.Multiply(this);
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$MultiplyExpr);
-var SharpAlg$Native$PowerExpr =
-{
-    fullname: "SharpAlg.Native.PowerExpr",
-    baseTypeName: "SharpAlg.Native.Expr",
-    staticDefinition:
-    {
-        cctor: function ()
-        {
-        }
-    },
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function (left, right)
-        {
-            this._Left = null;
-            this._Right = null;
-            SharpAlg.Native.Expr.ctor.call(this);
-            this.set_Right(right);
-            this.set_Left(left);
-        },
-        Left$$: "SharpAlg.Native.Expr",
-        get_Left: function ()
-        {
-            return this._Left;
-        },
-        set_Left: function (value)
-        {
-            this._Left = value;
-        },
-        Right$$: "SharpAlg.Native.Expr",
-        get_Right: function ()
-        {
-            return this._Right;
-        },
-        set_Right: function (value)
-        {
-            this._Right = value;
-        },
-        Visit$1: function (T, visitor)
-        {
-            return visitor.Power(this);
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$PowerExpr);
-var SharpAlg$Native$FunctionExpr =
-{
-    fullname: "SharpAlg.Native.FunctionExpr",
-    baseTypeName: "SharpAlg.Native.Expr",
-    staticDefinition:
-    {
-        cctor: function ()
-        {
-        }
-    },
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function (functionName, arguments)
-        {
-            this._FunctionName = null;
-            this._Args = null;
-            SharpAlg.Native.Expr.ctor.call(this);
-            this.set_Args(arguments);
-            this.set_FunctionName(functionName);
-        },
-        FunctionName$$: "System.String",
-        get_FunctionName: function ()
-        {
-            return this._FunctionName;
-        },
-        set_FunctionName: function (value)
-        {
-            this._FunctionName = value;
-        },
-        Args$$: "System.Collections.Generic.IEnumerable`1[[SharpAlg.Native.Expr]]",
-        get_Args: function ()
-        {
-            return this._Args;
-        },
-        set_Args: function (value)
-        {
-            this._Args = value;
-        },
-        Visit$1: function (T, visitor)
-        {
-            return visitor.Function(this);
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$FunctionExpr);
+JsTypes.push(SharpAlg$Native$ExprFactory);
 var SharpAlg$Native$ExpressionEqualityComparer =
 {
     fullname: "SharpAlg.Native.ExpressionEqualityComparer",
@@ -880,32 +565,6 @@ var SharpAlg$Native$ExpressionExtensions =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionExtensions);
-var SharpAlg$Native$Function =
-{
-    fullname: "SharpAlg.Native.Function",
-    baseTypeName: "System.Object",
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function (name)
-        {
-            this._Name = null;
-            System.Object.ctor.call(this);
-            this.set_Name(name);
-        },
-        Name$$: "System.String",
-        get_Name: function ()
-        {
-            return this._Name;
-        },
-        set_Name: function (value)
-        {
-            this._Name = value;
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$Function);
 var SharpAlg$Native$InvalidArgumentCountException =
 {
     fullname: "SharpAlg.Native.InvalidArgumentCountException",
@@ -986,7 +645,7 @@ var SharpAlg$Native$SingleArgumentDifferentiableFunction =
         {
             SharpAlg.Native.SingleArgumentFunction.CheckArgsCount$1(SharpAlg.Native.Expr.ctor, args);
             var arg = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
-            return diffVisitor.Builder.Multiply(arg.Visit$1(SharpAlg.Native.Expr.ctor, diffVisitor), this.DiffCore(diffVisitor.Builder, arg));
+            return diffVisitor.get_Builder().Multiply(arg.Visit$1(SharpAlg.Native.Expr.ctor, diffVisitor), this.DiffCore(diffVisitor.get_Builder(), arg));
         }
     }
 };
@@ -1122,189 +781,3 @@ var SharpAlg$Native$Functions =
     }
 };
 JsTypes.push(SharpAlg$Native$Functions);
-var SharpAlg$Native$ISupportDiff = {fullname: "SharpAlg.Native.ISupportDiff", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
-JsTypes.push(SharpAlg$Native$ISupportDiff);
-var SharpAlg$Native$ISupportCheckArgs = {fullname: "SharpAlg.Native.ISupportCheckArgs", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
-JsTypes.push(SharpAlg$Native$ISupportCheckArgs);
-var SharpAlg$Native$ISupportConvolution = {fullname: "SharpAlg.Native.ISupportConvolution", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
-JsTypes.push(SharpAlg$Native$ISupportConvolution);
-var SharpAlg$Native$FunctionalExtensions =
-{
-    fullname: "SharpAlg.Native.FunctionalExtensions",
-    baseTypeName: "System.Object",
-    staticDefinition:
-    {
-        cctor: function ()
-        {
-            SharpAlg.Native.FunctionalExtensions.STR_InputSequencesHaveDifferentLength = "Input sequences have different length.";
-        },
-        Map$2: function (TIn1, TIn2, action, input1, input2)
-        {
-            var enumerator1 = input1.GetEnumerator();
-            var enumerator2 = input2.GetEnumerator();
-            while (enumerator1.MoveNext())
-            {
-                if (!enumerator2.MoveNext())
-                    throw $CreateException(new System.ArgumentException.ctor$$String("Input sequences have different length."), new Error());
-                action(enumerator1.get_Current(), enumerator2.get_Current());
-            }
-            if (enumerator2.MoveNext())
-                throw $CreateException(new System.ArgumentException.ctor$$String("Input sequences have different length."), new Error());
-        },
-        EnumerableEqual$1: function (T, first, second, comparer)
-        {
-            var en1 = first.GetEnumerator();
-            var en2 = second.GetEnumerator();
-            while (en1.MoveNext())
-            {
-                if (!en2.MoveNext())
-                    return false;
-                if (!comparer(en1.get_Current(), en2.get_Current()))
-                    return false;
-            }
-            return !en2.MoveNext();
-        },
-        SetEqual$1: function (T, first, second, comparer)
-        {
-            var list = System.Linq.Enumerable.ToList$1(T, second);
-            var $it1 = first.GetEnumerator();
-            while ($it1.MoveNext())
-            {
-                var item = $it1.get_Current();
-                var found = false;
-                var $it2 = list.GetEnumerator();
-                while ($it2.MoveNext())
-                {
-                    var item2 = $it2.get_Current();
-                    if (comparer(item, item2))
-                    {
-                        list.Remove(item2);
-                        found = true;
-                        break;
-                    }
-                }
-                if (found == false)
-                    return false;
-            }
-            return list.get_Count() == 0;
-        },
-        RemoveAt$1: function (T, source, index)
-        {
-            var $yield = [];
-            var en = source.GetEnumerator();
-            while (en.MoveNext())
-            {
-                if (index != 0)
-                    $yield.push(en.get_Current());
-                index--;
-            }
-            if (index > 0)
-                throw $CreateException(new System.IndexOutOfRangeException.ctor$$String("index"), new Error());
-            return $yield;
-        },
-        Accumulate$1: function (T, source, init, next)
-        {
-            var enumerator = source.GetEnumerator();
-            if (enumerator.MoveNext())
-                init(enumerator.get_Current());
-            else
-                throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
-            while (enumerator.MoveNext())
-            {
-                next(enumerator.get_Current());
-            }
-        },
-        ForEach$1: function (T, source, action)
-        {
-            var enumerator = source.GetEnumerator();
-            while (enumerator.MoveNext())
-            {
-                action(enumerator.get_Current());
-            }
-        },
-        Tail$1: function (T, source)
-        {
-            return System.Linq.Enumerable.Skip$1(T, source, 1);
-        },
-        TryGetValue$2: function (TKey, TVal, source, key)
-        {
-            var result;
-            if ((function ()
-            {
-                result = {Value: result};
-                var $res = source.TryGetValue(key, result);
-                result = result.Value;
-                return $res;
-            })())
-                return result;
-            return null;
-        },
-        Convert$1: function (TOut, source)
-        {
-            return As(source, TOut);
-        },
-        AsEnumerable$1: function (T, source)
-        {
-            var $yield = [];
-            $yield.push(source);
-            return $yield;
-        },
-        Combine$1: function (T, first, next)
-        {
-            var $yield = [];
-            $yield.push(first);
-            $yield.push(next);
-            return $yield;
-        }
-    },
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function ()
-        {
-            System.Object.ctor.call(this);
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$FunctionalExtensions);
-var SharpAlg$Native$IExpressionVisitor$1 = {fullname: "SharpAlg.Native.IExpressionVisitor$1", baseTypeName: "System.Object", assemblyName: "SharpAlg", Kind: "Interface"};
-JsTypes.push(SharpAlg$Native$IExpressionVisitor$1);
-SharpAlg.Native.MayBe = function ()
-{
-};
-SharpAlg.Native.MayBe.With = function (input, evaluator)
-{
-    if (input == null)
-        return null;
-    return evaluator(input);
-};
-SharpAlg.Native.MayBe.Return = function (input, evaluator, fallback)
-{
-    if (!input.get_HasValue())
-        return fallback != null ? fallback() : Default(TR);
-    return evaluator(input.get_Value());
-};
-SharpAlg.Native.MayBe.Return = function (input, evaluator, fallback)
-{
-    if (input == null)
-        return fallback != null ? fallback() : Default(TR);
-    return evaluator(input);
-};
-SharpAlg.Native.MayBe.ReturnSuccess = function (input)
-{
-    return input != null;
-};
-SharpAlg.Native.MayBe.If = function (input, evaluator)
-{
-    if (input == null)
-        return null;
-    return evaluator(input) ? input : null;
-};
-SharpAlg.Native.MayBe.Do = function (input, action)
-{
-    if (input == null)
-        return null;
-    action(input);
-    return input;
-};

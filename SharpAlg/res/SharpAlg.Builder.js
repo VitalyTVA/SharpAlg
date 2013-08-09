@@ -61,25 +61,6 @@ if (typeof(SharpAlg.Native) == "undefined")
     SharpAlg.Native = {};
 if (typeof(SharpAlg.Native.Builder) == "undefined")
     SharpAlg.Native.Builder = {};
-SharpAlg.Native.Builder.ExprBuilder = function ()
-{
-};
-SharpAlg.Native.Builder.ExprBuilder.prototype.Subtract = function (left, right)
-{
-    return this.Add(left, this.Minus(right));
-};
-SharpAlg.Native.Builder.ExprBuilder.prototype.Divide = function (left, right)
-{
-    return this.Multiply(left, this.Inverse(right));
-};
-SharpAlg.Native.Builder.ExprBuilder.prototype.Minus = function (expr)
-{
-    return this.Multiply(SharpAlg.Native.Expr.MinusOne, expr);
-};
-SharpAlg.Native.Builder.ExprBuilder.prototype.Inverse = function (expr)
-{
-    return this.Power(expr, SharpAlg.Native.Expr.MinusOne);
-};
 SharpAlg.Native.Builder.ConvolutionExprBuilder = function (context)
 {
     this.context = null;

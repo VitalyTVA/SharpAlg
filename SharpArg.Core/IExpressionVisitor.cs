@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
-    [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
+    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
     public interface IExpressionVisitor<T> {
         T Constant(ConstantExpr constant);
         T Parameter(ParameterExpr parameter);

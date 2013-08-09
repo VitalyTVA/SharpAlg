@@ -62,7 +62,7 @@ PowerExpression<out Expr expr>					(. Expr rightExpr; .)
 FactorialExpression<out Expr expr>
 = Terminal<out expr>
 	{ 
-		'!'										(. expr = Expr.Factorial(expr); .)			
+		'!'										(. expr = ExprFactory.Factorial(expr); .)			
 	}										
 .
 

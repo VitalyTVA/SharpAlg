@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpAlg.Native.Builder {
-    [JsType(JsMode.Prototype, Filename = SR.JSBuilderName)]
+    [JsType(JsMode.Prototype, Filename = SR.JS_Core)]
     public abstract class ExprBuilder {
         //public abstract Context Context { get; }
         public abstract Expr Parameter(string parameterName);

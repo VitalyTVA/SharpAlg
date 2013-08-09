@@ -350,7 +350,7 @@ SharpAlg.Native.Parser.Parser.prototype.FactorialExpression = function (expr)
     while (this.la.kind == 9)
     {
         this.Get();
-        expr.Value = SharpAlg.Native.Expr.Factorial(expr.Value);
+        expr.Value = SharpAlg.Native.ExprFactory.Factorial(expr.Value);
     }
 };
 SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
