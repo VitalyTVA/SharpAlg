@@ -15,12 +15,6 @@ namespace SharpAlg.Native {
         public static Expr Diff(this Expr expr, string parameterName = null) {
             return expr.Visit(new DiffExpressionVisitor(ConvolutionExprBuilder.CreateDefault(), ContextFactory.Default, parameterName));
         }
-        public static bool ExprEquals(this Expr expr1, Expr expr2) {
-            return expr1.Visit(new ExpressionEqualityComparer(expr2));
-        }
-        public static bool ExprEquivalent(this Expr expr1, Expr expr2) {
-            return expr1.Visit(new ExpressionEquivalenceComparer(expr2));
-        }
         public static string Print(this Expr expr) {
             return expr.Visit(SharpAlg.Native.Printer.ExpressionPrinter.Instance);
         }

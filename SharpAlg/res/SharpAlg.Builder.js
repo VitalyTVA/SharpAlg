@@ -277,7 +277,7 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.PowerConvolution = func
     {
         var leftPower = SharpAlg.Native.Builder.ConvolutionExprBuilder.PowerExpressionExtractor.ExtractPower(left);
         var rightPower = SharpAlg.Native.Builder.ConvolutionExprBuilder.PowerExpressionExtractor.ExtractPower(right);
-        if (SharpAlg.Native.ExpressionExtensions.ExprEquivalent(leftPower.get_Left(), rightPower.get_Left()))
+        if (SharpAlg.Native.ImplementationExpressionExtensions.ExprEquivalent(leftPower.get_Left(), rightPower.get_Left()))
         {
             return this.Power(leftPower.get_Left(), this.Add(leftPower.get_Right(), rightPower.get_Right()));
         }
@@ -290,7 +290,7 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.MultiplyConvolution = f
     {
         var leftMultiply = SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.ExtractMultiply(left);
         var rightMultiply = SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.ExtractMultiply(right);
-        if (SharpAlg.Native.ExpressionExtensions.ExprEquivalent(leftMultiply.get_Item2(), rightMultiply.get_Item2()))
+        if (SharpAlg.Native.ImplementationExpressionExtensions.ExprEquivalent(leftMultiply.get_Item2(), rightMultiply.get_Item2()))
         {
             return this.Multiply(this.Add(leftMultiply.get_Item1(), rightMultiply.get_Item1()), leftMultiply.get_Item2());
         }

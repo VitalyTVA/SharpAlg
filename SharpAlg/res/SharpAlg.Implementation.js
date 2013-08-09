@@ -542,6 +542,60 @@ var SharpAlg$Native$SingleArgumentDifferentiableFunction =
     }
 };
 JsTypes.push(SharpAlg$Native$SingleArgumentDifferentiableFunction);
+var SharpAlg$Native$FactorialFunction =
+{
+    fullname: "SharpAlg.Native.FactorialFunction",
+    baseTypeName: "SharpAlg.Native.SingleArgumentFunction",
+    assemblyName: "SharpAlg.Implementation",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            SharpAlg.Native.SingleArgumentFunction.ctor.call(this, "factorial");
+        },
+        Evaluate$$Number: function (arg)
+        {
+            var result = SharpAlg.Native.Number.One;
+            for (var i = SharpAlg.Native.Number.Two; SharpAlg.Native.Number.op_LessThanOrEqual(i, arg); i = SharpAlg.Native.Number.op_Addition(i, SharpAlg.Native.Number.One))
+            {
+                result = SharpAlg.Native.Number.op_Multiply(result, i);
+            }
+            return result;
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$FactorialFunction);
+var SharpAlg$Native$LnFunction =
+{
+    fullname: "SharpAlg.Native.LnFunction",
+    baseTypeName: "SharpAlg.Native.SingleArgumentDifferentiableFunction",
+    assemblyName: "SharpAlg.Implementation",
+    interfaceNames: ["SharpAlg.Native.ISupportConvolution"],
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            SharpAlg.Native.SingleArgumentDifferentiableFunction.ctor.call(this, "ln");
+        },
+        Evaluate$$Number: function (arg)
+        {
+            return SharpAlg.Native.Number.Ln(arg);
+        },
+        DiffCore: function (builder, arg)
+        {
+            return builder.Inverse(arg);
+        },
+        Convolute: function (args)
+        {
+            if (SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), SharpAlg.Native.Expr.One))
+                return SharpAlg.Native.Expr.Zero;
+            return null;
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$LnFunction);
 var SharpAlg$Native$FunctionFactory =
 {
     fullname: "SharpAlg.Native.FunctionFactory",
@@ -573,3 +627,29 @@ var SharpAlg$Native$FunctionFactory =
     }
 };
 JsTypes.push(SharpAlg$Native$FunctionFactory);
+var SharpAlg$Native$ImplementationExpressionExtensions =
+{
+    fullname: "SharpAlg.Native.ImplementationExpressionExtensions",
+    baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        ExprEquals: function (expr1, expr2)
+        {
+            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionEqualityComparer.ctor(expr2));
+        },
+        ExprEquivalent: function (expr1, expr2)
+        {
+            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionEquivalenceComparer.ctor(expr2));
+        }
+    },
+    assemblyName: "SharpAlg.Implementation",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Object.ctor.call(this);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$ImplementationExpressionExtensions);

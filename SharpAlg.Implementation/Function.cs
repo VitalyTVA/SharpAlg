@@ -55,4 +55,38 @@ namespace SharpAlg.Native {
         }
         protected abstract Expr DiffCore(ExprBuilder builder, Expr arg);
     }
+    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
+    public class FactorialFunction : SingleArgumentFunction {
+        public FactorialFunction()
+            : base(FunctionFactory.FactorialName) {
+        }
+        protected override Number Evaluate(Number arg) {
+            Number result = Number.One;
+            for(Number i = Number.Two; i <= arg; i = i + Number.One) {
+                result = result * i;
+            }
+            return result;
+        }
+        //TODO factorial differentiation
+    }
+
+    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
+    public class LnFunction : SingleArgumentDifferentiableFunction, ISupportConvolution {
+        public LnFunction()
+            : base(FunctionFactory.LnName) {
+        }
+        protected override Number Evaluate(Number arg) {
+            return Number.Ln(arg);
+        }
+        protected override Expr DiffCore(ExprBuilder builder, Expr arg) {
+            return builder.Inverse(arg);
+        }
+
+        public Expr Convolute(IEnumerable<Expr> args) {
+            if(args.First().ExprEquals(Expr.One))
+                return Expr.Zero;
+            return null;
+        }
+    }
+
 }

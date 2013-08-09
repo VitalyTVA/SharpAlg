@@ -77,14 +77,6 @@ var SharpAlg$Native$ExpressionExtensions =
         {
             return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault(), SharpAlg.Native.ContextFactory.Default, parameterName));
         },
-        ExprEquals: function (expr1, expr2)
-        {
-            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionEqualityComparer.ctor(expr2));
-        },
-        ExprEquivalent: function (expr1, expr2)
-        {
-            return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionEquivalenceComparer.ctor(expr2));
-        },
         Print: function (expr)
         {
             return expr.Visit$1(System.String.ctor, SharpAlg.Native.Printer.ExpressionPrinter.Instance);
@@ -118,60 +110,6 @@ var SharpAlg$Native$ExpressionExtensions =
     }
 };
 JsTypes.push(SharpAlg$Native$ExpressionExtensions);
-var SharpAlg$Native$FactorialFunction =
-{
-    fullname: "SharpAlg.Native.FactorialFunction",
-    baseTypeName: "SharpAlg.Native.SingleArgumentFunction",
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function ()
-        {
-            SharpAlg.Native.SingleArgumentFunction.ctor.call(this, "factorial");
-        },
-        Evaluate$$Number: function (arg)
-        {
-            var result = SharpAlg.Native.Number.One;
-            for (var i = SharpAlg.Native.Number.Two; SharpAlg.Native.Number.op_LessThanOrEqual(i, arg); i = SharpAlg.Native.Number.op_Addition(i, SharpAlg.Native.Number.One))
-            {
-                result = SharpAlg.Native.Number.op_Multiply(result, i);
-            }
-            return result;
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$FactorialFunction);
-var SharpAlg$Native$LnFunction =
-{
-    fullname: "SharpAlg.Native.LnFunction",
-    baseTypeName: "SharpAlg.Native.SingleArgumentDifferentiableFunction",
-    assemblyName: "SharpAlg",
-    interfaceNames: ["SharpAlg.Native.ISupportConvolution"],
-    Kind: "Class",
-    definition:
-    {
-        ctor: function ()
-        {
-            SharpAlg.Native.SingleArgumentDifferentiableFunction.ctor.call(this, "ln");
-        },
-        Evaluate$$Number: function (arg)
-        {
-            return SharpAlg.Native.Number.Ln(arg);
-        },
-        DiffCore: function (builder, arg)
-        {
-            return builder.Inverse(arg);
-        },
-        Convolute: function (args)
-        {
-            if (SharpAlg.Native.ExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), SharpAlg.Native.Expr.One))
-                return SharpAlg.Native.Expr.Zero;
-            return null;
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$LnFunction);
 var SharpAlg$Native$DiffFunction =
 {
     fullname: "SharpAlg.Native.DiffFunction",
