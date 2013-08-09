@@ -3,10 +3,10 @@ using System;
 using System.Text;
 
 namespace SharpAlg.Native.Parser {
-    [JsType(JsMode.Prototype, Filename = SR.JSParserName)]
+    [JsType(JsMode.Prototype, Filename = SR.JS_Parser)]
     public abstract class ErrorsBase {
         const string errMsgFormat = "Error at line {0} column {1}: {2}";
-        internal static string GetErrorText(int line, int column, string errorText) {
+        public static string GetErrorText(int line, int column, string errorText) {
             return string.Format(errMsgFormat, line, column, errorText);
         }
 

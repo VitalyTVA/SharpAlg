@@ -1,17 +1,22 @@
--->begin
+/*----------------------------------------------------------------------
+SharpAlg Parser
+-----------------------------------------------------------------------*/
+
 using System;
 using System.IO;
 using System.Collections;
 using SharpKit.JavaScript;
 using System.Collections.Generic;
 
--->namespace
+namespace SharpAlg.Native.Parser {
 
-[JsType(JsMode.Clr, Filename = SR.JSParserName)]
+[JsType(JsMode.Clr, Filename = SR.JS_Parser)]
 public class Scanner {
 	const char EOL = '\n';
 	const int eofSym = 0; /* pdt */
--->declarations
+	const int maxT = 13;
+	const int noSym = 13;
+
 
 	public Buffer buffer; // scanner buffer
 	
@@ -32,7 +37,21 @@ public class Scanner {
 	
 	static Scanner() {
 		start = new Dictionary<int, int>();
--->initialization
+		for (int i = 65; i <= 90; ++i) start[i] = 1;
+		for (int i = 97; i <= 122; ++i) start[i] = 1;
+		for (int i = 48; i <= 57; ++i) start[i] = 4;
+		start[46] = 2; 
+		start[43] = 5; 
+		start[45] = 6; 
+		start[42] = 7; 
+		start[47] = 8; 
+		start[94] = 9; 
+		start[33] = 10; 
+		start[40] = 11; 
+		start[41] = 12; 
+		start[44] = 13; 
+		start[Buffer.EOF] = -1;
+
 	}
 	
 	public Scanner (string source) {
@@ -58,7 +77,7 @@ public class Scanner {
 			if (ch == '\r' && buffer.Peek() != '\n') ch = EOL;
 			if (ch == EOL) { line++; col = 0; }
 		}
--->casing1
+
 	}
 
 	void AddCh() {
@@ -71,7 +90,7 @@ public class Scanner {
 			tval = newBuf;
 		}
 		if (ch != Buffer.EOF) {
--->casing2
+			tval[tlen++] = GetCurrentChar();
 			NextCh();
 		}
 	}
@@ -81,17 +100,19 @@ public class Scanner {
     }
 
 
--->comments
+
 
 	void CheckLiteral() {
--->literals
+		switch (t.val) {
+			default: break;
+		}
 	}
 
 	Token NextToken() {
 		while (ch == ' ' ||
--->scan1
+			ch >= 9 && ch <= 10 || ch == 13
 		) NextCh();
--->scan2
+
 		int recKind = noSym;
 		int recEnd = pos;
 		t = new Token();
@@ -117,15 +138,49 @@ old way*/
         bool done = false;
         while(!done) {
 		switch (state) {
-			case -1: { t.kind = eofSym; break; } // NextCh already done
+			case -1: { t.kind = eofSym; done = true; break; } // NextCh already done
 			case 0: {
 				if (recKind != noSym) {
 					tlen = recEnd - t.pos;
 					SetScannerBehindT();
 				}
-				t.kind = recKind; break;
+				t.kind = recKind; done = true; break;
 			} // NextCh already done
--->scan3
+			case 1:
+				recEnd = pos; recKind = 1;
+				if (ch >= '0' && ch <= '9' || ch >= 'A' && ch <= 'Z' || ch >= 'a' && ch <= 'z') { AddCh(); state = 1; break; }
+				else {t.kind = 1; done = true; break;}
+			case 2:
+				if (ch >= '0' && ch <= '9') { AddCh(); state = 3; break; }
+				else { state = 0; break; }
+			case 3:
+				recEnd = pos; recKind = 3;
+				if (ch >= '0' && ch <= '9') { AddCh(); state = 3; break; }
+				else {t.kind = 3; done = true; break;}
+			case 4:
+				recEnd = pos; recKind = 2;
+				if (ch >= '0' && ch <= '9') { AddCh(); state = 4; break; }
+				else if (ch == '.') { AddCh(); state = 2; break; }
+				else {t.kind = 2; done = true; break;}
+			case 5:
+				{t.kind = 4; done = true; break;}
+			case 6:
+				{t.kind = 5; done = true; break;}
+			case 7:
+				{t.kind = 6; done = true; break;}
+			case 8:
+				{t.kind = 7; done = true; break;}
+			case 9:
+				{t.kind = 8; done = true; break;}
+			case 10:
+				{t.kind = 9; done = true; break;}
+			case 11:
+				{t.kind = 10; done = true; break;}
+			case 12:
+				{t.kind = 11; done = true; break;}
+			case 13:
+				{t.kind = 12; done = true; break;}
+
 		}
         }
 //new way end
@@ -170,3 +225,4 @@ old way*/
 	public void ResetPeek () { pt = tokens; }
 
 } // end Scanner
+}

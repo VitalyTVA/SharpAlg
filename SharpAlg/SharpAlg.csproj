@@ -68,7 +68,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Default.aspx" />
-    <Content Include="Native\Parser\Coco.exe" />
     <Content Include="res\Default.js" />
     <Content Include="res\jquery-1.8.2.min.js" />
     <Content Include="res\jsclr-4.1.0.js" />
@@ -96,9 +95,6 @@
     <Compile Include="Native\ExpressionFactory.cs" />
     <Compile Include="Native\Function.cs" />
     <Compile Include="Native\Printer\ExpressionPrinter.cs" />
-    <Compile Include="Native\Parser\Buffer.cs" />
-    <Compile Include="Native\Parser\Errors.cs" />
-    <Compile Include="Native\Parser\Token.cs" />
     <Compile Include="Native\SR.cs" />
     <Compile Include="Default.aspx.cs">
       <DependentUpon>Default.aspx</DependentUpon>
@@ -114,24 +110,6 @@
     <Compile Include="Tests\ParserTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Native\Parser\Parser_.cs">
-      <DependentUpOn>Parser.frame</DependentUpOn>
-    </Compile>
-    <Compile Include="Native\Parser\Scanner_.cs">
-      <DependentUpOn>Scanner.frame</DependentUpOn>
-    </Compile>
-    <None Include="Native\Parser\Copyright.frame">
-      <DependentUpOn>SharpAlg.ATG</DependentUpOn>
-    </None>
-    <None Include="Native\Parser\Parser.frame">
-      <DependentUpOn>SharpAlg.ATG</DependentUpOn>
-    </None>
-    <None Include="Native\Parser\Scanner.frame">
-      <DependentUpOn>SharpAlg.ATG</DependentUpOn>
-    </None>
-    <None Include="Native\Parser\SharpAlg.ATG" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="DefaultClient.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -143,6 +121,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Parser.csproj">
+      <Project>{a20747c7-601e-454a-83d5-d53fc6724f71}</Project>
+      <Name>SharpAlg.Parser</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SharpArg.Core\SharpArg.Core.csproj">
       <Project>{a823e596-e03f-4896-8946-5cae2ba1c65d}</Project>
       <Name>SharpArg.Core</Name>
@@ -180,10 +162,8 @@
     </PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)Native\Parser\coco $(ProjectDir)Native\Parser\SharpAlg.ATG -namespace SharpAlg.Native.Parser
-if ERRORLEVEL 1 goto END
-$(ProjectDir)bin\SharpAlg.Preprocess.exe
-:END</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

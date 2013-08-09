@@ -131,7 +131,7 @@ var SharpAlg$Native$Parser$ArgsList =
 {
     fullname: "SharpAlg.Native.Parser.ArgsList",
     baseTypeName: "System.Collections.Generic.List$1",
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Parser",
     Kind: "Class",
     definition:
     {
@@ -350,7 +350,7 @@ SharpAlg.Native.Parser.Parser.prototype.FactorialExpression = function (expr)
     while (this.la.kind == 9)
     {
         this.Get();
-        expr.Value = SharpAlg.Native.ExprFactory.Factorial(expr.Value);
+        expr.Value = SharpAlg.Native.Expr.Function$$String$$Expr("factorial", expr.Value);
     }
 };
 SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
@@ -531,7 +531,7 @@ var SharpAlg$Native$Parser$Scanner =
             SharpAlg.Native.Parser.Scanner.start.set_Item$$TKey(65536, -1);
         }
     },
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Parser",
     Kind: "Class",
     definition:
     {
