@@ -37,8 +37,12 @@ namespace SharpAlg.Tests {
             "100000000001".GreaterOrEqual("100000000001").IsTrue();
             "100000000001".GreaterOrEqual("100000000002").IsFalse();
 
-            //(1000000001.AsNumber() * 500000001.AsNumber()).AssertNumber("500000001500000001");
+            //"1000000001".Multiply("500000001").AssertNumber("500000001500000001");
             //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber());
+        }
+        [Test]
+        public void IntegerNumberTest() { 
+
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

@@ -17,43 +17,43 @@ var SharpAlg$Native$Number =
         },
         op_GreaterThanOrEqual: function (n1, n2)
         {
-            return n1.value >= n2.value;
+            return SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n1).value >= SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n2).value;
         },
         op_LessThanOrEqual: function (n1, n2)
         {
-            return n1.value <= n2.value;
+            return SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n1).value <= SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n2).value;
         },
         op_LessThan: function (n1, n2)
         {
-            return n1.value < n2.value;
+            return SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n1).value < SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n2).value;
         },
         op_GreaterThan: function (n1, n2)
         {
-            return n1.value > n2.value;
+            return SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n1).value > SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n2).value;
         },
         op_Multiply: function (n1, n2)
         {
-            return SharpAlg.Native.Number.FromDouble(n1.value * n2.value);
+            return SharpAlg.Native.Number.FromDouble(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n1).value * SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n2).value);
         },
         op_Division: function (n1, n2)
         {
-            return SharpAlg.Native.Number.FromDouble(n1.value / n2.value);
+            return SharpAlg.Native.Number.FromDouble(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n1).value / SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n2).value);
         },
         op_Addition: function (n1, n2)
         {
-            return SharpAlg.Native.Number.FromDouble(n1.value + n2.value);
+            return SharpAlg.Native.Number.FromDouble(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n1).value + SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n2).value);
         },
         op_Subtraction: function (n1, n2)
         {
-            return SharpAlg.Native.Number.FromDouble(n1.value - n2.value);
+            return SharpAlg.Native.Number.FromDouble(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n1).value - SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n2).value);
         },
         op_ExclusiveOr: function (n1, n2)
         {
-            return SharpAlg.Native.Number.FromDouble(System.Math.Pow(n1.value, n2.value));
+            return SharpAlg.Native.Number.FromDouble(System.Math.Pow(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n1).value, SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n2).value));
         },
         Ln: function (n)
         {
-            return SharpAlg.Native.Number.FromDouble(System.Math.Log$$Double(n.value));
+            return SharpAlg.Native.Number.FromDouble(System.Math.Log$$Double(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.FloatNumber.ctor, n).value));
         },
         cctor: function ()
         {
@@ -68,11 +68,32 @@ var SharpAlg$Native$Number =
         },
         FromDouble: function (value)
         {
-            return new SharpAlg.Native.Number.ctor(value);
+            return new SharpAlg.Native.FloatNumber.ctor(value);
         },
         FromString: function (s)
         {
-            return new SharpAlg.Native.Number.ctor(SharpAlg.Native.PlatformHelper.Parse(s));
+            return new SharpAlg.Native.FloatNumber.ctor(SharpAlg.Native.PlatformHelper.Parse(s));
+        }
+    },
+    assemblyName: "SharpAlg.Core",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Object.ctor.call(this);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$Number);
+var SharpAlg$Native$FloatNumber =
+{
+    fullname: "SharpAlg.Native.FloatNumber",
+    baseTypeName: "SharpAlg.Native.Number",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
         }
     },
     assemblyName: "SharpAlg.Core",
@@ -82,17 +103,17 @@ var SharpAlg$Native$Number =
         ctor: function (value)
         {
             this.value = 0;
-            System.Object.ctor.call(this);
+            SharpAlg.Native.Number.ctor.call(this);
             this.value = value;
         },
         Equals$$Object: function (obj)
         {
-            var other = As(obj, SharpAlg.Native.Number.ctor);
+            var other = As(obj, SharpAlg.Native.FloatNumber.ctor);
             return SharpAlg.Native.Number.op_Inequality(other, null) && other.value == this.value;
         },
         GetHashCode: function ()
         {
-            return System.Object.commonPrototype.GetHashCode.call(this);
+            return this.value.GetHashCode();
         },
         toString: function ()
         {
@@ -100,4 +121,40 @@ var SharpAlg$Native$Number =
         }
     }
 };
-JsTypes.push(SharpAlg$Native$Number);
+JsTypes.push(SharpAlg$Native$FloatNumber);
+var SharpAlg$Native$IntegerNumber =
+{
+    fullname: "SharpAlg.Native.IntegerNumber",
+    baseTypeName: "SharpAlg.Native.Number",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+        }
+    },
+    assemblyName: "SharpAlg.Core",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (value)
+        {
+            this.value = 0;
+            SharpAlg.Native.Number.ctor.call(this);
+            this.value = value;
+        },
+        Equals$$Object: function (obj)
+        {
+            var other = As(obj, SharpAlg.Native.IntegerNumber.ctor);
+            return SharpAlg.Native.Number.op_Inequality(other, null) && other.value == this.value;
+        },
+        GetHashCode: function ()
+        {
+            return this.value.GetHashCode();
+        },
+        toString: function ()
+        {
+            return this.value.toString();
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$IntegerNumber);

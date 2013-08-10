@@ -770,6 +770,9 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.Greater("100000000002", "100000000001"));
             SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("100000000001", "100000000001"));
             SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("100000000001", "100000000002"));
+        },
+        IntegerNumberTest: function ()
+        {
         }
     }
 };
