@@ -6,7 +6,11 @@ using System.Linq;
 namespace SharpAlg.Native.Builder {
     [JsType(JsMode.Prototype, Filename = SR.JSBuilderName)]
     public class TrivialExprBuilder : ExprBuilder {
-        //public override Context Context { get { return Context.Empty; } }
+        readonly IContext context;
+        public override IContext Context { get { return context; } }
+        public TrivialExprBuilder(IContext context) {
+            this.context = context;
+        }
         public override Expr Parameter(string parameterName) {
             return Expr.Parameter(parameterName);
         }

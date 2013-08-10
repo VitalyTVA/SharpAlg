@@ -68,8 +68,8 @@ namespace SharpAlg.Native.Builder {
         public static ExprBuilder Create(Context context) {
             return new ConvolutionExprBuilder(context);
         }
-        readonly Context context;
-        //public override Context Context { get { return context; } }
+        readonly IContext context;
+        public override IContext Context { get { return context; } }
         ConvolutionExprBuilder(Context context) { 
             this.context = context; 
         }

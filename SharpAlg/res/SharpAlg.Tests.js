@@ -857,7 +857,7 @@ var SharpAlg$Tests$ParserTestHelper =
         },
         ParseNoConvolutionCore: function (expression)
         {
-            return SharpAlg.Native.ExpressionExtensions.ParseCore(expression, new SharpAlg.Native.Builder.TrivialExprBuilder());
+            return SharpAlg.Native.ExpressionExtensions.ParseCore(expression, new SharpAlg.Native.Builder.TrivialExprBuilder(SharpAlg.Native.ContextFactory.Empty));
         }
     },
     assemblyName: "SharpAlg",

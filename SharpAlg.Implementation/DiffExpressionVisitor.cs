@@ -8,9 +8,9 @@ using System.Runtime.Serialization;
 namespace SharpAlg.Native {
     [JsType(JsMode.Prototype, Filename = SR.JS_Implementation)]
     public class DiffExpressionVisitor : IDiffExpressionVisitor {
-        readonly Context context;
         string parameterName;
         bool autoParameterName;
+        IContext Context { get { return builder.Context; } }
         private bool HasParameter { get { return !string.IsNullOrEmpty(parameterName); } }
         readonly ExprBuilder builder;
         public ExprBuilder Builder {
@@ -20,7 +20,6 @@ namespace SharpAlg.Native {
         }
         public DiffExpressionVisitor(ExprBuilder builder, Context context, string parameterName) {
             this.builder = builder;
-            this.context = context;
             this.parameterName = parameterName;
             autoParameterName = !HasParameter;
         }
@@ -62,7 +61,7 @@ namespace SharpAlg.Native {
             return Builder.Multiply(power, sum);
         }
         public Expr Function(FunctionExpr functionExpr) {
-            return context.GetFunction(functionExpr.FunctionName)
+            return Context.GetFunction(functionExpr.FunctionName)
                 .Convert<ISupportDiff>().Return(
                 x => x.Diff(this, functionExpr.Args),
                 () => { throw new InvalidOperationException(); }); //TODO exception and message

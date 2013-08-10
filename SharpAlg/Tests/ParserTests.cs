@@ -158,7 +158,7 @@ namespace SharpAlg.Tests {
             return ExpressionExtensions.GetExpression(ParseNoConvolutionCore(expression));
         }
         public static Parser ParseNoConvolutionCore(string expression) {
-            return ExpressionExtensions.ParseCore(expression, new TrivialExprBuilder());
+            return ExpressionExtensions.ParseCore(expression, new TrivialExprBuilder(ContextFactory.Empty));
         }
     }
 }

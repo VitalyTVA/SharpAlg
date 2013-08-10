@@ -142,14 +142,16 @@ SharpAlg.Native.DefaultExpressionVisitor.prototype.Function = function (function
 };
 SharpAlg.Native.DiffExpressionVisitor = function (builder, context, parameterName)
 {
-    this.context = null;
     this.parameterName = null;
     this.autoParameterName = false;
     this.builder = null;
     this.builder = builder;
-    this.context = context;
     this.parameterName = parameterName;
     this.autoParameterName = !this.get_HasParameter();
+};
+SharpAlg.Native.DiffExpressionVisitor.prototype.get_Context = function ()
+{
+    return this.builder.get_Context();
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.get_HasParameter = function ()
 {
@@ -209,7 +211,7 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Power = function (power)
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Function = function (functionExpr)
 {
-    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.ISupportDiff.ctor, this.context.GetFunction(functionExpr.get_FunctionName())), $CreateAnonymousDelegate(this, function (x)
+    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.ISupportDiff.ctor, this.get_Context().GetFunction(functionExpr.get_FunctionName())), $CreateAnonymousDelegate(this, function (x)
     {
         return x.Diff(this, functionExpr.get_Args());
     }), $CreateAnonymousDelegate(this, function ()
