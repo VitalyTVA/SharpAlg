@@ -13,19 +13,6 @@ if (typeof($CreateException)=='undefined')
         return error;
     }
 }
-if (typeof ($CreateAnonymousDelegate) == 'undefined') {
-    var $CreateAnonymousDelegate = function (target, func) {
-        if (target == null || func == null)
-            return func;
-        var delegate = function () {
-            return func.apply(target, arguments);
-        };
-        delegate.func = func;
-        delegate.target = target;
-        delegate.isDelegate = true;
-        return delegate;
-    }
-}
 if (typeof(SharpAlg) == "undefined")
     var SharpAlg = {};
 if (typeof(SharpAlg.Native) == "undefined")
@@ -84,47 +71,6 @@ var SharpAlg$Native$ContextFactory =
     }
 };
 JsTypes.push(SharpAlg$Native$ContextFactory);
-var SharpAlg$Native$DiffFunction =
-{
-    fullname: "SharpAlg.Native.DiffFunction",
-    baseTypeName: "SharpAlg.Native.Function",
-    assemblyName: "SharpAlg",
-    interfaceNames: ["SharpAlg.Native.ISupportConvolution"],
-    Kind: "Class",
-    definition:
-    {
-        ctor: function ()
-        {
-            SharpAlg.Native.Function.ctor.call(this, "diff");
-        },
-        Evaluate: function (evaluator, args)
-        {
-            return this.Convolute(evaluator.get_Context(), args).Visit$1(SharpAlg.Native.Number.ctor, evaluator);
-        },
-        Convolute: function (context, args)
-        {
-            var argsTail = SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, args);
-            if (!System.Linq.Enumerable.All$1(SharpAlg.Native.Expr.ctor, argsTail, $CreateAnonymousDelegate(this, function (x)
-            {
-                return Is(x, SharpAlg.Native.ParameterExpr.ctor);
-            })))
-                throw $CreateException(new SharpAlg.Native.ExpressionDefferentiationException.ctor$$String("All diff arguments should be parameters"), new Error());
-            var diffList = System.Linq.Enumerable.Cast$1(SharpAlg.Native.ParameterExpr.ctor, argsTail);
-            var builder = new SharpAlg.Native.Builder.ConvolutionExprBuilder(context);
-            if (!System.Linq.Enumerable.Any$1$$IEnumerable$1(SharpAlg.Native.ParameterExpr.ctor, diffList))
-            {
-                return SharpAlg.Native.ImplementationExpressionExtensions.Diff(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), builder, null);
-            }
-            var result = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
-            SharpAlg.Native.FunctionalExtensions.ForEach$1(SharpAlg.Native.ParameterExpr.ctor, diffList, $CreateAnonymousDelegate(this, function (x)
-            {
-                result = SharpAlg.Native.ImplementationExpressionExtensions.Diff(result, builder, x.get_ParameterName());
-            }));
-            return result;
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$DiffFunction);
 var SharpAlg$Native$ExpressionExtensions =
 {
     fullname: "SharpAlg.Native.ExpressionExtensions",
