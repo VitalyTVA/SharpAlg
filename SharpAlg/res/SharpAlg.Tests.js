@@ -85,7 +85,7 @@ var SharpAlg$Tests$DiffTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("diff(x ^ 3 * y ^ 2, x, y)", null), "6 * x ^ 2 * y");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("diff(x ^ 3 * y ^ 2)"), "Expression contains more than one independent variable\r\n");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("diff(x ^ 3, x + 1)"), "All diff arguments should be parameters\r\n");
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Native.ExpressionExtensions.ParseCore("diff(x ^ 3, x)", SharpAlg.Native.Builder.ConvolutionExprBuilder.Create(SharpAlg.Native.ContextFactory.CreateDefault().Register$$String$$Expr("x", SharpAlg.Native.ExpressionExtensions.Parse("y + 1", null)))), "All diff arguments should be parameters\r\n");
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Native.ExpressionExtensions.ParseCore("diff(x ^ 3, x)", SharpAlg.Native.Builder.ExprBuilderFactory.Create(SharpAlg.Native.ContextFactory.CreateDefault().Register$$String$$Expr("x", SharpAlg.Native.ExpressionExtensions.Parse("y + 1", null)))), "All diff arguments should be parameters\r\n");
             SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.ParserTestHelper.ParseNoConvolution("diff(x ^ 3)"), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, SharpAlg.Native.ContextFactory.CreateDefault().Register$$String$$Expr("x", SharpAlg.Native.ExpressionExtensions.Parse("2", null)));
@@ -104,7 +104,7 @@ var SharpAlg$Tests$DiffTests =
                 SharpAlg.Native.ExpressionExtensions.Diff(x, null);
             }), Typeof(SharpAlg.Native.ExpressionDefferentiationException.ctor), null);
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("(x ^ 2 + x * y) ^ (x ^ 2)", null), "x"), "(x ^ 2 + x * y) ^ (x ^ 2) * (2 * x * ln(x ^ 2 + x * y) + x ^ 2 * (2 * x + y) / (x ^ 2 + x * y))");
-            SharpAlg.Tests.FluentAssert.Fails$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("ln(x, x)", SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateEmpty()), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.FluentAssert.Fails$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("ln(x, x)", SharpAlg.Native.Builder.ExprBuilderFactory.CreateEmpty()), $CreateAnonymousDelegate(this, function (x)
             {
                 SharpAlg.Native.ExpressionExtensions.Diff(x, null);
             }), Typeof(SharpAlg.Native.InvalidArgumentCountException.ctor), null);
@@ -507,7 +507,7 @@ var SharpAlg$Tests$ExprTests =
         SubsitutionTest: function ()
         {
             var context = SharpAlg.Native.ContextFactory.CreateDefault().Register$$String$$Expr("x", SharpAlg.Native.ExpressionExtensions.Parse("y + 1", null));
-            var builder = SharpAlg.Native.Builder.ConvolutionExprBuilder.Create(context);
+            var builder = SharpAlg.Native.Builder.ExprBuilderFactory.Create(context);
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("x ^ 3", builder), "(y + 1) ^ 3");
         }
     }
@@ -547,7 +547,7 @@ var SharpAlg$Tests$ExprTestHelper =
     {
         GetParser: function (expression)
         {
-            return SharpAlg.Native.ExpressionExtensions.ParseCore(expression, SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault());
+            return SharpAlg.Native.ExpressionExtensions.ParseCore(expression, SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault());
         },
         AssertSimpleStringRepresentation: function (expr, value)
         {

@@ -85,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Native\Builder\ConvolutionExprBuilder.cs" />
+    <Compile Include="Native\Builder\ExprBuilderFactory.cs" />
     <Compile Include="Native\Builder\TrivialExprBuilder.cs" />
     <Compile Include="Native\ContextFactory.cs" />
     <Compile Include="Native\ExpressionExtensions.cs" />

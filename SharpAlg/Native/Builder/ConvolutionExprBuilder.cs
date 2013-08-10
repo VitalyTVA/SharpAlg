@@ -59,18 +59,9 @@ namespace SharpAlg.Native.Builder {
             }
         }
         #endregion
-        public static ExprBuilder CreateDefault() {
-            return new ConvolutionExprBuilder(ContextFactory.Default);
-        }
-        public static ExprBuilder CreateEmpty() {
-            return new ConvolutionExprBuilder(ContextFactory.Empty);
-        }
-        public static ExprBuilder Create(Context context) {
-            return new ConvolutionExprBuilder(context);
-        }
         readonly IContext context;
         public override IContext Context { get { return context; } }
-        ConvolutionExprBuilder(Context context) { 
+        public ConvolutionExprBuilder(Context context) { 
             this.context = context; 
         }
         public override Expr Function(string functionName, IEnumerable<Expr> args) {

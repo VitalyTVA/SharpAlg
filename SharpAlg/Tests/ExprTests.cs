@@ -341,7 +341,7 @@ namespace SharpAlg.Tests {
         public void SubsitutionTest() {
             var context = ContextFactory.CreateDefault()
                 .Register("x", "y + 1".Parse());
-            var builder = ConvolutionExprBuilder.Create(context);
+            var builder = ExprBuilderFactory.Create(context);
             "x ^ 3".Parse(builder).AssertSimpleStringRepresentation("(y + 1) ^ 3");
 
             //TODO recursive substitution x => x + 1
@@ -350,7 +350,7 @@ namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ExprTestHelper {
         public static Parser GetParser(this string expression) {
-            return expression.ParseCore(ConvolutionExprBuilder.CreateDefault());
+            return expression.ParseCore(ExprBuilderFactory.CreateDefault());
         }
         public static Expr AssertSimpleStringRepresentation(this Expr expr, string value) {
             return expr.IsEqual(x => x.Print(), value);

@@ -75,7 +75,7 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         Diff: function (expr, parameterName)
         {
-            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault(), SharpAlg.Native.ContextFactory.Default, parameterName));
+            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault(), SharpAlg.Native.ContextFactory.Default, parameterName));
         },
         Print: function (expr)
         {
@@ -83,7 +83,7 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         Parse: function (expression, builder)
         {
-            return SharpAlg.Native.ExpressionExtensions.GetExpression(SharpAlg.Native.ExpressionExtensions.ParseCore(expression, (builder != null ? builder : SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault())));
+            return SharpAlg.Native.ExpressionExtensions.GetExpression(SharpAlg.Native.ExpressionExtensions.ParseCore(expression, (builder != null ? builder : SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault())));
         },
         GetExpression: function (parser)
         {

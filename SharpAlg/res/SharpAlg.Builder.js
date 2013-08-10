@@ -67,18 +67,6 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder = function (context)
     SharpAlg.Native.Builder.ExprBuilder.call(this);
     this.context = context;
 };
-SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateDefault = function ()
-{
-    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.ContextFactory.Default);
-};
-SharpAlg.Native.Builder.ConvolutionExprBuilder.CreateEmpty = function ()
-{
-    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.ContextFactory.Empty);
-};
-SharpAlg.Native.Builder.ConvolutionExprBuilder.Create = function (context)
-{
-    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(context);
-};
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.get_Context = function ()
 {
     return this.context;
@@ -376,6 +364,21 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.PowerExpressionExtractor.prototyp
     return SharpAlg.Native.Expr.Power(expr, SharpAlg.Native.Expr.One);
 };
 $Inherit(SharpAlg.Native.Builder.ConvolutionExprBuilder.PowerExpressionExtractor, SharpAlg.Native.DefaultExpressionVisitor);
+SharpAlg.Native.Builder.ExprBuilderFactory = function ()
+{
+};
+SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault = function ()
+{
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.ContextFactory.Default);
+};
+SharpAlg.Native.Builder.ExprBuilderFactory.CreateEmpty = function ()
+{
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.ContextFactory.Empty);
+};
+SharpAlg.Native.Builder.ExprBuilderFactory.Create = function (context)
+{
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(context);
+};
 SharpAlg.Native.Builder.TrivialExprBuilder = function (context)
 {
     this.context = null;

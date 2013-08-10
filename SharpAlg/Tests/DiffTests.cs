@@ -67,7 +67,7 @@ namespace SharpAlg.Tests {
 
             
             "diff(x ^ 3, x)"
-                .ParseCore(ConvolutionExprBuilder.Create(ContextFactory.CreateDefault().Register("x", "y + 1".Parse())))
+                .ParseCore(ExprBuilderFactory.Create(ContextFactory.CreateDefault().Register("x", "y + 1".Parse())))
                 .AssertSingleSyntaxError("All diff arguments should be parameters\r\n");
             "diff(x ^ 3)"
                 .ParseNoConvolution()
@@ -83,7 +83,7 @@ namespace SharpAlg.Tests {
             "x^2 * y^3".Parse().Diff("y").AssertSimpleStringRepresentation("3 * x ^ 2 * y ^ 2");
             "x + y".Parse().Fails(x => x.Diff(), typeof(ExpressionDefferentiationException));
             "(x ^ 2 + x * y) ^ (x ^ 2)".Parse().Diff("x").AssertSimpleStringRepresentation("(x ^ 2 + x * y) ^ (x ^ 2) * (2 * x * ln(x ^ 2 + x * y) + x ^ 2 * (2 * x + y) / (x ^ 2 + x * y))");
-            "ln(x, x)".Parse(ConvolutionExprBuilder.CreateEmpty()).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));
+            "ln(x, x)".Parse(ExprBuilderFactory.CreateEmpty()).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));
         }
     }
 }

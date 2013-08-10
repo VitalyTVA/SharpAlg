@@ -13,13 +13,13 @@ namespace SharpAlg.Native {
             return expr.Visit(new ExpressionEvaluator(context ?? ContextFactory.Default));
         }
         public static Expr Diff(this Expr expr, string parameterName = null) {
-            return expr.Visit(new DiffExpressionVisitor(ConvolutionExprBuilder.CreateDefault(), ContextFactory.Default, parameterName));
+            return expr.Visit(new DiffExpressionVisitor(ExprBuilderFactory.CreateDefault(), ContextFactory.Default, parameterName));
         }
         public static string Print(this Expr expr) {
             return expr.Visit(SharpAlg.Native.Printer.ExpressionPrinter.Instance);
         }
         public static Expr Parse(this string expression, ExprBuilder builder = null) {
-            return GetExpression(ParseCore(expression, builder ?? ConvolutionExprBuilder.CreateDefault()));
+            return GetExpression(ParseCore(expression, builder ?? ExprBuilderFactory.CreateDefault()));
         }
         internal static Expr GetExpression(Parser.Parser parser) {
             if(parser.errors.Count > 0)
