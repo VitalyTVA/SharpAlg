@@ -21,10 +21,12 @@ namespace SharpAlg.Native {
             if(!argsTail.All(x => x is ParameterExpr))
                 throw new ExpressionDefferentiationException("All diff arguments should be parameters");//TODO correct message, go to constant
             var diffList = argsTail.Cast<ParameterExpr>();
-            if(!diffList.Any())
-                return args.First().Diff();
+            var builder = new ConvolutionExprBuilder(context);
+            if(!diffList.Any()) {
+                return args.First().Diff(builder);
+            }
             Expr result = args.First();
-            diffList.ForEach(x => result = result.Diff(x.ParameterName));
+            diffList.ForEach(x => result = result.Diff(builder, x.ParameterName));
             return result;
         }
     }

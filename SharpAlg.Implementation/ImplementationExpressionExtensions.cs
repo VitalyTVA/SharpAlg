@@ -16,5 +16,8 @@ namespace SharpAlg.Native {
         public static bool ExprEquivalent(this Expr expr1, Expr expr2) {
             return expr1.Visit(new ExpressionEquivalenceComparer(expr2));
         }
+        public static Expr Diff(this Expr expr, ExprBuilder builder, string parameterName = null) {
+            return expr.Visit(new DiffExpressionVisitor(builder, parameterName));
+        }
     }
 }

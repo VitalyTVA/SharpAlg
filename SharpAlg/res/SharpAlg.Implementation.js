@@ -646,6 +646,10 @@ var SharpAlg$Native$ImplementationExpressionExtensions =
         ExprEquivalent: function (expr1, expr2)
         {
             return expr1.Visit$1(System.Boolean.ctor, new SharpAlg.Native.ExpressionEquivalenceComparer.ctor(expr2));
+        },
+        Diff: function (expr, builder, parameterName)
+        {
+            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(builder, parameterName));
         }
     },
     assemblyName: "SharpAlg.Implementation",

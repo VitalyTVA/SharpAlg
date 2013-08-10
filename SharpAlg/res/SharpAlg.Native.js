@@ -89,12 +89,15 @@ var SharpAlg$Native$DiffFunction =
             })))
                 throw $CreateException(new SharpAlg.Native.ExpressionDefferentiationException.ctor$$String("All diff arguments should be parameters"), new Error());
             var diffList = System.Linq.Enumerable.Cast$1(SharpAlg.Native.ParameterExpr.ctor, argsTail);
+            var builder = new SharpAlg.Native.Builder.ConvolutionExprBuilder(context);
             if (!System.Linq.Enumerable.Any$1$$IEnumerable$1(SharpAlg.Native.ParameterExpr.ctor, diffList))
-                return SharpAlg.Native.ExpressionExtensions.Diff(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), null);
+            {
+                return SharpAlg.Native.ImplementationExpressionExtensions.Diff(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), builder, null);
+            }
             var result = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
             SharpAlg.Native.FunctionalExtensions.ForEach$1(SharpAlg.Native.ParameterExpr.ctor, diffList, $CreateAnonymousDelegate(this, function (x)
             {
-                result = SharpAlg.Native.ExpressionExtensions.Diff(result, x.get_ParameterName());
+                result = SharpAlg.Native.ImplementationExpressionExtensions.Diff(result, builder, x.get_ParameterName());
             }));
             return result;
         }
@@ -113,7 +116,7 @@ var SharpAlg$Native$ExpressionExtensions =
         },
         Diff: function (expr, parameterName)
         {
-            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault(), parameterName));
+            return SharpAlg.Native.ImplementationExpressionExtensions.Diff(expr, SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault(), parameterName);
         },
         Print: function (expr)
         {

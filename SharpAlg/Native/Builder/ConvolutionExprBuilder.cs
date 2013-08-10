@@ -61,7 +61,7 @@ namespace SharpAlg.Native.Builder {
         #endregion
         readonly IContext context;
         public override IContext Context { get { return context; } }
-        public ConvolutionExprBuilder(Context context) { 
+        public ConvolutionExprBuilder(IContext context) { 
             this.context = context; 
         }
         public override Expr Function(string functionName, IEnumerable<Expr> args) {
