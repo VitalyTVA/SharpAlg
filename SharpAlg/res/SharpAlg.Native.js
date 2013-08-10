@@ -26,6 +26,27 @@ if (typeof ($CreateAnonymousDelegate) == 'undefined') {
         return delegate;
     }
 }
+if (typeof(SharpAlg) == "undefined")
+    var SharpAlg = {};
+if (typeof(SharpAlg.Native) == "undefined")
+    SharpAlg.Native = {};
+if (typeof(SharpAlg.Native.Builder) == "undefined")
+    SharpAlg.Native.Builder = {};
+SharpAlg.Native.Builder.ExprBuilderFactory = function ()
+{
+};
+SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault = function ()
+{
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.ContextFactory.Default);
+};
+SharpAlg.Native.Builder.ExprBuilderFactory.CreateEmpty = function ()
+{
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(SharpAlg.Native.ContextFactory.Empty);
+};
+SharpAlg.Native.Builder.ExprBuilderFactory.Create = function (context)
+{
+    return new SharpAlg.Native.Builder.ConvolutionExprBuilder(context);
+};
 if (typeof(JsTypes) == "undefined")
     var JsTypes = [];
 var SharpAlg$Native$ContextFactory =

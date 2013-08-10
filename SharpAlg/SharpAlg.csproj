@@ -71,21 +71,19 @@
     <Content Include="res\Default.js" />
     <Content Include="res\jquery-1.8.2.min.js" />
     <Content Include="res\jsclr-4.1.0.js" />
-    <Content Include="res\SharpAlg.Builder.js" />
     <Content Include="res\SharpAlg.Core.js" />
     <Content Include="res\SharpAlg.Core.Number.js" />
     <Content Include="res\SharpAlg.Core.Utils.js" />
     <Content Include="res\SharpAlg.Implementation.Builder.js" />
     <Content Include="res\SharpAlg.Implementation.js" />
     <Content Include="res\SharpAlg.Native.js" />
-    <Content Include="res\SharpAlg.Number.js" />
     <Content Include="res\SharpAlg.Parser.js" />
     <Content Include="res\SharpAlg.Printer.js" />
     <Content Include="res\SharpAlg.Tests.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Native\Builder\ExprBuilderFactory.cs" />
+    <Compile Include="Native\ExprBuilderFactory.cs" />
     <Compile Include="Native\ContextFactory.cs" />
     <Compile Include="Native\DiffFunction.cs" />
     <Compile Include="Native\ExpressionExtensions.cs" />
