@@ -72,7 +72,7 @@ namespace SharpAlg.Native.Builder {
 
             return func
                 .Convert<ISupportConvolution>()
-                .With(x => x.Convolute(args))
+                .With(x => x.Convolute(Context, args))
                 .Return(x => x, () => Expr.Function(functionName, args)); //TODO As extension
         }
         public override Expr Parameter(string parameterName) {

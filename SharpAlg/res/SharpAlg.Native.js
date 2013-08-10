@@ -78,9 +78,9 @@ var SharpAlg$Native$DiffFunction =
         },
         Evaluate: function (evaluator, args)
         {
-            return this.Convolute(args).Visit$1(SharpAlg.Native.Number.ctor, evaluator);
+            return this.Convolute(evaluator.get_Context(), args).Visit$1(SharpAlg.Native.Number.ctor, evaluator);
         },
-        Convolute: function (args)
+        Convolute: function (context, args)
         {
             var argsTail = SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, args);
             if (!System.Linq.Enumerable.All$1(SharpAlg.Native.Expr.ctor, argsTail, $CreateAnonymousDelegate(this, function (x)

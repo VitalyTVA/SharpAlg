@@ -13,7 +13,7 @@ namespace SharpAlg.Native {
         protected Function(string name) {
             Name = name;
         }
-        public abstract Number Evaluate(IExpressionVisitor<Number> evaluator, IEnumerable<Expr> args);
+        public abstract Number Evaluate(IExpressionEvaluator evaluator, IEnumerable<Expr> args);
         
         public string Name { get; private set; }
     }
@@ -31,6 +31,6 @@ namespace SharpAlg.Native {
     }
     [JsType(JsMode.Clr, Filename = SR.JS_Core)]
     public interface ISupportConvolution {
-        Expr Convolute(IEnumerable<Expr> args);
+        Expr Convolute(IContext context, IEnumerable<Expr> args);
     }
 }

@@ -18,7 +18,7 @@ namespace SharpAlg.Tests {
             public CustomFunction()
                 : base("CustomFunc") {
             }
-            public override Number Evaluate(IExpressionVisitor<Number> evaluator, IEnumerable<Expr> args) {
+            public override Number Evaluate(IExpressionEvaluator evaluator, IEnumerable<Expr> args) {
                 Number result = args.Select(x => x.Visit(evaluator)).Aggregate(Number.Zero, (res, x) => res + x * x);
                 return result;
             }

@@ -13,10 +13,10 @@ namespace SharpAlg.Native {
         public DiffFunction()
             : base("diff") {
         }
-        public override Number Evaluate(IExpressionVisitor<Number> evaluator, IEnumerable<Expr> args) {
-            return Convolute(args).Visit(evaluator);
+        public override Number Evaluate(IExpressionEvaluator evaluator, IEnumerable<Expr> args) {
+            return Convolute(evaluator.Context, args).Visit(evaluator);
         }
-        public Expr Convolute(IEnumerable<Expr> args) {
+        public Expr Convolute(IContext context, IEnumerable<Expr> args) {
             var argsTail = args.Tail();
             if(!argsTail.All(x => x is ParameterExpr))
                 throw new ExpressionDefferentiationException("All diff arguments should be parameters");//TODO correct message, go to constant

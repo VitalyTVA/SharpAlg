@@ -12,8 +12,9 @@ namespace SharpAlg.Native {
         None, Add, Multiply, Power, Factorial
     }
     [JsType(JsMode.Prototype, Filename = SR.JS_Implementation)]
-    public class ExpressionEvaluator : IExpressionVisitor<Number> {
+    public class ExpressionEvaluator : IExpressionEvaluator {
         readonly IContext context;
+        public IContext Context { get { return context; } }
         public ExpressionEvaluator(IContext context) {
             this.context = context;
         }
@@ -39,7 +40,7 @@ namespace SharpAlg.Native {
             return power.Left.Visit(this) ^ power.Right.Visit(this);
         }
         public Number Parameter(ParameterExpr parameter) {
-            var parameterValue = context.GetValue(parameter.ParameterName);
+            var parameterValue = Context.GetValue(parameter.ParameterName);
             if(parameterValue == null)
                 throw new ExpressionEvaluationException(string.Format("{0} value is undefined", parameter.ParameterName));
             return parameterValue.Visit(this);
@@ -73,7 +74,7 @@ namespace SharpAlg.Native {
             return false;
         }
         public Number Function(FunctionExpr functionExpr) {
-            var func = context.GetFunction(functionExpr.FunctionName);
+            var func = Context.GetFunction(functionExpr.FunctionName);
             if(func != null) {
                 return func.Evaluate(this, functionExpr.Args);
             }

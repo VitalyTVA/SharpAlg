@@ -420,5 +420,7 @@ var SharpAlg$Native$ISupportConvolution = {fullname: "SharpAlg.Native.ISupportCo
 JsTypes.push(SharpAlg$Native$ISupportConvolution);
 var SharpAlg$Native$IContext = {fullname: "SharpAlg.Native.IContext", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IContext);
+var SharpAlg$Native$IExpressionEvaluator = {fullname: "SharpAlg.Native.IExpressionEvaluator", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", interfaceNames: ["SharpAlg.Native.IExpressionVisitor$1"], Kind: "Interface"};
+JsTypes.push(SharpAlg$Native$IExpressionEvaluator);
 var SharpAlg$Native$IExpressionVisitor$1 = {fullname: "SharpAlg.Native.IExpressionVisitor$1", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IExpressionVisitor$1);

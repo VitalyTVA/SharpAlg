@@ -23,7 +23,7 @@ namespace SharpAlg.Native {
         static bool IsValidArgsCount<T>(IEnumerable<T> args) {
             return args.Count() == 1;
         }
-        public override Number Evaluate(IExpressionVisitor<Number> evaluator, IEnumerable<Expr> args) {
+        public override Number Evaluate(IExpressionEvaluator evaluator, IEnumerable<Expr> args) {
             return EvaluateCore(args.Select(x => x.Visit(evaluator)));
         }
         protected static void CheckArgsCount<T>(IEnumerable<T> args) {
@@ -82,7 +82,7 @@ namespace SharpAlg.Native {
             return builder.Inverse(arg);
         }
 
-        public Expr Convolute(IEnumerable<Expr> args) {
+        public Expr Convolute(IContext context, IEnumerable<Expr> args) {
             if(args.First().ExprEquals(Expr.One))
                 return Expr.Zero;
             return null;

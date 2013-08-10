@@ -350,6 +350,10 @@ SharpAlg.Native.ExpressionEvaluator = function (context)
     this.context = null;
     this.context = context;
 };
+SharpAlg.Native.ExpressionEvaluator.prototype.get_Context = function ()
+{
+    return this.context;
+};
 SharpAlg.Native.ExpressionEvaluator.prototype.Constant = function (constant)
 {
     return constant.get_Value();
@@ -386,7 +390,7 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Power = function (power)
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Parameter = function (parameter)
 {
-    var parameterValue = this.context.GetValue(parameter.get_ParameterName());
+    var parameterValue = this.get_Context().GetValue(parameter.get_ParameterName());
     if (parameterValue == null)
         throw $CreateException(new SharpAlg.Native.ExpressionEvaluationException.ctor$$String(System.String.Format$$String$$Object("{0} value is undefined", parameter.get_ParameterName())), new Error());
     return parameterValue.Visit$1(SharpAlg.Native.Number.ctor, this);
@@ -433,7 +437,7 @@ SharpAlg.Native.ExpressionEvaluator.IsInvertedOperation = function (operation)
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.Function = function (functionExpr)
 {
-    var func = this.context.GetFunction(functionExpr.get_FunctionName());
+    var func = this.get_Context().GetFunction(functionExpr.get_FunctionName());
     if (func != null)
     {
         return func.Evaluate(this, functionExpr.get_Args());
@@ -589,7 +593,7 @@ var SharpAlg$Native$LnFunction =
         {
             return builder.Inverse(arg);
         },
-        Convolute: function (args)
+        Convolute: function (context, args)
         {
             if (SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), SharpAlg.Native.Expr.One))
                 return SharpAlg.Native.Expr.Zero;
