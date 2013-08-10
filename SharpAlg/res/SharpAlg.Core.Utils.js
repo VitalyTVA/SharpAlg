@@ -126,9 +126,13 @@ var SharpAlg$Native$FunctionalExtensions =
                 return result;
             return null;
         },
-        Convert$1: function (TOut, source)
+        ConvertAs$1: function (TOut, source)
         {
             return As(source, TOut);
+        },
+        ConvertCast$1: function (TOut, source)
+        {
+            return Cast(source, TOut);
         },
         AsEnumerable$1: function (T, source)
         {

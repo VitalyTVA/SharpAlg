@@ -211,7 +211,7 @@ SharpAlg.Native.DiffExpressionVisitor.prototype.Power = function (power)
 };
 SharpAlg.Native.DiffExpressionVisitor.prototype.Function = function (functionExpr)
 {
-    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.ISupportDiff.ctor, this.get_Context().GetFunction(functionExpr.get_FunctionName())), $CreateAnonymousDelegate(this, function (x)
+    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.ISupportDiff.ctor, this.get_Context().GetFunction(functionExpr.get_FunctionName())), $CreateAnonymousDelegate(this, function (x)
     {
         return x.Diff(this, functionExpr.get_Args());
     }), $CreateAnonymousDelegate(this, function ()

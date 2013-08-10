@@ -749,15 +749,38 @@ var SharpAlg$Tests$NumberTests =
         {
             System.Object.ctor.call(this);
         },
+        DoubleOperationsTest: function ()
+        {
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Add("1.2", "2.3"), "3.5");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Multiply("9.0", "13.0"), "117");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Subtract("9.0", "13.0"), "-4");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Divide("3.0", "2.0"), "1.5");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Divide("1593668734.0", "1287293.0"), "1238");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Power("117.0", "5.0"), "21924480357");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Add("1000000001.0", "500000001.0"), "1500000002");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Add("-1000000001.0", "500000001.0"), "-500000000");
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.Equal("100000000001.0", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.Equal("100000000001.0", "100000000000.0"));
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.NotEqual("100000000001.0", "100000000000.0"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.NotEqual("100000000001.0", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.Less("100000000001.0", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.Less("100000000001.0", "100000000002.0"));
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.LessOrEqual("100000000001.0", "100000000002.0"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.LessOrEqual("100000000002.0", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.Greater("100000000001.0", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.Greater("100000000002.0", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("100000000001.0", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("100000000001.0", "100000000002.0"));
+        },
         IntOperationsTest: function ()
         {
-            SharpAlg.Tests.NumberTestHelper.AssertNumber(SharpAlg.Tests.NumberTestHelper.Add("1", "2"), "3");
-            SharpAlg.Tests.NumberTestHelper.AssertNumber(SharpAlg.Tests.NumberTestHelper.Multiply("9", "13"), "117");
-            SharpAlg.Tests.NumberTestHelper.AssertNumber(SharpAlg.Tests.NumberTestHelper.Subtract("9", "13"), "-4");
-            SharpAlg.Tests.NumberTestHelper.AssertNumber(SharpAlg.Tests.NumberTestHelper.Divide("1593668734", "1287293"), "1238");
-            SharpAlg.Tests.NumberTestHelper.AssertNumber(SharpAlg.Tests.NumberTestHelper.Power("117", "5"), "21924480357");
-            SharpAlg.Tests.NumberTestHelper.AssertNumber(SharpAlg.Tests.NumberTestHelper.Add("1000000001", "500000001"), "1500000002");
-            SharpAlg.Tests.NumberTestHelper.AssertNumber(SharpAlg.Tests.NumberTestHelper.Add("-1000000001", "500000001"), "-500000000");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Add("1", "2"), "3");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("9", "13"), "-4");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Multiply("9", "13"), "117");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1593668734", "1287293"), "1238");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("117", "5"), "21924480357");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Add("1000000001", "500000001"), "1500000002");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Add("-1000000001", "500000001"), "-500000000");
             SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.Equal("100000000001", "100000000001"));
             SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.Equal("100000000001", "100000000000"));
             SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.NotEqual("100000000001", "100000000000"));
@@ -783,56 +806,73 @@ var SharpAlg$Tests$NumberTestHelper =
     baseTypeName: "System.Object",
     staticDefinition:
     {
-        AssertNumber: function (n, expected)
+        AssertFloatNumber: function (n, expected)
         {
-            return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, n, function (x)
+            return SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, n, function (x)
             {
                 return x.toString();
-            }, expected);
+            }, expected), function (x)
+            {
+                return Is(x, SharpAlg.Native.FloatNumber.ctor);
+            });
+        },
+        AssertIntegerNumber: function (n, expected)
+        {
+            return SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, n, function (x)
+            {
+                return x.toString();
+            }, expected), function (x)
+            {
+                return Is(x, SharpAlg.Native.IntegerNumber.ctor);
+            });
         },
         Add: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_Addition(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_Addition(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
         },
         Subtract: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_Subtraction(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
         },
         Multiply: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_Multiply(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_Multiply(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
         },
         Divide: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_Division(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_Division(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
         },
         Power: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_ExclusiveOr(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_ExclusiveOr(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
         },
         Equal: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_Equality(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_Equality(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
         },
         NotEqual: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_Inequality(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_Inequality(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
         },
         Less: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_LessThan(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_LessThan(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
         },
         LessOrEqual: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_LessThanOrEqual(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_LessThanOrEqual(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
         },
         Greater: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_GreaterThan(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_GreaterThan(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
         },
         GreaterOrEqual: function (s1, s2)
         {
-            return SharpAlg.Native.Number.op_GreaterThanOrEqual(SharpAlg.Native.Number.FromString(s1), SharpAlg.Native.Number.FromString(s2));
+            return SharpAlg.Native.Number.op_GreaterThanOrEqual(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
+        },
+        FromString: function (s)
+        {
+            return s.Contains(".") ? SharpAlg.Native.Number.FromString(s) : SharpAlg.Native.Number.FromIntString(s);
         }
     },
     assemblyName: "SharpAlg",

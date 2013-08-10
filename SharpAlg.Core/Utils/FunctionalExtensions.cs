@@ -99,8 +99,11 @@ namespace SharpAlg.Native {
                 return result;
             return null;
         }
-        public static TOut Convert<TOut>(this object source) where TOut : class {
+        public static TOut ConvertAs<TOut>(this object source) where TOut : class {
             return source as TOut;
+        }
+        public static TOut ConvertCast<TOut>(this object source) {
+            return (TOut)source;
         }
         public static IEnumerable<T> AsEnumerable<T>(this T source) {
             yield return source;

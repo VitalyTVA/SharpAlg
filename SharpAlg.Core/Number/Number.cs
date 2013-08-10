@@ -8,6 +8,8 @@ using System.Linq;
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
     public abstract class Number {
+        static void ToSameType(ref Number n1, ref Number n2) { 
+        }
         public static bool operator ==(Number n1, Number n2) {
             return object.Equals(n1, n2);
         }
@@ -15,34 +17,36 @@ namespace SharpAlg.Native {
             return !object.Equals(n1, n2);
         }
         public static bool operator >=(Number n1, Number n2) {
-            return n1.Convert<FloatNumber>().value >= n2.Convert<FloatNumber>().value;
+            return !n1.Less(n2);
         }
         public static bool operator <=(Number n1, Number n2) {
-            return n1.Convert<FloatNumber>().value <= n2.Convert<FloatNumber>().value;
+            return !n1.Greater(n2);
         }
         public static bool operator <(Number n1, Number n2) {
-            return n1.Convert<FloatNumber>().value < n2.Convert<FloatNumber>().value;
+            return n1.Less(n2);
         }
         public static bool operator >(Number n1, Number n2) {
-            return n1.Convert<FloatNumber>().value > n2.Convert<FloatNumber>().value;
+            return n1.Greater(n2);
         }
         public static Number operator *(Number n1, Number n2) {
-            return FromDouble(n1.Convert<FloatNumber>().value * n2.Convert<FloatNumber>().value);
+            return n1.Multiply(n2);
         }
         public static Number operator /(Number n1, Number n2) {
-            return FromDouble(n1.Convert<FloatNumber>().value / n2.Convert<FloatNumber>().value);
+            return n1.Divide(n2);
         }
         public static Number operator +(Number n1, Number n2) {
-            return FromDouble(n1.Convert<FloatNumber>().value + n2.Convert<FloatNumber>().value);
+            return n1.Add(n2);
         }
         public static Number operator -(Number n1, Number n2) {
-            return FromDouble(n1.Convert<FloatNumber>().value - n2.Convert<FloatNumber>().value);
+            return n1.Subtract(n2);
         }
         public static Number operator ^(Number n1, Number n2) {
-            return FromDouble(Math.Pow(n1.Convert<FloatNumber>().value, n2.Convert<FloatNumber>().value));
+            return n1.Power(n2);
         }
         public static Number Ln(Number n) {
-            return FromDouble(Math.Log(n.Convert<FloatNumber>().value)); //TODO make external
+            //TODO ln for integer number
+            //TODO conversion to int for ln(1);
+            return FromDouble(Math.Log(n.ConvertCast<FloatNumber>().value)); //TODO make external
         }
 
         public static readonly Number Zero;
@@ -55,15 +59,29 @@ namespace SharpAlg.Native {
             Two = FromDouble(2);
             MinusOne = FromDouble(-1);
         }
-        static Number FromDouble(double value) {
+        protected static Number FromDouble(double value) {
             return new FloatNumber(value);
         }
+        protected static Number FromLong(long value) {
+            return new IntegerNumber(value);
+        }
         public static Number FromString(string s) {
-            return new FloatNumber(PlatformHelper.Parse(s));
+            return FromDouble(PlatformHelper.Parse(s));
+        }
+        public static Number FromIntString(string s) {
+            return FromLong(long.Parse(s));
         }
 
         protected Number() {
         }
+
+        protected abstract Number Add(Number n);
+        protected abstract Number Subtract(Number n);
+        protected abstract Number Multiply(Number n);
+        protected abstract Number Divide(Number n);
+        protected abstract Number Power(Number n);
+        protected abstract bool Less(Number n);
+        protected abstract bool Greater(Number n);
     }
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
     public sealed class FloatNumber : Number {
@@ -81,6 +99,33 @@ namespace SharpAlg.Native {
         public override string ToString() {
             return PlatformHelper.ToInvariantString(value);
         }
+        protected override Number Add(Number n) {
+            return BinaryOperation(n, (x, y) => x + y);
+        }
+        protected override Number Subtract(Number n) {
+            return BinaryOperation(n, (x, y) => x - y);
+        }
+        protected override Number Multiply(Number n) {
+            return BinaryOperation(n, (x, y) => x * y);
+        }
+        protected override Number Divide(Number n) {
+            return BinaryOperation(n, (x, y) => x / y);
+        }
+        protected override Number Power(Number n) {
+            return BinaryOperation(n, (x, y) => Math.Pow(x, y));
+        }
+        protected override bool Less(Number n) {
+            return BinaryOperation(n, (x, y) => x < y);
+        }
+        protected override bool Greater(Number n) {
+            return BinaryOperation(n, (x, y) => x > y);
+        }
+        T BinaryOperation<T>(Number n, Func<double, double, T> operation) {
+            return operation(value, n.ConvertCast<FloatNumber>().value);
+        }
+        Number BinaryOperation(Number n, Func<double, double, double> operation) {
+            return FromDouble(BinaryOperation<double>(n, operation));
+        }
     }
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
     public sealed class IntegerNumber : Number {
@@ -97,6 +142,33 @@ namespace SharpAlg.Native {
         }
         public override string ToString() {
             return value.ToString();
+        }
+        protected override Number Add(Number n) {
+            return BinaryOperation(n, (x, y) => x + y);
+        }
+        protected override Number Subtract(Number n) {
+            return BinaryOperation(n, (x, y) => x - y);
+        }
+        protected override Number Multiply(Number n) {
+            return BinaryOperation(n, (x, y) => x * y);
+        }
+        protected override Number Divide(Number n) {
+            return BinaryOperation(n, (x, y) => x / y);
+        }
+        protected override Number Power(Number n) {
+            return BinaryOperation(n, (x, y) => (long)Math.Pow(x, y)); //TODO real power without long conversion
+        }
+        protected override bool Less(Number n) {
+            return BinaryOperation(n, (x, y) => x < y);
+        }
+        protected override bool Greater(Number n) {
+            return BinaryOperation(n, (x, y) => x > y);
+        }
+        T BinaryOperation<T>(Number n, Func<long, long, T> operation) {
+            return operation(value, n.ConvertCast<IntegerNumber>().value);
+        }
+        Number BinaryOperation(Number n, Func<long, long, long> operation) {
+            return FromLong(BinaryOperation<long>(n, operation));
         }
     }
 }

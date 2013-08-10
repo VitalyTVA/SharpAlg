@@ -66,12 +66,12 @@ namespace SharpAlg.Native.Builder {
         }
         public override Expr Function(string functionName, IEnumerable<Expr> args) {
             var func = context.GetFunction(functionName);
-            string checkArgs = func.Convert<ISupportCheckArgs>().With(x => x.Check(args));
+            string checkArgs = func.ConvertAs<ISupportCheckArgs>().With(x => x.Check(args));
             if(!string.IsNullOrEmpty(checkArgs))
                 throw new InvalidArgumentCountException(checkArgs);
 
             return func
-                .Convert<ISupportConvolution>()
+                .ConvertAs<ISupportConvolution>()
                 .With(x => x.Convolute(Context, args))
                 .Return(x => x, () => Expr.Function(functionName, args)); //TODO As extension
         }

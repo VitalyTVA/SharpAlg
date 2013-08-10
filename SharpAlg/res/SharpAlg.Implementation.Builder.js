@@ -74,13 +74,13 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.get_Context = function 
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Function = function (functionName, args)
 {
     var func = this.context.GetFunction(functionName);
-    var checkArgs = SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.ISupportCheckArgs.ctor, func), $CreateAnonymousDelegate(this, function (x)
+    var checkArgs = SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.ISupportCheckArgs.ctor, func), $CreateAnonymousDelegate(this, function (x)
     {
         return x.Check(args);
     }));
     if (!System.String.IsNullOrEmpty(checkArgs))
         throw $CreateException(new SharpAlg.Native.InvalidArgumentCountException.ctor$$String(checkArgs), new Error());
-    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.Convert$1(SharpAlg.Native.ISupportConvolution.ctor, func), $CreateAnonymousDelegate(this, function (x)
+    return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.ISupportConvolution.ctor, func), $CreateAnonymousDelegate(this, function (x)
     {
         return x.Convolute(this.get_Context(), args);
     })), $CreateAnonymousDelegate(this, function (x)

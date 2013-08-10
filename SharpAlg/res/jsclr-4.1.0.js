@@ -3279,6 +3279,22 @@ JsTypes.push({ fullname: "System.Int32", baseTypeName: "System.ValueType", defin
 	}
 }
 });
+JsTypes.push({
+    fullname: "System.Int64", baseTypeName: "System.ValueType", definition:
+
+     {
+         ctor: Number,
+         toString: Number.prototype.toString //avoid toString override by compiler (toString(radix) won't work if overriden)
+     }, staticDefinition:
+      {
+          tryParse: function (s) {
+              return parseInt(s);
+          },
+          Parse$$String: function (s) {
+              return parseInt(s);
+          }
+      }
+});
 JsTypes.push({ fullname: "System.Decimal", baseTypeName: "System.ValueType", definition:
  {
 	ctor: function (x) { return new Number(x); },
