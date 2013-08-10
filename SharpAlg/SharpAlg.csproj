@@ -75,6 +75,7 @@
     <Content Include="res\SharpAlg.Core.js" />
     <Content Include="res\SharpAlg.Core.Number.js" />
     <Content Include="res\SharpAlg.Core.Utils.js" />
+    <Content Include="res\SharpAlg.Implementation.Builder.js" />
     <Content Include="res\SharpAlg.Implementation.js" />
     <Content Include="res\SharpAlg.Native.js" />
     <Content Include="res\SharpAlg.Number.js" />
@@ -84,9 +85,7 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Native\Builder\ConvolutionExprBuilder.cs" />
     <Compile Include="Native\Builder\ExprBuilderFactory.cs" />
-    <Compile Include="Native\Builder\TrivialExprBuilder.cs" />
     <Compile Include="Native\ContextFactory.cs" />
     <Compile Include="Native\DiffFunction.cs" />
     <Compile Include="Native\ExpressionExtensions.cs" />

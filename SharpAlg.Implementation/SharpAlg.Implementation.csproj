@@ -43,6 +43,8 @@
     <Reference Include="SharpKit.JsClr" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builder\ConvolutionExprBuilder.cs" />
+    <Compile Include="Builder\TrivialExprBuilder.cs" />
     <Compile Include="Context.cs" />
     <Compile Include="DefaultExpressionVisitor.cs" />
     <Compile Include="DiffExpressionVisitor.cs" />
