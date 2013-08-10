@@ -8,39 +8,55 @@ using System.Linq;
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
     public abstract class Number {
-        static void ToSameType(ref Number n1, ref Number n2) { 
+        protected const int IntegerNumberType = 0;
+        protected const int FloatNumberType = 1;
+        static void ToSameType(ref Number n1, ref Number n2) {
+            var type = Math.Max(n1.NumberType, n2.NumberType);
+            n1 = n1.ConvertTo(type);
+            n2 = n2.ConvertTo(type);
         }
         public static bool operator ==(Number n1, Number n2) {
+            if((object)n1 != null && (object)n2 != null)
+                ToSameType(ref n1, ref n2);
             return object.Equals(n1, n2);
         }
         public static bool operator !=(Number n1, Number n2) {
-            return !object.Equals(n1, n2);
+            return !(n1 == n2);
         }
         public static bool operator >=(Number n1, Number n2) {
+            ToSameType(ref n1, ref n2);
             return !n1.Less(n2);
         }
         public static bool operator <=(Number n1, Number n2) {
+            ToSameType(ref n1, ref n2);
             return !n1.Greater(n2);
         }
         public static bool operator <(Number n1, Number n2) {
+            ToSameType(ref n1, ref n2);
             return n1.Less(n2);
         }
         public static bool operator >(Number n1, Number n2) {
+            ToSameType(ref n1, ref n2);
             return n1.Greater(n2);
         }
         public static Number operator *(Number n1, Number n2) {
+            ToSameType(ref n1, ref n2);
             return n1.Multiply(n2);
         }
         public static Number operator /(Number n1, Number n2) {
+            ToSameType(ref n1, ref n2);
             return n1.Divide(n2);
         }
         public static Number operator +(Number n1, Number n2) {
+            ToSameType(ref n1, ref n2);
             return n1.Add(n2);
         }
         public static Number operator -(Number n1, Number n2) {
+            ToSameType(ref n1, ref n2);
             return n1.Subtract(n2);
         }
         public static Number operator ^(Number n1, Number n2) {
+            ToSameType(ref n1, ref n2);
             return n1.Power(n2);
         }
         public static Number Ln(Number n) {
@@ -74,7 +90,16 @@ namespace SharpAlg.Native {
 
         protected Number() {
         }
+        protected Number ConvertTo(int type) {
+            if(type < NumberType)
+                throw new NotImplementedException();
+            if(type == NumberType)
+                return this;
+            return ConvertToCore(type);
+        }
 
+        protected abstract Number ConvertToCore(int type);
+        protected abstract int NumberType { get; }
         protected abstract Number Add(Number n);
         protected abstract Number Subtract(Number n);
         protected abstract Number Multiply(Number n);
@@ -88,6 +113,10 @@ namespace SharpAlg.Native {
         internal readonly double value;
         public FloatNumber(double value) {
             this.value = value;
+        }
+        protected override int NumberType { get { return FloatNumberType; } }
+        protected override Number ConvertToCore(int type) {
+            throw new NotImplementedException();
         }
         public override bool Equals(object obj) {
             var other = obj as FloatNumber;
@@ -132,6 +161,10 @@ namespace SharpAlg.Native {
         internal readonly long value;
         public IntegerNumber(long value) {
             this.value = value;
+        }
+        protected override int NumberType { get { return IntegerNumberType; } }
+        protected override Number ConvertToCore(int type) {
+            return FromDouble(value);
         }
         public override bool Equals(object obj) {
             var other = obj as IntegerNumber;

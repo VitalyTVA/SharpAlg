@@ -794,8 +794,32 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("100000000001", "100000000001"));
             SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("100000000001", "100000000002"));
         },
-        IntegerNumberTest: function ()
+        FloatIntOperationsTest: function ()
         {
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Add("1.0", "2"), "3");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Add("1", "2.0"), "3");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Add("1", "2.3"), "3.3");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Multiply("9", "13.0"), "117");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Multiply("9.0", "13"), "117");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Subtract("9", "13.0"), "-4");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Subtract("9.0", "13"), "-4");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Divide("3", "2.0"), "1.5");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Divide("3.0", "2"), "1.5");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Divide("4.0", "2"), "2");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Power("117", "5.0"), "21924480357");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Power("117.0", "5"), "21924480357");
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.Equal("100000000001", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.Equal("100000000001.0", "100000000000"));
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.NotEqual("100000000001", "100000000000.0"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.NotEqual("100000000001.0", "100000000001"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.Less("100000000001", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.Less("100000000001.0", "100000000002"));
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.LessOrEqual("100000000001", "100000000002.0"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.LessOrEqual("100000000002.0", "100000000001"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.Greater("100000000001", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.Greater("100000000002.0", "100000000001"));
+            SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("100000000001", "100000000001.0"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("100000000001.0", "100000000002"));
         }
     }
 };
