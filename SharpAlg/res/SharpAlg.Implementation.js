@@ -140,7 +140,7 @@ SharpAlg.Native.DefaultExpressionVisitor.prototype.Function = function (function
 {
     return this.GetDefault(functionExpr);
 };
-SharpAlg.Native.DiffExpressionVisitor = function (builder, context, parameterName)
+SharpAlg.Native.DiffExpressionVisitor = function (builder, parameterName)
 {
     this.parameterName = null;
     this.autoParameterName = false;

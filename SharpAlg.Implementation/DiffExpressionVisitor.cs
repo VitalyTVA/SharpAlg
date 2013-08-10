@@ -18,7 +18,7 @@ namespace SharpAlg.Native {
                 return builder;
             }
         }
-        public DiffExpressionVisitor(ExprBuilder builder, Context context, string parameterName) {
+        public DiffExpressionVisitor(ExprBuilder builder, string parameterName) {
             this.builder = builder;
             this.parameterName = parameterName;
             autoParameterName = !HasParameter;

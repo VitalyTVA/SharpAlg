@@ -13,7 +13,7 @@ namespace SharpAlg.Native {
             return expr.Visit(new ExpressionEvaluator(context ?? ContextFactory.Default));
         }
         public static Expr Diff(this Expr expr, string parameterName = null) {
-            return expr.Visit(new DiffExpressionVisitor(ExprBuilderFactory.CreateDefault(), ContextFactory.Default, parameterName));
+            return expr.Visit(new DiffExpressionVisitor(ExprBuilderFactory.CreateDefault(), parameterName));
         }
         public static string Print(this Expr expr) {
             return expr.Visit(SharpAlg.Native.Printer.ExpressionPrinter.Instance);

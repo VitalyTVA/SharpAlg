@@ -63,53 +63,6 @@ var SharpAlg$Native$ContextFactory =
     }
 };
 JsTypes.push(SharpAlg$Native$ContextFactory);
-var SharpAlg$Native$ExpressionExtensions =
-{
-    fullname: "SharpAlg.Native.ExpressionExtensions",
-    baseTypeName: "System.Object",
-    staticDefinition:
-    {
-        Evaluate: function (expr, context)
-        {
-            return expr.Visit$1(SharpAlg.Native.Number.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : SharpAlg.Native.ContextFactory.Default)));
-        },
-        Diff: function (expr, parameterName)
-        {
-            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault(), SharpAlg.Native.ContextFactory.Default, parameterName));
-        },
-        Print: function (expr)
-        {
-            return expr.Visit$1(System.String.ctor, SharpAlg.Native.Printer.ExpressionPrinter.Instance);
-        },
-        Parse: function (expression, builder)
-        {
-            return SharpAlg.Native.ExpressionExtensions.GetExpression(SharpAlg.Native.ExpressionExtensions.ParseCore(expression, (builder != null ? builder : SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault())));
-        },
-        GetExpression: function (parser)
-        {
-            if (parser.errors.Count > 0)
-                throw $CreateException(new System.InvalidOperationException.ctor$$String("String can not be parsed"), new Error());
-            return parser.Expr;
-        },
-        ParseCore: function (expression, builder)
-        {
-            var scanner = new SharpAlg.Native.Parser.Scanner.ctor(expression);
-            var parser = new SharpAlg.Native.Parser.Parser(scanner, builder);
-            parser.Parse();
-            return parser;
-        }
-    },
-    assemblyName: "SharpAlg",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function ()
-        {
-            System.Object.ctor.call(this);
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$ExpressionExtensions);
 var SharpAlg$Native$DiffFunction =
 {
     fullname: "SharpAlg.Native.DiffFunction",
@@ -148,6 +101,53 @@ var SharpAlg$Native$DiffFunction =
     }
 };
 JsTypes.push(SharpAlg$Native$DiffFunction);
+var SharpAlg$Native$ExpressionExtensions =
+{
+    fullname: "SharpAlg.Native.ExpressionExtensions",
+    baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        Evaluate: function (expr, context)
+        {
+            return expr.Visit$1(SharpAlg.Native.Number.ctor, new SharpAlg.Native.ExpressionEvaluator((context != null ? context : SharpAlg.Native.ContextFactory.Default)));
+        },
+        Diff: function (expr, parameterName)
+        {
+            return expr.Visit$1(SharpAlg.Native.Expr.ctor, new SharpAlg.Native.DiffExpressionVisitor(SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault(), parameterName));
+        },
+        Print: function (expr)
+        {
+            return expr.Visit$1(System.String.ctor, SharpAlg.Native.Printer.ExpressionPrinter.Instance);
+        },
+        Parse: function (expression, builder)
+        {
+            return SharpAlg.Native.ExpressionExtensions.GetExpression(SharpAlg.Native.ExpressionExtensions.ParseCore(expression, (builder != null ? builder : SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault())));
+        },
+        GetExpression: function (parser)
+        {
+            if (parser.errors.Count > 0)
+                throw $CreateException(new System.InvalidOperationException.ctor$$String("String can not be parsed"), new Error());
+            return parser.Expr;
+        },
+        ParseCore: function (expression, builder)
+        {
+            var scanner = new SharpAlg.Native.Parser.Scanner.ctor(expression);
+            var parser = new SharpAlg.Native.Parser.Parser(scanner, builder);
+            parser.Parse();
+            return parser;
+        }
+    },
+    assemblyName: "SharpAlg",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Object.ctor.call(this);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$ExpressionExtensions);
 var SharpAlg$Native$Functions =
 {
     fullname: "SharpAlg.Native.Functions",

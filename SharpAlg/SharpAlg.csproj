@@ -88,8 +88,9 @@
     <Compile Include="Native\Builder\ExprBuilderFactory.cs" />
     <Compile Include="Native\Builder\TrivialExprBuilder.cs" />
     <Compile Include="Native\ContextFactory.cs" />
+    <Compile Include="Native\DiffFunction.cs" />
     <Compile Include="Native\ExpressionExtensions.cs" />
-    <Compile Include="Native\Function.cs" />
+    <Compile Include="Native\Functions.cs" />
     <Compile Include="Native\Printer\ExpressionPrinter.cs" />
     <Compile Include="Native\SR.cs" />
     <Compile Include="Default.aspx.cs">
