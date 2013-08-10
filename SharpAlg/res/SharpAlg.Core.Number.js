@@ -35,6 +35,10 @@ var SharpAlg$Native$Number =
         {
             return SharpAlg.Native.Number.FromDouble(n1.value * n2.value);
         },
+        op_Division: function (n1, n2)
+        {
+            return SharpAlg.Native.Number.FromDouble(n1.value / n2.value);
+        },
         op_Addition: function (n1, n2)
         {
             return SharpAlg.Native.Number.FromDouble(n1.value + n2.value);

@@ -9,7 +9,7 @@ function btnTest_click(e)
 };
 function RunTests()
 {
-    var fixtures = [new SharpAlg.Tests.ExprTests.ctor(), new SharpAlg.Tests.DiffTests.ctor(), new SharpAlg.Tests.ParserTests.ctor()];
+    var fixtures = [new SharpAlg.Tests.ExprTests.ctor(), new SharpAlg.Tests.DiffTests.ctor(), new SharpAlg.Tests.ParserTests.ctor(), new SharpAlg.Tests.NumberTests.ctor()];
     var jQuery = $(document.body);
     jQuery.append("<br/>");
     var ok = 0, failed = 0;

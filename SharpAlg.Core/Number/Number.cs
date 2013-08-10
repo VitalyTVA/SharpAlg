@@ -29,6 +29,9 @@ namespace SharpAlg.Native {
         public static Number operator *(Number n1, Number n2) {
             return FromDouble(n1.value * n2.value);
         }
+        public static Number operator /(Number n1, Number n2) {
+            return FromDouble(n1.value / n2.value);
+        }
         public static Number operator +(Number n1, Number n2) {
             return FromDouble(n1.value + n2.value);
         }

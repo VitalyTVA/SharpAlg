@@ -371,6 +371,12 @@ namespace SharpAlg.Tests {
         public static Number AsNumber(this double constant) {
             return SharpAlg.Native.Number.FromString(PlatformHelper.ToInvariantString(constant));
         }
+        public static Number AsNumber(this int constant) {
+            return SharpAlg.Native.Number.FromString(PlatformHelper.ToInvariantString(constant));
+        }
+        public static Number AsNumber(this long constant) {
+            return SharpAlg.Native.Number.FromString(PlatformHelper.ToInvariantString(constant));
+        }
         public static TInput IsFloatEqual<TInput>(this TInput obj, Func<TInput, object> valueEvaluator, string expected) {
             int floatSignCount = expected.Length - expected.IndexOf(".");
             return obj.IsEqual(x => {

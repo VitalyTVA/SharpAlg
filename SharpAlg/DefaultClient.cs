@@ -20,7 +20,8 @@ namespace SharpAlg {
             var fixtures = new object[] {
                     new ExprTests(),
                     new DiffTests(),
-                    new ParserTests()
+                    new ParserTests(),
+                    new NumberTests()
                 };
             jQuery jQuery = new jQuery(HtmlContext.document.body);
             jQuery.append("<br/>");
