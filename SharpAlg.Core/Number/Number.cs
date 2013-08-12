@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
@@ -86,6 +87,9 @@ namespace SharpAlg.Native {
         }
         public static Number FromIntString(string s) {
             return FromLong(long.Parse(s));
+        }
+        public static Number FromLongIntString(string s) {
+            return LongIntegerNumber.FromLongIntStringCore(s);
         }
 
         protected Number() {
@@ -202,6 +206,132 @@ namespace SharpAlg.Native {
         }
         Number BinaryOperation(Number n, Func<long, long, long> operation) {
             return FromLong(BinaryOperation<long>(n, operation));
+        }
+    }
+    [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
+    public sealed class LongIntegerNumber : Number {
+        internal static Number FromLongIntStringCore(string s) {
+            IList<int> digits = new List<int>(); //TODO - set capacity
+            int currentPart = 0;
+            int currentIndex = 0;
+            int currentPower = 1;
+            int ZeroCode = PlatformHelper.CharToInt('0');
+            int lastIndex = s[0] == '-' ? 1 : 0;
+            for(int i = s.Length - 1; i >= lastIndex; i--) {
+                currentPart += (PlatformHelper.CharToInt(s[i]) - ZeroCode) * currentPower;
+                currentIndex++;
+                currentPower *= LongIntegerNumber.Base;
+                if(currentIndex == LongIntegerNumber.BaseCount) {
+                    currentIndex = 0;
+                    digits.Add(currentPart);
+                    currentPart = 0;
+                    currentPower = 1;
+                }
+            }
+            if(currentIndex > 0 && currentPart > 0) {
+                digits.Add(currentPart);
+            }
+            return new LongIntegerNumber(digits, lastIndex == 1);
+        }
+
+        internal const int Base = 10;
+        internal const int BaseCount = 4;
+        internal const int BaseFull = 10000;
+        readonly bool isNegative;
+        readonly IList<int> parts;
+        LongIntegerNumber(IList<int> parts, bool isNegative) {
+            this.isNegative = isNegative;
+            this.parts = parts;
+        }
+        protected override int NumberType { get { return IntegerNumberType; } }
+        protected override Number ConvertToCore(int type) {
+            throw new NotImplementedException();
+        }
+        public override bool Equals(object obj) {
+            throw new NotImplementedException();
+        }
+        public override int GetHashCode() {
+            throw new NotImplementedException();
+        }
+        public override string ToString() {
+            int startIndex = parts.Count - 1;
+            StringBuilder sb = new StringBuilder();
+            if(parts.Count == 0)
+                return "0";
+            if(isNegative)
+                sb.Append("-");
+            for(int i = startIndex; i >= 0; i--) {
+                string stringValue = parts[i].ToString();
+                if(i != startIndex) {
+                    for(int j = BaseCount - stringValue.Length; j > 0; j--) {
+                        sb.Append('0');
+                    }
+                }
+                sb.Append(stringValue);
+            }
+            return sb.ToString();
+        }
+        protected override Number Add(Number n) {
+            var longNumber = n.ConvertCast<LongIntegerNumber>();
+            int count = Math.Max(parts.Count, longNumber.parts.Count);
+            List<int> result = new List<int>();
+            int carry = 0;
+            for(int i = 0; i < count; i++) {
+                int resultPart = GetPart(i) + longNumber.GetPart(i) + carry;
+                if(resultPart >= BaseFull) {
+                    resultPart = resultPart - BaseFull;
+                    carry = 1;
+                } else {
+                    carry = 0;
+                }
+                result.Add(resultPart);
+            }
+            if(carry > 0)
+                result.Add(carry);
+            return new LongIntegerNumber(result, false);
+        }
+        protected override Number Subtract(Number n) {
+            var longNumber = n.ConvertCast<LongIntegerNumber>();
+            int count = Math.Max(parts.Count, longNumber.parts.Count);
+            List<int> result = new List<int>();
+            int carry = 0;
+            for(int i = 0; i < count; i++) {
+                int resultPart = GetPart(i) - longNumber.GetPart(i) + carry;
+                if(resultPart < 0) {
+                    resultPart = resultPart + BaseFull;
+                    carry = -1;
+                } else {
+                    carry = 0;
+                }
+                result.Add(resultPart );
+            }
+            //if(carry > 0)
+            //    result.Add(carry);
+            for(int i = result.Count - 1; i >= 0; i--) {
+                if(result[i] == 0)
+                    result.RemoveAt(i);
+                else
+                    break;
+            }
+            return new LongIntegerNumber(result, false);
+        }
+        protected override Number Multiply(Number n) {
+            throw new NotImplementedException();
+        }
+        protected override Number Divide(Number n) {
+            throw new NotImplementedException();
+        }
+        protected override Number Power(Number n) {
+            throw new NotImplementedException(); //TODO real power without long conversion
+        }
+        protected override bool Less(Number n) {
+            throw new NotImplementedException();
+        }
+        protected override bool Greater(Number n) {
+            throw new NotImplementedException();
+        }
+        int GetPart(int index) {
+            return index < parts.Count ? parts[index] : 0;
         }
     }
 }

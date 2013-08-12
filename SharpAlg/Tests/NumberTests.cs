@@ -38,64 +38,89 @@ namespace SharpAlg.Tests {
             "100000000001.0".GreaterOrEqual("100000000001.0").IsTrue();
             "100000000001.0".GreaterOrEqual("100000000002.0").IsFalse();
         }
+        //[Test]
+        //public void IntOperationsTest() {
+        //    "1".Add("2").AssertIntegerNumber("3");
+        //    "9".Subtract("13").AssertIntegerNumber("-4");
+        //    "9".Multiply("13").AssertIntegerNumber("117");
+        //    "1593668734".Divide("1287293").AssertIntegerNumber("1238");
+        //    "117".Power("5").AssertIntegerNumber("21924480357");
+        //    "1000000001".Add("500000001").AssertIntegerNumber("1500000002");
+        //    "-1000000001".Add("500000001").AssertIntegerNumber("-500000000");
+
+        //    "100000000001".Equal("100000000001").IsTrue();
+        //    "100000000001".Equal("100000000000").IsFalse();
+        //    "100000000001".NotEqual("100000000000").IsTrue();
+        //    "100000000001".NotEqual("100000000001").IsFalse();
+
+        //    "100000000001".Less("100000000001").IsFalse();
+        //    "100000000001".Less("100000000002").IsTrue();
+        //    "100000000001".LessOrEqual("100000000002").IsTrue();
+        //    "100000000002".LessOrEqual("100000000001").IsFalse();
+
+        //    "100000000001".Greater("100000000001").IsFalse();
+        //    "100000000002".Greater("100000000001").IsTrue();
+        //    "100000000001".GreaterOrEqual("100000000001").IsTrue();
+        //    "100000000001".GreaterOrEqual("100000000002").IsFalse();
+
+        //    //"1000000001".Multiply("500000001").AssertIntegerNumber("500000001500000001"); //TODO - long arithmetic
+        //    //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
+        //}
         [Test]
-        public void IntOperationsTest() {
-            "1".Add("2").AssertIntegerNumber("3");
-            "9".Subtract("13").AssertIntegerNumber("-4");
-            "9".Multiply("13").AssertIntegerNumber("117");
-            "1593668734".Divide("1287293").AssertIntegerNumber("1238");
-            "117".Power("5").AssertIntegerNumber("21924480357");
-            "1000000001".Add("500000001").AssertIntegerNumber("1500000002");
-            "-1000000001".Add("500000001").AssertIntegerNumber("-500000000");
+        public void LongIntOperationsTest() {
+            "123456789123456789123456789".FromString().AssertIntegerNumber("123456789123456789123456789");
+            "-123456789123456789123456789".FromString().AssertIntegerNumber("-123456789123456789123456789");
+            "100000000000000000000000009".FromString().AssertIntegerNumber("100000000000000000000000009");
+            "0".FromString().AssertIntegerNumber("0");
+            "-0".FromString().AssertIntegerNumber("0");
 
-            "100000000001".Equal("100000000001").IsTrue();
-            "100000000001".Equal("100000000000").IsFalse();
-            "100000000001".NotEqual("100000000000").IsTrue();
-            "100000000001".NotEqual("100000000001").IsFalse();
+            "9999".Add("1").AssertIntegerNumber("10000");
+            "9999".Add("9999").AssertIntegerNumber("19998");
+            "999999999".Add("999999999").AssertIntegerNumber("1999999998");
+            "1000000010000000000".Add("999999999999999999").AssertIntegerNumber("2000000009999999999");
+            "123123123123".Add("231231231231").AssertIntegerNumber("354354354354");
+            "123123123123".Add("231231231231123456").AssertIntegerNumber("231231354354246579");
+            "231231231231123456".Add("123123123123").AssertIntegerNumber("231231354354246579");
+            "123456789123456789123456789".Add("123456789123456789123456789").AssertIntegerNumber("246913578246913578246913578");
 
-            "100000000001".Less("100000000001").IsFalse();
-            "100000000001".Less("100000000002").IsTrue();
-            "100000000001".LessOrEqual("100000000002").IsTrue();
-            "100000000002".LessOrEqual("100000000001").IsFalse();
-
-            "100000000001".Greater("100000000001").IsFalse();
-            "100000000002".Greater("100000000001").IsTrue();
-            "100000000001".GreaterOrEqual("100000000001").IsTrue();
-            "100000000001".GreaterOrEqual("100000000002").IsFalse();
-
-            //"1000000001".Multiply("500000001").AssertIntegerNumber("500000001500000001"); //TODO - long arithmetic
+            "123456789123456789123456789".Subtract("123456789123456789123456789").AssertIntegerNumber("0");
+            "123456789123456789123456789".Subtract("123456789123456789123456788").AssertIntegerNumber("1");
+            "123456789123456789123456789123456789123456789".Subtract("123456789123456789023456789123456789123456788").AssertIntegerNumber("100000000000000000000000001");
+            "234567892345678923456789".Subtract("123456781234567812345678").AssertIntegerNumber("111111111111111111111111");
+            "100000000000000000".Subtract("99999999999999999").AssertIntegerNumber("1");
+            "19999999999999999900000000000000000".Subtract("9999999999999999999999999999999999").AssertIntegerNumber("9999999999999999900000000000000001");
             //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
         }
-        [Test]
-        public void FloatIntOperationsTest() {
-            "1.0".Add("2").AssertFloatNumber("3");
-            "1".Add("2.0").AssertFloatNumber("3");
-            "1".Add("2.3").AssertFloatNumber("3.3");
-            "9".Multiply("13.0").AssertFloatNumber("117");
-            "9.0".Multiply("13").AssertFloatNumber("117");
-            "9".Subtract("13.0").AssertFloatNumber("-4");
-            "9.0".Subtract("13").AssertFloatNumber("-4");
-            "3".Divide("2.0").AssertFloatNumber("1.5");
-            "3.0".Divide("2").AssertFloatNumber("1.5");
-            "4.0".Divide("2").AssertFloatNumber("2");
-            "117".Power("5.0").AssertFloatNumber("21924480357");
-            "117.0".Power("5").AssertFloatNumber("21924480357");
+        //[Test]
+        //public void FloatIntOperationsTest() {
+        //    "1.0".Add("2").AssertFloatNumber("3");
+        //    "1".Add("2.0").AssertFloatNumber("3");
+        //    "1".Add("2.3").AssertFloatNumber("3.3");
+        //    "9".Multiply("13.0").AssertFloatNumber("117");
+        //    "9.0".Multiply("13").AssertFloatNumber("117");
+        //    "9".Subtract("13.0").AssertFloatNumber("-4");
+        //    "9.0".Subtract("13").AssertFloatNumber("-4");
+        //    "3".Divide("2.0").AssertFloatNumber("1.5");
+        //    "3.0".Divide("2").AssertFloatNumber("1.5");
+        //    "4.0".Divide("2").AssertFloatNumber("2");
+        //    "117".Power("5.0").AssertFloatNumber("21924480357");
+        //    "117.0".Power("5").AssertFloatNumber("21924480357");
 
-            "100000000001".Equal("100000000001.0").IsTrue();
-            "100000000001.0".Equal("100000000000").IsFalse();
-            "100000000001".NotEqual("100000000000.0").IsTrue();
-            "100000000001.0".NotEqual("100000000001").IsFalse();
+        //    "100000000001".Equal("100000000001.0").IsTrue();
+        //    "100000000001.0".Equal("100000000000").IsFalse();
+        //    "100000000001".NotEqual("100000000000.0").IsTrue();
+        //    "100000000001.0".NotEqual("100000000001").IsFalse();
 
-            "100000000001".Less("100000000001.0").IsFalse();
-            "100000000001.0".Less("100000000002").IsTrue();
-            "100000000001".LessOrEqual("100000000002.0").IsTrue();
-            "100000000002.0".LessOrEqual("100000000001").IsFalse();
+        //    "100000000001".Less("100000000001.0").IsFalse();
+        //    "100000000001.0".Less("100000000002").IsTrue();
+        //    "100000000001".LessOrEqual("100000000002.0").IsTrue();
+        //    "100000000002.0".LessOrEqual("100000000001").IsFalse();
 
-            "100000000001".Greater("100000000001.0").IsFalse();
-            "100000000002.0".Greater("100000000001").IsTrue();
-            "100000000001".GreaterOrEqual("100000000001.0").IsTrue();
-            "100000000001.0".GreaterOrEqual("100000000002").IsFalse();
-        }
+        //    "100000000001".Greater("100000000001.0").IsFalse();
+        //    "100000000002.0".Greater("100000000001").IsTrue();
+        //    "100000000001".GreaterOrEqual("100000000001.0").IsTrue();
+        //    "100000000001.0".GreaterOrEqual("100000000002").IsFalse();
+        //}
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class NumberTestHelper {
@@ -103,7 +128,7 @@ namespace SharpAlg.Tests {
             return n.IsEqual(x => x.ToString(), expected).IsTrue(x => x is FloatNumber);
         }
         public static Number AssertIntegerNumber(this Number n, string expected) {
-            return n.IsEqual(x => x.ToString(), expected).IsTrue(x => x is IntegerNumber);
+            return n.IsEqual(x => x.ToString(), expected).IsTrue(x => x is LongIntegerNumber);
         }
         public static Number Add(this string s1, string s2) {
             return FromString(s1) + FromString(s2); 
@@ -138,8 +163,8 @@ namespace SharpAlg.Tests {
         public static bool GreaterOrEqual(this string s1, string s2) {
             return FromString(s1) >= FromString(s2);
         }
-        public static Number FromString(string s) {
-            return s.Contains(".") ? Number.FromString(s) : Number.FromIntString(s);
+        public static Number FromString(this string s) {
+            return s.Contains(".") ? Number.FromString(s) : Number.FromLongIntString(s);
         }
     }
 }

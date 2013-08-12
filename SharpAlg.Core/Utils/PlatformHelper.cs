@@ -28,5 +28,9 @@ namespace SharpAlg.Native {
         public static string GetMessage(this Exception e) {
             return e.Message;
         }
+        //[JsMethod(Code = "return x / (y | 0);")]
+        //public static int Divide(this int x, int y) {
+        //    return x / y;
+        //}
     }
 }

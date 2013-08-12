@@ -207,6 +207,10 @@ var SharpAlg$Native$Number =
         FromIntString: function (s)
         {
             return SharpAlg.Native.Number.FromLong(System.Int64.Parse$$String(s));
+        },
+        FromLongIntString: function (s)
+        {
+            return SharpAlg.Native.LongIntegerNumber.FromLongIntStringCore(s);
         }
     },
     assemblyName: "SharpAlg.Core",
@@ -433,3 +437,174 @@ var SharpAlg$Native$IntegerNumber =
     }
 };
 JsTypes.push(SharpAlg$Native$IntegerNumber);
+var SharpAlg$Native$LongIntegerNumber =
+{
+    fullname: "SharpAlg.Native.LongIntegerNumber",
+    baseTypeName: "SharpAlg.Native.Number",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+            SharpAlg.Native.LongIntegerNumber.Base = 10;
+            SharpAlg.Native.LongIntegerNumber.BaseCount = 4;
+            SharpAlg.Native.LongIntegerNumber.BaseFull = 10000;
+        },
+        FromLongIntStringCore: function (s)
+        {
+            var digits = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
+            var currentPart = 0;
+            var currentIndex = 0;
+            var currentPower = 1;
+            var ZeroCode = SharpAlg.Native.PlatformHelper.CharToInt("0");
+            var lastIndex = s.charAt(0) == "-" ? 1 : 0;
+            for (var i = s.length - 1; i >= lastIndex; i--)
+            {
+                currentPart += (SharpAlg.Native.PlatformHelper.CharToInt(s.charAt(i)) - ZeroCode) * currentPower;
+                currentIndex++;
+                currentPower *= 10;
+                if (currentIndex == 4)
+                {
+                    currentIndex = 0;
+                    digits.Add(currentPart);
+                    currentPart = 0;
+                    currentPower = 1;
+                }
+            }
+            if (currentIndex > 0 && currentPart > 0)
+            {
+                digits.Add(currentPart);
+            }
+            return new SharpAlg.Native.LongIntegerNumber.ctor(digits, lastIndex == 1);
+        }
+    },
+    assemblyName: "SharpAlg.Core",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (parts, isNegative)
+        {
+            this.isNegative = false;
+            this.parts = null;
+            SharpAlg.Native.Number.ctor.call(this);
+            this.isNegative = isNegative;
+            this.parts = parts;
+        },
+        NumberType$$: "System.Int32",
+        get_NumberType: function ()
+        {
+            return 0;
+        },
+        ConvertToCore: function (type)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Equals$$Object: function (obj)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        GetHashCode: function ()
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        toString: function ()
+        {
+            var startIndex = this.parts.get_Count() - 1;
+            var sb = new System.Text.StringBuilder.ctor();
+            if (this.parts.get_Count() == 0)
+                return "0";
+            if (this.isNegative)
+                sb.Append$$String("-");
+            for (var i = startIndex; i >= 0; i--)
+            {
+                var stringValue = this.parts.get_Item$$Int32(i).toString();
+                if (i != startIndex)
+                {
+                    for (var j = 4 - stringValue.length; j > 0; j--)
+                    {
+                        sb.Append$$Char("0");
+                    }
+                }
+                sb.Append$$String(stringValue);
+            }
+            return sb.toString();
+        },
+        Add: function (n)
+        {
+            var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, n);
+            var count = System.Math.Max$$Int32$$Int32(this.parts.get_Count(), longNumber.parts.get_Count());
+            var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
+            var carry = 0;
+            for (var i = 0; i < count; i++)
+            {
+                var resultPart = this.GetPart(i) + longNumber.GetPart(i) + carry;
+                if (resultPart >= 10000)
+                {
+                    resultPart = resultPart - 10000;
+                    carry = 1;
+                }
+                else
+                {
+                    carry = 0;
+                }
+                result.Add(resultPart);
+            }
+            if (carry > 0)
+                result.Add(carry);
+            return new SharpAlg.Native.LongIntegerNumber.ctor(result, false);
+        },
+        Subtract: function (n)
+        {
+            var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, n);
+            var count = System.Math.Max$$Int32$$Int32(this.parts.get_Count(), longNumber.parts.get_Count());
+            var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
+            var carry = 0;
+            for (var i = 0; i < count; i++)
+            {
+                var resultPart = this.GetPart(i) - longNumber.GetPart(i) + carry;
+                if (resultPart < 0)
+                {
+                    resultPart = resultPart + 10000;
+                    carry = -1;
+                }
+                else
+                {
+                    carry = 0;
+                }
+                result.Add(resultPart);
+            }
+            for (var i = result.get_Count() - 1; i >= 0; i--)
+            {
+                if (result.get_Item$$Int32(i) == 0)
+                    result.RemoveAt(i);
+                else
+                    break;
+            }
+            return new SharpAlg.Native.LongIntegerNumber.ctor(result, false);
+        },
+        Multiply: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Divide: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Power: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Less: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Greater: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        GetPart: function (index)
+        {
+            return index < this.parts.get_Count() ? this.parts.get_Item$$Int32(index) : 0;
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$LongIntegerNumber);
