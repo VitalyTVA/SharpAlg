@@ -273,14 +273,24 @@ namespace SharpAlg.Native {
         }
         protected override Number Add(Number n) {
             var longNumber = n.ConvertCast<LongIntegerNumber>();
+            return AddCore(longNumber);
+        }
+        protected override Number Subtract(Number n) {
+            var longNumber = n.ConvertCast<LongIntegerNumber>();
+            return Add(new LongIntegerNumber(longNumber.parts, !longNumber.isNegative));
+        }
+        Number AddCore(LongIntegerNumber longNumber) {
             int count = Math.Max(parts.Count, longNumber.parts.Count);
             List<int> result = new List<int>();
             int carry = 0;
             for(int i = 0; i < count; i++) {
-                int resultPart = GetPart(i) + longNumber.GetPart(i) + carry;
+                int resultPart = GetPart(i) + longNumber.GetPart(i) + carry;//TODO optimization - stop when one is empty
                 if(resultPart >= BaseFull) {
                     resultPart = resultPart - BaseFull;
                     carry = 1;
+                } else if(resultPart < 0) {
+                    resultPart = resultPart + BaseFull;
+                    carry = -1;
                 } else {
                     carry = 0;
                 }
@@ -288,25 +298,6 @@ namespace SharpAlg.Native {
             }
             if(carry > 0)
                 result.Add(carry);
-            return new LongIntegerNumber(result, false);
-        }
-        protected override Number Subtract(Number n) {
-            var longNumber = n.ConvertCast<LongIntegerNumber>();
-            int count = Math.Max(parts.Count, longNumber.parts.Count);
-            List<int> result = new List<int>();
-            int carry = 0;
-            for(int i = 0; i < count; i++) {
-                int resultPart = GetPart(i) - longNumber.GetPart(i) + carry;
-                if(resultPart < 0) {
-                    resultPart = resultPart + BaseFull;
-                    carry = -1;
-                } else {
-                    carry = 0;
-                }
-                result.Add(resultPart );
-            }
-            //if(carry > 0)
-            //    result.Add(carry);
             for(int i = result.Count - 1; i >= 0; i--) {
                 if(result[i] == 0)
                     result.RemoveAt(i);
@@ -331,7 +322,7 @@ namespace SharpAlg.Native {
             throw new NotImplementedException();
         }
         int GetPart(int index) {
-            return index < parts.Count ? parts[index] : 0;
+            return index < parts.Count ? (isNegative ? -parts[index] : parts[index]) : 0;
         }
     }
 }

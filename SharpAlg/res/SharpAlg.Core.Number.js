@@ -531,6 +531,15 @@ var SharpAlg$Native$LongIntegerNumber =
         Add: function (n)
         {
             var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, n);
+            return this.AddCore(longNumber);
+        },
+        Subtract: function (n)
+        {
+            var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, n);
+            return this.Add(new SharpAlg.Native.LongIntegerNumber.ctor(longNumber.parts, !longNumber.isNegative));
+        },
+        AddCore: function (longNumber)
+        {
             var count = System.Math.Max$$Int32$$Int32(this.parts.get_Count(), longNumber.parts.get_Count());
             var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
             var carry = 0;
@@ -542,26 +551,7 @@ var SharpAlg$Native$LongIntegerNumber =
                     resultPart = resultPart - 10000;
                     carry = 1;
                 }
-                else
-                {
-                    carry = 0;
-                }
-                result.Add(resultPart);
-            }
-            if (carry > 0)
-                result.Add(carry);
-            return new SharpAlg.Native.LongIntegerNumber.ctor(result, false);
-        },
-        Subtract: function (n)
-        {
-            var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, n);
-            var count = System.Math.Max$$Int32$$Int32(this.parts.get_Count(), longNumber.parts.get_Count());
-            var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
-            var carry = 0;
-            for (var i = 0; i < count; i++)
-            {
-                var resultPart = this.GetPart(i) - longNumber.GetPart(i) + carry;
-                if (resultPart < 0)
+                else if (resultPart < 0)
                 {
                     resultPart = resultPart + 10000;
                     carry = -1;
@@ -572,6 +562,8 @@ var SharpAlg$Native$LongIntegerNumber =
                 }
                 result.Add(resultPart);
             }
+            if (carry > 0)
+                result.Add(carry);
             for (var i = result.get_Count() - 1; i >= 0; i--)
             {
                 if (result.get_Item$$Int32(i) == 0)
@@ -603,7 +595,7 @@ var SharpAlg$Native$LongIntegerNumber =
         },
         GetPart: function (index)
         {
-            return index < this.parts.get_Count() ? this.parts.get_Item$$Int32(index) : 0;
+            return index < this.parts.get_Count() ? (this.isNegative ? -this.parts.get_Item$$Int32(index) : this.parts.get_Item$$Int32(index)) : 0;
         }
     }
 };
