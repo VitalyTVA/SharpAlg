@@ -10,6 +10,7 @@ using System.IO;
 using System.Text;
 using SharpAlg.Native.Parser;
 using SharpAlg.Native.Builder;
+using Parser = SharpAlg.Native.Parser.Parser;
 
 namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
@@ -135,7 +136,7 @@ namespace SharpAlg.Tests {
             Parse("-(-(x + 1))")
                 .AssertValue(10, null, context);
         }
-        Parser Parse(string expression) {
+        SharpAlg.Native.Parser.Parser Parse(string expression) {
             return ParserTestHelper.ParseNoConvolutionCore(expression);
         }
         static string GetNumberExpectedMessage(int column) {
@@ -144,20 +145,20 @@ namespace SharpAlg.Tests {
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ParserTestHelper {
-        public static Parser AssertValue(this Parser parser, double? value, Expr expectedExpr = null, Context context = null) {
+        public static SharpAlg.Native.Parser.Parser AssertValue(this SharpAlg.Native.Parser.Parser parser, double? value, Expr expectedExpr = null, Context context = null) {
             return parser
                 .IsEqual(x => x.errors.Errors, string.Empty)
                 .IsEqual(x => x.errors.Count, 0)
                 .IsEqual(x => value != null ? x.Expr.Evaluate(context) : null, value != null ? ExprTestHelper.AsNumber(value.Value) : null)
                 .IsTrue(x => expectedExpr == null || x.Expr.ExprEquals(expectedExpr));
         }
-        public static Parser AssertSingleSyntaxError(this Parser parser, string text) {
+        public static SharpAlg.Native.Parser.Parser AssertSingleSyntaxError(this SharpAlg.Native.Parser.Parser parser, string text) {
             return parser.IsEqual(x => x.errors.Count, 1).IsEqual(x => x.errors.Errors, text);
         }
         public static Expr ParseNoConvolution(this string expression) {
             return ExpressionExtensions.GetExpression(ParseNoConvolutionCore(expression));
         }
-        public static Parser ParseNoConvolutionCore(string expression) {
+        public static SharpAlg.Native.Parser.Parser ParseNoConvolutionCore(string expression) {
             return ExpressionExtensions.ParseCore(expression, new TrivialExprBuilder(ContextFactory.Empty));
         }
     }

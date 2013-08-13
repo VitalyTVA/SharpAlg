@@ -349,7 +349,7 @@ namespace SharpAlg.Tests {
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ExprTestHelper {
-        public static Parser GetParser(this string expression) {
+        public static SharpAlg.Native.Parser.Parser GetParser(this string expression) {
             return expression.ParseCore(ExprBuilderFactory.CreateDefault());
         }
         public static Expr AssertSimpleStringRepresentation(this Expr expr, string value) {
