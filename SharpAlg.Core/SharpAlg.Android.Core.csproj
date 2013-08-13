@@ -43,7 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compatibility\JsCompatibility.cs" />
+    <Compile Include="CoreExpressionExtensions.cs" />
     <Compile Include="Expr.cs" />
+    <Compile Include="ExprBuilder.cs" />
+    <Compile Include="Function.cs" />
+    <Compile Include="IContext.cs" />
+    <Compile Include="IExpressionEvaluator.cs" />
     <Compile Include="IExpressionVisitor.cs" />
     <Compile Include="Number\Number.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
