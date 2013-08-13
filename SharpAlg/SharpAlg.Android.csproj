@@ -59,5 +59,11 @@
   <ItemGroup>
     <AndroidResource Include="Resources\drawable\Icon.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Android.Core.csproj">
+      <Project>{fe7fc86e-3088-4b4c-a0f5-f28e8b2b4007}</Project>
+      <Name>SharpAlg.Android.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
 </Project>

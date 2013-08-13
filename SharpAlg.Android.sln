@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Android", "SharpAlg\SharpAlg.Android.csproj", "{38482767-3E98-4680-B8CD-BCF4268575E2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Android.Core", "SharpAlg.Core\SharpAlg.Android.Core.csproj", "{FE7FC86E-3088-4B4C-A0F5-F28E8B2B4007}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,11 +16,15 @@ Global
 		{38482767-3E98-4680-B8CD-BCF4268575E2}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{38482767-3E98-4680-B8CD-BCF4268575E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{38482767-3E98-4680-B8CD-BCF4268575E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE7FC86E-3088-4B4C-A0F5-F28E8B2B4007}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE7FC86E-3088-4B4C-A0F5-F28E8B2B4007}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE7FC86E-3088-4B4C-A0F5-F28E8B2B4007}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE7FC86E-3088-4B4C-A0F5-F28E8B2B4007}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = SharpAlg.Android\SharpAlg.Android.csproj
+		StartupItem = SharpAlg\SharpAlg.Android.csproj
 	EndGlobalSection
 EndGlobal
