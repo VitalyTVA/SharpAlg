@@ -1,4 +1,9 @@
+SharpAlg/Resources/Resource.designer.cs
+SharpAlg.Core/Resources/Resource.designer.cs
+SharpAlg.Parser/Resources/Resource.designer.cs
+SharpAlg.Implementation/Resources/Resource.designer.cs
 *.old
+
 #################
 ## Eclipse
 #################
