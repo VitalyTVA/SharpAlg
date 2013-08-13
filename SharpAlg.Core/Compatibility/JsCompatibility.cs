@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace SharpKit.JavaScript {
-    public enum JsMode { None, Prototype, Clr }
+    public enum JsMode { None, Prototype, Clr, Json }
     public class JsTypeAttribute : Attribute {
         public JsTypeAttribute(JsMode mode) {
         }
