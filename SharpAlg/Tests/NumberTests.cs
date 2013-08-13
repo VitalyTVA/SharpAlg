@@ -106,6 +106,14 @@ namespace SharpAlg.Tests {
             "231231231231123456".Subtract("-123123123123").AssertIntegerNumber("231231354354246579");
             "123456789123456789123456789".Subtract("-123456789123456789123456789").AssertIntegerNumber("246913578246913578246913578");
 
+            //"0".Subtract("1").AssertIntegerNumber("-1");
+            //"0".Subtract("999999999999999999999").AssertIntegerNumber("-999999999999999999999");
+            //"1".Subtract("999999999999999999999").AssertIntegerNumber("-999999999999999999998");
+            //"-1".Subtract("999999999999999999999").AssertIntegerNumber("");
+            //"1000000000000000000000000000".Subtract("999999999999999999999999999999999999999999").AssertIntegerNumber("-999999999999998999999999999999999999999999");
+            //"-1000000000000000000000000000".Subtract("999999999999999999999999999999999999999999").AssertIntegerNumber("");
+            //"-999999999".Subtract("-999999999").AssertIntegerNumber("");
+
             //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
         }
         //[Test]
