@@ -42,8 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compatibility\JsCompatibility.cs" />
+    <Compile Include="Expr.cs" />
+    <Compile Include="IExpressionVisitor.cs" />
+    <Compile Include="Number\Number.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SR.cs" />
+    <Compile Include="Utils\FunctionalExtensions.cs" />
+    <Compile Include="Utils\MayBe.cs" />
+    <Compile Include="Utils\PlatformHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />
