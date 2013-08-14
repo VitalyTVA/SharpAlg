@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Android.Implementa
 		{FE7FC86E-3088-4B4C-A0F5-F28E8B2B4007} = {FE7FC86E-3088-4B4C-A0F5-F28E8B2B4007}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Android.UI", "SharpAlg.Android.UI\SharpAlg.Android.UI.csproj", "{9AD4C677-1424-4CDC-904C-08B2E4C44283}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,12 @@ Global
 		{88B5FB76-2564-4CF7-BE75-B099098C857A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88B5FB76-2564-4CF7-BE75-B099098C857A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88B5FB76-2564-4CF7-BE75-B099098C857A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AD4C677-1424-4CDC-904C-08B2E4C44283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AD4C677-1424-4CDC-904C-08B2E4C44283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AD4C677-1424-4CDC-904C-08B2E4C44283}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{9AD4C677-1424-4CDC-904C-08B2E4C44283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AD4C677-1424-4CDC-904C-08B2E4C44283}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AD4C677-1424-4CDC-904C-08B2E4C44283}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
