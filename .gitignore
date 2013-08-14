@@ -1,3 +1,4 @@
+*.userprefs
 SharpAlg/Resources/Resource.designer.cs
 SharpAlg.Core/Resources/Resource.designer.cs
 SharpAlg.Parser/Resources/Resource.designer.cs
