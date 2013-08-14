@@ -26,7 +26,7 @@ namespace SharpAlg.Native {
                 throw new InvalidOperationException("String can not be parsed"); //TODO message
             return parser.Expr;
         }
-        internal static Parser.Parser ParseCore(this string expression, ExprBuilder builder) {
+        public static Parser.Parser ParseCore(this string expression, ExprBuilder builder) {
             Scanner scanner = new Scanner(expression);
             Parser.Parser parser = new Parser.Parser(scanner, builder);
             parser.Parse();

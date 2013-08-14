@@ -67,6 +67,24 @@
   <ItemGroup>
     <Content Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Android.Core.csproj">
+      <Project>{fe7fc86e-3088-4b4c-a0f5-f28e8b2b4007}</Project>
+      <Name>SharpAlg.Android.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Android.Implementation.csproj">
+      <Project>{88b5fb76-2564-4cf7-be75-b099098c857a}</Project>
+      <Name>SharpAlg.Android.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Android.Parser.csproj">
+      <Project>{a6a2db4e-f142-44cd-8cfe-c25af9a935dc}</Project>
+      <Name>SharpAlg.Android.Parser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpAlg\SharpAlg.Android.csproj">
+      <Project>{38482767-3e98-4680-b8cd-bcf4268575e2}</Project>
+      <Name>SharpAlg.Android</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\Android\Xamarin.Android.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
      Other similar extension points exist, see Microsoft.Common.targets.

@@ -48,7 +48,7 @@ var SharpAlg$Native$ContextFactory =
         },
         CreateDefault: function ()
         {
-            return new SharpAlg.Native.Context.ctor().Register$$Function(SharpAlg.Native.Functions.get_Factorial()).Register$$Function(SharpAlg.Native.Functions.get_Factorial()).Register$$Function(SharpAlg.Native.Functions.get_Ln()).Register$$Function(SharpAlg.Native.Functions.get_Diff());
+            return new SharpAlg.Native.Context.ctor().Register$$Function(SharpAlg.Native.Functions.get_Factorial()).Register$$Function(SharpAlg.Native.Functions.get_Ln()).Register$$Function(SharpAlg.Native.Functions.get_Diff());
         },
         cctor: function ()
         {

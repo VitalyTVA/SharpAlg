@@ -12,7 +12,6 @@ namespace SharpAlg.Native {
         public static Context CreateDefault() {
             return new Context()
                 .Register(Functions.Factorial)
-                .Register(Functions.Factorial)
                 .Register(Functions.Ln)
                 .Register(Functions.Diff);
         }

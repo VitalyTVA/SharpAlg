@@ -6,23 +6,34 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using Android.OS;
+using SharpAlg.Native;
+using SharpAlg.Native.Builder;
 
 namespace SharpAlg.Android.UI {
     [Activity(Label = "SharpAlg.Android.UI", MainLauncher = true, Icon = "@drawable/icon")]
     public class Activity1 : Activity {
-        int count = 1;
+        //int count = 1;
 
         protected override void OnCreate(Bundle bundle) {
             base.OnCreate(bundle);
 
-            // Set our view from the "main" layout resource
             SetContentView(Resource.Layout.Main);
 
-            // Get our button from the layout resource,
-            // and attach an event to it
-            Button button = FindViewById<Button>(Resource.Id.MyButton);
+            var expressionText = FindViewById<EditText>(Resource.Id.ExpressionTextBox);
+            expressionText.TextChanged += expressionText_TextChanged;
+        }
 
-            button.Click += delegate { button.Text = string.Format("{0} clicks!", count++); };
+        void expressionText_TextChanged(object sender, global::Android.Text.TextChangedEventArgs e) {
+            var expressionText = FindViewById<EditText>(Resource.Id.ExpressionTextBox);
+            var resultText = FindViewById<TextView>(Resource.Id.ResultText);
+
+            var builder = ExprBuilderFactory.CreateDefault();
+            var parser = expressionText.Text.ParseCore(builder);
+            if(parser.errors.Count > 0) {
+                resultText.Text = parser.errors.Errors;
+            } else {
+                resultText.Text = parser.Expr.Print();
+            }
         }
     }
 }
