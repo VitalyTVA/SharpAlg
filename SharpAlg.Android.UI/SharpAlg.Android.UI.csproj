@@ -47,6 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Core.csproj">
+      <Project>{a823e596-e03f-4896-8946-5cae2ba1c65d}</Project>
+      <Name>SharpAlg.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <Compile Include="Activity1.cs" />
     <Compile Include="Resources\Resource.Designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -68,10 +74,6 @@
     <Content Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Android.Core.csproj">
-      <Project>{fe7fc86e-3088-4b4c-a0f5-f28e8b2b4007}</Project>
-      <Name>SharpAlg.Android.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Android.Implementation.csproj">
       <Project>{88b5fb76-2564-4cf7-be75-b099098c857a}</Project>
       <Name>SharpAlg.Android.Implementation</Name>

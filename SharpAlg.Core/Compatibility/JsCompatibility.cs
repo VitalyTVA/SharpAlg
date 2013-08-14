@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if PORTABLE
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,3 +16,4 @@ namespace SharpKit.JavaScript {
         public string Code { get; set; }
     }
 }
+#endif

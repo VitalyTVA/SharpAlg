@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Utils)]

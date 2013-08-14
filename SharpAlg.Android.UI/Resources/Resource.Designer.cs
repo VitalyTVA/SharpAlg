@@ -26,10 +26,6 @@ namespace SharpAlg.Android.UI
 		
 		public static void UpdateIdValues()
 		{
-			SharpAlg.Core.Resource.Drawable.monoandroidsplash = SharpAlg.Android.UI.Resource.Drawable.monoandroidsplash;
-			SharpAlg.Core.Resource.String.ApplicationName = SharpAlg.Android.UI.Resource.String.ApplicationName;
-			SharpAlg.Core.Resource.String.Hello = SharpAlg.Android.UI.Resource.String.Hello;
-			SharpAlg.Core.Resource.Style.Mono_Android_Theme_Splash = SharpAlg.Android.UI.Resource.Style.Mono_Android_Theme_Splash;
 			SharpAlg.Implementation.Resource.Drawable.monoandroidsplash = SharpAlg.Android.UI.Resource.Drawable.monoandroidsplash;
 			SharpAlg.Implementation.Resource.String.ApplicationName = SharpAlg.Android.UI.Resource.String.ApplicationName;
 			SharpAlg.Implementation.Resource.String.Hello = SharpAlg.Android.UI.Resource.String.Hello;
