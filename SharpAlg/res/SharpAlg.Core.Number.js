@@ -499,7 +499,7 @@ var SharpAlg$Native$LongIntegerNumber =
             if (lenDifference != 0)
                 return lenDifference;
             var count = parts1.get_Count();
-            for (var i = 0; i < count; i++)
+            for (var i = count - 1; i >= 0; i--)
             {
                 var difference = parts1.get_Item$$Int32(i) - parts2.get_Item$$Int32(i);
                 if (difference != 0)
@@ -563,6 +563,20 @@ var SharpAlg$Native$LongIntegerNumber =
         Add: function (n)
         {
             var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, n);
+            if (!this.isNegative && !longNumber.isNegative)
+                return this.AddCore(longNumber);
+            if (longNumber.isNegative)
+            {
+                var invertedRight = new SharpAlg.Native.LongIntegerNumber.ctor(longNumber.parts, false);
+                if (SharpAlg.Native.Number.op_LessThan(this, invertedRight))
+                    return new SharpAlg.Native.LongIntegerNumber.ctor(SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, invertedRight.Subtract(this)).parts, true);
+            }
+            else
+            {
+                var invertedLeft = new SharpAlg.Native.LongIntegerNumber.ctor(this.parts, false);
+                if (SharpAlg.Native.Number.op_LessThan(longNumber, invertedLeft))
+                    return new SharpAlg.Native.LongIntegerNumber.ctor(SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, invertedLeft.Subtract(longNumber)).parts, true);
+            }
             return this.AddCore(longNumber);
         },
         Subtract: function (n)

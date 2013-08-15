@@ -271,7 +271,7 @@ namespace SharpAlg.Native {
             if(lenDifference != 0)
                 return lenDifference;
             int count = parts1.Count;
-            for(int i = 0; i < count; i++) {
+            for(int i = count - 1; i >= 0; i--) {
                 int difference = parts1[i] - parts2[i];
                 if(difference != 0)
                     return difference;
@@ -301,6 +301,17 @@ namespace SharpAlg.Native {
         }
         protected override Number Add(Number n) {
             var longNumber = n.ConvertCast<LongIntegerNumber>();
+            if(!isNegative && !longNumber.isNegative)
+                return AddCore(longNumber);
+            if(longNumber.isNegative) {
+                var invertedRight = new LongIntegerNumber(longNumber.parts, false);
+                if(this < invertedRight)
+                    return new LongIntegerNumber(invertedRight.Subtract(this).ConvertCast<LongIntegerNumber>().parts, true);
+            } else {
+                var invertedLeft = new LongIntegerNumber(this.parts, false);
+                if(longNumber < invertedLeft)
+                    return new LongIntegerNumber(invertedLeft.Subtract(longNumber).ConvertCast<LongIntegerNumber>().parts, true);
+            }
             return AddCore(longNumber);
         }
         protected override Number Subtract(Number n) {

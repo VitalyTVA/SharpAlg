@@ -137,15 +137,19 @@ namespace SharpAlg.Tests {
             "1000000000000000000002".Greater("1000000000000000000001").IsTrue();
             "1000000000000000000001".GreaterOrEqual("1000000000000000000001").IsTrue();
             "1000000000000000000001".GreaterOrEqual("1000000000000000000002").IsFalse();
+            "100000000000000000".Less("99999999999999999").IsFalse();
 
-
-            //"0".Subtract("1").AssertIntegerNumber("-1");
-            //"0".Subtract("999999999999999999999").AssertIntegerNumber("-999999999999999999999");
-            //"1".Subtract("999999999999999999999").AssertIntegerNumber("-999999999999999999998");
-            //"-1".Subtract("999999999999999999999").AssertIntegerNumber("");
-            //"1000000000000000000000000000".Subtract("999999999999999999999999999999999999999999").AssertIntegerNumber("-999999999999998999999999999999999999999999");
-            //"-1000000000000000000000000000".Subtract("999999999999999999999999999999999999999999").AssertIntegerNumber("");
-            //"-999999999".Subtract("-999999999").AssertIntegerNumber("");
+            "0".Subtract("1").AssertIntegerNumber("-1");
+            "-1".Add("0").AssertIntegerNumber("-1");
+            "-1".Add("-10000000000000").AssertIntegerNumber("-10000000000001");
+            "-10000000000000".Add("-1").AssertIntegerNumber("-10000000000001");
+            "0".Subtract("999999999999999999999").AssertIntegerNumber("-999999999999999999999");
+            "1".Subtract("999999999999999999999").AssertIntegerNumber("-999999999999999999998");
+            "-1".Subtract("999999999999999999999").AssertIntegerNumber("-1000000000000000000000");
+            "1000000000000000000000000000".Subtract("999999999999999999999999999999999999999999").AssertIntegerNumber("-999999999999998999999999999999999999999999");
+            "-1000000000000000000000000000".Subtract("999999999999999999999999999999999999999999").AssertIntegerNumber("-1000000000000000999999999999999999999999999");
+            "-999999999".Subtract("999999999").AssertIntegerNumber("-1999999998");
+            "-999999999".Subtract("-999999999").AssertIntegerNumber("0");
 
             //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
         }

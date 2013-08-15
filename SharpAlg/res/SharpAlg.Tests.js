@@ -838,6 +838,18 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.Greater("1000000000000000000002", "1000000000000000000001"));
             SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("1000000000000000000001", "1000000000000000000001"));
             SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("1000000000000000000001", "1000000000000000000002"));
+            SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.Less("100000000000000000", "99999999999999999"));
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("0", "1"), "-1");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Add("-1", "0"), "-1");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Add("-1", "-10000000000000"), "-10000000000001");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Add("-10000000000000", "-1"), "-10000000000001");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("0", "999999999999999999999"), "-999999999999999999999");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("1", "999999999999999999999"), "-999999999999999999998");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("-1", "999999999999999999999"), "-1000000000000000000000");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("1000000000000000000000000000", "999999999999999999999999999999999999999999"), "-999999999999998999999999999999999999999999");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("-1000000000000000000000000000", "999999999999999999999999999999999999999999"), "-1000000000000000999999999999999999999999999");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("-999999999", "999999999"), "-1999999998");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("-999999999", "-999999999"), "0");
         }
     }
 };
