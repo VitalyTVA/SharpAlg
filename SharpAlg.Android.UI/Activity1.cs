@@ -26,6 +26,27 @@ namespace SharpAlg.Android.UI {
             expressionText.TextChanged += expressionText_TextChanged;
             expressionText.Click +=expressionText_Click;
             expressionText.FocusChange +=expressionText_FocusChange;
+
+            var button1 = FindViewById<Button>(Resource.Id.button1);
+            button1.Click += button_Click;
+
+            var button2 = FindViewById<Button>(Resource.Id.button2);
+            button2.Click += button1_Click;
+
+        }
+
+        void button1_Click(object sender, EventArgs e) {
+            Insert("x");
+        }
+
+        void button_Click(object sender, EventArgs e) {
+            Insert("y");
+        }
+
+        void Insert(string s) {
+            int selStart = expressionText.SelectionStart;
+            string text = expressionText.Text.Insert(selStart, s);
+            expressionText.EditableText.Insert(expressionText.SelectionStart, new Java.Lang.String(s));
         }
 
         void expressionText_FocusChange(object sender, View.FocusChangeEventArgs e) {
@@ -38,7 +59,7 @@ namespace SharpAlg.Android.UI {
         }
 
         public void showCustomKeyboard(View v) {
-            if(v != null) ((InputMethodManager)GetSystemService(Activity.InputMethodService)).HideSoftInputFromWindow(v.WindowToken, 0);
+            //if(v != null) ((InputMethodManager)GetSystemService(Activity.InputMethodService)).HideSoftInputFromWindow(v.WindowToken, 0);
         }
         void expressionText_TextChanged(object sender, global::Android.Text.TextChangedEventArgs e) {
             var expressionText = FindViewById<EditText>(Resource.Id.ExpressionTextBox);
