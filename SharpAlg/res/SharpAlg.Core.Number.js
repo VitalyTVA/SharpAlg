@@ -110,6 +110,19 @@ var SharpAlg$Native$Number =
             })();
             return n1.Greater(n2);
         },
+        Compare$$Number$$Number: function (n1, n2)
+        {
+            (function ()
+            {
+                n1 = {Value: n1};
+                n2 = {Value: n2};
+                var $res = SharpAlg.Native.Number.ToSameType(n1, n2);
+                n1 = n1.Value;
+                n2 = n2.Value;
+                return $res;
+            })();
+            return n1.Compare$$Number(n2);
+        },
         op_Multiply: function (n1, n2)
         {
             (function ()
@@ -229,7 +242,20 @@ var SharpAlg$Native$Number =
                 return this;
             return this.ConvertToCore(type);
         },
-        NumberType$$: "System.Int32"
+        NumberType$$: "System.Int32",
+        Less: function (n)
+        {
+            return this.Compare$$Number(n) < 0;
+        },
+        Greater: function (n)
+        {
+            return this.Compare$$Number(n) > 0;
+        },
+        Equals$$Object: function (obj)
+        {
+            var other = As(obj, SharpAlg.Native.Number.ctor);
+            return this.Compare$$Number(other) == 0;
+        }
     }
 };
 JsTypes.push(SharpAlg$Native$Number);
@@ -261,11 +287,6 @@ var SharpAlg$Native$FloatNumber =
         ConvertToCore: function (type)
         {
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
-        },
-        Equals$$Object: function (obj)
-        {
-            var other = As(obj, SharpAlg.Native.FloatNumber.ctor);
-            return SharpAlg.Native.Number.op_Inequality(other, null) && other.value == this.value;
         },
         GetHashCode: function ()
         {
@@ -310,18 +331,11 @@ var SharpAlg$Native$FloatNumber =
                 return System.Math.Pow(x, y);
             }));
         },
-        Less: function (n)
+        Compare$$Number: function (n)
         {
-            return this.BinaryOperation$1$$Number$$Func$3(System.Boolean.ctor, n, $CreateAnonymousDelegate(this, function (x, y)
+            return this.BinaryOperation$1$$Number$$Func$3(System.Int32.ctor, n, $CreateAnonymousDelegate(this, function (x, y)
             {
-                return x < y;
-            }));
-        },
-        Greater: function (n)
-        {
-            return this.BinaryOperation$1$$Number$$Func$3(System.Boolean.ctor, n, $CreateAnonymousDelegate(this, function (x, y)
-            {
-                return x > y;
+                return System.Math.Sign$$Double(x - y);
             }));
         },
         BinaryOperation$1$$Number$$Func$3: function (T, n, operation)
@@ -363,11 +377,6 @@ var SharpAlg$Native$IntegerNumber =
         ConvertToCore: function (type)
         {
             return SharpAlg.Native.Number.FromDouble(this.value);
-        },
-        Equals$$Object: function (obj)
-        {
-            var other = As(obj, SharpAlg.Native.IntegerNumber.ctor);
-            return SharpAlg.Native.Number.op_Inequality(other, null) && other.value == this.value;
         },
         GetHashCode: function ()
         {
@@ -412,18 +421,11 @@ var SharpAlg$Native$IntegerNumber =
                 return Cast(System.Math.Pow(x, y), System.Int64.ctor);
             }));
         },
-        Less: function (n)
+        Compare$$Number: function (n)
         {
-            return this.BinaryOperation$1$$Number$$Func$3(System.Boolean.ctor, n, $CreateAnonymousDelegate(this, function (x, y)
+            return this.BinaryOperation$1$$Number$$Func$3(System.Int32.ctor, n, $CreateAnonymousDelegate(this, function (x, y)
             {
-                return x < y;
-            }));
-        },
-        Greater: function (n)
-        {
-            return this.BinaryOperation$1$$Number$$Func$3(System.Boolean.ctor, n, $CreateAnonymousDelegate(this, function (x, y)
-            {
-                return x > y;
+                return Cast((x - y), System.Int32.ctor);
             }));
         },
         BinaryOperation$1$$Number$$Func$3: function (T, n, operation)
@@ -475,6 +477,35 @@ var SharpAlg$Native$LongIntegerNumber =
                 digits.Add(currentPart);
             }
             return new SharpAlg.Native.LongIntegerNumber.ctor(digits, lastIndex == 1);
+        },
+        CompareCore: function (n1, n2)
+        {
+            if (!System.Linq.Enumerable.Any$1$$IEnumerable$1(System.Int32.ctor, n1.parts) && !System.Linq.Enumerable.Any$1$$IEnumerable$1(System.Int32.ctor, n2.parts))
+                return 0;
+            if (!System.Linq.Enumerable.Any$1$$IEnumerable$1(System.Int32.ctor, n2.parts))
+                return n1.isNegative ? -1 : 1;
+            if (!System.Linq.Enumerable.Any$1$$IEnumerable$1(System.Int32.ctor, n1.parts))
+                return n2.isNegative ? 1 : -1;
+            if (n1.isNegative && !n2.isNegative)
+                return -1;
+            if (!n1.isNegative && n2.isNegative)
+                return 1;
+            var partsComparisonResult = SharpAlg.Native.LongIntegerNumber.CompareParts(n1.parts, n2.parts);
+            return n1.isNegative ? -partsComparisonResult : partsComparisonResult;
+        },
+        CompareParts: function (parts1, parts2)
+        {
+            var lenDifference = parts1.get_Count() - parts2.get_Count();
+            if (lenDifference != 0)
+                return lenDifference;
+            var count = parts1.get_Count();
+            for (var i = 0; i < count; i++)
+            {
+                var difference = parts1.get_Item$$Int32(i) - parts2.get_Item$$Int32(i);
+                if (difference != 0)
+                    return difference;
+            }
+            return 0;
         }
     },
     assemblyName: "SharpAlg.Core",
@@ -498,9 +529,10 @@ var SharpAlg$Native$LongIntegerNumber =
         {
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
         },
-        Equals$$Object: function (obj)
+        Compare$$Number: function (n)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            var other = Cast(n, SharpAlg.Native.LongIntegerNumber.ctor);
+            return SharpAlg.Native.LongIntegerNumber.CompareCore(this, other);
         },
         GetHashCode: function ()
         {
@@ -582,14 +614,6 @@ var SharpAlg$Native$LongIntegerNumber =
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
         },
         Power: function (n)
-        {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
-        },
-        Less: function (n)
-        {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
-        },
-        Greater: function (n)
         {
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
         },

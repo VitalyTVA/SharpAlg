@@ -106,6 +106,39 @@ namespace SharpAlg.Tests {
             "231231231231123456".Subtract("-123123123123").AssertIntegerNumber("231231354354246579");
             "123456789123456789123456789".Subtract("-123456789123456789123456789").AssertIntegerNumber("246913578246913578246913578");
 
+            "-1".Less("1").IsTrue();
+            "-1".Greater("1").IsFalse();
+            "1".Less("-1").IsFalse();
+            "-1".Less("1").IsTrue();
+            "-1".Less("0").IsTrue();
+            "-1".Greater("0").IsFalse();
+            "1".Less("0").IsFalse();
+            "1".Greater("0").IsTrue();
+            "0".Less("-1").IsFalse();
+            "0".Greater("-1").IsTrue();
+            "0".Less("1").IsTrue();
+            "0".Greater("1").IsFalse();
+            "0".Less("0").IsFalse();
+            "0".Greater("0").IsFalse();
+            "0".GreaterOrEqual("0").IsTrue();
+            "0".LessOrEqual("0").IsTrue();
+            "0".Equal("0").IsTrue();
+            "100".Less("1000000000000000000000001").IsTrue();
+            "-100".Greater("-1000000000000000000000001").IsTrue();
+            "1000000000000000000001".Equal("1000000000000000000001").IsTrue();
+            "1000000000000000000001".Equal("1000000000000000000000").IsFalse();
+            "1000000000000000000001".NotEqual("1000000000000000000000").IsTrue();
+            "1000000000000000000001".NotEqual("1000000000000000000001").IsFalse();
+            "1000000000000000000001".Less("1000000000000000000001").IsFalse();
+            "1000000000000000000001".Less("1000000000000000000002").IsTrue();
+            "1000000000000000000001".LessOrEqual("1000000000000000000002").IsTrue();
+            "1000000000000000000002".LessOrEqual("1000000000000000000001").IsFalse();
+            "1000000000000000000001".Greater("1000000000000000000001").IsFalse();
+            "1000000000000000000002".Greater("1000000000000000000001").IsTrue();
+            "1000000000000000000001".GreaterOrEqual("1000000000000000000001").IsTrue();
+            "1000000000000000000001".GreaterOrEqual("1000000000000000000002").IsFalse();
+
+
             //"0".Subtract("1").AssertIntegerNumber("-1");
             //"0".Subtract("999999999999999999999").AssertIntegerNumber("-999999999999999999999");
             //"1".Subtract("999999999999999999999").AssertIntegerNumber("-999999999999999999998");

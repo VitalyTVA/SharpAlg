@@ -7260,7 +7260,11 @@ var System$Math =
         },
         Sign$$Double: function (value)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            if (value > 0)
+                return 1;
+            if (value < 0)
+                return -1;
+            return 0;
         },
         Sign$$Int16: function (value)
         {
@@ -7268,7 +7272,11 @@ var System$Math =
         },
         Sign$$Int32: function (value)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            if (value > 0)
+                return 1;
+            if (value < 0)
+                return -1;
+            return 0;
         },
         Sign$$Int64: function (value)
         {

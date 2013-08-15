@@ -40,6 +40,10 @@ namespace SharpAlg.Native {
             ToSameType(ref n1, ref n2);
             return n1.Greater(n2);
         }
+        public static int Compare(Number n1, Number n2) {
+            ToSameType(ref n1, ref n2);
+            return n1.Compare(n2);
+        }
         public static Number operator *(Number n1, Number n2) {
             ToSameType(ref n1, ref n2);
             return n1.Multiply(n2);
@@ -109,8 +113,18 @@ namespace SharpAlg.Native {
         protected abstract Number Multiply(Number n);
         protected abstract Number Divide(Number n);
         protected abstract Number Power(Number n);
-        protected abstract bool Less(Number n);
-        protected abstract bool Greater(Number n);
+        protected abstract int Compare(Number n);
+
+        bool Less(Number n) {
+            return Compare(n) < 0;
+        }
+        bool Greater(Number n) {
+            return Compare(n) > 0;
+        }
+        public sealed override bool Equals(object obj) {
+            var other = obj as Number;
+            return Compare(other) == 0;
+        }
     }
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
     public sealed class FloatNumber : Number {
@@ -121,10 +135,6 @@ namespace SharpAlg.Native {
         protected override int NumberType { get { return FloatNumberType; } }
         protected override Number ConvertToCore(int type) {
             throw new NotImplementedException();
-        }
-        public override bool Equals(object obj) {
-            var other = obj as FloatNumber;
-            return other != null && other.value == value;
         }
         public override int GetHashCode() {
             return value.GetHashCode();
@@ -147,11 +157,8 @@ namespace SharpAlg.Native {
         protected override Number Power(Number n) {
             return BinaryOperation(n, (x, y) => Math.Pow(x, y));
         }
-        protected override bool Less(Number n) {
-            return BinaryOperation(n, (x, y) => x < y);
-        }
-        protected override bool Greater(Number n) {
-            return BinaryOperation(n, (x, y) => x > y);
+        protected override int Compare(Number n) {
+            return BinaryOperation<int>(n, (x, y) => Math.Sign(x - y));
         }
         T BinaryOperation<T>(Number n, Func<double, double, T> operation) {
             return operation(value, n.ConvertCast<FloatNumber>().value);
@@ -169,10 +176,6 @@ namespace SharpAlg.Native {
         protected override int NumberType { get { return IntegerNumberType; } }
         protected override Number ConvertToCore(int type) {
             return FromDouble(value);
-        }
-        public override bool Equals(object obj) {
-            var other = obj as IntegerNumber;
-            return other != null && other.value == value;
         }
         public override int GetHashCode() {
             return value.GetHashCode();
@@ -195,11 +198,8 @@ namespace SharpAlg.Native {
         protected override Number Power(Number n) {
             return BinaryOperation(n, (x, y) => (long)Math.Pow(x, y)); //TODO real power without long conversion
         }
-        protected override bool Less(Number n) {
-            return BinaryOperation(n, (x, y) => x < y);
-        }
-        protected override bool Greater(Number n) {
-            return BinaryOperation(n, (x, y) => x > y);
+        protected override int Compare(Number n) {
+            return BinaryOperation<int>(n, (x, y) => (int)(x - y));
         }
         T BinaryOperation<T>(Number n, Func<long, long, T> operation) {
             return operation(value, n.ConvertCast<IntegerNumber>().value);
@@ -247,8 +247,36 @@ namespace SharpAlg.Native {
         protected override Number ConvertToCore(int type) {
             throw new NotImplementedException();
         }
-        public override bool Equals(object obj) {
-            throw new NotImplementedException();
+        protected override int Compare(Number n) {
+            var other = (LongIntegerNumber)n;
+            return CompareCore(this, other);
+        }
+        static int CompareCore(LongIntegerNumber n1, LongIntegerNumber n2) {
+            if(!n1.parts.Any() && !n2.parts.Any())
+                return 0;
+            if(!n2.parts.Any())
+                return n1.isNegative ? -1 : 1;
+            if(!n1.parts.Any())
+                return n2.isNegative ? 1 : -1;
+
+            if(n1.isNegative && !n2.isNegative)
+                return -1;
+            if(!n1.isNegative && n2.isNegative)
+                return 1;
+            int partsComparisonResult = CompareParts(n1.parts, n2.parts);
+            return n1.isNegative ? -partsComparisonResult : partsComparisonResult;
+        }
+        static int CompareParts(IList<int> parts1, IList<int> parts2) {
+            int lenDifference = parts1.Count - parts2.Count;
+            if(lenDifference != 0)
+                return lenDifference;
+            int count = parts1.Count;
+            for(int i = 0; i < count; i++) {
+                int difference = parts1[i] - parts2[i];
+                if(difference != 0)
+                    return difference;
+            }
+            return 0;
         }
         public override int GetHashCode() {
             throw new NotImplementedException();
@@ -314,12 +342,6 @@ namespace SharpAlg.Native {
         }
         protected override Number Power(Number n) {
             throw new NotImplementedException(); //TODO real power without long conversion
-        }
-        protected override bool Less(Number n) {
-            throw new NotImplementedException();
-        }
-        protected override bool Greater(Number n) {
-            throw new NotImplementedException();
         }
         int GetPart(int index) {
             return index < parts.Count ? (isNegative ? -parts[index] : parts[index]) : 0;
