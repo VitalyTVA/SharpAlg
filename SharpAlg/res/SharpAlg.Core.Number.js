@@ -447,6 +447,7 @@ var SharpAlg$Native$LongIntegerNumber =
     {
         cctor: function ()
         {
+            SharpAlg.Native.LongIntegerNumber.ZeroLongNumber = new SharpAlg.Native.LongIntegerNumber.ctor([], false);
             SharpAlg.Native.LongIntegerNumber.Base = 10;
             SharpAlg.Native.LongIntegerNumber.BaseCount = 4;
             SharpAlg.Native.LongIntegerNumber.BaseFull = 10000;
@@ -626,12 +627,14 @@ var SharpAlg$Native$LongIntegerNumber =
         },
         MultiplyCore: function (longNumber)
         {
-            var count = System.Math.Max$$Int32$$Int32(this.parts.get_Count(), longNumber.parts.get_Count());
+            if (longNumber.parts.get_Count() == 0)
+                return SharpAlg.Native.LongIntegerNumber.ZeroLongNumber;
+            var count = this.parts.get_Count();
             var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
             var carry = 0;
             for (var i = 0; i < count; i++)
             {
-                var resultPart = this.GetPart(i) * longNumber.GetPart(0) + carry;
+                var resultPart = this.parts.get_Item$$Int32(i) * longNumber.parts.get_Item$$Int32(0) + carry;
                 if (resultPart >= 10000)
                 {
                     var remain = resultPart % 10000;
@@ -646,7 +649,7 @@ var SharpAlg$Native$LongIntegerNumber =
             }
             if (carry > 0)
                 result.Add(carry);
-            return new SharpAlg.Native.LongIntegerNumber.ctor(result, false);
+            return new SharpAlg.Native.LongIntegerNumber.ctor(result, this.isNegative ^ longNumber.isNegative);
         },
         Divide: function (n)
         {

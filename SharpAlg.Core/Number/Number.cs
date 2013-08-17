@@ -210,6 +210,7 @@ namespace SharpAlg.Native {
     }
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
     public sealed class LongIntegerNumber : Number {
+        static readonly LongIntegerNumber ZeroLongNumber = new LongIntegerNumber(new int[0], false);
         internal static Number FromLongIntStringCore(string s) {
             IList<int> digits = new List<int>(); //TODO - set capacity
             int currentPart = 0;
@@ -351,11 +352,13 @@ namespace SharpAlg.Native {
         }
 
         Number MultiplyCore(LongIntegerNumber longNumber) {
-            int count = Math.Max(parts.Count, longNumber.parts.Count);
+            if(longNumber.parts.Count == 0)
+                return ZeroLongNumber;
+            int count = parts.Count;
             List<int> result = new List<int>();
             int carry = 0;
             for(int i = 0; i < count; i++) {
-                int resultPart = GetPart(i) * longNumber.GetPart(0) + carry;
+                int resultPart = parts[i] * longNumber.parts[0] + carry;
                 if(resultPart >= BaseFull) {
                     int remain = resultPart % BaseFull;
                     carry = (resultPart - remain) / BaseFull;
@@ -367,7 +370,7 @@ namespace SharpAlg.Native {
             }
             if(carry > 0)
                 result.Add(carry);
-            return new LongIntegerNumber(result, false);
+            return new LongIntegerNumber(result, isNegative ^ longNumber.isNegative);
         }
         protected override Number Divide(Number n) {
             throw new NotImplementedException();
