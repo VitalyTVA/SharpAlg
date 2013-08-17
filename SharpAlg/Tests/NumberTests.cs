@@ -42,7 +42,7 @@ namespace SharpAlg.Tests {
         public void IntOperationsTest() {
             "1".Add("2").AssertIntegerNumber("3");
             "9".Subtract("13").AssertIntegerNumber("-4");
-            //"9".Multiply("13").AssertIntegerNumber("117");
+            "9".Multiply("13").AssertIntegerNumber("117");
             //"1593668734".Divide("1287293").AssertIntegerNumber("1238");
             //"117".Power("5").AssertIntegerNumber("21924480357");
             "1000000001".Add("500000001").AssertIntegerNumber("1500000002");
@@ -63,6 +63,8 @@ namespace SharpAlg.Tests {
             "100000000001".GreaterOrEqual("100000000001").IsTrue();
             "100000000001".GreaterOrEqual("100000000002").IsFalse();
 
+            "999999999999999999999999".Multiply("999").AssertIntegerNumber("998999999999999999999999001"); //TODO - long arithmetic
+            "10000000000000100000000001".Multiply("500").AssertIntegerNumber("5000000000000050000000000500"); //TODO - long arithmetic
             //"1000000001".Multiply("500000001").AssertIntegerNumber("500000001500000001"); //TODO - long arithmetic
             //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
         }

@@ -346,7 +346,28 @@ namespace SharpAlg.Native {
             return new LongIntegerNumber(result, false);
         }
         protected override Number Multiply(Number n) {
-            throw new NotImplementedException();
+            var longNumber = n.ConvertCast<LongIntegerNumber>();
+            return MultiplyCore(longNumber);
+        }
+
+        Number MultiplyCore(LongIntegerNumber longNumber) {
+            int count = Math.Max(parts.Count, longNumber.parts.Count);
+            List<int> result = new List<int>();
+            int carry = 0;
+            for(int i = 0; i < count; i++) {
+                int resultPart = GetPart(i) * longNumber.GetPart(0) + carry;
+                if(resultPart >= BaseFull) {
+                    int remain = resultPart % BaseFull;
+                    carry = (resultPart - remain) / BaseFull;
+                    resultPart = remain;
+                } else {
+                    carry = 0;
+                }
+                result.Add(resultPart);
+            }
+            if(carry > 0)
+                result.Add(carry);
+            return new LongIntegerNumber(result, false);
         }
         protected override Number Divide(Number n) {
             throw new NotImplementedException();

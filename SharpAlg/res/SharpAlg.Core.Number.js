@@ -621,7 +621,32 @@ var SharpAlg$Native$LongIntegerNumber =
         },
         Multiply: function (n)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, n);
+            return this.MultiplyCore(longNumber);
+        },
+        MultiplyCore: function (longNumber)
+        {
+            var count = System.Math.Max$$Int32$$Int32(this.parts.get_Count(), longNumber.parts.get_Count());
+            var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
+            var carry = 0;
+            for (var i = 0; i < count; i++)
+            {
+                var resultPart = this.GetPart(i) * longNumber.GetPart(0) + carry;
+                if (resultPart >= 10000)
+                {
+                    var remain = resultPart % 10000;
+                    carry = (resultPart - remain) / 10000;
+                    resultPart = remain;
+                }
+                else
+                {
+                    carry = 0;
+                }
+                result.Add(resultPart);
+            }
+            if (carry > 0)
+                result.Add(carry);
+            return new SharpAlg.Native.LongIntegerNumber.ctor(result, false);
         },
         Divide: function (n)
         {
