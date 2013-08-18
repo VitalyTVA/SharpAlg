@@ -160,7 +160,39 @@ namespace SharpAlg.Tests {
             "-999999999".Subtract("999999999").AssertIntegerNumber("-1999999998");
             "-999999999".Subtract("-999999999").AssertIntegerNumber("0");
 
+            "117".Divide("9").AssertIntegerNumber("13");
+            "1234840820348902398409233209380984".Divide("1234840820348902398409233209380985").AssertIntegerNumber("0");
+            "1234840820348902398409233209380984".Divide("1234840821348902398409233209380984").AssertIntegerNumber("0");
+            "99999".Divide("3").AssertIntegerNumber("33333");
+            "99999999999999999999999999999".Divide("3").AssertIntegerNumber("33333333333333333333333333333");
+            "888848888848888488884888888".Divide("2").AssertIntegerNumber("444424444424444244442444444");
+            "1000002".Divide("3").AssertIntegerNumber("333334");
+            "100000000000000000000000002".Divide("3").AssertIntegerNumber("33333333333333333333333334");
+            "1234840820348902398409233209380984".Divide("1234840820348902398409233209380984").AssertIntegerNumber("1");
+            "1000000".Divide("1009999").AssertIntegerNumber("0");
+            "10000000".Divide("1009999").AssertIntegerNumber("9");
+            "100000000000".Divide("1009999").AssertIntegerNumber("99009");
+            "1000000000000000000000000".Divide("1009999").AssertIntegerNumber("990099990198010097");
+            "8888348213303695859491006407241101393874673214452576111112".Divide("888834888882318888543888888").AssertIntegerNumber("9999999239994399999991239999999"); //TODO - long arithmetic
+
             //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
+            //divide by zero
+        }
+        [Test]
+        public void RandomLongDivision() {
+            Random rnd = new Random();
+            for(int i = 0; i < 100; i++) {
+                RandomLongDivisionCore(rnd, 0, int.MaxValue, int.MaxValue);
+                RandomLongDivisionCore(rnd, int.MaxValue, int.MaxValue, int.MaxValue);
+                RandomLongDivisionCore(rnd, int.MaxValue, int.MaxValue, 10000);
+                //RandomLongDivisionCore(rnd, int.MaxValue, int.MaxValue, 10); //TODO optimize this shit
+            }
+        }
+        static void RandomLongDivisionCore(Random rnd, int maxDivident1, int maxDivident2, int maxDivisor) {
+            long x = rnd.Next(maxDivident1) * (long)int.MaxValue + rnd.Next(maxDivident2);
+            long y = rnd.Next(maxDivisor);
+            if(x > y && y != 0)
+                x.ToString().Divide(y.ToString()).AssertIntegerNumber((x / y).ToString());
         }
         [Test]
         public void FloatIntOperationsTest() {

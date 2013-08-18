@@ -258,9 +258,9 @@ namespace SharpAlg.Native {
         }
         protected override int Compare(Number n) {
             var other = (LongIntegerNumber)n;
-            return CompareCore(this, other);
+            return Compare(this, other);
         }
-        static int CompareCore(LongIntegerNumber n1, LongIntegerNumber n2) {
+        static int Compare(LongIntegerNumber n1, LongIntegerNumber n2) {
             if(!n1.parts.Any() && !n2.parts.Any())
                 return 0;
             if(!n2.parts.Any())
@@ -272,10 +272,10 @@ namespace SharpAlg.Native {
                 return -1;
             if(!n1.isNegative && n2.isNegative)
                 return 1;
-            int partsComparisonResult = CompareParts(n1.parts, n2.parts);
+            int partsComparisonResult = CompareCore(n1.parts, n2.parts);
             return n1.isNegative ? -partsComparisonResult : partsComparisonResult;
         }
-        static int CompareParts(IList<int> parts1, IList<int> parts2) {
+        static int CompareCore(IList<int> parts1, IList<int> parts2) {
             int lenDifference = parts1.Count - parts2.Count;
             if(lenDifference != 0)
                 return lenDifference;
@@ -376,14 +376,12 @@ namespace SharpAlg.Native {
             List<int> result = new List<int>();
             int carry = 0;
             int leftCount = left.Count;
-            for(int i = 0; i < shift; i++) {
-                result.Add(0);
-            }
+            AddTrailingZeros(result, shift);
             for(int leftIndex = 0; leftIndex < leftCount; leftIndex++) {
                 int resultPart = left[leftIndex] * digit + carry;
                 if(resultPart >= BaseFull) {
                     int remain = resultPart % BaseFull;
-                    carry = (resultPart - remain) / BaseFull;
+                    carry = (resultPart - remain) / BaseFull; //TODO move to platfrom helper
                     resultPart = remain;
                 } else {
                     carry = 0;
@@ -394,8 +392,70 @@ namespace SharpAlg.Native {
                 result.Add(carry);
             return result;
         }
+        static void AddTrailingZeros(IList<int> result, int shift) {
+            for(int i = 0; i < shift; i++) {
+                result.Add(0);
+            }
+        }
+        static void ShiftLeft(IList<int> result) {
+            result.Insert(0, 0);
+        }
+        static void ShiftRight(IList<int> result) {
+            result.RemoveAt(0);
+        }
         protected override Number Divide(Number n) {
-            throw new NotImplementedException();
+            var longNumber = n.ConvertCast<LongIntegerNumber>();
+            if(this < n)
+                return ZeroLongNumber;
+            return new LongIntegerNumber(DivieCore(this, longNumber.parts), false);
+        }
+        static IList<int> DivieCore(LongIntegerNumber divident, IList<int> originalDivisor) {
+            IList<int> divisor = new List<int>(originalDivisor); //TODO test it
+            int shiftCount = 0;
+            while(CompareCore(divident.parts, divisor) >= 0) {
+                ShiftLeft(divisor);
+                shiftCount++;
+            }
+            ShiftRight(divisor);
+            shiftCount--;
+            List<int> result = new List<int>();
+            while(CompareCore(divident.parts, originalDivisor) >= 0) {
+                int digit = FindDigit(divident, divisor);
+                result.Insert(0, digit);
+                Number temp = (new LongIntegerNumber(divisor, false)).Multiply(new LongIntegerNumber(new int[] { digit }, false));
+                divident = (LongIntegerNumber)divident.Subtract(temp);
+                if(CompareCore(divident.parts, divisor) < 0)
+                    ShiftRight(divisor);
+            }
+            return result;
+        }
+        static int FindDigit(LongIntegerNumber divident, IList<int> divisor) {
+            int dividentPart = ((divident.parts.Count == divisor.Count) ? divident.parts.Last() : divident.parts.Last() * BaseFull + divident.parts[divident.parts.Count - 2]);
+            int divisorPart = divisor.Last() + 1;
+            int remain = dividentPart % divisorPart;
+            int digit = (dividentPart - remain) / divisorPart; //TODO move to platfrom helper
+#if DEBUG 
+            int checkCount = 0;
+#endif
+            while(true) {
+                Number temp = (new LongIntegerNumber(divisor, false)).Multiply(new LongIntegerNumber(new int[] { digit }, false));
+                LongIntegerNumber temp2 = (LongIntegerNumber)divident.Subtract(temp);
+                if(temp2.isNegative)
+                    throw new InvalidOperationException();
+                if(CompareCore(temp2.parts, divisor) >= 0) {
+#if DEBUG
+                    checkCount++;
+#endif
+                    digit++;
+                } else
+                    break;
+            }
+#if DEBUG
+            if(checkCount > 5000)
+                throw new InvalidOperationException(); //TODO optimize this shit
+#endif
+
+            return digit;
         }
         protected override Number Power(Number n) {
             throw new NotImplementedException(); //TODO real power without long conversion

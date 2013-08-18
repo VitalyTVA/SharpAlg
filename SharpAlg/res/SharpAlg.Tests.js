@@ -741,6 +741,16 @@ var SharpAlg$Tests$NumberTests =
 {
     fullname: "SharpAlg.Tests.NumberTests",
     baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        RandomLongDivisionCore: function (rnd, maxDivident1, maxDivident2, maxDivisor)
+        {
+            var x = rnd.Next$$Int32(maxDivident1) * 2147483647 + rnd.Next$$Int32(maxDivident2);
+            var y = rnd.Next$$Int32(maxDivisor);
+            if (x > y && y != 0)
+                SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide(x.toString(), y.toString()), (x / y).toString());
+        }
+    },
     assemblyName: "SharpAlg",
     Kind: "Class",
     definition:
@@ -881,6 +891,30 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("-1000000000000000000000000000", "999999999999999999999999999999999999999999"), "-1000000000000000999999999999999999999999999");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("-999999999", "999999999"), "-1999999998");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Subtract("-999999999", "-999999999"), "0");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("117", "9"), "13");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1234840820348902398409233209380984", "1234840820348902398409233209380985"), "0");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1234840820348902398409233209380984", "1234840821348902398409233209380984"), "0");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("99999", "3"), "33333");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("99999999999999999999999999999", "3"), "33333333333333333333333333333");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("888848888848888488884888888", "2"), "444424444424444244442444444");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1000002", "3"), "333334");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("100000000000000000000000002", "3"), "33333333333333333333333334");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1234840820348902398409233209380984", "1234840820348902398409233209380984"), "1");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1000000", "1009999"), "0");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("10000000", "1009999"), "9");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("100000000000", "1009999"), "99009");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1000000000000000000000000", "1009999"), "990099990198010097");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("8888348213303695859491006407241101393874673214452576111112", "888834888882318888543888888"), "9999999239994399999991239999999");
+        },
+        RandomLongDivision: function ()
+        {
+            var rnd = new System.Random.ctor();
+            for (var i = 0; i < 100; i++)
+            {
+                SharpAlg.Tests.NumberTests.RandomLongDivisionCore(rnd, 0, 2147483647, 2147483647);
+                SharpAlg.Tests.NumberTests.RandomLongDivisionCore(rnd, 2147483647, 2147483647, 2147483647);
+                SharpAlg.Tests.NumberTests.RandomLongDivisionCore(rnd, 2147483647, 2147483647, 10000);
+            }
         },
         FloatIntOperationsTest: function ()
         {
