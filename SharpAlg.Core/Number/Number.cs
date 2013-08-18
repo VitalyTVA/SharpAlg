@@ -246,6 +246,14 @@ namespace SharpAlg.Native {
         }
         protected override int NumberType { get { return IntegerNumberType; } }
         protected override Number ConvertToCore(int type) {
+            if(type == Number.FloatNumberType) {
+                double result = 0;
+                int count = parts.Count;
+                for(int i = count - 1; i >= 0; i--) {
+                    result = result * BaseFull + parts[i];
+                }
+                return FromDouble(result);
+            }
             throw new NotImplementedException();
         }
         protected override int Compare(Number n) {

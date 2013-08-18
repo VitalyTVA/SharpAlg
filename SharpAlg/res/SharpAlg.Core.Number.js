@@ -607,6 +607,16 @@ var SharpAlg$Native$LongIntegerNumber =
         },
         ConvertToCore: function (type)
         {
+            if (type == 1)
+            {
+                var result = 0;
+                var count = this.parts.get_Count();
+                for (var i = count - 1; i >= 0; i--)
+                {
+                    result = result * 10000 + this.parts.get_Item$$Int32(i);
+                }
+                return SharpAlg.Native.Number.FromDouble(result);
+            }
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
         },
         Compare$$Number: function (n)

@@ -74,7 +74,6 @@ namespace SharpAlg.Tests {
             "-999999999999999999999999".Multiply("999").AssertIntegerNumber("-998999999999999999999999001");
             "10000000000000100000000001".Multiply("500").AssertIntegerNumber("5000000000000050000000000500"); //TODO - long arithmetic
             "9999999239994399999991239999999".Multiply("888834888882318888543888888").AssertIntegerNumber("8888348213303695859491006407241101393874673214452576111112"); //TODO - long arithmetic
-            //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
         }
         [Test]
         public void LongIntOperationsTest() {
@@ -163,36 +162,36 @@ namespace SharpAlg.Tests {
 
             //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
         }
-        //[Test]
-        //public void FloatIntOperationsTest() {
-        //    "1.0".Add("2").AssertFloatNumber("3");
-        //    "1".Add("2.0").AssertFloatNumber("3");
-        //    "1".Add("2.3").AssertFloatNumber("3.3");
-        //    "9".Multiply("13.0").AssertFloatNumber("117");
-        //    "9.0".Multiply("13").AssertFloatNumber("117");
-        //    "9".Subtract("13.0").AssertFloatNumber("-4");
-        //    "9.0".Subtract("13").AssertFloatNumber("-4");
-        //    "3".Divide("2.0").AssertFloatNumber("1.5");
-        //    "3.0".Divide("2").AssertFloatNumber("1.5");
-        //    "4.0".Divide("2").AssertFloatNumber("2");
-        //    "117".Power("5.0").AssertFloatNumber("21924480357");
-        //    "117.0".Power("5").AssertFloatNumber("21924480357");
+        [Test]
+        public void FloatIntOperationsTest() {
+            "1.0".Add("2").AssertFloatNumber("3");
+            "1".Add("2.0").AssertFloatNumber("3");
+            "1".Add("2.3").AssertFloatNumber("3.3");
+            "9".Multiply("13.0").AssertFloatNumber("117");
+            "9.0".Multiply("13").AssertFloatNumber("117");
+            "9".Subtract("13.0").AssertFloatNumber("-4");
+            "9.0".Subtract("13").AssertFloatNumber("-4");
+            "3".Divide("2.0").AssertFloatNumber("1.5");
+            "3.0".Divide("2").AssertFloatNumber("1.5");
+            "4.0".Divide("2").AssertFloatNumber("2");
+            "117".Power("5.0").AssertFloatNumber("21924480357");
+            "117.0".Power("5").AssertFloatNumber("21924480357");
 
-        //    "100000000001".Equal("100000000001.0").IsTrue();
-        //    "100000000001.0".Equal("100000000000").IsFalse();
-        //    "100000000001".NotEqual("100000000000.0").IsTrue();
-        //    "100000000001.0".NotEqual("100000000001").IsFalse();
+            "100000000001".Equal("100000000001.0").IsTrue();
+            "100000000001.0".Equal("100000000000").IsFalse();
+            "100000000001".NotEqual("100000000000.0").IsTrue();
+            "100000000001.0".NotEqual("100000000001").IsFalse();
 
-        //    "100000000001".Less("100000000001.0").IsFalse();
-        //    "100000000001.0".Less("100000000002").IsTrue();
-        //    "100000000001".LessOrEqual("100000000002.0").IsTrue();
-        //    "100000000002.0".LessOrEqual("100000000001").IsFalse();
+            "100000000001".Less("100000000001.0").IsFalse();
+            "100000000001.0".Less("100000000002").IsTrue();
+            "100000000001".LessOrEqual("100000000002.0").IsTrue();
+            "100000000002.0".LessOrEqual("100000000001").IsFalse();
 
-        //    "100000000001".Greater("100000000001.0").IsFalse();
-        //    "100000000002.0".Greater("100000000001").IsTrue();
-        //    "100000000001".GreaterOrEqual("100000000001.0").IsTrue();
-        //    "100000000001.0".GreaterOrEqual("100000000002").IsFalse();
-        //}
+            "100000000001".Greater("100000000001.0").IsFalse();
+            "100000000002.0".Greater("100000000001").IsTrue();
+            "100000000001".GreaterOrEqual("100000000001.0").IsTrue();
+            "100000000001.0".GreaterOrEqual("100000000002").IsFalse();
+        }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class NumberTestHelper {
