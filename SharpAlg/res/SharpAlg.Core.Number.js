@@ -507,6 +507,85 @@ var SharpAlg$Native$LongIntegerNumber =
                     return difference;
             }
             return 0;
+        },
+        AddImpl: function (left, right, isLeftNegative, isRightNegative)
+        {
+            var count = System.Math.Max$$Int32$$Int32(left.get_Count(), right.get_Count());
+            var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
+            var carry = 0;
+            for (var i = 0; i < count; i++)
+            {
+                var resultPart = SharpAlg.Native.LongIntegerNumber.GetPart$$IList$1$Int32$$Int32$$Boolean(left, i, isLeftNegative) + SharpAlg.Native.LongIntegerNumber.GetPart$$IList$1$Int32$$Int32$$Boolean(right, i, isRightNegative) + carry;
+                if (resultPart >= 10000)
+                {
+                    resultPart = resultPart - 10000;
+                    carry = 1;
+                }
+                else if (resultPart < 0)
+                {
+                    resultPart = resultPart + 10000;
+                    carry = -1;
+                }
+                else
+                {
+                    carry = 0;
+                }
+                result.Add(resultPart);
+            }
+            if (carry > 0)
+                result.Add(carry);
+            for (var i = result.get_Count() - 1; i >= 0; i--)
+            {
+                if (result.get_Item$$Int32(i) == 0)
+                    result.RemoveAt(i);
+                else
+                    break;
+            }
+            return result;
+        },
+        MultiplyCore: function (left, right)
+        {
+            if (right.get_Count() == 0)
+                return SharpAlg.Native.LongIntegerNumber.ZeroLongNumber.parts;
+            var result = [];
+            var rightCount = right.get_Count();
+            for (var i = 0; i < rightCount; i++)
+            {
+                result = SharpAlg.Native.LongIntegerNumber.AddImpl(result, SharpAlg.Native.LongIntegerNumber.MultiplyOneDigit(left, right.get_Item$$Int32(i), i), false, false);
+            }
+            return result;
+        },
+        MultiplyOneDigit: function (left, digit, shift)
+        {
+            var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
+            var carry = 0;
+            var leftCount = left.get_Count();
+            for (var i = 0; i < shift; i++)
+            {
+                result.Add(0);
+            }
+            for (var leftIndex = 0; leftIndex < leftCount; leftIndex++)
+            {
+                var resultPart = left.get_Item$$Int32(leftIndex) * digit + carry;
+                if (resultPart >= 10000)
+                {
+                    var remain = resultPart % 10000;
+                    carry = (resultPart - remain) / 10000;
+                    resultPart = remain;
+                }
+                else
+                {
+                    carry = 0;
+                }
+                result.Add(resultPart);
+            }
+            if (carry > 0)
+                result.Add(carry);
+            return result;
+        },
+        GetPart$$IList$1$Int32$$Int32$$Boolean: function (parts, index, isNegative)
+        {
+            return index < parts.get_Count() ? (isNegative ? -parts.get_Item$$Int32(index) : parts.get_Item$$Int32(index)) : 0;
         }
     },
     assemblyName: "SharpAlg.Core",
@@ -587,69 +666,12 @@ var SharpAlg$Native$LongIntegerNumber =
         },
         AddCore: function (longNumber)
         {
-            var count = System.Math.Max$$Int32$$Int32(this.parts.get_Count(), longNumber.parts.get_Count());
-            var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
-            var carry = 0;
-            for (var i = 0; i < count; i++)
-            {
-                var resultPart = this.GetPart(i) + longNumber.GetPart(i) + carry;
-                if (resultPart >= 10000)
-                {
-                    resultPart = resultPart - 10000;
-                    carry = 1;
-                }
-                else if (resultPart < 0)
-                {
-                    resultPart = resultPart + 10000;
-                    carry = -1;
-                }
-                else
-                {
-                    carry = 0;
-                }
-                result.Add(resultPart);
-            }
-            if (carry > 0)
-                result.Add(carry);
-            for (var i = result.get_Count() - 1; i >= 0; i--)
-            {
-                if (result.get_Item$$Int32(i) == 0)
-                    result.RemoveAt(i);
-                else
-                    break;
-            }
-            return new SharpAlg.Native.LongIntegerNumber.ctor(result, false);
+            return new SharpAlg.Native.LongIntegerNumber.ctor(SharpAlg.Native.LongIntegerNumber.AddImpl(this.parts, longNumber.parts, this.isNegative, longNumber.isNegative), false);
         },
         Multiply: function (n)
         {
             var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, n);
-            return this.MultiplyCore(longNumber);
-        },
-        MultiplyCore: function (longNumber)
-        {
-            if (longNumber.parts.get_Count() == 0)
-                return SharpAlg.Native.LongIntegerNumber.ZeroLongNumber;
-            var count = this.parts.get_Count();
-            var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
-            var carry = 0;
-            for (var i = 0; i < count; i++)
-            {
-                var resultPart = this.parts.get_Item$$Int32(i) * longNumber.parts.get_Item$$Int32(0) + carry;
-                if (resultPart >= 10000)
-                {
-                    var remain = resultPart % 10000;
-                    carry = (resultPart - remain) / 10000;
-                    resultPart = remain;
-                }
-                else
-                {
-                    carry = 0;
-                }
-                result.Add(resultPart);
-            }
-            if (carry > 0)
-                result.Add(carry);
-            return new SharpAlg.Native.LongIntegerNumber.ctor(result, this.isNegative ^ longNumber.isNegative);
+            return new SharpAlg.Native.LongIntegerNumber.ctor(SharpAlg.Native.LongIntegerNumber.MultiplyCore(this.parts, longNumber.parts), this.isNegative ^ longNumber.isNegative);
         },
         Divide: function (n)
         {
@@ -659,9 +681,9 @@ var SharpAlg$Native$LongIntegerNumber =
         {
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
         },
-        GetPart: function (index)
+        GetPart$$Int32: function (index)
         {
-            return index < this.parts.get_Count() ? (this.isNegative ? -this.parts.get_Item$$Int32(index) : this.parts.get_Item$$Int32(index)) : 0;
+            return SharpAlg.Native.LongIntegerNumber.GetPart$$IList$1$Int32$$Int32$$Boolean(this.parts, index, this.isNegative);
         }
     }
 };

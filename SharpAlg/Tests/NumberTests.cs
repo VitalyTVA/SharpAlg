@@ -73,7 +73,7 @@ namespace SharpAlg.Tests {
             "999999999999999999999999".Multiply("-999").AssertIntegerNumber("-998999999999999999999999001");
             "-999999999999999999999999".Multiply("999").AssertIntegerNumber("-998999999999999999999999001");
             "10000000000000100000000001".Multiply("500").AssertIntegerNumber("5000000000000050000000000500"); //TODO - long arithmetic
-            //"1000000001".Multiply("500000001").AssertIntegerNumber("500000001500000001"); //TODO - long arithmetic
+            "9999999239994399999991239999999".Multiply("888834888882318888543888888").AssertIntegerNumber("8888348213303695859491006407241101393874673214452576111112"); //TODO - long arithmetic
             //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
         }
         [Test]

@@ -320,11 +320,14 @@ namespace SharpAlg.Native {
             return Add(new LongIntegerNumber(longNumber.parts, !longNumber.isNegative));
         }
         Number AddCore(LongIntegerNumber longNumber) {
-            int count = Math.Max(parts.Count, longNumber.parts.Count);
+            return new LongIntegerNumber(AddImpl(this.parts, longNumber.parts, isNegative, longNumber.isNegative), false);
+        }
+        static IList<int> AddImpl(IList<int> left, IList<int> right, bool isLeftNegative, bool isRightNegative) {
+            int count = Math.Max(left.Count, right.Count);
             List<int> result = new List<int>();
             int carry = 0;
             for(int i = 0; i < count; i++) {
-                int resultPart = GetPart(i) + longNumber.GetPart(i) + carry;//TODO optimization - stop when one is empty
+                int resultPart = GetPart(left, i, isLeftNegative) + GetPart(right, i, isRightNegative) + carry;//TODO optimization - stop when one is empty
                 if(resultPart >= BaseFull) {
                     resultPart = resultPart - BaseFull;
                     carry = 1;
@@ -344,21 +347,32 @@ namespace SharpAlg.Native {
                 else
                     break;
             }
-            return new LongIntegerNumber(result, false);
+            return result;
         }
         protected override Number Multiply(Number n) {
             var longNumber = n.ConvertCast<LongIntegerNumber>();
-            return MultiplyCore(longNumber);
+            return new LongIntegerNumber(MultiplyCore(this.parts, longNumber.parts), isNegative ^ longNumber.isNegative);
         }
 
-        Number MultiplyCore(LongIntegerNumber longNumber) {
-            if(longNumber.parts.Count == 0)
-                return ZeroLongNumber;
-            int count = parts.Count;
+        static IList<int> MultiplyCore(IList<int> left, IList<int> right) {
+            if(right.Count == 0)
+                return ZeroLongNumber.parts;
+            IList<int> result = new int[0];
+            int rightCount = right.Count;
+            for(int i = 0; i < rightCount; i++) {
+                result = AddImpl(result, MultiplyOneDigit(left, right[i], i), false, false);
+            }
+            return result;
+        }
+        static IList<int> MultiplyOneDigit(IList<int> left, int digit, int shift) {
             List<int> result = new List<int>();
             int carry = 0;
-            for(int i = 0; i < count; i++) {
-                int resultPart = parts[i] * longNumber.parts[0] + carry;
+            int leftCount = left.Count;
+            for(int i = 0; i < shift; i++) {
+                result.Add(0);
+            }
+            for(int leftIndex = 0; leftIndex < leftCount; leftIndex++) {
+                int resultPart = left[leftIndex] * digit + carry;
                 if(resultPart >= BaseFull) {
                     int remain = resultPart % BaseFull;
                     carry = (resultPart - remain) / BaseFull;
@@ -370,7 +384,7 @@ namespace SharpAlg.Native {
             }
             if(carry > 0)
                 result.Add(carry);
-            return new LongIntegerNumber(result, isNegative ^ longNumber.isNegative);
+            return result;
         }
         protected override Number Divide(Number n) {
             throw new NotImplementedException();
@@ -379,6 +393,9 @@ namespace SharpAlg.Native {
             throw new NotImplementedException(); //TODO real power without long conversion
         }
         int GetPart(int index) {
+            return GetPart(parts, index, isNegative);
+        }
+        static int GetPart(IList<int> parts, int index, bool isNegative) {
             return index < parts.Count ? (isNegative ? -parts[index] : parts[index]) : 0;
         }
     }

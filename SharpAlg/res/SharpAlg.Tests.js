@@ -801,6 +801,7 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Multiply("999999999999999999999999", "-999"), "-998999999999999999999999001");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Multiply("-999999999999999999999999", "999"), "-998999999999999999999999001");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Multiply("10000000000000100000000001", "500"), "5000000000000050000000000500");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Multiply("9999999239994399999991239999999", "888834888882318888543888888"), "8888348213303695859491006407241101393874673214452576111112");
         },
         LongIntOperationsTest: function ()
         {
