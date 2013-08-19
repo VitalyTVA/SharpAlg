@@ -415,7 +415,7 @@ SharpAlg.Native.ExpressionEvaluator.prototype.Multiply = function (multi)
 };
 SharpAlg.Native.ExpressionEvaluator.prototype.EvaluateMulti = function (multi, evaluator)
 {
-    var result = SharpAlg.Native.Number.Zero;
+    var result = SharpAlg.Native.NumberFactory.Zero;
     SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, multi.get_Args(), $CreateAnonymousDelegate(this, function (x)
     {
         result = x.Visit$1(SharpAlg.Native.Number.ctor, this);
@@ -603,8 +603,8 @@ var SharpAlg$Native$FactorialFunction =
         },
         Evaluate$$Number: function (arg)
         {
-            var result = SharpAlg.Native.Number.One;
-            for (var i = SharpAlg.Native.Number.Two; SharpAlg.Native.Number.op_LessThanOrEqual(i, arg); i = SharpAlg.Native.Number.op_Addition(i, SharpAlg.Native.Number.One))
+            var result = SharpAlg.Native.NumberFactory.One;
+            for (var i = SharpAlg.Native.NumberFactory.Two; SharpAlg.Native.Number.op_LessThanOrEqual(i, arg); i = SharpAlg.Native.Number.op_Addition(i, SharpAlg.Native.NumberFactory.One))
             {
                 result = SharpAlg.Native.Number.op_Multiply(result, i);
             }
@@ -628,7 +628,7 @@ var SharpAlg$Native$LnFunction =
         },
         Evaluate$$Number: function (arg)
         {
-            return SharpAlg.Native.Number.Ln(arg);
+            return SharpAlg.Native.NumberFactory.Ln(arg);
         },
         DiffCore: function (builder, arg)
         {

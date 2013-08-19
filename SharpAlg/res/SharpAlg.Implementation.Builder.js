@@ -188,27 +188,27 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.GetArgs = function (exp
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.ConstantConvolution = function (left, right, operation)
 {
     var leftConst = SharpAlg.Native.Builder.ConvolutionExprBuilder.GetConstValue(left);
-    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.Number.Zero))
+    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.NumberFactory.Zero))
     {
         if (operation == 0)
             return right;
         if (operation == 1)
             return SharpAlg.Native.Expr.Zero;
     }
-    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.Number.One))
+    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.NumberFactory.One))
     {
         if (operation == 1)
             return right;
     }
     var rightConst = SharpAlg.Native.Builder.ConvolutionExprBuilder.GetConstValue(right);
-    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.Number.Zero))
+    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.NumberFactory.Zero))
     {
         if (operation == 0)
             return left;
         if (operation == 1)
             return SharpAlg.Native.Expr.Zero;
     }
-    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.Number.One))
+    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.NumberFactory.One))
     {
         if (operation == 1)
             return left;
@@ -222,20 +222,20 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.ConstantConvolution = f
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.ConstantPowerConvolution = function (left, right)
 {
     var leftConst = SharpAlg.Native.Builder.ConvolutionExprBuilder.GetConstValue(left);
-    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.Number.Zero))
+    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.NumberFactory.Zero))
     {
         return SharpAlg.Native.Expr.Zero;
     }
-    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.Number.One))
+    if (SharpAlg.Native.Number.op_Equality(leftConst, SharpAlg.Native.NumberFactory.One))
     {
         return SharpAlg.Native.Expr.One;
     }
     var rightConst = SharpAlg.Native.Builder.ConvolutionExprBuilder.GetConstValue(right);
-    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.Number.Zero))
+    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.NumberFactory.Zero))
     {
         return SharpAlg.Native.Expr.One;
     }
-    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.Number.One))
+    if (SharpAlg.Native.Number.op_Equality(rightConst, SharpAlg.Native.NumberFactory.One))
     {
         return left;
     }

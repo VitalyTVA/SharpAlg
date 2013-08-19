@@ -28,7 +28,7 @@ namespace SharpAlg.Native {
             return EvaluateMulti(multi, (x1, x2) => x1 * x2);
         }
         Number EvaluateMulti(MultiExpr multi, Func<Number, Number, Number> evaluator) {
-            Number result = Number.Zero;
+            Number result = NumberFactory.Zero;
             multi.Args.Accumulate(x => {
                 result = x.Visit(this);
             }, x => {

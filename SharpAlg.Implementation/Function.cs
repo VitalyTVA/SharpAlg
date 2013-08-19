@@ -61,8 +61,8 @@ namespace SharpAlg.Native {
             : base(FunctionFactory.FactorialName) {
         }
         protected override Number Evaluate(Number arg) {
-            Number result = Number.One;
-            for(Number i = Number.Two; i <= arg; i = i + Number.One) {
+            Number result = NumberFactory.One;
+            for(Number i = NumberFactory.Two; i <= arg; i = i + NumberFactory.One) {
                 result = result * i;
             }
             return result;
@@ -76,7 +76,7 @@ namespace SharpAlg.Native {
             : base(FunctionFactory.LnName) {
         }
         protected override Number Evaluate(Number arg) {
-            return Number.Ln(arg);
+            return NumberFactory.Ln(arg);
         }
         protected override Expr DiffCore(ExprBuilder builder, Expr arg) {
             return builder.Inverse(arg);

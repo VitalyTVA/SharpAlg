@@ -21,7 +21,7 @@ namespace SharpAlg.Native.Printer {
             public bool Constant(ConstantExpr constant) {
                 if(order == ExpressionOrder.Head)
                     return false;
-                return constant.Value < Number.Zero;
+                return constant.Value < NumberFactory.Zero;
             }
             public bool Parameter(ParameterExpr parameter) {
                 return false;
@@ -54,9 +54,9 @@ namespace SharpAlg.Native.Printer {
             protected UnaryExpressionExtractor() {
             }
             public override UnaryExpressionInfo Constant(ConstantExpr constant) {
-                return constant.Value >= Number.Zero || Operation != BinaryOperation.Add ?
+                return constant.Value >= NumberFactory.Zero || Operation != BinaryOperation.Add ?
                     base.Constant(constant) :
-                    new UnaryExpressionInfo(Expr.Constant(Number.Zero - constant.Value), BinaryOperationEx.Subtract);
+                    new UnaryExpressionInfo(Expr.Constant(NumberFactory.Zero - constant.Value), BinaryOperationEx.Subtract);
             }
             protected override UnaryExpressionInfo GetDefault(Expr expr) {
                 return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(Operation));
@@ -86,8 +86,8 @@ namespace SharpAlg.Native.Printer {
             }
             public override UnaryExpressionInfo Multiply(MultiplyExpr multi) {
                 ConstantExpr headConstant = multi.Args.First() as ConstantExpr;
-                if(headConstant.Return(x => x.Value < Number.Zero, () => false)) {
-                    ConstantExpr exprConstant = Expr.Constant(Number.Zero - multi.Args.First().With(y => y as ConstantExpr).Value);
+                if(headConstant.Return(x => x.Value < NumberFactory.Zero, () => false)) {
+                    ConstantExpr exprConstant = Expr.Constant(NumberFactory.Zero - multi.Args.First().With(y => y as ConstantExpr).Value);
                     Expr expr = multi.Args.First().ExprEquals(Expr.MinusOne) ? 
                         multi.Tail() : 
                         Expr.Multiply(exprConstant.AsEnumerable().Concat(multi.Args.Tail()));

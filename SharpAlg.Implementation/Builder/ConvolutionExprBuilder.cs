@@ -151,26 +151,26 @@ namespace SharpAlg.Native.Builder {
         Expr ConstantConvolution(Expr left, Expr right, BinaryOperation operation) {
             Number leftConst = GetConstValue(left);
 
-            if(leftConst == Number.Zero) {
+            if(leftConst == NumberFactory.Zero) {
                 if(operation == BinaryOperation.Add)
                     return right;
                 if(operation == BinaryOperation.Multiply)
                     return Expr.Zero;
             }
-            if(leftConst == Number.One) {
+            if(leftConst == NumberFactory.One) {
                 if(operation == BinaryOperation.Multiply)
                     return right;
             }
 
             Number rightConst = GetConstValue(right);
 
-            if(rightConst == Number.Zero) {
+            if(rightConst == NumberFactory.Zero) {
                 if(operation == BinaryOperation.Add)
                     return left;
                 if(operation == BinaryOperation.Multiply)
                     return Expr.Zero;
             }
-            if(rightConst == Number.One) {
+            if(rightConst == NumberFactory.One) {
                 if(operation == BinaryOperation.Multiply)
                     return left;
             }
@@ -183,19 +183,19 @@ namespace SharpAlg.Native.Builder {
         Expr ConstantPowerConvolution(Expr left, Expr right) {
             Number leftConst = GetConstValue(left);
 
-            if(leftConst == Number.Zero) {
+            if(leftConst == NumberFactory.Zero) {
                 return Expr.Zero;
             }
-            if(leftConst == Number.One) {
+            if(leftConst == NumberFactory.One) {
                 return Expr.One;
             }
 
             Number rightConst = GetConstValue(right);
 
-            if(rightConst == Number.Zero) {
+            if(rightConst == NumberFactory.Zero) {
                 return Expr.One;
             }
-            if(rightConst == Number.One) {
+            if(rightConst == NumberFactory.One) {
                 return left;
             }
 

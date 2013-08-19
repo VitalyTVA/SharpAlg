@@ -10,9 +10,9 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Core)]
     //[DebuggerDisplay("Expr: {Print}")]
     public abstract class Expr {
-        public static readonly ConstantExpr Zero = new ConstantExpr(Number.Zero);
-        public static readonly ConstantExpr One = new ConstantExpr(Number.One);
-        public static readonly ConstantExpr MinusOne = new ConstantExpr(Number.MinusOne);
+        public static readonly ConstantExpr Zero = new ConstantExpr(NumberFactory.Zero);
+        public static readonly ConstantExpr One = new ConstantExpr(NumberFactory.One);
+        public static readonly ConstantExpr MinusOne = new ConstantExpr(NumberFactory.MinusOne);
         public static ConstantExpr Constant(Number constant) {
             return new ConstantExpr(constant);
         }

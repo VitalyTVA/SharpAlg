@@ -530,7 +530,7 @@ var SharpAlg$Tests$ExprTests$CustomFunction =
             var result = System.Linq.Enumerable.Aggregate$2$$IEnumerable$1$$TAccumulate$$Func$3(SharpAlg.Native.Number.ctor, SharpAlg.Native.Number.ctor, System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Number.ctor, args, $CreateAnonymousDelegate(this, function (x)
             {
                 return x.Visit$1(SharpAlg.Native.Number.ctor, evaluator);
-            })), SharpAlg.Native.Number.Zero, $CreateAnonymousDelegate(this, function (res, x)
+            })), SharpAlg.Native.NumberFactory.Zero, $CreateAnonymousDelegate(this, function (res, x)
             {
                 return SharpAlg.Native.Number.op_Addition(res, SharpAlg.Native.Number.op_Multiply(x, x));
             }));
@@ -581,15 +581,15 @@ var SharpAlg$Tests$ExprTestHelper =
         },
         AsNumber$$Double: function (constant)
         {
-            return SharpAlg.Native.Number.FromString(SharpAlg.Native.PlatformHelper.ToInvariantString(constant));
+            return SharpAlg.Native.NumberFactory.FromString(SharpAlg.Native.PlatformHelper.ToInvariantString(constant));
         },
         AsNumber$$Int32: function (constant)
         {
-            return SharpAlg.Native.Number.FromString(SharpAlg.Native.PlatformHelper.ToInvariantString(constant));
+            return SharpAlg.Native.NumberFactory.FromString(SharpAlg.Native.PlatformHelper.ToInvariantString(constant));
         },
         AsNumber$$Int64: function (constant)
         {
-            return SharpAlg.Native.Number.FromString(SharpAlg.Native.PlatformHelper.ToInvariantString(constant));
+            return SharpAlg.Native.NumberFactory.FromString(SharpAlg.Native.PlatformHelper.ToInvariantString(constant));
         },
         IsFloatEqual$1: function (TInput, obj, valueEvaluator, expected)
         {
@@ -980,23 +980,23 @@ var SharpAlg$Tests$NumberTestHelper =
     {
         AssertFloatNumber: function (n, expected)
         {
-            return SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, n, function (x)
+            return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, n, function (x)
             {
                 return x.toString();
             }, expected), function (x)
             {
-                return Is(x, SharpAlg.Native.FloatNumber.ctor);
-            });
+                return x.GetType().get_Name();
+            }, "FloatNumber");
         },
         AssertIntegerNumber: function (n, expected)
         {
-            return SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, n, function (x)
+            return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, n, function (x)
             {
                 return x.toString();
             }, expected), function (x)
             {
-                return Is(x, SharpAlg.Native.LongIntegerNumber.ctor);
-            });
+                return x.GetType().get_Name();
+            }, "LongIntegerNumber");
         },
         Add: function (s1, s2)
         {
@@ -1044,7 +1044,7 @@ var SharpAlg$Tests$NumberTestHelper =
         },
         FromString: function (s)
         {
-            return s.Contains(".") ? SharpAlg.Native.Number.FromString(s) : SharpAlg.Native.Number.FromIntString(s);
+            return s.Contains(".") ? SharpAlg.Native.NumberFactory.FromString(s) : SharpAlg.Native.NumberFactory.FromIntString(s);
         }
     },
     assemblyName: "SharpAlg",

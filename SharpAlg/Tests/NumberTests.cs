@@ -247,10 +247,10 @@ namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class NumberTestHelper {
         public static Number AssertFloatNumber(this Number n, string expected) {
-            return n.IsEqual(x => x.ToString(), expected).IsTrue(x => x is FloatNumber);
+            return n.IsEqual(x => x.ToString(), expected).IsEqual(x => x.GetType().Name, "FloatNumber");
         }
         public static Number AssertIntegerNumber(this Number n, string expected) {
-            return n.IsEqual(x => x.ToString(), expected).IsTrue(x => x is LongIntegerNumber);
+            return n.IsEqual(x => x.ToString(), expected).IsEqual(x => x.GetType().Name, "LongIntegerNumber");
         }
         public static Number Add(this string s1, string s2) {
             return FromString(s1) + FromString(s2); 
@@ -286,7 +286,7 @@ namespace SharpAlg.Tests {
             return FromString(s1) >= FromString(s2);
         }
         public static Number FromString(this string s) {
-            return s.Contains(".") ? Number.FromString(s) : Number.FromIntString(s);
+            return s.Contains(".") ? NumberFactory.FromString(s) : NumberFactory.FromIntString(s);
         }
     }
 }

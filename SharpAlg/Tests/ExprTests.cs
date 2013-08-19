@@ -19,7 +19,7 @@ namespace SharpAlg.Tests {
                 : base("CustomFunc") {
             }
             public override Number Evaluate(IExpressionEvaluator evaluator, IEnumerable<Expr> args) {
-                Number result = args.Select(x => x.Visit(evaluator)).Aggregate(Number.Zero, (res, x) => res + x * x);
+                Number result = args.Select(x => x.Visit(evaluator)).Aggregate(NumberFactory.Zero, (res, x) => res + x * x);
                 return result;
             }
         }
@@ -369,13 +369,13 @@ namespace SharpAlg.Tests {
             return Expr.Constant(AsNumber(constant));
         }
         public static Number AsNumber(this double constant) {
-            return SharpAlg.Native.Number.FromString(PlatformHelper.ToInvariantString(constant));
+            return SharpAlg.Native.NumberFactory.FromString(PlatformHelper.ToInvariantString(constant));
         }
         public static Number AsNumber(this int constant) {
-            return SharpAlg.Native.Number.FromString(PlatformHelper.ToInvariantString(constant));
+            return SharpAlg.Native.NumberFactory.FromString(PlatformHelper.ToInvariantString(constant));
         }
         public static Number AsNumber(this long constant) {
-            return SharpAlg.Native.Number.FromString(PlatformHelper.ToInvariantString(constant));
+            return SharpAlg.Native.NumberFactory.FromString(PlatformHelper.ToInvariantString(constant));
         }
         public static TInput IsFloatEqual<TInput>(this TInput obj, Func<TInput, object> valueEvaluator, string expected) {
             int floatSignCount = expected.Length - expected.IndexOf(".");

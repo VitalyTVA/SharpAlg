@@ -208,7 +208,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Con
 {
     if (this.order == 0)
         return false;
-    return SharpAlg.Native.Number.op_LessThan(constant.get_Value(), SharpAlg.Native.Number.Zero);
+    return SharpAlg.Native.Number.op_LessThan(constant.get_Value(), SharpAlg.Native.NumberFactory.Zero);
 };
 SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Parameter = function (parameter)
 {
@@ -246,7 +246,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor = function ()
 };
 SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.prototype.Constant = function (constant)
 {
-    return SharpAlg.Native.Number.op_GreaterThanOrEqual(constant.get_Value(), SharpAlg.Native.Number.Zero) || this.get_Operation() != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.Number.Zero, constant.get_Value())), 1);
+    return SharpAlg.Native.Number.op_GreaterThanOrEqual(constant.get_Value(), SharpAlg.Native.NumberFactory.Zero) || this.get_Operation() != 0 ? SharpAlg.Native.DefaultExpressionVisitor.prototype.Constant.call(this, constant) : new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo(SharpAlg.Native.Expr.Constant(SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.NumberFactory.Zero, constant.get_Value())), 1);
 };
 SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionExtractor.prototype.GetDefault = function (expr)
 {
@@ -289,13 +289,13 @@ SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor.prototype.
     var headConstant = As(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.ConstantExpr.ctor);
     if (SharpAlg.Native.MayBe.Return(headConstant, $CreateAnonymousDelegate(this, function (x)
     {
-        return SharpAlg.Native.Number.op_LessThan(x.get_Value(), SharpAlg.Native.Number.Zero);
+        return SharpAlg.Native.Number.op_LessThan(x.get_Value(), SharpAlg.Native.NumberFactory.Zero);
     }), $CreateAnonymousDelegate(this, function ()
     {
         return false;
     })))
     {
-        var exprConstant = SharpAlg.Native.Expr.Constant(SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.Number.Zero, SharpAlg.Native.MayBe.With(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), $CreateAnonymousDelegate(this, function (y)
+        var exprConstant = SharpAlg.Native.Expr.Constant(SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.NumberFactory.Zero, SharpAlg.Native.MayBe.With(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), $CreateAnonymousDelegate(this, function (y)
         {
             return As(y, SharpAlg.Native.ConstantExpr.ctor);
         })).get_Value()));

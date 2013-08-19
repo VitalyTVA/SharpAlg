@@ -162,10 +162,10 @@ public class Parser {
 		expr = null; 
 		if (la.kind == 2) {
 			Get();
-			expr = Expr.Constant(Number.FromString(t.val)); 
+			expr = Expr.Constant(NumberFactory.FromString(t.val)); 
 		} else if (la.kind == 3) {
 			Get();
-			expr = Expr.Constant(Number.FromString(t.val)); 
+			expr = Expr.Constant(NumberFactory.FromString(t.val)); 
 		} else if (la.kind == 10) {
 			Get();
 			AdditiveExpression(out expr);
