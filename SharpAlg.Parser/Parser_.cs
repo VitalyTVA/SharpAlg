@@ -154,7 +154,7 @@ public class Parser {
 		Terminal(out expr);
 		while (la.kind == 9) {
 			Get();
-			expr = Expr.Function("factorial", expr); 
+			expr = builder.Function("factorial", expr.AsEnumerable()); 
 		}
 	}
 

@@ -56,7 +56,7 @@ namespace SharpAlg.Native {
         protected abstract Expr DiffCore(ExprBuilder builder, Expr arg);
     }
     [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
-    public class FactorialFunction : SingleArgumentFunction {
+    public class FactorialFunction : SingleArgumentFunction, ISupportConvolution {
         public FactorialFunction()
             : base(FunctionFactory.FactorialName) {
         }
@@ -68,6 +68,10 @@ namespace SharpAlg.Native {
             return result;
         }
         //TODO factorial differentiation
+
+        public Expr Convolute(IContext context, IEnumerable<Expr> args) {
+            return args.First().ConvertAs<ConstantExpr>().Return(x => Expr.Constant(Evaluate(x.Value)), () => null);
+        }
     }
 
     [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
@@ -83,9 +87,7 @@ namespace SharpAlg.Native {
         }
 
         public Expr Convolute(IContext context, IEnumerable<Expr> args) {
-            if(args.First().ExprEquals(Expr.One))
-                return Expr.Zero;
-            return null;
+            return args.First().If(x => x.ExprEquals(Expr.One)).Return(x => Expr.Zero, () => null);
         }
     }
 

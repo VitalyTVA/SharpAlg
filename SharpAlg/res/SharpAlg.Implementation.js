@@ -594,6 +594,7 @@ var SharpAlg$Native$FactorialFunction =
     fullname: "SharpAlg.Native.FactorialFunction",
     baseTypeName: "SharpAlg.Native.SingleArgumentFunction",
     assemblyName: "SharpAlg.Implementation",
+    interfaceNames: ["SharpAlg.Native.ISupportConvolution"],
     Kind: "Class",
     definition:
     {
@@ -609,6 +610,16 @@ var SharpAlg$Native$FactorialFunction =
                 result = SharpAlg.Native.Number.op_Multiply(result, i);
             }
             return result;
+        },
+        Convolute: function (context, args)
+        {
+            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.ConstantExpr.ctor, System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args)), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.Expr.Constant(this.Evaluate$$Number(x.get_Value()));
+            }), $CreateAnonymousDelegate(this, function ()
+            {
+                return null;
+            }));
         }
     }
 };
@@ -636,9 +647,16 @@ var SharpAlg$Native$LnFunction =
         },
         Convolute: function (context, args)
         {
-            if (SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), SharpAlg.Native.Expr.One))
+            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.One);
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
                 return SharpAlg.Native.Expr.Zero;
-            return null;
+            }), $CreateAnonymousDelegate(this, function ()
+            {
+                return null;
+            }));
         }
     }
 };

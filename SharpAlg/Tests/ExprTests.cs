@@ -336,6 +336,7 @@ namespace SharpAlg.Tests {
             "ln(x * x) + ln(x + x)".Parse().AssertSimpleStringRepresentation("ln(x ^ 2) + ln(2 * x)");
 
             "ln(1)".Parse().AssertSimpleStringRepresentation("0");
+            "3!".Parse().AssertSimpleStringRepresentation("6");
         }
         [Test]
         public void SubsitutionTest() {
