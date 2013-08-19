@@ -286,7 +286,7 @@ namespace SharpAlg.Tests {
             return FromString(s1) >= FromString(s2);
         }
         public static Number FromString(this string s) {
-            return s.Contains(".") ? Number.FromString(s) : Number.FromLongIntString(s);
+            return s.Contains(".") ? Number.FromString(s) : Number.FromIntString(s);
         }
     }
 }

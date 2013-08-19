@@ -1044,7 +1044,7 @@ var SharpAlg$Tests$NumberTestHelper =
         },
         FromString: function (s)
         {
-            return s.Contains(".") ? SharpAlg.Native.Number.FromString(s) : SharpAlg.Native.Number.FromLongIntString(s);
+            return s.Contains(".") ? SharpAlg.Native.Number.FromString(s) : SharpAlg.Native.Number.FromIntString(s);
         }
     },
     assemblyName: "SharpAlg",

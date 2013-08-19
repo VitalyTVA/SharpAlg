@@ -83,16 +83,10 @@ namespace SharpAlg.Native {
         protected static Number FromDouble(double value) {
             return new FloatNumber(value);
         }
-        protected static Number FromLong(long value) {
-            return new IntegerNumber(value);
-        }
         public static Number FromString(string s) {
             return FromDouble(PlatformHelper.Parse(s));
         }
         public static Number FromIntString(string s) {
-            return FromLong(long.Parse(s));
-        }
-        public static Number FromLongIntString(string s) {
             return LongIntegerNumber.FromLongIntStringCore(s);
         }
 
@@ -165,47 +159,6 @@ namespace SharpAlg.Native {
         }
         Number BinaryOperation(Number n, Func<double, double, double> operation) {
             return FromDouble(BinaryOperation<double>(n, operation));
-        }
-    }
-    [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
-    public sealed class IntegerNumber : Number {
-        internal readonly long value;
-        public IntegerNumber(long value) {
-            this.value = value;
-        }
-        protected override int NumberType { get { return IntegerNumberType; } }
-        protected override Number ConvertToCore(int type) {
-            return FromDouble(value);
-        }
-        public override int GetHashCode() {
-            return value.GetHashCode();
-        }
-        public override string ToString() {
-            return value.ToString();
-        }
-        protected override Number Add(Number n) {
-            return BinaryOperation(n, (x, y) => x + y);
-        }
-        protected override Number Subtract(Number n) {
-            return BinaryOperation(n, (x, y) => x - y);
-        }
-        protected override Number Multiply(Number n) {
-            return BinaryOperation(n, (x, y) => x * y);
-        }
-        protected override Number Divide(Number n) {
-            return BinaryOperation(n, (x, y) => x / y);
-        }
-        protected override Number Power(Number n) {
-            return BinaryOperation(n, (x, y) => (long)Math.Pow(x, y)); //TODO real power without long conversion
-        }
-        protected override int Compare(Number n) {
-            return BinaryOperation<int>(n, (x, y) => (int)(x - y));
-        }
-        T BinaryOperation<T>(Number n, Func<long, long, T> operation) {
-            return operation(value, n.ConvertCast<IntegerNumber>().value);
-        }
-        Number BinaryOperation(Number n, Func<long, long, long> operation) {
-            return FromLong(BinaryOperation<long>(n, operation));
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]

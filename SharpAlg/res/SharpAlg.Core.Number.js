@@ -209,19 +209,11 @@ var SharpAlg$Native$Number =
         {
             return new SharpAlg.Native.FloatNumber.ctor(value);
         },
-        FromLong: function (value)
-        {
-            return new SharpAlg.Native.IntegerNumber.ctor(value);
-        },
         FromString: function (s)
         {
             return SharpAlg.Native.Number.FromDouble(SharpAlg.Native.PlatformHelper.Parse(s));
         },
         FromIntString: function (s)
-        {
-            return SharpAlg.Native.Number.FromLong(System.Int64.Parse$$String(s));
-        },
-        FromLongIntString: function (s)
         {
             return SharpAlg.Native.LongIntegerNumber.FromLongIntStringCore(s);
         }
@@ -349,96 +341,6 @@ var SharpAlg$Native$FloatNumber =
     }
 };
 JsTypes.push(SharpAlg$Native$FloatNumber);
-var SharpAlg$Native$IntegerNumber =
-{
-    fullname: "SharpAlg.Native.IntegerNumber",
-    baseTypeName: "SharpAlg.Native.Number",
-    staticDefinition:
-    {
-        cctor: function ()
-        {
-        }
-    },
-    assemblyName: "SharpAlg.Core",
-    Kind: "Class",
-    definition:
-    {
-        ctor: function (value)
-        {
-            this.value = 0;
-            SharpAlg.Native.Number.ctor.call(this);
-            this.value = value;
-        },
-        NumberType$$: "System.Int32",
-        get_NumberType: function ()
-        {
-            return 0;
-        },
-        ConvertToCore: function (type)
-        {
-            return SharpAlg.Native.Number.FromDouble(this.value);
-        },
-        GetHashCode: function ()
-        {
-            return this.value.GetHashCode();
-        },
-        toString: function ()
-        {
-            return this.value.toString();
-        },
-        Add: function (n)
-        {
-            return this.BinaryOperation$$Number$$Func$3$Int64$Int64$Int64(n, $CreateAnonymousDelegate(this, function (x, y)
-            {
-                return x + y;
-            }));
-        },
-        Subtract: function (n)
-        {
-            return this.BinaryOperation$$Number$$Func$3$Int64$Int64$Int64(n, $CreateAnonymousDelegate(this, function (x, y)
-            {
-                return x - y;
-            }));
-        },
-        Multiply: function (n)
-        {
-            return this.BinaryOperation$$Number$$Func$3$Int64$Int64$Int64(n, $CreateAnonymousDelegate(this, function (x, y)
-            {
-                return x * y;
-            }));
-        },
-        Divide: function (n)
-        {
-            return this.BinaryOperation$$Number$$Func$3$Int64$Int64$Int64(n, $CreateAnonymousDelegate(this, function (x, y)
-            {
-                return x / y;
-            }));
-        },
-        Power: function (n)
-        {
-            return this.BinaryOperation$$Number$$Func$3$Int64$Int64$Int64(n, $CreateAnonymousDelegate(this, function (x, y)
-            {
-                return Cast(System.Math.Pow(x, y), System.Int64.ctor);
-            }));
-        },
-        Compare$$Number: function (n)
-        {
-            return this.BinaryOperation$1$$Number$$Func$3(System.Int32.ctor, n, $CreateAnonymousDelegate(this, function (x, y)
-            {
-                return Cast((x - y), System.Int32.ctor);
-            }));
-        },
-        BinaryOperation$1$$Number$$Func$3: function (T, n, operation)
-        {
-            return operation(this.value, SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.IntegerNumber.ctor, n).value);
-        },
-        BinaryOperation$$Number$$Func$3$Int64$Int64$Int64: function (n, operation)
-        {
-            return SharpAlg.Native.Number.FromLong(this.BinaryOperation$1$$Number$$Func$3(System.Int64.ctor, n, operation));
-        }
-    }
-};
-JsTypes.push(SharpAlg$Native$IntegerNumber);
 var SharpAlg$Native$LongIntegerNumber =
 {
     fullname: "SharpAlg.Native.LongIntegerNumber",
