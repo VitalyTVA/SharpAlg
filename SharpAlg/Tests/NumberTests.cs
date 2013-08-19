@@ -7,6 +7,7 @@ using SharpAlg;
 using SharpAlg.Native;
 using SharpKit.JavaScript;
 using SharpAlg.Native.Builder;
+using System.Diagnostics;
 
 namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
@@ -173,7 +174,10 @@ namespace SharpAlg.Tests {
             "10000000".Divide("1009999").AssertIntegerNumber("9");
             "100000000000".Divide("1009999").AssertIntegerNumber("99009");
             "1000000000000000000000000".Divide("1009999").AssertIntegerNumber("990099990198010097");
-            "8888348213303695859491006407241101393874673214452576111112".Divide("888834888882318888543888888").AssertIntegerNumber("9999999239994399999991239999999"); //TODO - long arithmetic
+            "8888348213303695859491006407241101393874673214452576111112".Divide("888834888882318888543888888").AssertIntegerNumber("9999999239994399999991239999999");
+            "300000".Divide("30").AssertIntegerNumber("10000");
+            "1341046897309863686".Divide("1697420285").AssertIntegerNumber("790050000");
+            "450436426101345047".Divide("1073592397").AssertIntegerNumber("419560000");
 
             //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
             //divide by zero
@@ -185,14 +189,20 @@ namespace SharpAlg.Tests {
                 RandomLongDivisionCore(rnd, 0, int.MaxValue, int.MaxValue);
                 RandomLongDivisionCore(rnd, int.MaxValue, int.MaxValue, int.MaxValue);
                 RandomLongDivisionCore(rnd, int.MaxValue, int.MaxValue, 10000);
-                //RandomLongDivisionCore(rnd, int.MaxValue, int.MaxValue, 10); //TODO optimize this shit
+                RandomLongDivisionCore(rnd, int.MaxValue, int.MaxValue, 10);
             }
         }
         static void RandomLongDivisionCore(Random rnd, int maxDivident1, int maxDivident2, int maxDivisor) {
             long x = rnd.Next(maxDivident1) * (long)int.MaxValue + rnd.Next(maxDivident2);
             long y = rnd.Next(maxDivisor);
-            if(x > y && y != 0)
-                x.ToString().Divide(y.ToString()).AssertIntegerNumber((x / y).ToString());
+            if(x > y && y != 0) {
+                try {
+                    x.ToString().Divide(y.ToString()).AssertIntegerNumber((x / y).ToString());
+                } catch(Exception e) {
+                    Debug.WriteLine(x + "/" + y);
+                    throw e;
+                }
+            }
         }
         [Test]
         public void FloatIntOperationsTest() {

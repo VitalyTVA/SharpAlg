@@ -607,7 +607,7 @@ var SharpAlg$Native$LongIntegerNumber =
             SharpAlg.Native.LongIntegerNumber.ShiftRight(divisor);
             shiftCount--;
             var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
-            while (SharpAlg.Native.LongIntegerNumber.CompareCore(divident.parts, originalDivisor) >= 0)
+            while (divisor.get_Count() >= originalDivisor.get_Count())
             {
                 var digit = SharpAlg.Native.LongIntegerNumber.FindDigit(divident, divisor);
                 result.Insert(0, digit);
@@ -618,28 +618,48 @@ var SharpAlg$Native$LongIntegerNumber =
             }
             return result;
         },
-        FindDigit: function (divident, divisor)
+        Div: function (x, y)
         {
-            var dividentPart = ((divident.parts.get_Count() == divisor.get_Count()) ? System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divident.parts) : System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divident.parts) * 10000 + divident.parts.get_Item$$Int32(divident.parts.get_Count() - 2));
-            var divisorPart = System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divisor) + 1;
-            var remain = dividentPart % divisorPart;
-            var digit = (dividentPart - remain) / divisorPart;
+            var remain = x % y;
+            return (x - remain) / y;
+        },
+        Bisect: function (lowDigit, topDigit)
+        {
+            return lowDigit + SharpAlg.Native.LongIntegerNumber.Div(topDigit - lowDigit, 2);
+        },
+        FindDigit: function (divident, divisorParts)
+        {
+            var divisor = new SharpAlg.Native.LongIntegerNumber.ctor(divisorParts, false);
+            if (SharpAlg.Native.Number.op_Equality(divident, SharpAlg.Native.LongIntegerNumber.ZeroLongNumber) || SharpAlg.Native.Number.op_GreaterThan(divisor, divident))
+                return 0;
+            var dividentPart = ((divident.parts.get_Count() == divisor.parts.get_Count()) ? System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divident.parts) : System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divident.parts) * 10000 + divident.parts.get_Item$$Int32(divident.parts.get_Count() - 2));
+            var divisorPart = System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divisor.parts);
+            var lowDigit = SharpAlg.Native.LongIntegerNumber.Div(dividentPart, divisorPart + 1);
             var checkCount = 0;
+            var topDigit = SharpAlg.Native.LongIntegerNumber.Div(dividentPart + 1, divisorPart);
+            var digit = SharpAlg.Native.LongIntegerNumber.Bisect(lowDigit, topDigit);
             while (true)
             {
-                var temp = (new SharpAlg.Native.LongIntegerNumber.ctor(divisor, false)).Multiply(new SharpAlg.Native.LongIntegerNumber.ctor([digit], false));
-                var temp2 = Cast(divident.Subtract(temp), SharpAlg.Native.LongIntegerNumber.ctor);
-                if (temp2.isNegative)
-                    throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
-                if (SharpAlg.Native.LongIntegerNumber.CompareCore(temp2.parts, divisor) >= 0)
+                var mult = divisor.Multiply(new SharpAlg.Native.LongIntegerNumber.ctor([digit], false));
+                var diff = Cast(divident.Subtract(mult), SharpAlg.Native.LongIntegerNumber.ctor);
+                if (diff.isNegative)
                 {
                     checkCount++;
-                    digit++;
+                    topDigit = digit;
+                    digit = SharpAlg.Native.LongIntegerNumber.Bisect(lowDigit, topDigit);
+                    continue;
                 }
-                else
-                    break;
+                var comparisonResult = diff.Compare$$Number(divisor);
+                if (comparisonResult >= 0)
+                {
+                    checkCount++;
+                    lowDigit = digit + 1;
+                    digit = SharpAlg.Native.LongIntegerNumber.Bisect(lowDigit, topDigit);
+                    continue;
+                }
+                break;
             }
-            if (checkCount > 5000)
+            if (checkCount > 15)
                 throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
             return digit;
         },

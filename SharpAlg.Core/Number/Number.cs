@@ -419,7 +419,7 @@ namespace SharpAlg.Native {
             ShiftRight(divisor);
             shiftCount--;
             List<int> result = new List<int>();
-            while(CompareCore(divident.parts, originalDivisor) >= 0) {
+            while(divisor.Count >= originalDivisor.Count) {
                 int digit = FindDigit(divident, divisor);
                 result.Insert(0, digit);
                 Number temp = (new LongIntegerNumber(divisor, false)).Multiply(new LongIntegerNumber(new int[] { digit }, false));
@@ -429,30 +429,50 @@ namespace SharpAlg.Native {
             }
             return result;
         }
-        static int FindDigit(LongIntegerNumber divident, IList<int> divisor) {
-            int dividentPart = ((divident.parts.Count == divisor.Count) ? divident.parts.Last() : divident.parts.Last() * BaseFull + divident.parts[divident.parts.Count - 2]);
-            int divisorPart = divisor.Last() + 1;
-            int remain = dividentPart % divisorPart;
-            int digit = (dividentPart - remain) / divisorPart; //TODO move to platfrom helper
+        static int Div(int x, int y) {
+            int remain = x % y;
+            return (x - remain) / y; //TODO
+        }
+        static int Bisect(int lowDigit, int topDigit) {
+            return lowDigit + Div(topDigit - lowDigit, 2);
+        }
+        static int FindDigit(LongIntegerNumber divident, IList<int> divisorParts) {
+            LongIntegerNumber divisor = new LongIntegerNumber(divisorParts, false);
+            if(divident == ZeroLongNumber || divisor > divident)
+                return 0;
+            int dividentPart = ((divident.parts.Count == divisor.parts.Count) ? divident.parts.Last() : divident.parts.Last() * BaseFull + divident.parts[divident.parts.Count - 2]);
+            int divisorPart = divisor.parts.Last();
+            int lowDigit = Div(dividentPart, divisorPart + 1);
 #if DEBUG 
             int checkCount = 0;
 #endif
+            int topDigit = Div(dividentPart + 1, divisorPart);
+            int digit = Bisect(lowDigit, topDigit);
             while(true) {
-                Number temp = (new LongIntegerNumber(divisor, false)).Multiply(new LongIntegerNumber(new int[] { digit }, false));
-                LongIntegerNumber temp2 = (LongIntegerNumber)divident.Subtract(temp);
-                if(temp2.isNegative)
-                    throw new InvalidOperationException();
-                if(CompareCore(temp2.parts, divisor) >= 0) {
+                Number mult = divisor.Multiply(new LongIntegerNumber(new int[] { digit }, false));
+                LongIntegerNumber diff = (LongIntegerNumber)divident.Subtract(mult);
+                if(diff.isNegative) {
 #if DEBUG
                     checkCount++;
 #endif
-                    digit++;
-                } else
-                    break;
+                    topDigit = digit;
+                    digit = Bisect(lowDigit, topDigit);
+                    continue;
+                }
+                int comparisonResult = diff.Compare(divisor);
+                if(comparisonResult >= 0) {
+#if DEBUG
+                    checkCount++;
+#endif
+                    lowDigit = digit + 1;
+                    digit = Bisect(lowDigit, topDigit);
+                    continue;
+                }
+                break;
             }
 #if DEBUG
-            if(checkCount > 5000)
-                throw new InvalidOperationException(); //TODO optimize this shit
+            if(checkCount > 15)
+                throw new InvalidOperationException();
 #endif
 
             return digit;

@@ -748,7 +748,17 @@ var SharpAlg$Tests$NumberTests =
             var x = rnd.Next$$Int32(maxDivident1) * 2147483647 + rnd.Next$$Int32(maxDivident2);
             var y = rnd.Next$$Int32(maxDivisor);
             if (x > y && y != 0)
-                SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide(x.toString(), y.toString()), (x / y).toString());
+            {
+                try
+                {
+                    SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide(x.toString(), y.toString()), (x / y).toString());
+                }
+                catch (e)
+                {
+                    System.Diagnostics.Debug.WriteLine$$String(x + "/" + y);
+                    throw $CreateException(e, new Error());
+                }
+            }
         }
     },
     assemblyName: "SharpAlg",
@@ -905,6 +915,9 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("100000000000", "1009999"), "99009");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1000000000000000000000000", "1009999"), "990099990198010097");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("8888348213303695859491006407241101393874673214452576111112", "888834888882318888543888888"), "9999999239994399999991239999999");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("300000", "30"), "10000");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1341046897309863686", "1697420285"), "790050000");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("450436426101345047", "1073592397"), "419560000");
         },
         RandomLongDivision: function ()
         {
@@ -914,6 +927,7 @@ var SharpAlg$Tests$NumberTests =
                 SharpAlg.Tests.NumberTests.RandomLongDivisionCore(rnd, 0, 2147483647, 2147483647);
                 SharpAlg.Tests.NumberTests.RandomLongDivisionCore(rnd, 2147483647, 2147483647, 2147483647);
                 SharpAlg.Tests.NumberTests.RandomLongDivisionCore(rnd, 2147483647, 2147483647, 10000);
+                SharpAlg.Tests.NumberTests.RandomLongDivisionCore(rnd, 2147483647, 2147483647, 10);
             }
         },
         FloatIntOperationsTest: function ()
