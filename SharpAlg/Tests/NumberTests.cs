@@ -50,7 +50,7 @@ namespace SharpAlg.Tests {
             "9".Multiply("-13").AssertIntegerNumber("-117");
             "-9".Multiply("13").AssertIntegerNumber("-117");
             "1593668734".Divide("1287293").AssertIntegerNumber("1238");
-            //"117".Power("5").AssertIntegerNumber("21924480357");
+            "117".Power("5").AssertIntegerNumber("21924480357");
             "1000000001".Add("500000001").AssertIntegerNumber("1500000002");
             "-1000000001".Add("500000001").AssertIntegerNumber("-500000000");
 
@@ -183,8 +183,9 @@ namespace SharpAlg.Tests {
             "1341046897309863686".Divide("1697420285").AssertIntegerNumber("790050000");
             "450436426101345047".Divide("1073592397").AssertIntegerNumber("419560000");
 
-            //(2.AsNumber() ^ 50.AsNumber()).IsEqual(1500000002.AsNumber()); //TODO - long arithmetic
-            //divide by zero
+            "2".Power("50").AssertIntegerNumber("1125899906842624");
+            "132124324".Power("15").AssertIntegerNumber("65274217536749135507709536991541526352990992087301082499764789926799099562303792713876561988745245818772486712415039258624");
+            //TODO divide by zero
         }
         [Test]
         public void RandomLongDivision() {

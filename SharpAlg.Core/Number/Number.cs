@@ -211,6 +211,8 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
     public sealed class LongIntegerNumber : Number {
         static readonly LongIntegerNumber ZeroLongNumber = new LongIntegerNumber(new int[0], false);
+        static readonly LongIntegerNumber OneLongNumber = new LongIntegerNumber(new int[] { 1 }, false);
+        static readonly LongIntegerNumber TwoLongNumber = new LongIntegerNumber(new int[] { 2 }, false);
         internal static Number FromLongIntStringCore(string s) {
             IList<int> digits = new List<int>(); //TODO - set capacity
             int currentPart = 0;
@@ -443,7 +445,7 @@ namespace SharpAlg.Native {
                 return 0;
             int dividentPart = ((divident.parts.Count == divisor.parts.Count) ? divident.parts.Last() : divident.parts.Last() * BaseFull + divident.parts[divident.parts.Count - 2]);
             int divisorPart = divisor.parts.Last();
-            int lowDigit = Div(dividentPart, divisorPart + 1);
+            int lowDigit = Div(dividentPart, divisorPart + 1); //TODO optimize - no need to add 1 if divisor has zeros at the end
 #if DEBUG 
             int checkCount = 0;
 #endif
@@ -479,10 +481,16 @@ namespace SharpAlg.Native {
             return digit;
         }
         protected override Number Power(Number n) {
-            throw new NotImplementedException(); //TODO real power without long conversion
-        }
-        int GetPart(int index) {
-            return GetPart(parts, index, isNegative);
+            var b = n.ConvertCast<LongIntegerNumber>();
+            Number re = OneLongNumber;
+            Number a = this;
+            while(b != ZeroLongNumber) {
+                if(b.parts.First() % 2 == 1)
+                    re = re * a;
+                a = (a * a); 
+                b = (LongIntegerNumber)(b / TwoLongNumber);
+            }
+            return re;
         }
         static int GetPart(IList<int> parts, int index, bool isNegative) {
             return index < parts.Count ? (isNegative ? -parts[index] : parts[index]) : 0;

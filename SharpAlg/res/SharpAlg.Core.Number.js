@@ -448,6 +448,8 @@ var SharpAlg$Native$LongIntegerNumber =
         cctor: function ()
         {
             SharpAlg.Native.LongIntegerNumber.ZeroLongNumber = new SharpAlg.Native.LongIntegerNumber.ctor([], false);
+            SharpAlg.Native.LongIntegerNumber.OneLongNumber = new SharpAlg.Native.LongIntegerNumber.ctor([1], false);
+            SharpAlg.Native.LongIntegerNumber.TwoLongNumber = new SharpAlg.Native.LongIntegerNumber.ctor([2], false);
             SharpAlg.Native.LongIntegerNumber.Base = 10;
             SharpAlg.Native.LongIntegerNumber.BaseCount = 4;
             SharpAlg.Native.LongIntegerNumber.BaseFull = 10000;
@@ -515,7 +517,7 @@ var SharpAlg$Native$LongIntegerNumber =
             var carry = 0;
             for (var i = 0; i < count; i++)
             {
-                var resultPart = SharpAlg.Native.LongIntegerNumber.GetPart$$IList$1$Int32$$Int32$$Boolean(left, i, isLeftNegative) + SharpAlg.Native.LongIntegerNumber.GetPart$$IList$1$Int32$$Int32$$Boolean(right, i, isRightNegative) + carry;
+                var resultPart = SharpAlg.Native.LongIntegerNumber.GetPart(left, i, isLeftNegative) + SharpAlg.Native.LongIntegerNumber.GetPart(right, i, isRightNegative) + carry;
                 if (resultPart >= 10000)
                 {
                     resultPart = resultPart - 10000;
@@ -664,7 +666,7 @@ var SharpAlg$Native$LongIntegerNumber =
                 throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
             return digit;
         },
-        GetPart$$IList$1$Int32$$Int32$$Boolean: function (parts, index, isNegative)
+        GetPart: function (parts, index, isNegative)
         {
             return index < parts.get_Count() ? (isNegative ? -parts.get_Item$$Int32(index) : parts.get_Item$$Int32(index)) : 0;
         }
@@ -773,11 +775,17 @@ var SharpAlg$Native$LongIntegerNumber =
         },
         Power: function (n)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
-        },
-        GetPart$$Int32: function (index)
-        {
-            return SharpAlg.Native.LongIntegerNumber.GetPart$$IList$1$Int32$$Int32$$Boolean(this.parts, index, this.isNegative);
+            var b = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, n);
+            var re = SharpAlg.Native.LongIntegerNumber.OneLongNumber;
+            var a = this;
+            while (SharpAlg.Native.Number.op_Inequality(b, SharpAlg.Native.LongIntegerNumber.ZeroLongNumber))
+            {
+                if (System.Linq.Enumerable.First$1$$IEnumerable$1(System.Int32.ctor, b.parts) % 2 == 1)
+                    re = SharpAlg.Native.Number.op_Multiply(re, a);
+                a = (SharpAlg.Native.Number.op_Multiply(a, a));
+                b = Cast((SharpAlg.Native.Number.op_Division(b, SharpAlg.Native.LongIntegerNumber.TwoLongNumber)), SharpAlg.Native.LongIntegerNumber.ctor);
+            }
+            return re;
         }
     }
 };
