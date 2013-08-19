@@ -925,6 +925,10 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1341046897309863686", "1697420285"), "790050000");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("450436426101345047", "1073592397"), "419560000");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("2", "50"), "1125899906842624");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("-2", "3"), "-8");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("-2", "4"), "16");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("-2", "5"), "-32");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("-2", "6"), "64");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("132124324", "15"), "65274217536749135507709536991541526352990992087301082499764789926799099562303792713876561988745245818772486712415039258624");
         },
         RandomLongDivision: function ()

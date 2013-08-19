@@ -184,6 +184,10 @@ namespace SharpAlg.Tests {
             "450436426101345047".Divide("1073592397").AssertIntegerNumber("419560000");
 
             "2".Power("50").AssertIntegerNumber("1125899906842624");
+            "-2".Power("3").AssertIntegerNumber("-8");
+            "-2".Power("4").AssertIntegerNumber("16");
+            "-2".Power("5").AssertIntegerNumber("-32");
+            "-2".Power("6").AssertIntegerNumber("64");
             "132124324".Power("15").AssertIntegerNumber("65274217536749135507709536991541526352990992087301082499764789926799099562303792713876561988745245818772486712415039258624");
             //TODO divide by zero
         }
