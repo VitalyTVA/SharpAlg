@@ -146,6 +146,7 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.Evaluate(context), 30.0.AsNumber());
             "ln(1)".Parse()
                 .IsEqual(x => x.Evaluate(), 0.0.AsNumber());
+                //.IsTrue(x => x.ConvertCast<ConstantExpr>().Value.IsInteger);
             "ln(3)".Parse()
                 .IsFloatEqual(x => x.Evaluate(), "1.098612");
             Expr.Function("ln", new Expr[] { "1".Parse(), "2".Parse() }).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));
@@ -337,6 +338,7 @@ namespace SharpAlg.Tests {
 
             "ln(1)".Parse().AssertSimpleStringRepresentation("0");
             "3!".Parse().AssertSimpleStringRepresentation("6");
+            "3.5!".Parse().AssertSimpleStringRepresentation("3.5!");
         }
         [Test]
         public void SubsitutionTest() {

@@ -68,7 +68,7 @@ FactorialExpression<out Expr expr>
 
 Terminal<out Expr expr>							(. expr = null; .)
 =	
-	(number										(. expr = Expr.Constant(NumberFactory.FromString(t.val)); .)
+	(number										(. expr = Expr.Constant(NumberFactory.FromIntString(t.val)); .)
 	| floatNumber								(. expr = Expr.Constant(NumberFactory.FromString(t.val)); .)
 	| '('AdditiveExpression<out expr>')'
 	| FunctionCall<out expr>			

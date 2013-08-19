@@ -67,6 +67,9 @@ namespace SharpAlg.Native {
 
         protected Number() {
         }
+        internal Number ToFloat() {
+            return ConvertTo(FloatNumberType);
+        }
         protected Number ConvertTo(int type) {
             if(type < NumberType)
                 throw new NotImplementedException();
@@ -91,8 +94,11 @@ namespace SharpAlg.Native {
             return Compare(n) > 0;
         }
         public sealed override bool Equals(object obj) {
+            var this_ = this;
             var other = obj as Number;
-            return Compare(other) == 0;
+            ToSameType(ref this_, ref other);
+            return this_.Compare(other) == 0;
         }
+        public bool IsInteger { get { return NumberType == IntegerNumberType; } }
     }
 }

@@ -643,6 +643,10 @@ var SharpAlg$Native$Number =
         {
             System.Object.ctor.call(this);
         },
+        ToFloat: function ()
+        {
+            return this.ConvertTo(1);
+        },
         ConvertTo: function (type)
         {
             if (type < this.get_NumberType())
@@ -662,8 +666,23 @@ var SharpAlg$Native$Number =
         },
         Equals$$Object: function (obj)
         {
+            var this_ = this;
             var other = As(obj, SharpAlg.Native.Number.ctor);
-            return this.Compare$$Number(other) == 0;
+            (function ()
+            {
+                this_ = {Value: this_};
+                other = {Value: other};
+                var $res = SharpAlg.Native.Number.ToSameType(this_, other);
+                this_ = this_.Value;
+                other = other.Value;
+                return $res;
+            }).call(this);
+            return this_.Compare$$Number(other) == 0;
+        },
+        IsInteger$$: "System.Boolean",
+        get_IsInteger: function ()
+        {
+            return this.get_NumberType() == 0;
         }
     }
 };
@@ -687,7 +706,7 @@ var SharpAlg$Native$NumberFactory =
         },
         Ln: function (n)
         {
-            return SharpAlg.Native.NumberFactory.FromDouble(System.Math.Log$$Double(SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.FloatNumber.ctor, n).value));
+            return SharpAlg.Native.NumberFactory.FromDouble(System.Math.Log$$Double(SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.FloatNumber.ctor, n.ToFloat()).value));
         },
         FromDouble: function (value)
         {

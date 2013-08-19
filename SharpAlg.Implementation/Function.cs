@@ -70,7 +70,11 @@ namespace SharpAlg.Native {
         //TODO factorial differentiation
 
         public Expr Convolute(IContext context, IEnumerable<Expr> args) {
-            return args.First().ConvertAs<ConstantExpr>().Return(x => Expr.Constant(Evaluate(x.Value)), () => null);
+            return args
+                .First()
+                .ConvertAs<ConstantExpr>()
+                .If(x => x.Value.IsInteger)
+                .Return(x => Expr.Constant(Evaluate(x.Value)), () => null);
         }
     }
 

@@ -162,7 +162,7 @@ public class Parser {
 		expr = null; 
 		if (la.kind == 2) {
 			Get();
-			expr = Expr.Constant(NumberFactory.FromString(t.val)); 
+			expr = Expr.Constant(NumberFactory.FromIntString(t.val)); 
 		} else if (la.kind == 3) {
 			Get();
 			expr = Expr.Constant(NumberFactory.FromString(t.val)); 
