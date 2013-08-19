@@ -49,7 +49,7 @@ namespace SharpAlg.Tests {
             "0".Multiply("9").AssertIntegerNumber("0");
             "9".Multiply("-13").AssertIntegerNumber("-117");
             "-9".Multiply("13").AssertIntegerNumber("-117");
-            //"1593668734".Divide("1287293").AssertIntegerNumber("1238");
+            "1593668734".Divide("1287293").AssertIntegerNumber("1238");
             //"117".Power("5").AssertIntegerNumber("21924480357");
             "1000000001".Add("500000001").AssertIntegerNumber("1500000002");
             "-1000000001".Add("500000001").AssertIntegerNumber("-500000000");
@@ -162,6 +162,10 @@ namespace SharpAlg.Tests {
             "-999999999".Subtract("-999999999").AssertIntegerNumber("0");
 
             "117".Divide("9").AssertIntegerNumber("13");
+            "-117".Divide("-9").AssertIntegerNumber("13");
+            "-117".Divide("9").AssertIntegerNumber("-13");
+            "117".Divide("-9").AssertIntegerNumber("-13");
+            "-9".Divide("117").AssertIntegerNumber("0");
             "1234840820348902398409233209380984".Divide("1234840820348902398409233209380985").AssertIntegerNumber("0");
             "1234840820348902398409233209380984".Divide("1234840821348902398409233209380984").AssertIntegerNumber("0");
             "99999".Divide("3").AssertIntegerNumber("33333");

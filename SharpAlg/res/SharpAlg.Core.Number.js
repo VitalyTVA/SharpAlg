@@ -595,8 +595,9 @@ var SharpAlg$Native$LongIntegerNumber =
         {
             result.RemoveAt(0);
         },
-        DivieCore: function (divident, originalDivisor)
+        DivieCore: function (dividentParts, originalDivisor)
         {
+            var divident = new SharpAlg.Native.LongIntegerNumber.ctor(dividentParts, false);
             var divisor = new System.Collections.Generic.List$1.ctor$$IEnumerable$1(System.Int32.ctor, originalDivisor);
             var shiftCount = 0;
             while (SharpAlg.Native.LongIntegerNumber.CompareCore(divident.parts, divisor) >= 0)
@@ -766,9 +767,9 @@ var SharpAlg$Native$LongIntegerNumber =
         Divide: function (n)
         {
             var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.LongIntegerNumber.ctor, n);
-            if (SharpAlg.Native.Number.op_LessThan(this, n))
+            if (SharpAlg.Native.LongIntegerNumber.CompareCore(this.parts, longNumber.parts) < 0)
                 return SharpAlg.Native.LongIntegerNumber.ZeroLongNumber;
-            return new SharpAlg.Native.LongIntegerNumber.ctor(SharpAlg.Native.LongIntegerNumber.DivieCore(this, longNumber.parts), false);
+            return new SharpAlg.Native.LongIntegerNumber.ctor(SharpAlg.Native.LongIntegerNumber.DivieCore(this.parts, longNumber.parts), this.isNegative ^ longNumber.isNegative);
         },
         Power: function (n)
         {

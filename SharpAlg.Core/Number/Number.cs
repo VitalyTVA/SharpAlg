@@ -405,12 +405,13 @@ namespace SharpAlg.Native {
         }
         protected override Number Divide(Number n) {
             var longNumber = n.ConvertCast<LongIntegerNumber>();
-            if(this < n)
+            if(CompareCore(parts, longNumber.parts) < 0)
                 return ZeroLongNumber;
-            return new LongIntegerNumber(DivieCore(this, longNumber.parts), false);
+            return new LongIntegerNumber(DivieCore(parts, longNumber.parts), isNegative ^ longNumber.isNegative);
         }
-        static IList<int> DivieCore(LongIntegerNumber divident, IList<int> originalDivisor) {
-            IList<int> divisor = new List<int>(originalDivisor); //TODO test it
+        static IList<int> DivieCore(IList<int> dividentParts, IList<int> originalDivisor) {
+            LongIntegerNumber divident = new LongIntegerNumber(dividentParts, false);
+            IList<int> divisor = new List<int>(originalDivisor);
             int shiftCount = 0;
             while(CompareCore(divident.parts, divisor) >= 0) {
                 ShiftLeft(divisor);
