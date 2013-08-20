@@ -79,7 +79,6 @@ namespace SharpAlg.Tests {
             "-1".Power("-1").AssertIntegerNumber("-1");
             "1".Power("-1").AssertIntegerNumber("1");
             "1".Power("-2").AssertIntegerNumber("1");
-            "2".Power("-1").AssertFloatNumber("0.5"); //TODO will be replaced with fraction
         }
         [Test]
         public void LongIntOperationsTest() {
@@ -195,6 +194,12 @@ namespace SharpAlg.Tests {
             "-2".Power("5").AssertIntegerNumber("-32");
             "-2".Power("6").AssertIntegerNumber("64");
             "132124324".Power("15").AssertIntegerNumber("65274217536749135507709536991541526352990992087301082499764789926799099562303792713876561988745245818772486712415039258624");
+            "2".Power("-1").AssertFractionNumber("1/2");
+            "2".Power("-50").AssertFractionNumber("1/1125899906842624");
+            "-2".Power("-3").AssertFractionNumber("-1/8");
+            "-2".Power("-4").AssertFractionNumber("1/16");
+            "-2".Power("-5").AssertFractionNumber("-1/32");
+            "-2".Power("-6").AssertFractionNumber("1/64");
             //TODO divide by zero
         }
         [Test]
@@ -267,6 +272,8 @@ namespace SharpAlg.Tests {
             "100000000002.0".Greater("100000000001").IsTrue();
             "100000000001".GreaterOrEqual("100000000001.0").IsTrue();
             "100000000001.0".GreaterOrEqual("100000000002").IsFalse();
+
+            "1".Divide("2").IsTrue(x => x == "0.5".FromString());
         }
         [Test]
         public void FractionTest() {
@@ -281,7 +288,23 @@ namespace SharpAlg.Tests {
             "-5".Divide("3").AssertFractionNumber("-5/3");
             "-5".Divide("-3").AssertFractionNumber("5/3");
             "6".Divide("4").AssertFractionNumber("3/2");
-            //"8".Divide("30").AssertFractionNumber("4/15");
+            "8".Divide("30").AssertFractionNumber("4/15");
+
+            ("2".FromString() < "5".Divide("2")).IsTrue();
+            ("2".FromString() > "5".Divide("2")).IsFalse();
+            ("3".Divide("4") > "2".Divide("3")).IsTrue();
+            ("3".Divide("4") < "2".Divide("3")).IsFalse();
+            ("3".Divide("4") == "3".Divide("4")).IsTrue();
+
+            ("1".Divide("3") + "1".Divide("2")).AssertFractionNumber("5/6");
+            ("1".Divide("2") + "1".Divide("2")).AssertIntegerNumber("1");
+            ("4".Divide("3") + "7".Divide("2")).AssertFractionNumber("29/6");
+            ("1".Divide("4") + "1".Divide("4")).AssertFractionNumber("1/2");
+            ("1".Divide("3") - "1".Divide("2")).AssertFractionNumber("-1/6");
+            ("2".Divide("3") * "-7".Divide("9")).AssertFractionNumber("-14/27");
+            ("2".Divide("3") * "-3".Divide("2")).AssertIntegerNumber("-1");
+            ("2".Divide("3") / "-7".Divide("9")).AssertFractionNumber("-6/7");
+            ("2".Divide("3") / "-2".Divide("3")).AssertIntegerNumber("-1");
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

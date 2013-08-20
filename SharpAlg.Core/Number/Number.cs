@@ -10,7 +10,8 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
     public abstract class Number {
         protected const int IntegerNumberType = 0;
-        protected const int FloatNumberType = 1;
+        protected const int FractionNumberType = 1;
+        protected const int FloatNumberType = 2;
         static void ToSameType(ref Number n1, ref Number n2) {
             var type = Math.Max(n1.NumberType, n2.NumberType);
             n1 = n1.ConvertTo(type);

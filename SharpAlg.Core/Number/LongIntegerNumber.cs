@@ -56,6 +56,9 @@ namespace SharpAlg.Native.Numbers {
                 }
                 return new FloatNumber(isNegative ? -result : result);
             }
+            if(type == Number.FractionNumberType) {
+                return new FractionNumber(this, One);
+            }
             throw new NotImplementedException();
         }
         protected override int Compare(Number n) {
@@ -211,37 +214,24 @@ namespace SharpAlg.Native.Numbers {
         public LongIntegerNumber IntDivide(Number n) {
             return (LongIntegerNumber)Divide(n, false);
         }
-        LongIntegerNumber Modulo(Number n) {
+        internal LongIntegerNumber Modulo(Number n) {
             var longNumber = n.ConvertCast<LongIntegerNumber>();
             LongIntegerNumber remain = Zero;
             DivieImpl(parts, longNumber.parts, out remain);
             return remain;
         }
-        static LongIntegerNumber GCD(LongIntegerNumber a, LongIntegerNumber b) {
-            LongIntegerNumber c;
-            while(b > Zero) {
-                c = a.Modulo(b);
-                a = b;
-                b = c;
-            }
-            return a;
-        }
-        static Number CreateFraction(LongIntegerNumber numerator, LongIntegerNumber denominator) {
-            var gcd = GCD(numerator, denominator);
-            return FractionNumber.Create((LongIntegerNumber)numerator.Divide(gcd), (LongIntegerNumber)denominator.Divide(gcd));
-        }
         Number Divide(Number n, bool allowFraction) {
             var longNumber = n.ConvertCast<LongIntegerNumber>();
             bool isResultNegative = isNegative ^ longNumber.isNegative;
             if(allowFraction && CompareCore(parts, longNumber.parts) < 0)
-                return CreateFraction(new LongIntegerNumber(parts, isResultNegative), new LongIntegerNumber(longNumber.parts, false)); ;
+                return FractionNumber.Create(new LongIntegerNumber(parts, isResultNegative), new LongIntegerNumber(longNumber.parts, false)); ;
             return DivieCore(parts, longNumber.parts, isResultNegative, allowFraction);
         }
         static Number DivieCore(IList<int> dividentParts, IList<int> originalDivisor, bool isNegative, bool allowFraction) {
             LongIntegerNumber remain = Zero;
             IList<int> result = DivieImpl(dividentParts, originalDivisor, out remain);
             if(allowFraction && remain != Zero)
-                return CreateFraction(new LongIntegerNumber(dividentParts, isNegative), new LongIntegerNumber(originalDivisor, false));
+                return FractionNumber.Create(new LongIntegerNumber(dividentParts, isNegative), new LongIntegerNumber(originalDivisor, false));
             return new LongIntegerNumber(result, isNegative);
         }
         static IList<int> DivieImpl(IList<int> dividentParts, IList<int> originalDivisor, out LongIntegerNumber remain) {
@@ -316,9 +306,6 @@ namespace SharpAlg.Native.Numbers {
         }
         protected override Number Power(Number n) {
             var b = n.ConvertCast<LongIntegerNumber>();
-            if(b.isNegative && this != NumberFactory.One && this != NumberFactory.MinusOne) {
-                return ToFloat() ^ n;
-            }
             Number re = One;
             Number a = this;
             while(b != Zero) {
@@ -327,7 +314,7 @@ namespace SharpAlg.Native.Numbers {
                 a = (a * a);
                 b = b.IntDivide(Two);
             }
-            return re;
+            return b.isNegative ? (One / re) : re;
         }
         static int GetPart(IList<int> parts, int index, bool isNegative) {
             return index < parts.Count ? (isNegative ? -parts[index] : parts[index]) : 0;

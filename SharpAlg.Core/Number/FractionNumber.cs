@@ -11,10 +11,22 @@ namespace SharpAlg.Native.Numbers {
     internal sealed class FractionNumber : Number {
         readonly LongIntegerNumber denominator;
         readonly LongIntegerNumber numerator;
-        internal static Number Create(LongIntegerNumber numerator, LongIntegerNumber denominator) {
-            return new FractionNumber(numerator, denominator);
+        static LongIntegerNumber GCD(LongIntegerNumber a, LongIntegerNumber b) {
+            LongIntegerNumber c;
+            while(b > NumberFactory.Zero) {
+                c = a.Modulo(b);
+                a = b;
+                b = c;
+            }
+            return a;
         }
-        FractionNumber(LongIntegerNumber numerator, LongIntegerNumber denominator) {
+        public static Number Create(LongIntegerNumber numerator, LongIntegerNumber denominator) {
+            var gcd = GCD(numerator, denominator);
+            LongIntegerNumber numerator_ = (LongIntegerNumber)numerator.IntDivide(gcd);
+            LongIntegerNumber denominator_ = (LongIntegerNumber)denominator.IntDivide(gcd);
+            return denominator_ == NumberFactory.One ? (Number)numerator_ : new FractionNumber(numerator_, denominator_);
+        }
+        internal FractionNumber(LongIntegerNumber numerator, LongIntegerNumber denominator) {
             if(denominator < NumberFactory.Zero)
                 throw new ArgumentException("denominator");
             this.denominator = denominator;
@@ -24,27 +36,43 @@ namespace SharpAlg.Native.Numbers {
             return numerator.ToString() + "/" + denominator.ToString();
         }
         protected override Number ConvertToCore(int type) {
-            throw new NotImplementedException();
+            return numerator.ToFloat() / denominator.ToFloat();
         }
 
         protected override int NumberType {
-            get { throw new NotImplementedException(); }
+            get { return FractionNumberType; }
         }
 
         protected override Number Add(Number n) {
-            throw new NotImplementedException();
+            return BinaryOperation(n, (x, y) => {
+                LongIntegerNumber numerator = (x.numerator * y.denominator + x.denominator * y.numerator).ConvertCast<LongIntegerNumber>();
+                LongIntegerNumber denominator = (x.denominator * y.denominator).ConvertCast<LongIntegerNumber>();
+                return Create(numerator, denominator);
+            });
         }
 
         protected override Number Subtract(Number n) {
-            throw new NotImplementedException();
+            var other = n.ConvertCast<FractionNumber>();
+            return this + new FractionNumber((NumberFactory.Zero - other.numerator).ConvertCast<LongIntegerNumber>(), other.denominator.ConvertCast<LongIntegerNumber>());
         }
 
         protected override Number Multiply(Number n) {
-            throw new NotImplementedException();
+            return BinaryOperation(n, (x, y) => {
+                LongIntegerNumber numerator = (x.numerator * y.numerator).ConvertCast<LongIntegerNumber>();
+                LongIntegerNumber denominator = (x.denominator * y.denominator).ConvertCast<LongIntegerNumber>();
+                return Create(numerator, denominator);
+            });
         }
-
         protected override Number Divide(Number n) {
-            throw new NotImplementedException();
+            return BinaryOperation(n, (x, y) => {
+                LongIntegerNumber numerator = (x.numerator * y.denominator).ConvertCast<LongIntegerNumber>();
+                LongIntegerNumber denominator = (x.denominator * y.numerator).ConvertCast<LongIntegerNumber>();
+                if(denominator < NumberFactory.Zero) {
+                    denominator = (NumberFactory.Zero - denominator).ConvertCast<LongIntegerNumber>();
+                    numerator = (NumberFactory.Zero - numerator).ConvertCast<LongIntegerNumber>();
+                }
+                return Create(numerator, denominator);
+            });
         }
 
         protected override Number Power(Number n) {
@@ -52,7 +80,13 @@ namespace SharpAlg.Native.Numbers {
         }
 
         protected override int Compare(Number n) {
-            throw new NotImplementedException();
+            return BinaryOperation(n, (x, y) => Compare(x.numerator * y.denominator, x.denominator * y.numerator));
+        }
+        T BinaryOperation<T>(Number n, Func<FractionNumber, FractionNumber, T> operation) {
+            return operation(this, n.ConvertCast<FractionNumber>());
+        }
+        Number BinaryOperation(Number n, Func<FractionNumber, FractionNumber, Number> operation) {
+            return BinaryOperation<Number>(n, operation);
         }
     }
 }

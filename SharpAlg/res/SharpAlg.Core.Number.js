@@ -51,7 +51,7 @@ var SharpAlg$Native$Numbers$FloatNumber =
         NumberType$$: "System.Int32",
         get_NumberType: function ()
         {
-            return 1;
+            return 2;
         },
         ConvertToCore: function (type)
         {
@@ -127,9 +127,23 @@ var SharpAlg$Native$Numbers$FractionNumber =
         cctor: function ()
         {
         },
+        GCD: function (a, b)
+        {
+            var c;
+            while (SharpAlg.Native.Number.op_GreaterThan(b, SharpAlg.Native.NumberFactory.Zero))
+            {
+                c = a.Modulo(b);
+                a = b;
+                b = c;
+            }
+            return a;
+        },
         Create: function (numerator, denominator)
         {
-            return new SharpAlg.Native.Numbers.FractionNumber.ctor(numerator, denominator);
+            var gcd = SharpAlg.Native.Numbers.FractionNumber.GCD(numerator, denominator);
+            var numerator_ = numerator.IntDivide(gcd);
+            var denominator_ = denominator.IntDivide(gcd);
+            return SharpAlg.Native.Number.op_Equality(denominator_, SharpAlg.Native.NumberFactory.One) ? numerator_ : new SharpAlg.Native.Numbers.FractionNumber.ctor(numerator_, denominator_);
         }
     },
     assemblyName: "SharpAlg.Core",
@@ -152,28 +166,49 @@ var SharpAlg$Native$Numbers$FractionNumber =
         },
         ConvertToCore: function (type)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            return SharpAlg.Native.Number.op_Division(this.numerator.ToFloat(), this.denominator.ToFloat());
         },
         NumberType$$: "System.Int32",
         get_NumberType: function ()
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            return 1;
         },
         Add: function (n)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            return this.BinaryOperation$$Number$$Func$3$FractionNumber$FractionNumber$Number(n, $CreateAnonymousDelegate(this, function (x, y)
+            {
+                var numerator = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, (SharpAlg.Native.Number.op_Addition(SharpAlg.Native.Number.op_Multiply(x.numerator, y.denominator), SharpAlg.Native.Number.op_Multiply(x.denominator, y.numerator))));
+                var denominator = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, (SharpAlg.Native.Number.op_Multiply(x.denominator, y.denominator)));
+                return SharpAlg.Native.Numbers.FractionNumber.Create(numerator, denominator);
+            }));
         },
         Subtract: function (n)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            var other = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.FractionNumber.ctor, n);
+            return SharpAlg.Native.Number.op_Addition(this, new SharpAlg.Native.Numbers.FractionNumber.ctor(SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, (SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.NumberFactory.Zero, other.numerator))), SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, other.denominator)));
         },
         Multiply: function (n)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            return this.BinaryOperation$$Number$$Func$3$FractionNumber$FractionNumber$Number(n, $CreateAnonymousDelegate(this, function (x, y)
+            {
+                var numerator = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, (SharpAlg.Native.Number.op_Multiply(x.numerator, y.numerator)));
+                var denominator = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, (SharpAlg.Native.Number.op_Multiply(x.denominator, y.denominator)));
+                return SharpAlg.Native.Numbers.FractionNumber.Create(numerator, denominator);
+            }));
         },
         Divide: function (n)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            return this.BinaryOperation$$Number$$Func$3$FractionNumber$FractionNumber$Number(n, $CreateAnonymousDelegate(this, function (x, y)
+            {
+                var numerator = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, (SharpAlg.Native.Number.op_Multiply(x.numerator, y.denominator)));
+                var denominator = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, (SharpAlg.Native.Number.op_Multiply(x.denominator, y.numerator)));
+                if (SharpAlg.Native.Number.op_LessThan(denominator, SharpAlg.Native.NumberFactory.Zero))
+                {
+                    denominator = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, (SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.NumberFactory.Zero, denominator)));
+                    numerator = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, (SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.NumberFactory.Zero, numerator)));
+                }
+                return SharpAlg.Native.Numbers.FractionNumber.Create(numerator, denominator);
+            }));
         },
         Power: function (n)
         {
@@ -181,7 +216,18 @@ var SharpAlg$Native$Numbers$FractionNumber =
         },
         Compare$$Number: function (n)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            return this.BinaryOperation$1$$Number$$Func$3(System.Int32.ctor, n, $CreateAnonymousDelegate(this, function (x, y)
+            {
+                return SharpAlg.Native.Number.Compare$$Number$$Number(SharpAlg.Native.Number.op_Multiply(x.numerator, y.denominator), SharpAlg.Native.Number.op_Multiply(x.denominator, y.numerator));
+            }));
+        },
+        BinaryOperation$1$$Number$$Func$3: function (T, n, operation)
+        {
+            return operation(this, SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.FractionNumber.ctor, n));
+        },
+        BinaryOperation$$Number$$Func$3$FractionNumber$FractionNumber$Number: function (n, operation)
+        {
+            return this.BinaryOperation$1$$Number$$Func$3(SharpAlg.Native.Number.ctor, n, operation);
         }
     }
 };
@@ -345,22 +391,6 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
         {
             result.RemoveAt(0);
         },
-        GCD: function (a, b)
-        {
-            var c;
-            while (SharpAlg.Native.Number.op_GreaterThan(b, SharpAlg.Native.Numbers.LongIntegerNumber.Zero))
-            {
-                c = a.Modulo(b);
-                a = b;
-                b = c;
-            }
-            return a;
-        },
-        CreateFraction: function (numerator, denominator)
-        {
-            var gcd = SharpAlg.Native.Numbers.LongIntegerNumber.GCD(numerator, denominator);
-            return SharpAlg.Native.Numbers.FractionNumber.Create(Cast(numerator.Divide(gcd), SharpAlg.Native.Numbers.LongIntegerNumber.ctor), Cast(denominator.Divide(gcd), SharpAlg.Native.Numbers.LongIntegerNumber.ctor));
-        },
         DivieCore: function (dividentParts, originalDivisor, isNegative, allowFraction)
         {
             var remain = SharpAlg.Native.Numbers.LongIntegerNumber.Zero;
@@ -372,7 +402,7 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
                 return $res;
             })();
             if (allowFraction && SharpAlg.Native.Number.op_Inequality(remain, SharpAlg.Native.Numbers.LongIntegerNumber.Zero))
-                return SharpAlg.Native.Numbers.LongIntegerNumber.CreateFraction(new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(dividentParts, isNegative), new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(originalDivisor, false));
+                return SharpAlg.Native.Numbers.FractionNumber.Create(new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(dividentParts, isNegative), new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(originalDivisor, false));
             return new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(result, isNegative);
         },
         DivieImpl: function (dividentParts, originalDivisor, remain)
@@ -470,7 +500,7 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
         },
         ConvertToCore: function (type)
         {
-            if (type == 1)
+            if (type == 2)
             {
                 var result = 0;
                 var count = this.parts.get_Count();
@@ -479,6 +509,10 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
                     result = result * 10000 + this.parts.get_Item$$Int32(i);
                 }
                 return new SharpAlg.Native.Numbers.FloatNumber.ctor(this.isNegative ? -result : result);
+            }
+            if (type == 1)
+            {
+                return new SharpAlg.Native.Numbers.FractionNumber.ctor(this, SharpAlg.Native.Numbers.LongIntegerNumber.One);
             }
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
         },
@@ -572,16 +606,12 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
             var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, n);
             var isResultNegative = this.isNegative ^ longNumber.isNegative;
             if (allowFraction && SharpAlg.Native.Numbers.LongIntegerNumber.CompareCore(this.parts, longNumber.parts) < 0)
-                return SharpAlg.Native.Numbers.LongIntegerNumber.CreateFraction(new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(this.parts, isResultNegative), new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(longNumber.parts, false));
+                return SharpAlg.Native.Numbers.FractionNumber.Create(new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(this.parts, isResultNegative), new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(longNumber.parts, false));
             return SharpAlg.Native.Numbers.LongIntegerNumber.DivieCore(this.parts, longNumber.parts, isResultNegative, allowFraction);
         },
         Power: function (n)
         {
             var b = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, n);
-            if (b.isNegative && SharpAlg.Native.Number.op_Inequality(this, SharpAlg.Native.NumberFactory.One) && SharpAlg.Native.Number.op_Inequality(this, SharpAlg.Native.NumberFactory.MinusOne))
-            {
-                return SharpAlg.Native.Number.op_ExclusiveOr(this.ToFloat(), n);
-            }
             var re = SharpAlg.Native.Numbers.LongIntegerNumber.One;
             var a = this;
             while (SharpAlg.Native.Number.op_Inequality(b, SharpAlg.Native.Numbers.LongIntegerNumber.Zero))
@@ -591,7 +621,7 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
                 a = (SharpAlg.Native.Number.op_Multiply(a, a));
                 b = b.IntDivide(SharpAlg.Native.Numbers.LongIntegerNumber.Two);
             }
-            return re;
+            return b.isNegative ? (SharpAlg.Native.Number.op_Division(SharpAlg.Native.Numbers.LongIntegerNumber.One, re)) : re;
         }
     }
 };
@@ -605,7 +635,8 @@ var SharpAlg$Native$Number =
         cctor: function ()
         {
             SharpAlg.Native.Number.IntegerNumberType = 0;
-            SharpAlg.Native.Number.FloatNumberType = 1;
+            SharpAlg.Native.Number.FractionNumberType = 1;
+            SharpAlg.Native.Number.FloatNumberType = 2;
         },
         ToSameType: function (n1, n2)
         {
@@ -772,7 +803,7 @@ var SharpAlg$Native$Number =
         },
         ToFloat: function ()
         {
-            return this.ConvertTo(1);
+            return this.ConvertTo(2);
         },
         ConvertTo: function (type)
         {

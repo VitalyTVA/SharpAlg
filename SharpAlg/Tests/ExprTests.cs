@@ -95,7 +95,7 @@ namespace SharpAlg.Tests {
             "-2".Parse().AssertIsInteger();
             "-3".Parse().AssertIsInteger();
             "24539485093485348358904704".Parse().AssertIsInteger();
-            //"6 / 6".Parse().AssertIsInteger(); //TODO after fractional numers implemented
+            "6 / 6".Parse().AssertIsInteger();
         }
         [Test]
         public void BinaryExprTest() {
@@ -216,7 +216,7 @@ namespace SharpAlg.Tests {
             "2 * x / (y * z)".Parse().AssertSimpleStringRepresentation("2 * x / y / z");
             "x ^ z / y ^ t".Parse().AssertSimpleStringRepresentation("x ^ z / y ^ t");
             "1 / 3 ^ x".Parse().AssertSimpleStringRepresentation("1 / 3 ^ x");
-            "1 / (4 * x)".Parse().AssertSimpleStringRepresentation("0.25 / x");
+            "1 / (4 * x)".Parse().AssertSimpleStringRepresentation("1/4 / x");
             "t * (-x)".Parse().AssertSimpleStringRepresentation("-t * x");
             "t * (-2) * x".Parse().AssertSimpleStringRepresentation("-2 * t * x");
             "z + t * (-x)".Parse().AssertSimpleStringRepresentation("z - t * x");
@@ -265,7 +265,7 @@ namespace SharpAlg.Tests {
             "x * 1".Parse().AssertSimpleStringRepresentation("x");
 
             "4 / 2 / x".Parse().AssertSimpleStringRepresentation("2 / x");
-            "x / 2".Parse().AssertSimpleStringRepresentation("0.5 * x");
+            "x / 2".Parse().AssertSimpleStringRepresentation("1/2 * x");
             "1 / x".Parse().AssertSimpleStringRepresentation("1 / x");
             "x / 1".Parse().AssertSimpleStringRepresentation("x");
             "0 / x".Parse().AssertSimpleStringRepresentation("0");
