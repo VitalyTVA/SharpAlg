@@ -206,6 +206,8 @@ SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor = function (p
 };
 SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Constant = function (constant)
 {
+    if (constant.get_Value().get_IsFraction())
+        return this.ShouldWrap(3);
     if (this.order == 0)
         return false;
     return SharpAlg.Native.Number.op_LessThan(constant.get_Value(), SharpAlg.Native.NumberFactory.Zero);
@@ -227,7 +229,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Mul
 SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Power = function (power)
 {
     if (SharpAlg.Native.Printer.ExpressionPrinter.IsInverseExpression(power))
-        return this.priority >= 2;
+        return this.ShouldWrap(2);
     return this.ShouldWrap(3);
 };
 SharpAlg.Native.Printer.ExpressionPrinter.ExpressionWrapperVisitor.prototype.Function = function (functionExpr)

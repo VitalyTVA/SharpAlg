@@ -19,6 +19,8 @@ namespace SharpAlg.Native.Printer {
                 this.priority = priority;
             }
             public bool Constant(ConstantExpr constant) {
+                if(constant.Value.IsFraction)
+                    return ShouldWrap(OperationPriority.Power);
                 if(order == ExpressionOrder.Head)
                     return false;
                 return constant.Value < NumberFactory.Zero;
@@ -36,7 +38,7 @@ namespace SharpAlg.Native.Printer {
             }
             public bool Power(PowerExpr power) {
                 if(IsInverseExpression(power))
-                    return priority >= OperationPriority.Multiply;
+                    return ShouldWrap(OperationPriority.Multiply);
                 return ShouldWrap(OperationPriority.Power);
             }
             public bool Function(FunctionExpr functionExpr) {

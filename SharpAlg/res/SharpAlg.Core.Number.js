@@ -849,6 +849,11 @@ var SharpAlg$Native$Number =
         get_IsInteger: function ()
         {
             return this.get_NumberType() == 0;
+        },
+        IsFraction$$: "System.Boolean",
+        get_IsFraction: function ()
+        {
+            return this.get_NumberType() == 1;
         }
     }
 };

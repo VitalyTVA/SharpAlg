@@ -101,5 +101,6 @@ namespace SharpAlg.Native {
             return this_.Compare(other) == 0;
         }
         public bool IsInteger { get { return NumberType == IntegerNumberType; } }
+        public bool IsFraction { get { return NumberType == FractionNumberType; } }
     }
 }

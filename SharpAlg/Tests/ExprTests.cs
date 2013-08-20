@@ -96,6 +96,7 @@ namespace SharpAlg.Tests {
             "-3".Parse().AssertIsInteger();
             "24539485093485348358904704".Parse().AssertIsInteger();
             "6 / 6".Parse().AssertIsInteger();
+            "5 / 6".Parse().AssertIsFraction();
         }
         [Test]
         public void BinaryExprTest() {
@@ -234,6 +235,14 @@ namespace SharpAlg.Tests {
             "(y ^ z)!".Parse().AssertSimpleStringRepresentation("(y ^ z)!");
             "y! ^ z!".Parse().AssertSimpleStringRepresentation("y! ^ z!");
             "someFunc(x, x + y, x ^ y)".Parse().AssertSimpleStringRepresentation("someFunc(x, x + y, x ^ y)");
+
+            "2*x/3*y".Parse().AssertSimpleStringRepresentation("2/3 * x * y");
+            "2*x/(-3)*y".Parse().AssertSimpleStringRepresentation("-2/3 * x * y");
+            "2/3 + y".Parse().AssertSimpleStringRepresentation("2/3 + y");
+            "2/3^2".Parse().AssertSimpleStringRepresentation("2/9");
+            "(-4/6)^2".Parse().AssertSimpleStringRepresentation("4/9");
+            "(2/3)^x".Parse().AssertSimpleStringRepresentation("(2/3) ^ x");
+            "(-2/3)^x".Parse().AssertSimpleStringRepresentation("(-2/3) ^ x");
         }
         [Test]
         public void ConvolutionTest() {
@@ -371,6 +380,9 @@ namespace SharpAlg.Tests {
         }
         public static Expr AssertIsInteger(this Expr expr) {
             return expr.IsTrue(x => x.ConvertCast<ConstantExpr>().Value.IsInteger);
+        }
+        public static Expr AssertIsFraction(this Expr expr) {
+            return expr.IsTrue(x => x.ConvertCast<ConstantExpr>().Value.IsFraction);
         }
         public static Expr AssertEvaluatedValues(this Expr expr, double[] input, double[] expected) {
             var evaluator = expr.AsEvaluator();

@@ -250,6 +250,7 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("-3", null));
             SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("24539485093485348358904704", null));
             SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("6 / 6", null));
+            SharpAlg.Tests.ExprTestHelper.AssertIsFraction(SharpAlg.Native.ExpressionExtensions.Parse("5 / 6", null));
         },
         BinaryExprTest: function ()
         {
@@ -416,6 +417,13 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(y ^ z)!", null), "(y ^ z)!");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("y! ^ z!", null), "y! ^ z!");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("someFunc(x, x + y, x ^ y)", null), "someFunc(x, x + y, x ^ y)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("2*x/3*y", null), "2/3 * x * y");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("2*x/(-3)*y", null), "-2/3 * x * y");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("2/3 + y", null), "2/3 + y");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("2/3^2", null), "2/9");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(-4/6)^2", null), "4/9");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(2/3)^x", null), "(2/3) ^ x");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(-2/3)^x", null), "(-2/3) ^ x");
         },
         ConvolutionTest: function ()
         {
@@ -574,6 +582,13 @@ var SharpAlg$Tests$ExprTestHelper =
             return SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, expr, function (x)
             {
                 return SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.ConstantExpr.ctor, x).get_Value().get_IsInteger();
+            });
+        },
+        AssertIsFraction: function (expr)
+        {
+            return SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, expr, function (x)
+            {
+                return SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.ConstantExpr.ctor, x).get_Value().get_IsFraction();
             });
         },
         AssertEvaluatedValues: function (expr, input, expected)
