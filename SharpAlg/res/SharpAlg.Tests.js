@@ -239,6 +239,16 @@ var SharpAlg$Tests$ExprTests =
             {
                 return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Tests.ExprTestHelper.AsConstant(13));
             }));
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("5 - 5", null));
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("3 - 2", null));
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("2 * 2 - 2", null));
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("1 - 2", null));
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("0", null));
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("1", null));
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("2", null));
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("-2", null));
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("-3", null));
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("24539485093485348358904704", null));
         },
         BinaryExprTest: function ()
         {
@@ -328,10 +338,10 @@ var SharpAlg$Tests$ExprTests =
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, context);
             }), SharpAlg.Tests.ExprTestHelper.AsNumber$$Double(30));
-            SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("ln(1)", null), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("ln(1)", null), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), SharpAlg.Tests.ExprTestHelper.AsNumber$$Double(0));
+            }), SharpAlg.Tests.ExprTestHelper.AsNumber$$Double(0)));
             SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("ln(3)", null), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
@@ -557,6 +567,13 @@ var SharpAlg$Tests$ExprTestHelper =
             {
                 return SharpAlg.Native.ExpressionExtensions.Print(x);
             }, value);
+        },
+        AssertIsInteger: function (expr)
+        {
+            return SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, expr, function (x)
+            {
+                return SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.ConstantExpr.ctor, x).get_Value().get_IsInteger();
+            });
         },
         AssertEvaluatedValues: function (expr, input, expected)
         {
@@ -826,6 +843,10 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Multiply("-999999999999999999999999", "999"), "-998999999999999999999999001");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Multiply("10000000000000100000000001", "500"), "5000000000000050000000000500");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Multiply("9999999239994399999991239999999", "888834888882318888543888888"), "8888348213303695859491006407241101393874673214452576111112");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("-1", "-1"), "-1");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("1", "-1"), "1");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("1", "-2"), "1");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Power("2", "-1"), "0.5");
         },
         LongIntOperationsTest: function ()
         {
@@ -949,6 +970,8 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Add("1.0", "2"), "3");
             SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Add("1", "2.0"), "3");
             SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Add("1", "2.3"), "3.3");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Multiply("-1", "13.0"), "-13");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Multiply("-9", "13.0"), "-117");
             SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Multiply("9", "13.0"), "117");
             SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Multiply("9.0", "13"), "117");
             SharpAlg.Tests.NumberTestHelper.AssertFloatNumber(SharpAlg.Tests.NumberTestHelper.Subtract("9", "13.0"), "-4");

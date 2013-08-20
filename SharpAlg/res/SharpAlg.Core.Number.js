@@ -377,7 +377,7 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
                 {
                     result = result * 10000 + this.parts.get_Item$$Int32(i);
                 }
-                return new SharpAlg.Native.Numbers.FloatNumber.ctor(result);
+                return new SharpAlg.Native.Numbers.FloatNumber.ctor(this.isNegative ? -result : result);
             }
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
         },
@@ -455,6 +455,10 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
         Power: function (n)
         {
             var b = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, n);
+            if (b.isNegative && SharpAlg.Native.Number.op_Inequality(this, SharpAlg.Native.NumberFactory.One) && SharpAlg.Native.Number.op_Inequality(this, SharpAlg.Native.NumberFactory.MinusOne))
+            {
+                return SharpAlg.Native.Number.op_ExclusiveOr(this.ToFloat(), n);
+            }
             var re = SharpAlg.Native.Numbers.LongIntegerNumber.OneLongNumber;
             var a = this;
             while (SharpAlg.Native.Number.op_Inequality(b, SharpAlg.Native.Numbers.LongIntegerNumber.ZeroLongNumber))
@@ -699,10 +703,10 @@ var SharpAlg$Native$NumberFactory =
             SharpAlg.Native.NumberFactory.One = null;
             SharpAlg.Native.NumberFactory.Two = null;
             SharpAlg.Native.NumberFactory.MinusOne = null;
-            SharpAlg.Native.NumberFactory.Zero = SharpAlg.Native.NumberFactory.FromDouble(0);
-            SharpAlg.Native.NumberFactory.One = SharpAlg.Native.NumberFactory.FromDouble(1);
-            SharpAlg.Native.NumberFactory.Two = SharpAlg.Native.NumberFactory.FromDouble(2);
-            SharpAlg.Native.NumberFactory.MinusOne = SharpAlg.Native.NumberFactory.FromDouble(-1);
+            SharpAlg.Native.NumberFactory.Zero = SharpAlg.Native.NumberFactory.FromIntString("0");
+            SharpAlg.Native.NumberFactory.One = SharpAlg.Native.NumberFactory.FromIntString("1");
+            SharpAlg.Native.NumberFactory.Two = SharpAlg.Native.NumberFactory.FromIntString("2");
+            SharpAlg.Native.NumberFactory.MinusOne = SharpAlg.Native.NumberFactory.FromIntString("-1");
         },
         Ln: function (n)
         {

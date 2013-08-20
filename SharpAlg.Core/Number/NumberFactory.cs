@@ -15,10 +15,10 @@ namespace SharpAlg.Native {
         public static readonly Number Two;
         public static readonly Number MinusOne;
         static NumberFactory() {
-            Zero = FromDouble(0);
-            One = FromDouble(1);
-            Two = FromDouble(2);
-            MinusOne = FromDouble(-1);
+            Zero = FromIntString("0");
+            One = FromIntString("1");
+            Two = FromIntString("2");
+            MinusOne = FromIntString("-1");
         }
 
         public static Number Ln(Number n) {

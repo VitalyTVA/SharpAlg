@@ -75,6 +75,11 @@ namespace SharpAlg.Tests {
             "-999999999999999999999999".Multiply("999").AssertIntegerNumber("-998999999999999999999999001");
             "10000000000000100000000001".Multiply("500").AssertIntegerNumber("5000000000000050000000000500"); //TODO - long arithmetic
             "9999999239994399999991239999999".Multiply("888834888882318888543888888").AssertIntegerNumber("8888348213303695859491006407241101393874673214452576111112"); //TODO - long arithmetic
+
+            "-1".Power("-1").AssertIntegerNumber("-1");
+            "1".Power("-1").AssertIntegerNumber("1");
+            "1".Power("-2").AssertIntegerNumber("1");
+            "2".Power("-1").AssertFloatNumber("0.5"); //TODO will be replaced with fraction
         }
         [Test]
         public void LongIntOperationsTest() {
@@ -218,6 +223,8 @@ namespace SharpAlg.Tests {
             "1.0".Add("2").AssertFloatNumber("3");
             "1".Add("2.0").AssertFloatNumber("3");
             "1".Add("2.3").AssertFloatNumber("3.3");
+            "-1".Multiply("13.0").AssertFloatNumber("-13");
+            "-9".Multiply("13.0").AssertFloatNumber("-117");
             "9".Multiply("13.0").AssertFloatNumber("117");
             "9.0".Multiply("13").AssertFloatNumber("117");
             "9".Subtract("13.0").AssertFloatNumber("-4");

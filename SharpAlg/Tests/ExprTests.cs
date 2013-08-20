@@ -85,6 +85,17 @@ namespace SharpAlg.Tests {
                 .IsEqual(x => x.Evaluate(), ExprTestHelper.AsNumber(9))
                 .IsTrue(x => x.ExprEquals(ExprTestHelper.AsConstant(9)))
                 .IsFalse(x => x.ExprEquals(ExprTestHelper.AsConstant(13)));
+            "5 - 5".Parse().AssertIsInteger();
+            "3 - 2".Parse().AssertIsInteger();
+            "2 * 2 - 2".Parse().AssertIsInteger();
+            "1 - 2".Parse().AssertIsInteger();
+            "0".Parse().AssertIsInteger();
+            "1".Parse().AssertIsInteger();
+            "2".Parse().AssertIsInteger();
+            "-2".Parse().AssertIsInteger();
+            "-3".Parse().AssertIsInteger();
+            "24539485093485348358904704".Parse().AssertIsInteger();
+            //"6 / 6".Parse().AssertIsInteger(); //TODO after fractional numers implemented
         }
         [Test]
         public void BinaryExprTest() {
@@ -145,8 +156,8 @@ namespace SharpAlg.Tests {
             "CustomFunc(1, x + 2, 2)".Parse()
                 .IsEqual(x => x.Evaluate(context), 30.0.AsNumber());
             "ln(1)".Parse()
-                .IsEqual(x => x.Evaluate(), 0.0.AsNumber());
-                //.IsTrue(x => x.ConvertCast<ConstantExpr>().Value.IsInteger);
+                .IsEqual(x => x.Evaluate(), 0.0.AsNumber())
+                .AssertIsInteger();
             "ln(3)".Parse()
                 .IsFloatEqual(x => x.Evaluate(), "1.098612");
             Expr.Function("ln", new Expr[] { "1".Parse(), "2".Parse() }).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));
@@ -357,6 +368,9 @@ namespace SharpAlg.Tests {
         }
         public static Expr AssertSimpleStringRepresentation(this Expr expr, string value) {
             return expr.IsEqual(x => x.Print(), value);
+        }
+        public static Expr AssertIsInteger(this Expr expr) {
+            return expr.IsTrue(x => x.ConvertCast<ConstantExpr>().Value.IsInteger);
         }
         public static Expr AssertEvaluatedValues(this Expr expr, double[] input, double[] expected) {
             var evaluator = expr.AsEvaluator();

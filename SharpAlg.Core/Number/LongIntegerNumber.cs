@@ -53,7 +53,7 @@ namespace SharpAlg.Native.Numbers {
                 for(int i = count - 1; i >= 0; i--) {
                     result = result * BaseFull + parts[i];
                 }
-                return new FloatNumber(result);
+                return new FloatNumber(isNegative ? -result : result);
             }
             throw new NotImplementedException();
         }
@@ -281,6 +281,9 @@ namespace SharpAlg.Native.Numbers {
         }
         protected override Number Power(Number n) {
             var b = n.ConvertCast<LongIntegerNumber>();
+            if(b.isNegative && this != NumberFactory.One && this != NumberFactory.MinusOne) {
+                return ToFloat() ^ n;
+            }
             Number re = OneLongNumber;
             Number a = this;
             while(b != ZeroLongNumber) {
