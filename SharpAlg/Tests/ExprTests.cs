@@ -359,6 +359,10 @@ namespace SharpAlg.Tests {
             "ln(1)".Parse().AssertSimpleStringRepresentation("0");
             "3!".Parse().AssertSimpleStringRepresentation("6");
             "3.5!".Parse().AssertSimpleStringRepresentation("3.5!");
+
+            "(2 / 3)^(2^6/2^(5 - 0))/(36/24)".Parse().AssertSimpleStringRepresentation("8/27");
+            "(2 / 3 / x)^2".Parse().AssertSimpleStringRepresentation("4/9 * x ^ (-2)");
+            "(2 / 3) * (9 / 4)".Parse().AssertSimpleStringRepresentation("3/2");
         }
         [Test]
         public void SubsitutionTest() {
