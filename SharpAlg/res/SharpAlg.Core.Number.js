@@ -126,9 +126,10 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
     {
         cctor: function ()
         {
-            SharpAlg.Native.Numbers.LongIntegerNumber.ZeroLongNumber = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor([], false);
-            SharpAlg.Native.Numbers.LongIntegerNumber.OneLongNumber = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor([1], false);
-            SharpAlg.Native.Numbers.LongIntegerNumber.TwoLongNumber = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor([2], false);
+            SharpAlg.Native.Numbers.LongIntegerNumber.Zero = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor([], false);
+            SharpAlg.Native.Numbers.LongIntegerNumber.One = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor([1], false);
+            SharpAlg.Native.Numbers.LongIntegerNumber.Two = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor([2], false);
+            SharpAlg.Native.Numbers.LongIntegerNumber.MinusOne = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor([1], true);
             SharpAlg.Native.Numbers.LongIntegerNumber.Base = 10;
             SharpAlg.Native.Numbers.LongIntegerNumber.BaseCount = 4;
             SharpAlg.Native.Numbers.LongIntegerNumber.BaseFull = 10000;
@@ -227,7 +228,7 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
         MultiplyCore: function (left, right)
         {
             if (right.get_Count() == 0)
-                return SharpAlg.Native.Numbers.LongIntegerNumber.ZeroLongNumber.parts;
+                return SharpAlg.Native.Numbers.LongIntegerNumber.Zero.parts;
             var result = [];
             var rightCount = right.get_Count();
             for (var i = 0; i < rightCount; i++)
@@ -312,7 +313,7 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
         FindDigit: function (divident, divisorParts)
         {
             var divisor = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(divisorParts, false);
-            if (SharpAlg.Native.Number.op_Equality(divident, SharpAlg.Native.Numbers.LongIntegerNumber.ZeroLongNumber) || SharpAlg.Native.Number.op_GreaterThan(divisor, divident))
+            if (SharpAlg.Native.Number.op_Equality(divident, SharpAlg.Native.Numbers.LongIntegerNumber.Zero) || SharpAlg.Native.Number.op_GreaterThan(divisor, divident))
                 return 0;
             var dividentPart = ((divident.parts.get_Count() == divisor.parts.get_Count()) ? System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divident.parts) : System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divident.parts) * 10000 + divident.parts.get_Item$$Int32(divident.parts.get_Count() - 2));
             var divisorPart = System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divisor.parts);
@@ -449,7 +450,7 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
         {
             var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, n);
             if (SharpAlg.Native.Numbers.LongIntegerNumber.CompareCore(this.parts, longNumber.parts) < 0)
-                return SharpAlg.Native.Numbers.LongIntegerNumber.ZeroLongNumber;
+                return SharpAlg.Native.Numbers.LongIntegerNumber.Zero;
             return new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(SharpAlg.Native.Numbers.LongIntegerNumber.DivieCore(this.parts, longNumber.parts), this.isNegative ^ longNumber.isNegative);
         },
         Power: function (n)
@@ -459,14 +460,14 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
             {
                 return SharpAlg.Native.Number.op_ExclusiveOr(this.ToFloat(), n);
             }
-            var re = SharpAlg.Native.Numbers.LongIntegerNumber.OneLongNumber;
+            var re = SharpAlg.Native.Numbers.LongIntegerNumber.One;
             var a = this;
-            while (SharpAlg.Native.Number.op_Inequality(b, SharpAlg.Native.Numbers.LongIntegerNumber.ZeroLongNumber))
+            while (SharpAlg.Native.Number.op_Inequality(b, SharpAlg.Native.Numbers.LongIntegerNumber.Zero))
             {
                 if (System.Linq.Enumerable.First$1$$IEnumerable$1(System.Int32.ctor, b.parts) % 2 == 1)
                     re = SharpAlg.Native.Number.op_Multiply(re, a);
                 a = (SharpAlg.Native.Number.op_Multiply(a, a));
-                b = Cast((SharpAlg.Native.Number.op_Division(b, SharpAlg.Native.Numbers.LongIntegerNumber.TwoLongNumber)), SharpAlg.Native.Numbers.LongIntegerNumber.ctor);
+                b = Cast((SharpAlg.Native.Number.op_Division(b, SharpAlg.Native.Numbers.LongIntegerNumber.Two)), SharpAlg.Native.Numbers.LongIntegerNumber.ctor);
             }
             return re;
         }
@@ -703,10 +704,10 @@ var SharpAlg$Native$NumberFactory =
             SharpAlg.Native.NumberFactory.One = null;
             SharpAlg.Native.NumberFactory.Two = null;
             SharpAlg.Native.NumberFactory.MinusOne = null;
-            SharpAlg.Native.NumberFactory.Zero = SharpAlg.Native.NumberFactory.FromIntString("0");
-            SharpAlg.Native.NumberFactory.One = SharpAlg.Native.NumberFactory.FromIntString("1");
-            SharpAlg.Native.NumberFactory.Two = SharpAlg.Native.NumberFactory.FromIntString("2");
-            SharpAlg.Native.NumberFactory.MinusOne = SharpAlg.Native.NumberFactory.FromIntString("-1");
+            SharpAlg.Native.NumberFactory.Zero = SharpAlg.Native.Numbers.LongIntegerNumber.Zero;
+            SharpAlg.Native.NumberFactory.One = SharpAlg.Native.Numbers.LongIntegerNumber.One;
+            SharpAlg.Native.NumberFactory.Two = SharpAlg.Native.Numbers.LongIntegerNumber.Two;
+            SharpAlg.Native.NumberFactory.MinusOne = SharpAlg.Native.Numbers.LongIntegerNumber.MinusOne;
         },
         Ln: function (n)
         {
