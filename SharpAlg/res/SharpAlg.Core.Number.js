@@ -212,7 +212,12 @@ var SharpAlg$Native$Numbers$FractionNumber =
         },
         Power: function (n)
         {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+            if (SharpAlg.Native.Number.op_Equality(this.numerator, SharpAlg.Native.Numbers.LongIntegerNumber.One) && SharpAlg.Native.Number.op_Equality(this.denominator, SharpAlg.Native.Numbers.LongIntegerNumber.One))
+                return SharpAlg.Native.NumberFactory.One;
+            var other = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.FractionNumber.ctor, n);
+            if (SharpAlg.Native.Number.op_Equality(other.denominator, SharpAlg.Native.Numbers.LongIntegerNumber.One))
+                return SharpAlg.Native.Numbers.LongIntegerNumber.FastPower(this, other.numerator);
+            return SharpAlg.Native.Number.op_ExclusiveOr(this.ToFloat(), n.ToFloat());
         },
         Compare$$Number: function (n)
         {
@@ -476,6 +481,18 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
                 throw $CreateException(new System.InvalidOperationException.ctor(), new Error());
             return digit;
         },
+        FastPower: function (a, b)
+        {
+            var re = SharpAlg.Native.Numbers.LongIntegerNumber.One;
+            while (SharpAlg.Native.Number.op_Inequality(b, SharpAlg.Native.Numbers.LongIntegerNumber.Zero))
+            {
+                if (System.Linq.Enumerable.First$1$$IEnumerable$1(System.Int32.ctor, b.parts) % 2 == 1)
+                    re = SharpAlg.Native.Number.op_Multiply(re, a);
+                a = (SharpAlg.Native.Number.op_Multiply(a, a));
+                b = b.IntDivide(SharpAlg.Native.Numbers.LongIntegerNumber.Two);
+            }
+            return b.isNegative ? (SharpAlg.Native.Number.op_Division(SharpAlg.Native.Numbers.LongIntegerNumber.One, re)) : re;
+        },
         GetPart: function (parts, index, isNegative)
         {
             return index < parts.get_Count() ? (isNegative ? -parts.get_Item$$Int32(index) : parts.get_Item$$Int32(index)) : 0;
@@ -612,16 +629,7 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
         Power: function (n)
         {
             var b = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, n);
-            var re = SharpAlg.Native.Numbers.LongIntegerNumber.One;
-            var a = this;
-            while (SharpAlg.Native.Number.op_Inequality(b, SharpAlg.Native.Numbers.LongIntegerNumber.Zero))
-            {
-                if (System.Linq.Enumerable.First$1$$IEnumerable$1(System.Int32.ctor, b.parts) % 2 == 1)
-                    re = SharpAlg.Native.Number.op_Multiply(re, a);
-                a = (SharpAlg.Native.Number.op_Multiply(a, a));
-                b = b.IntDivide(SharpAlg.Native.Numbers.LongIntegerNumber.Two);
-            }
-            return b.isNegative ? (SharpAlg.Native.Number.op_Division(SharpAlg.Native.Numbers.LongIntegerNumber.One, re)) : re;
+            return SharpAlg.Native.Numbers.LongIntegerNumber.FastPower(this, b);
         }
     }
 };

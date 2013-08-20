@@ -306,8 +306,10 @@ namespace SharpAlg.Native.Numbers {
         }
         protected override Number Power(Number n) {
             var b = n.ConvertCast<LongIntegerNumber>();
+            return FastPower(this, b);
+        }
+        internal static Number FastPower(Number a, LongIntegerNumber b) {
             Number re = One;
-            Number a = this;
             while(b != Zero) {
                 if(b.parts.First() % 2 == 1)
                     re = re * a;

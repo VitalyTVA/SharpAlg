@@ -305,6 +305,14 @@ namespace SharpAlg.Tests {
             ("2".Divide("3") * "-3".Divide("2")).AssertIntegerNumber("-1");
             ("2".Divide("3") / "-7".Divide("9")).AssertFractionNumber("-6/7");
             ("2".Divide("3") / "-2".Divide("3")).AssertIntegerNumber("-1");
+
+            ("2".FromString() ^ "1".Divide("2")).IsFloatEqual(x => x, "1.414213562");
+            ("1".FromString() ^ "1".Divide("2")).AssertIntegerNumber("1");
+            ("1".FromString() ^ "5".Divide("6")).AssertIntegerNumber("1");
+            ("2".Divide("3") ^ "5".FromString()).AssertFractionNumber("32/243");
+            ("2".Divide("3") ^ "-5".FromString()).AssertFractionNumber("243/32");
+            ("2".Divide("3") ^ "1".FromString()).AssertFractionNumber("2/3");
+            ("2".Divide("3") ^ "-1".FromString()).AssertFractionNumber("3/2");
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

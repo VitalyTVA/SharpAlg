@@ -76,7 +76,14 @@ namespace SharpAlg.Native.Numbers {
         }
 
         protected override Number Power(Number n) {
-            throw new NotImplementedException();
+            if(numerator == LongIntegerNumber.One && denominator == LongIntegerNumber.One)
+                return NumberFactory.One;
+
+            var other = n.ConvertCast<FractionNumber>();
+            if(other.denominator == LongIntegerNumber.One)
+                return LongIntegerNumber.FastPower(this, other.numerator);
+
+            return ToFloat() ^ n.ToFloat();
         }
 
         protected override int Compare(Number n) {

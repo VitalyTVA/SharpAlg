@@ -395,9 +395,9 @@ namespace SharpAlg.Tests {
             return SharpAlg.Native.NumberFactory.FromString(PlatformHelper.ToInvariantString(constant));
         }
         public static TInput IsFloatEqual<TInput>(this TInput obj, Func<TInput, object> valueEvaluator, string expected) {
-            int floatSignCount = expected.Length - expected.IndexOf(".");
             return obj.IsEqual(x => {
                 var res = valueEvaluator(x).ToString();
+                int floatSignCount = expected.Length - expected.IndexOf(".");
                 res = res.Substring(0, res.IndexOf(".") + floatSignCount);
                 return res;
             }, expected);
