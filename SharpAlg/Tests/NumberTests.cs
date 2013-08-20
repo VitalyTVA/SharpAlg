@@ -170,23 +170,24 @@ namespace SharpAlg.Tests {
             "-117".Divide("-9").AssertIntegerNumber("13");
             "-117".Divide("9").AssertIntegerNumber("-13");
             "117".Divide("-9").AssertIntegerNumber("-13");
-            "-9".Divide("117").AssertIntegerNumber("0");
-            "1234840820348902398409233209380984".Divide("1234840820348902398409233209380985").AssertIntegerNumber("0");
-            "1234840820348902398409233209380984".Divide("1234840821348902398409233209380984").AssertIntegerNumber("0");
             "99999".Divide("3").AssertIntegerNumber("33333");
             "99999999999999999999999999999".Divide("3").AssertIntegerNumber("33333333333333333333333333333");
             "888848888848888488884888888".Divide("2").AssertIntegerNumber("444424444424444244442444444");
             "1000002".Divide("3").AssertIntegerNumber("333334");
             "100000000000000000000000002".Divide("3").AssertIntegerNumber("33333333333333333333333334");
             "1234840820348902398409233209380984".Divide("1234840820348902398409233209380984").AssertIntegerNumber("1");
-            "1000000".Divide("1009999").AssertIntegerNumber("0");
-            "10000000".Divide("1009999").AssertIntegerNumber("9");
-            "100000000000".Divide("1009999").AssertIntegerNumber("99009");
-            "1000000000000000000000000".Divide("1009999").AssertIntegerNumber("990099990198010097");
+            "10000000".IntDivide("1009999").AssertIntegerNumber("9");
+            "10000000".Divide("1009999").AssertFractionNumber("10000000/1009999");
+            "100000000000".IntDivide("1009999").AssertIntegerNumber("99009");
+            "100000000000".Divide("1009999").AssertFractionNumber("100000000000/1009999");
+            "1000000000000000000000000".IntDivide("1009999").AssertIntegerNumber("990099990198010097");
+            "1000000000000000000000000".Divide("1009999").AssertFractionNumber("1000000000000000000000000/1009999");
             "8888348213303695859491006407241101393874673214452576111112".Divide("888834888882318888543888888").AssertIntegerNumber("9999999239994399999991239999999");
             "300000".Divide("30").AssertIntegerNumber("10000");
-            "1341046897309863686".Divide("1697420285").AssertIntegerNumber("790050000");
-            "450436426101345047".Divide("1073592397").AssertIntegerNumber("419560000");
+            "1341046897309863686".IntDivide("1697420285").AssertIntegerNumber("790050000");
+            "1341046897309863686".Divide("1697420285").AssertFractionNumber("1341046897309863686/1697420285");
+            "450436426101345047".IntDivide("1073592397").AssertIntegerNumber("419560000");
+            "450436426101345047".Divide("1073592397").AssertFractionNumber("450436426101345047/1073592397");
 
             "2".Power("50").AssertIntegerNumber("1125899906842624");
             "-2".Power("3").AssertIntegerNumber("-8");
@@ -209,14 +210,31 @@ namespace SharpAlg.Tests {
         static void RandomLongDivisionCore(Random rnd, int maxDivident1, int maxDivident2, int maxDivisor) {
             long x = rnd.Next(maxDivident1) * (long)int.MaxValue + rnd.Next(maxDivident2);
             long y = rnd.Next(maxDivisor);
-            if(x > y && y != 0) {
+            if(y != 0) { //TODO not only x > y
                 try {
-                    x.ToString().Divide(y.ToString()).AssertIntegerNumber((x / y).ToString());
+                    x.ToString().IntDivide(y.ToString()).AssertIntegerNumber((x / y).ToString());
+
+                    long gcd = GCD(x, y);
+                    long x_ = x / gcd;
+                    long y_ = y / gcd;
+                    if(y_ > 1)
+                        x.ToString().Divide(y.ToString()).AssertFractionNumber(x_.ToString() + "/" + y_.ToString());
+                    else
+                        x.ToString().Divide(y.ToString()).AssertIntegerNumber(x_.ToString());
                 } catch(Exception e) {
                     Debug.WriteLine(x + "/" + y);
                     throw e;
                 }
             }
+        }
+        static long GCD(long a, long b) {
+            long c;
+            while(b > 0) {
+                c = a % b;
+                a = b;
+                b = c;
+            }
+            return a;
         }
         [Test]
         public void FloatIntOperationsTest() {
@@ -250,9 +268,27 @@ namespace SharpAlg.Tests {
             "100000000001".GreaterOrEqual("100000000001.0").IsTrue();
             "100000000001.0".GreaterOrEqual("100000000002").IsFalse();
         }
+        [Test]
+        public void FractionTest() {
+            "1".Divide("2").AssertFractionNumber("1/2");
+            "-9".Divide("117").AssertFractionNumber("-1/13");
+            "1234840820348902398409233209380984".Divide("1234840820348902398409233209380985").AssertFractionNumber("1234840820348902398409233209380984/1234840820348902398409233209380985");
+            "1234840820348902398409233209380984".Divide("1234840821348902398409233209380984").AssertFractionNumber("154355102543612799801154151172623/154355102668612799801154151172623");
+            "1000000".Divide("1009999").AssertFractionNumber("1000000/1009999");
+            "4".Divide("2").AssertIntegerNumber("2");
+            "5".Divide("3").AssertFractionNumber("5/3");
+            "5".Divide("-3").AssertFractionNumber("-5/3");
+            "-5".Divide("3").AssertFractionNumber("-5/3");
+            "-5".Divide("-3").AssertFractionNumber("5/3");
+            "6".Divide("4").AssertFractionNumber("3/2");
+            //"8".Divide("30").AssertFractionNumber("4/15");
+        }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class NumberTestHelper {
+        public static Number AssertFractionNumber(this Number n, string expected) {
+            return n.IsEqual(x => x.ToString(), expected).IsEqual(x => x.GetType().Name, "FractionNumber");
+        }
         public static Number AssertFloatNumber(this Number n, string expected) {
             return n.IsEqual(x => x.ToString(), expected).IsEqual(x => x.GetType().Name, "FloatNumber");
         }
@@ -270,6 +306,9 @@ namespace SharpAlg.Tests {
         }
         public static Number Divide(this string s1, string s2) {
             return FromString(s1) / FromString(s2);
+        }
+        public static Number IntDivide(this string s1, string s2) {
+            return ((SharpAlg.Native.Numbers.LongIntegerNumber)FromString(s1)).IntDivide(((SharpAlg.Native.Numbers.LongIntegerNumber)FromString(s2)));
         }
         public static Number Power(this string s1, string s2) {
             return FromString(s1) ^ FromString(s2);

@@ -55,6 +55,7 @@
     <Compile Include="IExpressionEvaluator.cs" />
     <Compile Include="IExpressionVisitor.cs" />
     <Compile Include="Number\FloatNumber.cs" />
+    <Compile Include="Number\FractionNumber.cs" />
     <Compile Include="Number\LongIntegerNumber.cs" />
     <Compile Include="Number\Number.cs" />
     <Compile Include="Number\NumberFactory.cs" />

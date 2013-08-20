@@ -118,6 +118,74 @@ var SharpAlg$Native$Numbers$FloatNumber =
     }
 };
 JsTypes.push(SharpAlg$Native$Numbers$FloatNumber);
+var SharpAlg$Native$Numbers$FractionNumber =
+{
+    fullname: "SharpAlg.Native.Numbers.FractionNumber",
+    baseTypeName: "SharpAlg.Native.Number",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+        },
+        Create: function (numerator, denominator)
+        {
+            return new SharpAlg.Native.Numbers.FractionNumber.ctor(numerator, denominator);
+        }
+    },
+    assemblyName: "SharpAlg.Core",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (numerator, denominator)
+        {
+            this.denominator = null;
+            this.numerator = null;
+            SharpAlg.Native.Number.ctor.call(this);
+            if (SharpAlg.Native.Number.op_LessThan(denominator, SharpAlg.Native.NumberFactory.Zero))
+                throw $CreateException(new System.ArgumentException.ctor$$String("denominator"), new Error());
+            this.denominator = denominator;
+            this.numerator = numerator;
+        },
+        toString: function ()
+        {
+            return this.numerator.toString() + "/" + this.denominator.toString();
+        },
+        ConvertToCore: function (type)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        NumberType$$: "System.Int32",
+        get_NumberType: function ()
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Add: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Subtract: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Multiply: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Divide: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Power: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        },
+        Compare$$Number: function (n)
+        {
+            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$Numbers$FractionNumber);
 var SharpAlg$Native$Numbers$LongIntegerNumber =
 {
     fullname: "SharpAlg.Native.Numbers.LongIntegerNumber",
@@ -277,12 +345,42 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
         {
             result.RemoveAt(0);
         },
-        DivieCore: function (dividentParts, originalDivisor)
+        GCD: function (a, b)
         {
-            var divident = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(dividentParts, false);
+            var c;
+            while (SharpAlg.Native.Number.op_GreaterThan(b, SharpAlg.Native.Numbers.LongIntegerNumber.Zero))
+            {
+                c = a.Modulo(b);
+                a = b;
+                b = c;
+            }
+            return a;
+        },
+        CreateFraction: function (numerator, denominator)
+        {
+            var gcd = SharpAlg.Native.Numbers.LongIntegerNumber.GCD(numerator, denominator);
+            return SharpAlg.Native.Numbers.FractionNumber.Create(Cast(numerator.Divide(gcd), SharpAlg.Native.Numbers.LongIntegerNumber.ctor), Cast(denominator.Divide(gcd), SharpAlg.Native.Numbers.LongIntegerNumber.ctor));
+        },
+        DivieCore: function (dividentParts, originalDivisor, isNegative, allowFraction)
+        {
+            var remain = SharpAlg.Native.Numbers.LongIntegerNumber.Zero;
+            var result = (function ()
+            {
+                remain = {Value: remain};
+                var $res = SharpAlg.Native.Numbers.LongIntegerNumber.DivieImpl(dividentParts, originalDivisor, remain);
+                remain = remain.Value;
+                return $res;
+            })();
+            if (allowFraction && SharpAlg.Native.Number.op_Inequality(remain, SharpAlg.Native.Numbers.LongIntegerNumber.Zero))
+                return SharpAlg.Native.Numbers.LongIntegerNumber.CreateFraction(new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(dividentParts, isNegative), new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(originalDivisor, false));
+            return new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(result, isNegative);
+        },
+        DivieImpl: function (dividentParts, originalDivisor, remain)
+        {
+            remain.Value = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(dividentParts, false);
             var divisor = new System.Collections.Generic.List$1.ctor$$IEnumerable$1(System.Int32.ctor, originalDivisor);
             var shiftCount = 0;
-            while (SharpAlg.Native.Numbers.LongIntegerNumber.CompareCore(divident.parts, divisor) >= 0)
+            while (SharpAlg.Native.Numbers.LongIntegerNumber.CompareCore(remain.Value.parts, divisor) >= 0)
             {
                 SharpAlg.Native.Numbers.LongIntegerNumber.ShiftLeft(divisor);
                 shiftCount++;
@@ -292,11 +390,11 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
             var result = new System.Collections.Generic.List$1.ctor(System.Int32.ctor);
             while (divisor.get_Count() >= originalDivisor.get_Count())
             {
-                var digit = SharpAlg.Native.Numbers.LongIntegerNumber.FindDigit(divident, divisor);
+                var digit = SharpAlg.Native.Numbers.LongIntegerNumber.FindDigit(remain.Value, divisor);
                 result.Insert(0, digit);
                 var temp = (new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(divisor, false)).Multiply(new SharpAlg.Native.Numbers.LongIntegerNumber.ctor([digit], false));
-                divident = Cast(divident.Subtract(temp), SharpAlg.Native.Numbers.LongIntegerNumber.ctor);
-                if (SharpAlg.Native.Numbers.LongIntegerNumber.CompareCore(divident.parts, divisor) < 0)
+                remain.Value = Cast(remain.Value.Subtract(temp), SharpAlg.Native.Numbers.LongIntegerNumber.ctor);
+                if (SharpAlg.Native.Numbers.LongIntegerNumber.CompareCore(remain.Value.parts, divisor) < 0)
                     SharpAlg.Native.Numbers.LongIntegerNumber.ShiftRight(divisor);
             }
             return result;
@@ -314,7 +412,9 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
         {
             var divisor = new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(divisorParts, false);
             if (SharpAlg.Native.Number.op_Equality(divident, SharpAlg.Native.Numbers.LongIntegerNumber.Zero) || SharpAlg.Native.Number.op_GreaterThan(divisor, divident))
+            {
                 return 0;
+            }
             var dividentPart = ((divident.parts.get_Count() == divisor.parts.get_Count()) ? System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divident.parts) : System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divident.parts) * 10000 + divident.parts.get_Item$$Int32(divident.parts.get_Count() - 2));
             var divisorPart = System.Linq.Enumerable.Last$1$$IEnumerable$1(System.Int32.ctor, divisor.parts);
             var lowDigit = SharpAlg.Native.Numbers.LongIntegerNumber.Div(dividentPart, divisorPart + 1);
@@ -324,15 +424,15 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
             while (true)
             {
                 var mult = divisor.Multiply(new SharpAlg.Native.Numbers.LongIntegerNumber.ctor([digit], false));
-                var diff = Cast(divident.Subtract(mult), SharpAlg.Native.Numbers.LongIntegerNumber.ctor);
-                if (diff.isNegative)
+                var remain = Cast(divident.Subtract(mult), SharpAlg.Native.Numbers.LongIntegerNumber.ctor);
+                if (remain.isNegative)
                 {
                     checkCount++;
                     topDigit = digit;
                     digit = SharpAlg.Native.Numbers.LongIntegerNumber.Bisect(lowDigit, topDigit);
                     continue;
                 }
-                var comparisonResult = diff.Compare$$Number(divisor);
+                var comparisonResult = remain.Compare$$Number(divisor);
                 if (comparisonResult >= 0)
                 {
                     checkCount++;
@@ -448,10 +548,32 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
         },
         Divide: function (n)
         {
+            return this.Divide$$Number$$Boolean(n, true);
+        },
+        IntDivide: function (n)
+        {
+            return Cast(this.Divide$$Number$$Boolean(n, false), SharpAlg.Native.Numbers.LongIntegerNumber.ctor);
+        },
+        Modulo: function (n)
+        {
             var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, n);
-            if (SharpAlg.Native.Numbers.LongIntegerNumber.CompareCore(this.parts, longNumber.parts) < 0)
-                return SharpAlg.Native.Numbers.LongIntegerNumber.Zero;
-            return new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(SharpAlg.Native.Numbers.LongIntegerNumber.DivieCore(this.parts, longNumber.parts), this.isNegative ^ longNumber.isNegative);
+            var remain = SharpAlg.Native.Numbers.LongIntegerNumber.Zero;
+            (function ()
+            {
+                remain = {Value: remain};
+                var $res = SharpAlg.Native.Numbers.LongIntegerNumber.DivieImpl(this.parts, longNumber.parts, remain);
+                remain = remain.Value;
+                return $res;
+            }).call(this);
+            return remain;
+        },
+        Divide$$Number$$Boolean: function (n, allowFraction)
+        {
+            var longNumber = SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.LongIntegerNumber.ctor, n);
+            var isResultNegative = this.isNegative ^ longNumber.isNegative;
+            if (allowFraction && SharpAlg.Native.Numbers.LongIntegerNumber.CompareCore(this.parts, longNumber.parts) < 0)
+                return SharpAlg.Native.Numbers.LongIntegerNumber.CreateFraction(new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(this.parts, isResultNegative), new SharpAlg.Native.Numbers.LongIntegerNumber.ctor(longNumber.parts, false));
+            return SharpAlg.Native.Numbers.LongIntegerNumber.DivieCore(this.parts, longNumber.parts, isResultNegative, allowFraction);
         },
         Power: function (n)
         {
@@ -467,7 +589,7 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
                 if (System.Linq.Enumerable.First$1$$IEnumerable$1(System.Int32.ctor, b.parts) % 2 == 1)
                     re = SharpAlg.Native.Number.op_Multiply(re, a);
                 a = (SharpAlg.Native.Number.op_Multiply(a, a));
-                b = Cast((SharpAlg.Native.Number.op_Division(b, SharpAlg.Native.Numbers.LongIntegerNumber.Two)), SharpAlg.Native.Numbers.LongIntegerNumber.ctor);
+                b = b.IntDivide(SharpAlg.Native.Numbers.LongIntegerNumber.Two);
             }
             return re;
         }

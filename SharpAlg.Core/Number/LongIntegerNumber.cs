@@ -8,7 +8,7 @@ using System.Text;
 
 namespace SharpAlg.Native.Numbers {
     [JsType(JsMode.Clr, Filename = SR.JS_Core_Number)]
-    internal sealed class LongIntegerNumber : Number {
+    public sealed class LongIntegerNumber : Number {
         internal static readonly LongIntegerNumber Zero = new LongIntegerNumber(new int[0], false);
         internal static readonly LongIntegerNumber One = new LongIntegerNumber(new int[] { 1 }, false);
         internal static readonly LongIntegerNumber Two = new LongIntegerNumber(new int[] { 2 }, false);
@@ -206,16 +206,49 @@ namespace SharpAlg.Native.Numbers {
             result.RemoveAt(0);
         }
         protected override Number Divide(Number n) {
-            var longNumber = n.ConvertCast<LongIntegerNumber>();
-            if(CompareCore(parts, longNumber.parts) < 0)
-                return Zero;
-            return new LongIntegerNumber(DivieCore(parts, longNumber.parts), isNegative ^ longNumber.isNegative);
+            return Divide(n, true);
         }
-        static IList<int> DivieCore(IList<int> dividentParts, IList<int> originalDivisor) {
-            LongIntegerNumber divident = new LongIntegerNumber(dividentParts, false);
+        public LongIntegerNumber IntDivide(Number n) {
+            return (LongIntegerNumber)Divide(n, false);
+        }
+        LongIntegerNumber Modulo(Number n) {
+            var longNumber = n.ConvertCast<LongIntegerNumber>();
+            LongIntegerNumber remain = Zero;
+            DivieImpl(parts, longNumber.parts, out remain);
+            return remain;
+        }
+        static LongIntegerNumber GCD(LongIntegerNumber a, LongIntegerNumber b) {
+            LongIntegerNumber c;
+            while(b > Zero) {
+                c = a.Modulo(b);
+                a = b;
+                b = c;
+            }
+            return a;
+        }
+        static Number CreateFraction(LongIntegerNumber numerator, LongIntegerNumber denominator) {
+            var gcd = GCD(numerator, denominator);
+            return FractionNumber.Create((LongIntegerNumber)numerator.Divide(gcd), (LongIntegerNumber)denominator.Divide(gcd));
+        }
+        Number Divide(Number n, bool allowFraction) {
+            var longNumber = n.ConvertCast<LongIntegerNumber>();
+            bool isResultNegative = isNegative ^ longNumber.isNegative;
+            if(allowFraction && CompareCore(parts, longNumber.parts) < 0)
+                return CreateFraction(new LongIntegerNumber(parts, isResultNegative), new LongIntegerNumber(longNumber.parts, false)); ;
+            return DivieCore(parts, longNumber.parts, isResultNegative, allowFraction);
+        }
+        static Number DivieCore(IList<int> dividentParts, IList<int> originalDivisor, bool isNegative, bool allowFraction) {
+            LongIntegerNumber remain = Zero;
+            IList<int> result = DivieImpl(dividentParts, originalDivisor, out remain);
+            if(allowFraction && remain != Zero)
+                return CreateFraction(new LongIntegerNumber(dividentParts, isNegative), new LongIntegerNumber(originalDivisor, false));
+            return new LongIntegerNumber(result, isNegative);
+        }
+        static IList<int> DivieImpl(IList<int> dividentParts, IList<int> originalDivisor, out LongIntegerNumber remain) {
+            remain = new LongIntegerNumber(dividentParts, false);
             IList<int> divisor = new List<int>(originalDivisor);
             int shiftCount = 0;
-            while(CompareCore(divident.parts, divisor) >= 0) {
+            while(CompareCore(remain.parts, divisor) >= 0) {
                 ShiftLeft(divisor);
                 shiftCount++;
             }
@@ -223,11 +256,11 @@ namespace SharpAlg.Native.Numbers {
             shiftCount--;
             List<int> result = new List<int>();
             while(divisor.Count >= originalDivisor.Count) {
-                int digit = FindDigit(divident, divisor);
+                int digit = FindDigit(remain, divisor);
                 result.Insert(0, digit);
                 Number temp = (new LongIntegerNumber(divisor, false)).Multiply(new LongIntegerNumber(new int[] { digit }, false));
-                divident = (LongIntegerNumber)divident.Subtract(temp);
-                if(CompareCore(divident.parts, divisor) < 0)
+                remain = (LongIntegerNumber)remain.Subtract(temp);
+                if(CompareCore(remain.parts, divisor) < 0)
                     ShiftRight(divisor);
             }
             return result;
@@ -241,8 +274,9 @@ namespace SharpAlg.Native.Numbers {
         }
         static int FindDigit(LongIntegerNumber divident, IList<int> divisorParts) {
             LongIntegerNumber divisor = new LongIntegerNumber(divisorParts, false);
-            if(divident == Zero || divisor > divident)
+            if(divident == Zero || divisor > divident) {
                 return 0;
+            }
             int dividentPart = ((divident.parts.Count == divisor.parts.Count) ? divident.parts.Last() : divident.parts.Last() * BaseFull + divident.parts[divident.parts.Count - 2]);
             int divisorPart = divisor.parts.Last();
             int lowDigit = Div(dividentPart, divisorPart + 1); //TODO optimize - no need to add 1 if divisor has zeros at the end
@@ -253,8 +287,8 @@ namespace SharpAlg.Native.Numbers {
             int digit = Bisect(lowDigit, topDigit);
             while(true) {
                 Number mult = divisor.Multiply(new LongIntegerNumber(new int[] { digit }, false));
-                LongIntegerNumber diff = (LongIntegerNumber)divident.Subtract(mult);
-                if(diff.isNegative) {
+                LongIntegerNumber remain = (LongIntegerNumber)divident.Subtract(mult);
+                if(remain.isNegative) {
 #if DEBUG
                     checkCount++;
 #endif
@@ -262,7 +296,7 @@ namespace SharpAlg.Native.Numbers {
                     digit = Bisect(lowDigit, topDigit);
                     continue;
                 }
-                int comparisonResult = diff.Compare(divisor);
+                int comparisonResult = remain.Compare(divisor);
                 if(comparisonResult >= 0) {
 #if DEBUG
                     checkCount++;
@@ -291,7 +325,7 @@ namespace SharpAlg.Native.Numbers {
                 if(b.parts.First() % 2 == 1)
                     re = re * a;
                 a = (a * a);
-                b = (LongIntegerNumber)(b / Two);
+                b = b.IntDivide(Two);
             }
             return re;
         }

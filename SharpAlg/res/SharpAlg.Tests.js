@@ -766,11 +766,18 @@ var SharpAlg$Tests$NumberTests =
         {
             var x = rnd.Next$$Int32(maxDivident1) * 2147483647 + rnd.Next$$Int32(maxDivident2);
             var y = rnd.Next$$Int32(maxDivisor);
-            if (x > y && y != 0)
+            if (y != 0)
             {
                 try
                 {
-                    SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide(x.toString(), y.toString()), (x / y).toString());
+                    SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.IntDivide(x.toString(), y.toString()), (x / y).toString());
+                    var gcd = SharpAlg.Tests.NumberTests.GCD(x, y);
+                    var x_ = x / gcd;
+                    var y_ = y / gcd;
+                    if (y_ > 1)
+                        SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide(x.toString(), y.toString()), x_.toString() + "/" + y_.toString());
+                    else
+                        SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide(x.toString(), y.toString()), x_.toString());
                 }
                 catch (e)
                 {
@@ -778,6 +785,17 @@ var SharpAlg$Tests$NumberTests =
                     throw $CreateException(e, new Error());
                 }
             }
+        },
+        GCD: function (a, b)
+        {
+            var c;
+            while (b > 0)
+            {
+                c = a % b;
+                a = b;
+                b = c;
+            }
+            return a;
         }
     },
     assemblyName: "SharpAlg",
@@ -930,23 +948,24 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("-117", "-9"), "13");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("-117", "9"), "-13");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("117", "-9"), "-13");
-            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("-9", "117"), "0");
-            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1234840820348902398409233209380984", "1234840820348902398409233209380985"), "0");
-            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1234840820348902398409233209380984", "1234840821348902398409233209380984"), "0");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("99999", "3"), "33333");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("99999999999999999999999999999", "3"), "33333333333333333333333333333");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("888848888848888488884888888", "2"), "444424444424444244442444444");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1000002", "3"), "333334");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("100000000000000000000000002", "3"), "33333333333333333333333334");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1234840820348902398409233209380984", "1234840820348902398409233209380984"), "1");
-            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1000000", "1009999"), "0");
-            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("10000000", "1009999"), "9");
-            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("100000000000", "1009999"), "99009");
-            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1000000000000000000000000", "1009999"), "990099990198010097");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.IntDivide("10000000", "1009999"), "9");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("10000000", "1009999"), "10000000/1009999");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.IntDivide("100000000000", "1009999"), "99009");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("100000000000", "1009999"), "100000000000/1009999");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.IntDivide("1000000000000000000000000", "1009999"), "990099990198010097");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("1000000000000000000000000", "1009999"), "1000000000000000000000000/1009999");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("8888348213303695859491006407241101393874673214452576111112", "888834888882318888543888888"), "9999999239994399999991239999999");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("300000", "30"), "10000");
-            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("1341046897309863686", "1697420285"), "790050000");
-            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("450436426101345047", "1073592397"), "419560000");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.IntDivide("1341046897309863686", "1697420285"), "790050000");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("1341046897309863686", "1697420285"), "1341046897309863686/1697420285");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.IntDivide("450436426101345047", "1073592397"), "419560000");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("450436426101345047", "1073592397"), "450436426101345047/1073592397");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("2", "50"), "1125899906842624");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("-2", "3"), "-8");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("-2", "4"), "16");
@@ -993,6 +1012,20 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.Greater("100000000002.0", "100000000001"));
             SharpAlg.Tests.FluentAssert.IsTrue$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("100000000001", "100000000001.0"));
             SharpAlg.Tests.FluentAssert.IsFalse$$Boolean(SharpAlg.Tests.NumberTestHelper.GreaterOrEqual("100000000001.0", "100000000002"));
+        },
+        FractionTest: function ()
+        {
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("1", "2"), "1/2");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("-9", "117"), "-1/13");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("1234840820348902398409233209380984", "1234840820348902398409233209380985"), "1234840820348902398409233209380984/1234840820348902398409233209380985");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("1234840820348902398409233209380984", "1234840821348902398409233209380984"), "154355102543612799801154151172623/154355102668612799801154151172623");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("1000000", "1009999"), "1000000/1009999");
+            SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Divide("4", "2"), "2");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("5", "3"), "5/3");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("5", "-3"), "-5/3");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("-5", "3"), "-5/3");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("-5", "-3"), "5/3");
+            SharpAlg.Tests.NumberTestHelper.AssertFractionNumber(SharpAlg.Tests.NumberTestHelper.Divide("6", "4"), "3/2");
         }
     }
 };
@@ -1003,6 +1036,16 @@ var SharpAlg$Tests$NumberTestHelper =
     baseTypeName: "System.Object",
     staticDefinition:
     {
+        AssertFractionNumber: function (n, expected)
+        {
+            return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, n, function (x)
+            {
+                return x.toString();
+            }, expected), function (x)
+            {
+                return x.GetType().get_Name();
+            }, "FractionNumber");
+        },
         AssertFloatNumber: function (n, expected)
         {
             return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Number.ctor, n, function (x)
@@ -1038,6 +1081,10 @@ var SharpAlg$Tests$NumberTestHelper =
         Divide: function (s1, s2)
         {
             return SharpAlg.Native.Number.op_Division(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Tests.NumberTestHelper.FromString(s2));
+        },
+        IntDivide: function (s1, s2)
+        {
+            return (Cast(SharpAlg.Tests.NumberTestHelper.FromString(s1), SharpAlg.Native.Numbers.LongIntegerNumber.ctor)).IntDivide((Cast(SharpAlg.Tests.NumberTestHelper.FromString(s2), SharpAlg.Native.Numbers.LongIntegerNumber.ctor)));
         },
         Power: function (s1, s2)
         {
