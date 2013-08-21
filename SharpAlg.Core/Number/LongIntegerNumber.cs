@@ -92,9 +92,6 @@ namespace SharpAlg.Native.Numbers {
             }
             return 0;
         }
-        public override int GetHashCode() {
-            throw new NotImplementedException();
-        }
         public override string ToString() {
             int startIndex = parts.Count - 1;
             StringBuilder sb = new StringBuilder();

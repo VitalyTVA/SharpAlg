@@ -33,6 +33,7 @@
     <ProductVersion>12.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <IntermediateOutputPath>obj.Portable\Debug</IntermediateOutputPath>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -49,7 +50,6 @@
   <ItemGroup>
     <Compile Include="Buffer.cs" />
     <Compile Include="Errors.cs" />
-
     <Compile Include="SR.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -64,8 +64,8 @@
     <Content Include="Coco.exe" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <Compile Include="Parser_.cs"/>
-    <Compile Include="Scanner_.cs"/>
+    <Compile Include="Parser_.cs" />
+    <Compile Include="Scanner_.cs" />
   </ItemGroup>
   <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_NET|AnyCPU' ">
     <Compile Include="Parser_.cs">
@@ -95,5 +95,6 @@ set dir=$(ProjectDir)
 if ERRORLEVEL 1 goto END
 %dir%bin\SharpAlg.Preprocess.exe
 :END</PreBuildEvent>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 </Project>

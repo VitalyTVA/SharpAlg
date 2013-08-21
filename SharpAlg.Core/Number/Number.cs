@@ -100,6 +100,9 @@ namespace SharpAlg.Native {
             ToSameType(ref this_, ref other);
             return this_.Compare(other) == 0;
         }
+        public sealed override int GetHashCode() {
+            throw new NotSupportedException();
+        }
         public bool IsInteger { get { return NumberType == IntegerNumberType; } }
         public bool IsFraction { get { return NumberType == FractionNumberType; } }
         public bool IsFloat { get { return NumberType == FloatNumberType; } }

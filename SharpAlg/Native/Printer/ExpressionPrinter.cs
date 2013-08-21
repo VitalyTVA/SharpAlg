@@ -91,8 +91,8 @@ namespace SharpAlg.Native.Printer {
                 if(headConstant.Return(x => x.Value < NumberFactory.Zero, () => false)) {
                     ConstantExpr exprConstant = Expr.Constant(NumberFactory.Zero - multi.Args.First().With(y => y as ConstantExpr).Value);
                     Expr expr = multi.Args.First().ExprEquals(Expr.MinusOne) ? 
-                        multi.Tail() : 
-                        Expr.Multiply(exprConstant.AsEnumerable().Concat(multi.Args.Tail()));
+                        multi.Tail() :
+                        Expr.Multiply(exprConstant.AsEnumerable<Expr>().Concat(multi.Args.Tail()));
                     return new UnaryExpressionInfo(expr, BinaryOperationEx.Subtract);
                 }
                 return base.Multiply(multi);

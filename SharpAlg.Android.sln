@@ -1,15 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Android", "SharpAlg\SharpAlg.Android.csproj", "{38482767-3E98-4680-B8CD-BCF4268575E2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{A823E596-E03F-4896-8946-5CAE2BA1C65D} = {A823E596-E03F-4896-8946-5CAE2BA1C65D}
-		{06BD00AF-1F46-4DF4-A61E-E05D412D90B4} = {06BD00AF-1F46-4DF4-A61E-E05D412D90B4}
-		{A20747C7-601E-454A-83D5-D53FC6724F71} = {A20747C7-601E-454A-83D5-D53FC6724F71}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Android.UI", "SharpAlg.Android.UI\SharpAlg.Android.UI.csproj", "{9AD4C677-1424-4CDC-904C-08B2E4C44283}"
 	ProjectSection(ProjectDependencies) = postProject
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E} = {01DEE02A-1F6C-46A9-B945-65E9DE87498E}
 		{06BD00AF-1F46-4DF4-A61E-E05D412D90B4} = {06BD00AF-1F46-4DF4-A61E-E05D412D90B4}
 		{A20747C7-601E-454A-83D5-D53FC6724F71} = {A20747C7-601E-454A-83D5-D53FC6724F71}
 	EndProjectSection
@@ -21,6 +15,11 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Implementation", "SharpAlg.Implementation\SharpAlg.Implementation.csproj", "{06BD00AF-1F46-4DF4-A61E-E05D412D90B4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Tests.Android", "SharpAlg.Tests\SharpAlg.Tests.Android.csproj", "{C9AFE3B3-BEA8-4B09-AC04-94C1DFEE1EB0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E} = {01DEE02A-1F6C-46A9-B945-65E9DE87498E}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg", "SharpAlg\SharpAlg.csproj", "{01DEE02A-1F6C-46A9-B945-65E9DE87498E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,16 +29,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{38482767-3E98-4680-B8CD-BCF4268575E2}.Debug_NET|Any CPU.ActiveCfg = Debug|Any CPU
-		{38482767-3E98-4680-B8CD-BCF4268575E2}.Debug_NET|Any CPU.Build.0 = Debug|Any CPU
-		{38482767-3E98-4680-B8CD-BCF4268575E2}.Debug_NET|Any CPU.Deploy.0 = Debug|Any CPU
-		{38482767-3E98-4680-B8CD-BCF4268575E2}.Debug_Portable|Any CPU.ActiveCfg = Debug|Any CPU
-		{38482767-3E98-4680-B8CD-BCF4268575E2}.Debug_Portable|Any CPU.Build.0 = Debug|Any CPU
-		{38482767-3E98-4680-B8CD-BCF4268575E2}.Debug_Portable|Any CPU.Deploy.0 = Debug|Any CPU
-		{38482767-3E98-4680-B8CD-BCF4268575E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{38482767-3E98-4680-B8CD-BCF4268575E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{38482767-3E98-4680-B8CD-BCF4268575E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{38482767-3E98-4680-B8CD-BCF4268575E2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9AD4C677-1424-4CDC-904C-08B2E4C44283}.Debug_NET|Any CPU.ActiveCfg = Debug|Any CPU
 		{9AD4C677-1424-4CDC-904C-08B2E4C44283}.Debug_Portable|Any CPU.ActiveCfg = Debug|Any CPU
 		{9AD4C677-1424-4CDC-904C-08B2E4C44283}.Debug_Portable|Any CPU.Build.0 = Debug|Any CPU
@@ -86,6 +75,14 @@ Global
 		{C9AFE3B3-BEA8-4B09-AC04-94C1DFEE1EB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9AFE3B3-BEA8-4B09-AC04-94C1DFEE1EB0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C9AFE3B3-BEA8-4B09-AC04-94C1DFEE1EB0}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug_NET|Any CPU.ActiveCfg = Debug_NET|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug_NET|Any CPU.Build.0 = Debug_NET|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug_Portable|Any CPU.ActiveCfg = Debug_NET|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug_Portable|Any CPU.Build.0 = Debug_NET|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{01DEE02A-1F6C-46A9-B945-65E9DE87498E}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -17,9 +17,6 @@ namespace SharpAlg.Native.Numbers {
         protected override Number ConvertToCore(int type) {
             throw new NotImplementedException();
         }
-        public override int GetHashCode() {
-            return value.GetHashCode();
-        }
         public override string ToString() {
             return PlatformHelper.ToInvariantString(value);
         }

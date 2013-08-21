@@ -3456,7 +3456,8 @@ JsTypes.push({ fullname: "System.String", baseTypeName: "System.Object", definit
 		return this.indexOf(str) == 0;
 	},
 	EndsWith$$String: function (str) {
-		return this.lastIndexOf(str) == this.length - str.length;
+	    var index = this.lastIndexOf(str);
+		return index >= 0 && index == this.length - str.length;
 	},
 	Contains: function (s) {
 		return this.indexOf(s) != -1;

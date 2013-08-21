@@ -57,10 +57,6 @@ var SharpAlg$Native$Numbers$FloatNumber =
         {
             throw $CreateException(new System.NotImplementedException.ctor(), new Error());
         },
-        GetHashCode: function ()
-        {
-            return this.value.GetHashCode();
-        },
         toString: function ()
         {
             return SharpAlg.Native.PlatformHelper.ToInvariantString(this.value);
@@ -538,10 +534,6 @@ var SharpAlg$Native$Numbers$LongIntegerNumber =
             var other = Cast(n, SharpAlg.Native.Numbers.LongIntegerNumber.ctor);
             return SharpAlg.Native.Numbers.LongIntegerNumber.Compare$$LongIntegerNumber$$LongIntegerNumber(this, other);
         },
-        GetHashCode: function ()
-        {
-            throw $CreateException(new System.NotImplementedException.ctor(), new Error());
-        },
         toString: function ()
         {
             var startIndex = this.parts.get_Count() - 1;
@@ -844,6 +836,10 @@ var SharpAlg$Native$Number =
                 return $res;
             }).call(this);
             return this_.Compare$$Number(other) == 0;
+        },
+        GetHashCode: function ()
+        {
+            throw $CreateException(new System.NotSupportedException.ctor(), new Error());
         },
         IsInteger$$: "System.Boolean",
         get_IsInteger: function ()

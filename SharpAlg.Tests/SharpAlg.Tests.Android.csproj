@@ -28,6 +28,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AndroidLinkMode>None</AndroidLinkMode>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>full</DebugType>
@@ -37,6 +38,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <AndroidUseSharedRuntime>false</AndroidUseSharedRuntime>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -77,9 +79,9 @@
       <Project>{A20747C7-601E-454A-83D5-D53FC6724F71}</Project>
       <Name>SharpAlg.Parser</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpAlg\SharpAlg.Android.csproj">
-      <Project>{38482767-3e98-4680-b8cd-bcf4268575e2}</Project>
-      <Name>SharpAlg.Android</Name>
+    <ProjectReference Include="..\SharpAlg\SharpAlg.csproj">
+      <Project>{01dee02a-1f6c-46a9-b945-65e9de87498e}</Project>
+      <Name>SharpAlg</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />
