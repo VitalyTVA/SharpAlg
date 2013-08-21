@@ -79,6 +79,8 @@ namespace SharpAlg.Tests {
             "-1".Power("-1").AssertIntegerNumber("-1");
             "1".Power("-1").AssertIntegerNumber("1");
             "1".Power("-2").AssertIntegerNumber("1");
+
+            "1".FromString().IsFalse(x => x.IsFloat).IsTrue(x => x.IsInteger).IsFalse(x => x.IsFraction);
         }
         [Test]
         public void LongIntOperationsTest() {
@@ -274,6 +276,8 @@ namespace SharpAlg.Tests {
             "100000000001.0".GreaterOrEqual("100000000002").IsFalse();
 
             "1".Divide("2").IsTrue(x => x == "0.5".FromString());
+
+            "1.0".FromString().IsTrue(x => x.IsFloat).IsFalse(x => x.IsInteger).IsFalse(x => x.IsFraction);
         }
         [Test]
         public void FractionTest() {
@@ -313,6 +317,9 @@ namespace SharpAlg.Tests {
             ("2".Divide("3") ^ "-5".FromString()).AssertFractionNumber("243/32");
             ("2".Divide("3") ^ "1".FromString()).AssertFractionNumber("2/3");
             ("2".Divide("3") ^ "-1".FromString()).AssertFractionNumber("3/2");
+            ("4".FromString() ^ "1".Divide("2")).AssertFloatNumber("2");
+
+            "1".Divide("2").IsFalse(x => x.IsFloat).IsFalse(x => x.IsInteger).IsTrue(x => x.IsFraction);
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]

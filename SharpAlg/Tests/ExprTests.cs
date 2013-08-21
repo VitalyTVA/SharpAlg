@@ -363,6 +363,16 @@ namespace SharpAlg.Tests {
             "(2 / 3)^(2^6/2^(5 - 0))/(36/24)".Parse().AssertSimpleStringRepresentation("8/27");
             "(2 / 3 / x)^2".Parse().AssertSimpleStringRepresentation("4/9 * x ^ (-2)");
             "(2 / 3) * (9 / 4)".Parse().AssertSimpleStringRepresentation("3/2");
+            "2 / 3.0".Parse().IsFloatEqual(x => x.Evaluate(), "0.666666");
+
+            "2 ^ (1/2)".Parse().IsFloatEqual(x => x.Evaluate(), "1.414213").AssertSimpleStringRepresentation("2 ^ (1/2)");
+            "(2 ^ (2/3)) ^ (3/4)".Parse().AssertSimpleStringRepresentation("2 ^ (1/2)");
+            "(4 * x) ^ 2".Parse().AssertSimpleStringRepresentation("16 * x ^ 2");
+            "(2 * x^2) ^ (1 / 2)".Parse().AssertSimpleStringRepresentation("2 ^ (1/2) * x");
+            "1 ^ (1/2)".Parse().AssertIsInteger().AssertSimpleStringRepresentation("1");
+            "1.0 ^ (1/2)".Parse().AssertIsFloat().AssertSimpleStringRepresentation("1");
+            "4 ^ (1/2)".Parse().AssertSimpleStringRepresentation("4 ^ (1/2)");
+            "4.0 ^ (1/2)".Parse().AssertIsFloat().AssertSimpleStringRepresentation("2");
         }
         [Test]
         public void SubsitutionTest() {
@@ -387,6 +397,9 @@ namespace SharpAlg.Tests {
         }
         public static Expr AssertIsFraction(this Expr expr) {
             return expr.IsTrue(x => x.ConvertCast<ConstantExpr>().Value.IsFraction);
+        }
+        public static Expr AssertIsFloat(this Expr expr) {
+            return expr.IsTrue(x => x.ConvertCast<ConstantExpr>().Value.IsFloat);
         }
         public static Expr AssertEvaluatedValues(this Expr expr, double[] input, double[] expected) {
             var evaluator = expr.AsEvaluator();

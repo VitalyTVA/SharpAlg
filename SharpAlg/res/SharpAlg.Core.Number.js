@@ -854,6 +854,11 @@ var SharpAlg$Native$Number =
         get_IsFraction: function ()
         {
             return this.get_NumberType() == 1;
+        },
+        IsFloat$$: "System.Boolean",
+        get_IsFloat: function ()
+        {
+            return this.get_NumberType() == 2;
         }
     }
 };

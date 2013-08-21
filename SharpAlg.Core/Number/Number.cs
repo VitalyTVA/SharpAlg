@@ -102,5 +102,6 @@ namespace SharpAlg.Native {
         }
         public bool IsInteger { get { return NumberType == IntegerNumberType; } }
         public bool IsFraction { get { return NumberType == FractionNumberType; } }
+        public bool IsFloat { get { return NumberType == FloatNumberType; } }
     }
 }

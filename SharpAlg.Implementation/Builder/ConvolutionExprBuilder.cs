@@ -182,6 +182,10 @@ namespace SharpAlg.Native.Builder {
         }
         Expr ConstantPowerConvolution(Expr left, Expr right) {
             Number leftConst = GetConstValue(left);
+            Number rightConst = GetConstValue(right);
+
+            if(rightConst != null && leftConst != null && (!rightConst.IsFraction || leftConst == NumberFactory.One || leftConst.IsFloat))
+                return Expr.Constant(leftConst ^ rightConst);
 
             if(leftConst == NumberFactory.Zero) {
                 return Expr.Zero;
@@ -190,8 +194,6 @@ namespace SharpAlg.Native.Builder {
                 return Expr.One;
             }
 
-            Number rightConst = GetConstValue(right);
-
             if(rightConst == NumberFactory.Zero) {
                 return Expr.One;
             }
@@ -199,8 +201,6 @@ namespace SharpAlg.Native.Builder {
                 return left;
             }
 
-            if(rightConst != null && leftConst != null)
-                return Expr.Constant(leftConst ^ rightConst);
             return null;
         }
         Expr ExpressionPowerConvolution(Expr left, Expr right) {
@@ -211,9 +211,12 @@ namespace SharpAlg.Native.Builder {
                     return Expr.Multiply(leftMultiplyExpr.Args.Select(x => Power(x, Expr.Constant(rightConst))));
                 }
                 var power = PowerExpressionExtractor.ExtractPower(left);
-                Number leftConst = GetConstValue(power.Right);
-                if(leftConst != null)
-                    return Expr.Power(power.Left, Expr.Constant(rightConst * leftConst));
+                if(!power.Right.ExprEquals(Expr.One)) {
+                    Number leftConst = GetConstValue(power.Right);
+                    if(leftConst != null) {
+                        return Power(power.Left, Multiply(Expr.Constant(rightConst), Expr.Constant(leftConst)));
+                    }
+                }
             }
             return null;
         }

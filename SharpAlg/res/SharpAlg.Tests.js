@@ -527,6 +527,21 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(2 / 3)^(2^6/2^(5 - 0))/(36/24)", null), "8/27");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(2 / 3 / x)^2", null), "4/9 * x ^ (-2)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(2 / 3) * (9 / 4)", null), "3/2");
+            SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("2 / 3.0", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "0.666666");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("2 ^ (1/2)", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "1.414213"), "2 ^ (1/2)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(2 ^ (2/3)) ^ (3/4)", null), "2 ^ (1/2)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(4 * x) ^ 2", null), "16 * x ^ 2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(2 * x^2) ^ (1 / 2)", null), "2 ^ (1/2) * x");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("1 ^ (1/2)", null)), "1");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.AssertIsFloat(SharpAlg.Native.ExpressionExtensions.Parse("1.0 ^ (1/2)", null)), "1");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("4 ^ (1/2)", null), "4 ^ (1/2)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.AssertIsFloat(SharpAlg.Native.ExpressionExtensions.Parse("4.0 ^ (1/2)", null)), "2");
         },
         SubsitutionTest: function ()
         {
@@ -592,6 +607,13 @@ var SharpAlg$Tests$ExprTestHelper =
             return SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, expr, function (x)
             {
                 return SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.ConstantExpr.ctor, x).get_Value().get_IsFraction();
+            });
+        },
+        AssertIsFloat: function (expr)
+        {
+            return SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Expr.ctor, expr, function (x)
+            {
+                return SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.ConstantExpr.ctor, x).get_Value().get_IsFloat();
             });
         },
         AssertEvaluatedValues: function (expr, input, expected)
@@ -883,6 +905,16 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("-1", "-1"), "-1");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("1", "-1"), "1");
             SharpAlg.Tests.NumberTestHelper.AssertIntegerNumber(SharpAlg.Tests.NumberTestHelper.Power("1", "-2"), "1");
+            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.NumberTestHelper.FromString("1"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_IsFloat();
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_IsInteger();
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_IsFraction();
+            }));
         },
         LongIntOperationsTest: function ()
         {
@@ -1040,6 +1072,16 @@ var SharpAlg$Tests$NumberTests =
             {
                 return SharpAlg.Native.Number.op_Equality(x, SharpAlg.Tests.NumberTestHelper.FromString("0.5"));
             }));
+            SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.NumberTestHelper.FromString("1.0"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_IsFloat();
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_IsInteger();
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_IsFraction();
+            }));
         },
         FractionTest: function ()
         {
@@ -1079,6 +1121,17 @@ var SharpAlg$Tests$NumberTests =
             SharpAlg.Tests.NumberTestHelper.AssertFractionNumber((SharpAlg.Native.Number.op_ExclusiveOr(SharpAlg.Tests.NumberTestHelper.Divide("2", "3"), SharpAlg.Tests.NumberTestHelper.FromString("-5"))), "243/32");
             SharpAlg.Tests.NumberTestHelper.AssertFractionNumber((SharpAlg.Native.Number.op_ExclusiveOr(SharpAlg.Tests.NumberTestHelper.Divide("2", "3"), SharpAlg.Tests.NumberTestHelper.FromString("1"))), "2/3");
             SharpAlg.Tests.NumberTestHelper.AssertFractionNumber((SharpAlg.Native.Number.op_ExclusiveOr(SharpAlg.Tests.NumberTestHelper.Divide("2", "3"), SharpAlg.Tests.NumberTestHelper.FromString("-1"))), "3/2");
+            SharpAlg.Tests.NumberTestHelper.AssertFloatNumber((SharpAlg.Native.Number.op_ExclusiveOr(SharpAlg.Tests.NumberTestHelper.FromString("4"), SharpAlg.Tests.NumberTestHelper.Divide("1", "2"))), "2");
+            SharpAlg.Tests.FluentAssert.IsTrue$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.FluentAssert.IsFalse$1$$TInput$$Func$2(SharpAlg.Native.Number.ctor, SharpAlg.Tests.NumberTestHelper.Divide("1", "2"), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_IsFloat();
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_IsInteger();
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_IsFraction();
+            }));
         }
     }
 };
