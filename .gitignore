@@ -1,5 +1,6 @@
 *.userprefs
 SharpAlg.Android.UI/Resources/Resource.designer.cs
+SharpAlg.Tests/Resources/Resource.designer.cs
 SharpAlg/Resources/Resource.designer.cs
 SharpAlg.Core/Resources/Resource.designer.cs
 SharpAlg.Parser/Resources/Resource.designer.cs

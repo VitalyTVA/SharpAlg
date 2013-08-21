@@ -7,12 +7,12 @@
     <ProductVersion>
     </ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{01DEE02A-1F6C-46A9-B945-65E9DE87498E}</ProjectGuid>
+    <ProjectGuid>{58AEC48D-89AD-4C2F-B11D-BD26E297B830}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpAlg</RootNamespace>
-    <AssemblyName>SharpAlg</AssemblyName>
+    <RootNamespace>SharpAlg.Tests</RootNamespace>
+    <AssemblyName>SharpAlg.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <UseIISExpress>true</UseIISExpress>
@@ -67,13 +67,47 @@
     <Reference Include="SharpKit.JsClr" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Native\ExprBuilderFactory.cs" />
-    <Compile Include="Native\ContextFactory.cs" />
-    <Compile Include="Native\ExpressionExtensions.cs" />
-    <Compile Include="Native\Functions.cs" />
-    <Compile Include="Native\Printer\ExpressionPrinter.cs" />
-    <Compile Include="Native\SR.cs" />
+    <Content Include="Default.aspx" />
+    <Content Include="res\Default.js" />
+    <Content Include="res\jquery-1.8.2.min.js" />
+    <Content Include="res\jsclr-4.1.0.js" />
+    <Content Include="res\SharpAlg.Core.js" />
+    <Content Include="res\SharpAlg.Core.Number.js" />
+    <Content Include="res\SharpAlg.Core.Utils.js" />
+    <Content Include="res\SharpAlg.Implementation.Builder.js" />
+    <Content Include="res\SharpAlg.Implementation.js" />
+    <Content Include="res\SharpAlg.Native.js" />
+    <Content Include="res\SharpAlg.Parser.js" />
+    <Content Include="res\SharpAlg.Printer.js" />
+    <Content Include="res\SharpAlg.Tests.js" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Default.aspx.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Default.aspx.designer.cs">
+      <DependentUpon>Default.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\DiffTests.cs" />
+    <Compile Include="Tests\ExprTests.cs" />
+    <Compile Include="Tests\FluentAssert.cs" />
+    <Compile Include="Tests\NumberTests.cs" />
+    <Compile Include="Tests\ParserTests.cs" />
+    <Compile Include="Tests\SR.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DefaultClient.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Implementation.csproj">
@@ -87,6 +121,10 @@
     <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Core.csproj">
       <Project>{a823e596-e03f-4896-8946-5cae2ba1c65d}</Project>
       <Name>SharpAlg.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpAlg\SharpAlg.csproj">
+      <Project>{01dee02a-1f6c-46a9-b945-65e9de87498e}</Project>
+      <Name>SharpAlg</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
@@ -103,7 +141,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>60490</DevelopmentServerPort>
+          <DevelopmentServerPort>55095</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

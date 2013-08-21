@@ -5,7 +5,7 @@ using Xamarin.Android.NUnitLite;
 
 namespace SharpAlg.Android
 {
-	[Activity (Label = "SharpAlg.Android", MainLauncher = true)]
+	[Activity (Label = "SharpAlg.Tests.Android", MainLauncher = true)]
 	public class MainActivity : TestSuiteActivity
 	{
 		protected override void OnCreate (Bundle bundle)

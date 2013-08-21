@@ -21,7 +21,7 @@ namespace SharpAlg.Native {
         public static Expr Parse(this string expression, ExprBuilder builder = null) {
             return GetExpression(ParseCore(expression, builder ?? ExprBuilderFactory.CreateDefault()));
         }
-        internal static Expr GetExpression(Parser.Parser parser) {
+        public static Expr GetExpression(Parser.Parser parser) {
             if(parser.errors.Count > 0)
                 throw new InvalidOperationException("String can not be parsed"); //TODO message
             return parser.Expr;

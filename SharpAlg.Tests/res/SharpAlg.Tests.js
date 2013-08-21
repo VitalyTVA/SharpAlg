@@ -32,7 +32,7 @@ var SharpAlg$Tests$DiffTests =
 {
     fullname: "SharpAlg.Tests.DiffTests",
     baseTypeName: "System.Object",
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
     {
@@ -116,7 +116,7 @@ var SharpAlg$Tests$ExprTests =
 {
     fullname: "SharpAlg.Tests.ExprTests",
     baseTypeName: "System.Object",
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
     {
@@ -556,7 +556,7 @@ var SharpAlg$Tests$ExprTests$CustomFunction =
 {
     fullname: "SharpAlg.Tests.ExprTests.CustomFunction",
     baseTypeName: "SharpAlg.Native.Function",
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
     {
@@ -662,7 +662,7 @@ var SharpAlg$Tests$ExprTestHelper =
             }, expected);
         }
     },
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
     {
@@ -771,7 +771,7 @@ var SharpAlg$Tests$FluentAssert =
                 throw $CreateException(new SharpAlg.Tests.FluentAssert.JsAssertionException.ctor("Expected: " + expected + " but was: " + actual), new Error());
         }
     },
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
     {
@@ -786,7 +786,7 @@ var SharpAlg$Tests$FluentAssert$JsAssertionException =
 {
     fullname: "SharpAlg.Tests.FluentAssert.JsAssertionException",
     baseTypeName: "System.Exception",
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
     {
@@ -839,7 +839,7 @@ var SharpAlg$Tests$NumberTests =
             return a;
         }
     },
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
     {
@@ -1225,7 +1225,7 @@ var SharpAlg$Tests$NumberTestHelper =
             return s.Contains(".") ? SharpAlg.Native.NumberFactory.FromString(s) : SharpAlg.Native.NumberFactory.FromIntString(s);
         }
     },
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
     {
@@ -1247,7 +1247,7 @@ var SharpAlg$Tests$ParserTests =
             return SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, column, "invalid Terminal\r\n");
         }
     },
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
     {
@@ -1367,7 +1367,7 @@ var SharpAlg$Tests$ParserTestHelper =
             return SharpAlg.Native.ExpressionExtensions.ParseCore(expression, new SharpAlg.Native.Builder.TrivialExprBuilder(SharpAlg.Native.ContextFactory.Empty));
         }
     },
-    assemblyName: "SharpAlg",
+    assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
     {

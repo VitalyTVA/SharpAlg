@@ -5,16 +5,16 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.0</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{38482767-3E98-4680-B8CD-BCF4268575E2}</ProjectGuid>
+    <ProjectGuid>{C9AFE3B3-BEA8-4B09-AC04-94C1DFEE1EB0}</ProjectGuid>
     <ProjectTypeGuids>{EFBA0AD7-5A72-4C68-AF49-83D382785DCF};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
-    <RootNamespace>SharpAlg.Android</RootNamespace>
+    <RootNamespace>SharpAlg.Tests.Android</RootNamespace>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
     <MonoAndroidResourcePrefix>Resources</MonoAndroidResourcePrefix>
     <MonoAndroidAssetsPrefix>Assets</MonoAndroidAssetsPrefix>
-    <AssemblyName>SharpAlg.Android</AssemblyName>
+    <AssemblyName>SharpAlg.Tests.Android</AssemblyName>
     <AndroidManifest>Properties\AndroidManifest.xml</AndroidManifest>
     <IntermediateOutputPath>obj.Android\Debug</IntermediateOutputPath>
   </PropertyGroup>
@@ -46,16 +46,23 @@
     <Reference Include="Xamarin.Android.NUnitLite" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Native\ContextFactory.cs" />
-    <Compile Include="Native\ExprBuilderFactory.cs" />
-    <Compile Include="Native\ExpressionExtensions.cs" />
-    <Compile Include="Native\Functions.cs" />
-    <Compile Include="Native\Printer\ExpressionPrinter.cs" />
-    <Compile Include="Native\SR.cs" />
+    <Compile Include="Android\MainActivity.cs" />
+    <Compile Include="Resources\Resource.designer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tests\DiffTests.cs" />
+    <Compile Include="Tests\ExprTests.cs" />
+    <Compile Include="Tests\FluentAssert.cs" />
+    <Compile Include="Tests\NumberTests.cs" />
+    <Compile Include="Tests\ParserTests.cs" />
+    <Compile Include="Tests\SR.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\AboutResources.txt" />
+    <None Include="Android\Assets\AboutAssets.txt" />
     <None Include="Properties\AndroidManifest.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <AndroidResource Include="Resources\drawable\Icon.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Implementation.csproj">
@@ -69,6 +76,10 @@
     <ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Parser.csproj">
       <Project>{A20747C7-601E-454A-83D5-D53FC6724F71}</Project>
       <Name>SharpAlg.Parser</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpAlg\SharpAlg.Android.csproj">
+      <Project>{38482767-3e98-4680-b8cd-bcf4268575e2}</Project>
+      <Name>SharpAlg.Android</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />

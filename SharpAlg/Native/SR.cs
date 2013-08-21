@@ -6,9 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace SharpAlg.Native {
-    public static class SR {
-        public const string JSPrinterName = "../../res/SharpAlg.Printer.js";
-        public const string JSNativeName = "../res/SharpAlg.Native.js";
-        public const string JSTestsName = "../res/SharpAlg.Tests.js";
+    static class SR {
+        public const string JSPrinterName = "../../../SharpAlg.Tests/res/SharpAlg.Printer.js";
+        public const string JSNativeName = "../../SharpAlg.Tests/res/SharpAlg.Native.js";
     }
 }
