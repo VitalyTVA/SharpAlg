@@ -2,55 +2,54 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{A20747C7-601E-454A-83D5-D53FC6724F71}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpAlg.Parser</RootNamespace>
     <AssemblyName>SharpAlg.Parser</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_NET|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <OutputPath>bin.Portable\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;PORTABLE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
+    <TargetFrameworkProfile>Profile104</TargetFrameworkProfile>
+    <ProjectTypeGuids>{786C830F-07A1-408B-BD7F-6EE04809D6DB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProductVersion>12.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <IntermediateOutputPath>obj.Portable\Debug</IntermediateOutputPath>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_NET|AnyCPU' ">
     <Reference Include="SharpKit.JavaScript" />
-    <Reference Include="SharpKit.Html" />
-    <Reference Include="SharpKit.jQuery" />
-    <Reference Include="SharpKit.JsClr" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Reference Include="mscorlib" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Buffer.cs" />
     <Compile Include="Errors.cs" />
-    <Compile Include="Parser_.cs">
-      <DependentUpon>Parser.frame</DependentUpon>
-    </Compile>
-    <Compile Include="Scanner_.cs">
-      <DependentUpon>Scanner.frame</DependentUpon>
-    </Compile>
+
     <Compile Include="SR.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -61,10 +60,20 @@
       <Name>SharpAlg.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_NET|AnyCPU' ">
     <Content Include="Coco.exe" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <Compile Include="Parser_.cs"/>
+    <Compile Include="Scanner_.cs"/>
+  </ItemGroup>
+  <ItemGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_NET|AnyCPU' ">
+    <Compile Include="Parser_.cs">
+      <DependentUpon>Parser.frame</DependentUpon>
+    </Compile>
+    <Compile Include="Scanner_.cs">
+      <DependentUpon>Scanner.frame</DependentUpon>
+    </Compile>
     <None Include="Copyright.frame">
       <DependentUpon>SharpAlg.ATG</DependentUpon>
     </None>
@@ -76,19 +85,15 @@
     </None>
     <None Include="SharpAlg.ATG" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(MSBuildBinPath)\SharpKit\5\SharpKit.Build.targets" />
-  <PropertyGroup>
-    <PreBuildEvent>$(ProjectDir)coco $(ProjectDir)SharpAlg.ATG -namespace SharpAlg.Native.Parser
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' " />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" Condition=" '$(Configuration)|$(Platform)' == 'Debug_NET|AnyCPU' " />
+  <Import Project="$(MSBuildBinPath)\SharpKit\5\SharpKit.Build.targets" Condition=" '$(Configuration)|$(Platform)' == 'Debug_NET|AnyCPU' " />
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug_NET|AnyCPU' ">
+    <PreBuildEvent>
+set dir=$(ProjectDir)
+%dir%coco.exe %dir%SharpAlg.ATG -namespace SharpAlg.Native.Parser
 if ERRORLEVEL 1 goto END
-$(ProjectDir)bin\SharpAlg.Preprocess.exe
+%dir%bin\SharpAlg.Preprocess.exe
 :END</PreBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

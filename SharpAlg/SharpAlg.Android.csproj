@@ -74,13 +74,13 @@
       <Project>{88b5fb76-2564-4cf7-be75-b099098c857a}</Project>
       <Name>SharpAlg.Android.Implementation</Name>
     </ProjectReference>
-    <ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Android.Parser.csproj">
-      <Project>{a6a2db4e-f142-44cd-8cfe-c25af9a935dc}</Project>
-      <Name>SharpAlg.Android.Parser</Name>
-    </ProjectReference>
     <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Core.csproj">
       <Project>{a823e596-e03f-4896-8946-5cae2ba1c65d}</Project>
       <Name>SharpAlg.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Parser.csproj">
+      <Project>{A20747C7-601E-454A-83D5-D53FC6724F71}</Project>
+      <Name>SharpAlg.Parser</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Novell\Novell.MonoDroid.CSharp.targets" />

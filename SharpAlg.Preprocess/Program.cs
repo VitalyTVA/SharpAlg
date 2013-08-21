@@ -9,7 +9,7 @@ using System.IO;
 
 namespace SharpAlg.Preprocess {
     public class Program {
-        const string path = @"..";
+        const string path = @"..\..";
         static void Main(string[] args) {
             PatchScanner();
 
