@@ -224,3 +224,68 @@ SharpAlg.Native.PlatformHelper.GetMessage = function (e)
 {
     return e.toString();
 };
+var SharpAlg$Native$Tuple$2 =
+{
+    fullname: "SharpAlg.Native.Tuple$2",
+    baseTypeName: "System.Object",
+    assemblyName: "SharpAlg.Core",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function (T1, T2, item1, item2)
+        {
+            this.T1 = T1;
+            this.T2 = T2;
+            this.item1 = null;
+            this.item2 = null;
+            System.Object.ctor.call(this);
+            this.item1 = item1;
+            this.item2 = item2;
+        },
+        Item1$$: "`0",
+        get_Item1: function ()
+        {
+            return this.item1;
+        },
+        Item2$$: "`1",
+        get_Item2: function ()
+        {
+            return this.item2;
+        },
+        Equals$$Object: function (obj)
+        {
+            return this.Equals$$Object$$IEqualityComparer(obj, System.Collections.Generic.EqualityComparer$1.get_Default());
+        },
+        GetHashCode: function ()
+        {
+            return this.GetHashCode$$IEqualityComparer(System.Collections.Generic.EqualityComparer$1.get_Default());
+        },
+        Equals$$Object$$IEqualityComparer: function (other, comparer)
+        {
+            if (other == null)
+            {
+                return false;
+            }
+            var tuple = As(other, SharpAlg.Native.Tuple$2.ctor);
+            if (tuple == null)
+            {
+                return false;
+            }
+            return (comparer.Equals$$Object$$Object(this.item1, tuple.item1) && comparer.Equals$$Object$$Object(this.item2, tuple.item2));
+        },
+        GetHashCode$$IEqualityComparer: function (comparer)
+        {
+            return comparer.GetHashCode$$Object(this.item1) ^ comparer.GetHashCode$$Object(this.item2);
+        },
+        toString: function ()
+        {
+            var sb = new System.Text.StringBuilder.ctor();
+            sb.Append$$Object(this.item1);
+            sb.Append$$String(", ");
+            sb.Append$$Object(this.item2);
+            sb.Append$$String(")");
+            return sb.toString();
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$Tuple$2);

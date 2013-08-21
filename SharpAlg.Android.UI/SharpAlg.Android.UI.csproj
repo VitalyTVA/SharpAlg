@@ -74,15 +74,15 @@
     <Content Include="Properties\AndroidManifest.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Android.Implementation.csproj">
-      <Project>{88b5fb76-2564-4cf7-be75-b099098c857a}</Project>
-      <Name>SharpAlg.Android.Implementation</Name>
+    <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Implementation.csproj">
+      <Project>{06bd00af-1f46-4df4-a61e-e05d412d90b4}</Project>
+      <Name>SharpAlg.Implementation</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpAlg\SharpAlg.Android.csproj">
       <Project>{38482767-3e98-4680-b8cd-bcf4268575e2}</Project>
       <Name>SharpAlg.Android</Name>
     </ProjectReference>
-	<ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Parser.csproj">
+    <ProjectReference Include="..\SharpAlg.Parser\SharpAlg.Parser.csproj">
       <Project>{A20747C7-601E-454A-83D5-D53FC6724F71}</Project>
       <Name>SharpAlg.Parser</Name>
     </ProjectReference>

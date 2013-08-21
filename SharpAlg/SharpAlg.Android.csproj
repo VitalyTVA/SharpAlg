@@ -70,9 +70,9 @@
     <AndroidResource Include="Resources\drawable\Icon.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Android.Implementation.csproj">
-      <Project>{88b5fb76-2564-4cf7-be75-b099098c857a}</Project>
-      <Name>SharpAlg.Android.Implementation</Name>
+    <ProjectReference Include="..\SharpAlg.Implementation\SharpAlg.Implementation.csproj">
+      <Project>{06bd00af-1f46-4df4-a61e-e05d412d90b4}</Project>
+      <Name>SharpAlg.Implementation</Name>
     </ProjectReference>
     <ProjectReference Include="..\SharpAlg.Core\SharpAlg.Core.csproj">
       <Project>{a823e596-e03f-4896-8946-5cae2ba1c65d}</Project>

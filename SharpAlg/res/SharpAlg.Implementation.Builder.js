@@ -338,17 +338,17 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor = fun
 SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.Instance = new SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor();
 SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.ExtractMultiply = function (expr)
 {
-    return expr.Visit$1(System.Tuple$2.ctor, SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.Instance);
+    return expr.Visit$1(SharpAlg.Native.Tuple$2.ctor, SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.Instance);
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.prototype.Multiply = function (multi)
 {
     if (Is(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.ConstantExpr.ctor))
-        return new System.Tuple$2.ctor(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.CoreExpressionExtensions.Tail$$MultiplyExpr(multi));
+        return new SharpAlg.Native.Tuple$2.ctor(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.CoreExpressionExtensions.Tail$$MultiplyExpr(multi));
     return SharpAlg.Native.DefaultExpressionVisitor.prototype.Multiply.call(this, multi);
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor.prototype.GetDefault = function (expr)
 {
-    return new System.Tuple$2.ctor(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.One, expr);
+    return new SharpAlg.Native.Tuple$2.ctor(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.One, expr);
 };
 $Inherit(SharpAlg.Native.Builder.ConvolutionExprBuilder.MultiplyExpressionExtractor, SharpAlg.Native.DefaultExpressionVisitor);
 SharpAlg.Native.Builder.ConvolutionExprBuilder.PowerExpressionExtractor = function ()
