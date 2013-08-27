@@ -7,14 +7,16 @@ using System.Runtime.Serialization;
 using System.Text;
 
 namespace SharpAlg.Native.Printer {
-    [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+    [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
     public class ExpressionPrinter : IExpressionVisitor<string> {
         #region inner classes
-        [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         class ExpressionWrapperVisitor : IExpressionVisitor<bool> {
             readonly ExpressionOrder order;
             readonly OperationPriority priority;
-            public ExpressionWrapperVisitor(OperationPriority priority, ExpressionOrder order) {
+            readonly IContext context;
+            public ExpressionWrapperVisitor(IContext context, OperationPriority priority, ExpressionOrder order) {
+                this.context = context;
                 this.order = order;
                 this.priority = priority;
             }
@@ -42,7 +44,7 @@ namespace SharpAlg.Native.Printer {
                 return ShouldWrap(OperationPriority.Power);
             }
             public bool Function(FunctionExpr functionExpr) {
-                if(IsFactorial(functionExpr))
+                if(IsFactorial(context, functionExpr))
                     return ShouldWrap(OperationPriority.Factorial);
                 return false;
             }
@@ -50,7 +52,7 @@ namespace SharpAlg.Native.Printer {
                 return priority >= exprPriority;
             }
         }
-        [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         abstract class UnaryExpressionExtractor : DefaultExpressionVisitor<UnaryExpressionInfo> {
             protected abstract BinaryOperation Operation { get; }
             protected UnaryExpressionExtractor() {
@@ -64,7 +66,7 @@ namespace SharpAlg.Native.Printer {
                 return new UnaryExpressionInfo(expr, ExpressionEvaluator.GetBinaryOperationEx(Operation));
             }
         }
-        [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         class MultiplyUnaryExpressionExtractor : UnaryExpressionExtractor {
             public static readonly MultiplyUnaryExpressionExtractor MultiplyInstance = new MultiplyUnaryExpressionExtractor();
             protected override BinaryOperation Operation { get { return BinaryOperation.Multiply; } }
@@ -77,7 +79,7 @@ namespace SharpAlg.Native.Printer {
                 return base.Power(power);
             }
         }
-        [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         class AddUnaryExpressionExtractor : UnaryExpressionExtractor {
             public static readonly AddUnaryExpressionExtractor AddInstance = new AddUnaryExpressionExtractor();
             public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
@@ -98,7 +100,7 @@ namespace SharpAlg.Native.Printer {
                 return base.Multiply(multi);
             }
         }
-        [JsType(JsMode.Prototype, Filename = SR.JSPrinterName)]
+        [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         class UnaryExpressionInfo {
             public UnaryExpressionInfo(Expr expr, BinaryOperationEx operation) {
                 Operation = operation;
@@ -113,9 +115,6 @@ namespace SharpAlg.Native.Printer {
         }
         static bool IsInverseExpression(PowerExpr power) {
             return Expr.MinusOne.ExprEquals(power.Right);
-        }
-        static bool IsFactorial(FunctionExpr functionExpr) {
-            return functionExpr.FunctionName == Functions.Factorial.Name;
         }
         public static ExpressionPrinter Create(IContext context) {
             return new ExpressionPrinter(context);
@@ -169,7 +168,7 @@ namespace SharpAlg.Native.Printer {
             if(customPrint != null)
                 return customPrint;
 
-            if(IsFactorial(functionExpr))
+            if(IsFactorial(context, functionExpr))
                 return string.Format("{0}!", WrapFromFactorial(functionExpr.Args.First()));
 
             var sb = new StringBuilder(functionExpr.FunctionName);
@@ -182,6 +181,9 @@ namespace SharpAlg.Native.Printer {
             });
             sb.Append(")");
             return sb.ToString();
+        }
+        static bool IsFactorial(IContext context, FunctionExpr functionExpr) {
+            return context.GetFunction(functionExpr.FunctionName) is FactorialFunction;
         }
         static string GetBinaryOperationSymbol(BinaryOperationEx operation) {
             switch(operation) {
@@ -220,7 +222,7 @@ namespace SharpAlg.Native.Printer {
             return Wrap(expr, OperationPriority.Factorial, ExpressionOrder.Default);
         }
         string Wrap(Expr expr, OperationPriority currentPriority, ExpressionOrder order) {
-            bool wrap = expr.Visit(new ExpressionWrapperVisitor(currentPriority, order));
+            bool wrap = expr.Visit(new ExpressionWrapperVisitor(context, currentPriority, order));
             string s = expr.Visit(this);
             if(wrap)
                 return "(" + s + ")";

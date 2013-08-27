@@ -53,7 +53,6 @@
     <Compile Include="Native\ContextFactory.cs" />
     <Compile Include="Native\ExpressionExtensions.cs" />
     <Compile Include="Native\Functions.cs" />
-    <Compile Include="Native\Printer\ExpressionPrinter.cs" />
     <Compile Include="Native\SR.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
