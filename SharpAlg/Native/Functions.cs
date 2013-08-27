@@ -19,5 +19,8 @@ namespace SharpAlg.Native {
 
         static Function diff;
         public static Function Diff { get { return diff ?? (diff = new DiffFunction()); } }
+
+        static Function exp;
+        public static Function Exp { get { return exp ?? (exp = new ExpFunction()); } }
     }
 }

@@ -94,5 +94,27 @@ namespace SharpAlg.Native {
             return args.First().If(x => x.ExprEquals(Expr.One)).Return(x => Expr.Zero, () => null);
         }
     }
+    [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
+    public class ExpFunction : SingleArgumentDifferentiableFunction, ISupportCustomPrinting {
+        public ExpFunction()
+            : base(FunctionFactory.ExpName) {
+        }
+        protected override Number Evaluate(Number arg) {
+            return NumberFactory.Exp(arg);
+        }
+        protected override Expr DiffCore(ExprBuilder builder, Expr arg) {
+            return FunctionFactory.Exp(arg);
+        }
+
+        //public Expr Convolute(IContext context, IEnumerable<Expr> args) {
+        //    return args.First().If(x => x.ExprEquals(Expr.One)).Return(x => Expr.Zero, () => null);
+        //}
+
+        public Expr GetPrintableExpression(IContext context, IEnumerable<Expr> args) {
+            Expr arg = args.First();
+            ParameterExpr expExpression = Expr.Parameter("e");
+            return arg.ExprEquals(Expr.One) ? (Expr)expExpression : Expr.Power(expExpression, arg);
+        }
+    }
 
 }

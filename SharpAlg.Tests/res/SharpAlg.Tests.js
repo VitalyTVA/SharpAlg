@@ -592,7 +592,7 @@ var SharpAlg$Tests$ExprTestHelper =
         {
             return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Expr.ctor, expr, function (x)
             {
-                return SharpAlg.Native.ExpressionExtensions.Print(x);
+                return SharpAlg.Native.ExpressionExtensions.Print(x, null);
             }, value);
         },
         AssertIsInteger: function (expr)
@@ -797,6 +797,46 @@ var SharpAlg$Tests$FluentAssert$JsAssertionException =
     }
 };
 JsTypes.push(SharpAlg$Tests$FluentAssert$JsAssertionException);
+var SharpAlg$Tests$FunctionsTests =
+{
+    fullname: "SharpAlg.Tests.FunctionsTests",
+    baseTypeName: "System.Object",
+    assemblyName: "SharpAlg.Tests",
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            System.Object.ctor.call(this);
+        },
+        ExpTest: function ()
+        {
+            SharpAlg.Tests.FluentAssert.Fails$1(SharpAlg.Native.FunctionExpr.ctor, SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr("exp", [SharpAlg.Native.ExpressionExtensions.Parse("1", null), SharpAlg.Native.ExpressionExtensions.Parse("2", null)]), $CreateAnonymousDelegate(this, function (x)
+            {
+                SharpAlg.Native.ExpressionExtensions.Diff(x, null);
+            }), Typeof(SharpAlg.Native.InvalidArgumentCountException.ctor), null);
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("exp(1)", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "2.718281"), "e");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("exp(2)", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "7.389056"), "e ^ 2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("exp(-1)", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "0.367879"), "1 / e");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("exp(-2)", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "0.135335"), "e ^ (-2)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(x)", null), "e ^ x"), null), "e ^ x");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(x^2)", null), "e ^ (x ^ 2)"), null), "2 * x * e ^ (x ^ 2)");
+        }
+    }
+};
+JsTypes.push(SharpAlg$Tests$FunctionsTests);
 var SharpAlg$Tests$NumberTests =
 {
     fullname: "SharpAlg.Tests.NumberTests",

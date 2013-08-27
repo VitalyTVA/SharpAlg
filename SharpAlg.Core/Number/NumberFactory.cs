@@ -22,8 +22,10 @@ namespace SharpAlg.Native {
         }
 
         public static Number Ln(Number n) {
-            //TODO conversion to int for ln(1);
             return FromDouble(Math.Log(n.ToFloat().ConvertCast<FloatNumber>().value));
+        }
+        public static Number Exp(Number n) {
+            return FromDouble(Math.Exp(n.ToFloat().ConvertCast<FloatNumber>().value));
         }
         static Number FromDouble(double value) {
             return new FloatNumber(value);

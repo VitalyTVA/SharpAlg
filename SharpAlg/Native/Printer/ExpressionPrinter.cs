@@ -117,8 +117,12 @@ namespace SharpAlg.Native.Printer {
         static bool IsFactorial(FunctionExpr functionExpr) {
             return functionExpr.FunctionName == Functions.Factorial.Name;
         }
-        public static ExpressionPrinter Instance = new ExpressionPrinter();
-        ExpressionPrinter() {
+        public static ExpressionPrinter Create(IContext context) {
+            return new ExpressionPrinter(context);
+        }
+        readonly IContext context;
+        ExpressionPrinter(IContext context) {
+            this.context = context;
         }
         public string Constant(ConstantExpr constant) {
             return constant.Value.ToString();
@@ -159,6 +163,12 @@ namespace SharpAlg.Native.Printer {
             return parameter.ParameterName;
         }
         public string Function(FunctionExpr functionExpr) {
+            string customPrint = context.GetFunction(functionExpr.FunctionName)
+                .With(x => x as ISupportCustomPrinting)
+                .Return(x => x.GetPrintableExpression(context, functionExpr.Args).Visit(this), () => null);
+            if(customPrint != null)
+                return customPrint;
+
             if(IsFactorial(functionExpr))
                 return string.Format("{0}!", WrapFromFactorial(functionExpr.Args.First()));
 

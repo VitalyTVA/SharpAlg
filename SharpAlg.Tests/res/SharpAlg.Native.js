@@ -48,7 +48,7 @@ var SharpAlg$Native$ContextFactory =
         },
         CreateDefault: function ()
         {
-            return new SharpAlg.Native.Context.ctor().Register$$Function(SharpAlg.Native.Functions.get_Factorial()).Register$$Function(SharpAlg.Native.Functions.get_Ln()).Register$$Function(SharpAlg.Native.Functions.get_Diff());
+            return new SharpAlg.Native.Context.ctor().Register$$Function(SharpAlg.Native.Functions.get_Factorial()).Register$$Function(SharpAlg.Native.Functions.get_Ln()).Register$$Function(SharpAlg.Native.Functions.get_Diff()).Register$$Function(SharpAlg.Native.Functions.get_Exp());
         },
         cctor: function ()
         {
@@ -85,9 +85,9 @@ var SharpAlg$Native$ExpressionExtensions =
         {
             return SharpAlg.Native.ImplementationExpressionExtensions.Diff(expr, SharpAlg.Native.Builder.ExprBuilderFactory.CreateDefault(), parameterName);
         },
-        Print: function (expr)
+        Print: function (expr, context)
         {
-            return expr.Visit$1(System.String.ctor, SharpAlg.Native.Printer.ExpressionPrinter.Instance);
+            return expr.Visit$1(System.String.ctor, SharpAlg.Native.Printer.ExpressionPrinter.Create((context != null ? context : SharpAlg.Native.ContextFactory.Default)));
         },
         Parse: function (expression, builder)
         {
@@ -129,6 +129,7 @@ var SharpAlg$Native$Functions =
             SharpAlg.Native.Functions.factorial = null;
             SharpAlg.Native.Functions.ln = null;
             SharpAlg.Native.Functions.diff = null;
+            SharpAlg.Native.Functions.exp = null;
         },
         Factorial$$: "SharpAlg.Native.Function",
         get_Factorial: function ()
@@ -144,6 +145,11 @@ var SharpAlg$Native$Functions =
         get_Diff: function ()
         {
             return (SharpAlg.Native.Functions.diff != null ? SharpAlg.Native.Functions.diff : (SharpAlg.Native.Functions.diff = new SharpAlg.Native.DiffFunction.ctor()));
+        },
+        Exp$$: "SharpAlg.Native.Function",
+        get_Exp: function ()
+        {
+            return (SharpAlg.Native.Functions.exp != null ? SharpAlg.Native.Functions.exp : (SharpAlg.Native.Functions.exp = new SharpAlg.Native.ExpFunction.ctor()));
         }
     },
     assemblyName: "SharpAlg",

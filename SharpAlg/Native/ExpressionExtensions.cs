@@ -1,5 +1,6 @@
 using SharpAlg.Native.Builder;
 using SharpAlg.Native.Parser;
+using SharpAlg.Native.Printer;
 using SharpKit.JavaScript;
 using System;
 using System.Collections.Generic;
@@ -15,8 +16,8 @@ namespace SharpAlg.Native {
         public static Expr Diff(this Expr expr, string parameterName = null) {
             return expr.Diff(ExprBuilderFactory.CreateDefault(), parameterName);
         }
-        public static string Print(this Expr expr) {
-            return expr.Visit(SharpAlg.Native.Printer.ExpressionPrinter.Instance);
+        public static string Print(this Expr expr, Context context = null) {
+            return expr.Visit(ExpressionPrinter.Create(context ?? ContextFactory.Default));
         }
         public static Expr Parse(this string expression, ExprBuilder builder = null) {
             return GetExpression(ParseCore(expression, builder ?? ExprBuilderFactory.CreateDefault()));

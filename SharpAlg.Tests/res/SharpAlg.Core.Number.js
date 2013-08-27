@@ -880,6 +880,10 @@ var SharpAlg$Native$NumberFactory =
         {
             return SharpAlg.Native.NumberFactory.FromDouble(System.Math.Log$$Double(SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.FloatNumber.ctor, n.ToFloat()).value));
         },
+        Exp: function (n)
+        {
+            return SharpAlg.Native.NumberFactory.FromDouble(System.Math.Exp(SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.FloatNumber.ctor, n.ToFloat()).value));
+        },
         FromDouble: function (value)
         {
             return new SharpAlg.Native.Numbers.FloatNumber.ctor(value);

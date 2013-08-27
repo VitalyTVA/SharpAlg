@@ -21,7 +21,8 @@ namespace SharpAlg {
                     new ExprTests(),
                     new DiffTests(),
                     new ParserTests(),
-                    new NumberTests()
+                    new NumberTests(),
+                    new FunctionsTests()
                 };
             jQuery jQuery = new jQuery(HtmlContext.document.body);
             jQuery.append("<br/>");

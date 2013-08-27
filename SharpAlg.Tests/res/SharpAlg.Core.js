@@ -418,6 +418,8 @@ var SharpAlg$Native$ISupportCheckArgs = {fullname: "SharpAlg.Native.ISupportChec
 JsTypes.push(SharpAlg$Native$ISupportCheckArgs);
 var SharpAlg$Native$ISupportConvolution = {fullname: "SharpAlg.Native.ISupportConvolution", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$ISupportConvolution);
+var SharpAlg$Native$ISupportCustomPrinting = {fullname: "SharpAlg.Native.ISupportCustomPrinting", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
+JsTypes.push(SharpAlg$Native$ISupportCustomPrinting);
 var SharpAlg$Native$IContext = {fullname: "SharpAlg.Native.IContext", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$IContext);
 var SharpAlg$Native$IExpressionEvaluator = {fullname: "SharpAlg.Native.IExpressionEvaluator", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", interfaceNames: ["SharpAlg.Native.IExpressionVisitor$1"], Kind: "Interface"};

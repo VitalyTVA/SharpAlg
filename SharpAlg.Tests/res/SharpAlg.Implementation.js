@@ -664,6 +664,36 @@ var SharpAlg$Native$LnFunction =
     }
 };
 JsTypes.push(SharpAlg$Native$LnFunction);
+var SharpAlg$Native$ExpFunction =
+{
+    fullname: "SharpAlg.Native.ExpFunction",
+    baseTypeName: "SharpAlg.Native.SingleArgumentDifferentiableFunction",
+    assemblyName: "SharpAlg.Implementation",
+    interfaceNames: ["SharpAlg.Native.ISupportCustomPrinting"],
+    Kind: "Class",
+    definition:
+    {
+        ctor: function ()
+        {
+            SharpAlg.Native.SingleArgumentDifferentiableFunction.ctor.call(this, "exp");
+        },
+        Evaluate$$Number: function (arg)
+        {
+            return SharpAlg.Native.NumberFactory.Exp(arg);
+        },
+        DiffCore: function (builder, arg)
+        {
+            return SharpAlg.Native.FunctionFactory.Exp(arg);
+        },
+        GetPrintableExpression: function (context, args)
+        {
+            var arg = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
+            var expExpression = SharpAlg.Native.Expr.Parameter("e");
+            return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(arg, SharpAlg.Native.Expr.One) ? expExpression : SharpAlg.Native.Expr.Power(expExpression, arg);
+        }
+    }
+};
+JsTypes.push(SharpAlg$Native$ExpFunction);
 var SharpAlg$Native$FunctionFactory =
 {
     fullname: "SharpAlg.Native.FunctionFactory",
@@ -674,6 +704,7 @@ var SharpAlg$Native$FunctionFactory =
         {
             SharpAlg.Native.FunctionFactory.FactorialName = "factorial";
             SharpAlg.Native.FunctionFactory.LnName = "ln";
+            SharpAlg.Native.FunctionFactory.ExpName = "exp";
         },
         Factorial: function (argument)
         {
@@ -682,6 +713,10 @@ var SharpAlg$Native$FunctionFactory =
         Ln: function (argument)
         {
             return SharpAlg.Native.Expr.Function$$String$$Expr("ln", argument);
+        },
+        Exp: function (argument)
+        {
+            return SharpAlg.Native.Expr.Function$$String$$Expr("exp", argument);
         }
     },
     assemblyName: "SharpAlg.Implementation",

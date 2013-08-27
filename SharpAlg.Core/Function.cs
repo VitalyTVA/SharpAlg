@@ -33,4 +33,8 @@ namespace SharpAlg.Native {
     public interface ISupportConvolution {
         Expr Convolute(IContext context, IEnumerable<Expr> args);
     }
+    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
+    public interface ISupportCustomPrinting {
+        Expr GetPrintableExpression(IContext context, IEnumerable<Expr> args);
+    }
 }
