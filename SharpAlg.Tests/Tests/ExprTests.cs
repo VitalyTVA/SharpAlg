@@ -354,7 +354,7 @@ namespace SharpAlg.Tests {
             "(y * x)! + (x * y)!".Parse().AssertSimpleStringRepresentation("2 * (y * x)!");
             "someFunc(x, y * x) + someFunc(x, x * y)".Parse().AssertSimpleStringRepresentation("2 * someFunc(x, y * x)");
             "someFunc(x, y * x)! + 2 * someFunc(x, x * y)!".Parse().AssertSimpleStringRepresentation("3 * someFunc(x, y * x)!");
-            "ln(x * x) + ln(x + x)".Parse().AssertSimpleStringRepresentation("ln(x ^ 2) + ln(2 * x)");
+            "ln(x * x) + ln(x + x)".Parse().AssertSimpleStringRepresentation("2 * ln(x) + ln(2 * x)");
 
             "ln(1)".Parse().AssertSimpleStringRepresentation("0");
             "3!".Parse().AssertSimpleStringRepresentation("6");
@@ -373,6 +373,7 @@ namespace SharpAlg.Tests {
             "1.0 ^ (1/2)".Parse().AssertIsFloat().AssertSimpleStringRepresentation("1");
             "4 ^ (1/2)".Parse().AssertSimpleStringRepresentation("4 ^ (1/2)");
             "4.0 ^ (1/2)".Parse().AssertIsFloat().AssertSimpleStringRepresentation("2");
+            "1.0 - 1".Parse().AssertIsFloat().AssertSimpleStringRepresentation("0");
         }
         [Test]
         public void SubsitutionTest() {

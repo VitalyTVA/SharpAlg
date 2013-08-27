@@ -129,18 +129,6 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Parameter = function (parame
 };
 SharpAlg.Native.Printer.ExpressionPrinter.prototype.Function = function (functionExpr)
 {
-    var customPrint = SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(this.context.GetFunction(functionExpr.get_FunctionName()), $CreateAnonymousDelegate(this, function (x)
-    {
-        return As(x, SharpAlg.Native.ISupportCustomPrinting.ctor);
-    })), $CreateAnonymousDelegate(this, function (x)
-    {
-        return x.GetPrintableExpression(this.context, functionExpr.get_Args()).Visit$1(System.String.ctor, this);
-    }), $CreateAnonymousDelegate(this, function ()
-    {
-        return null;
-    }));
-    if (customPrint != null)
-        return customPrint;
     if (SharpAlg.Native.Printer.ExpressionPrinter.IsFactorial(this.context, functionExpr))
         return System.String.Format$$String$$Object("{0}!", this.WrapFromFactorial(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args())));
     var sb = new System.Text.StringBuilder.ctor$$String(functionExpr.get_FunctionName());

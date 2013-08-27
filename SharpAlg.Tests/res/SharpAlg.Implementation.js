@@ -631,6 +631,45 @@ var SharpAlg$Native$LnFunction =
 {
     fullname: "SharpAlg.Native.LnFunction",
     baseTypeName: "SharpAlg.Native.SingleArgumentDifferentiableFunction",
+    staticDefinition:
+    {
+        PowerConvolution: function (context, arg)
+        {
+            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.PowerExpr.ctor, arg), function (x)
+            {
+                return SharpAlg.Native.Expr.Multiply$$Expr$$Expr(x.get_Right(), SharpAlg.Native.FunctionFactory.Ln(x.get_Left()));
+            }, function ()
+            {
+                return null;
+            });
+        },
+        InverseFunctionConvolution: function (context, arg)
+        {
+            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.FunctionExpr.ctor, arg), function (x)
+            {
+                return Is(context.GetFunction(x.get_FunctionName()), SharpAlg.Native.ExpFunction.ctor);
+            }), function (x)
+            {
+                return System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, x.get_Args());
+            }, function ()
+            {
+                return null;
+            });
+        },
+        ConstantConvolution: function (arg)
+        {
+            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(arg, function (x)
+            {
+                return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.One);
+            }), function (x)
+            {
+                return SharpAlg.Native.Expr.Zero;
+            }, function ()
+            {
+                return null;
+            });
+        }
+    },
     assemblyName: "SharpAlg.Implementation",
     interfaceNames: ["SharpAlg.Native.ISupportConvolution"],
     Kind: "Class",
@@ -650,16 +689,8 @@ var SharpAlg$Native$LnFunction =
         },
         Convolute: function (context, args)
         {
-            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args), $CreateAnonymousDelegate(this, function (x)
-            {
-                return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.One);
-            })), $CreateAnonymousDelegate(this, function (x)
-            {
-                return SharpAlg.Native.Expr.Zero;
-            }), $CreateAnonymousDelegate(this, function ()
-            {
-                return null;
-            }));
+            var arg = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
+            return (SharpAlg.Native.LnFunction.ConstantConvolution(arg) != null ? SharpAlg.Native.LnFunction.ConstantConvolution(arg) : (SharpAlg.Native.LnFunction.PowerConvolution(context, arg) != null ? SharpAlg.Native.LnFunction.PowerConvolution(context, arg) : SharpAlg.Native.LnFunction.InverseFunctionConvolution(context, arg)));
         }
     }
 };
@@ -668,8 +699,56 @@ var SharpAlg$Native$ExpFunction =
 {
     fullname: "SharpAlg.Native.ExpFunction",
     baseTypeName: "SharpAlg.Native.SingleArgumentDifferentiableFunction",
+    staticDefinition:
+    {
+        MultiplyConvoultion: function (context, arg)
+        {
+            return SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.MultiplyExpr.ctor, arg), function (x)
+            {
+                var lnExpr = System.Linq.Enumerable.FirstOrDefault$1$$IEnumerable$1$$Func$2(SharpAlg.Native.FunctionExpr.ctor, System.Linq.Enumerable.Cast$1(SharpAlg.Native.FunctionExpr.ctor, System.Linq.Enumerable.Where$1$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, x.get_Args(), function (y)
+                {
+                    return Is(y, SharpAlg.Native.FunctionExpr.ctor);
+                })), function (y)
+                {
+                    return Is(context.GetFunction(y.get_FunctionName()), SharpAlg.Native.LnFunction.ctor);
+                });
+                if (lnExpr != null)
+                    return SharpAlg.Native.Expr.Power(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, lnExpr.get_Args()), SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(System.Linq.Enumerable.Where$1$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, x.get_Args(), function (y)
+                    {
+                        return y != lnExpr;
+                    })));
+                return null;
+            });
+        },
+        InverseFunctionConvolution: function (context, arg)
+        {
+            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.FunctionExpr.ctor, arg), function (x)
+            {
+                return Is(context.GetFunction(x.get_FunctionName()), SharpAlg.Native.LnFunction.ctor);
+            }), function (x)
+            {
+                return System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, x.get_Args());
+            }, function ()
+            {
+                return null;
+            });
+        },
+        ConstantConvolution: function (arg)
+        {
+            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(arg, function (x)
+            {
+                return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Zero);
+            }), function (x)
+            {
+                return SharpAlg.Native.Expr.One;
+            }, function ()
+            {
+                return null;
+            });
+        }
+    },
     assemblyName: "SharpAlg.Implementation",
-    interfaceNames: ["SharpAlg.Native.ISupportCustomPrinting"],
+    interfaceNames: ["SharpAlg.Native.ISupportConvolution"],
     Kind: "Class",
     definition:
     {
@@ -685,11 +764,10 @@ var SharpAlg$Native$ExpFunction =
         {
             return SharpAlg.Native.FunctionFactory.Exp(arg);
         },
-        GetPrintableExpression: function (context, args)
+        Convolute: function (context, args)
         {
             var arg = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
-            var expExpression = SharpAlg.Native.Expr.Parameter("e");
-            return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(arg, SharpAlg.Native.Expr.One) ? expExpression : SharpAlg.Native.Expr.Power(expExpression, arg);
+            return (SharpAlg.Native.ExpFunction.ConstantConvolution(arg) != null ? SharpAlg.Native.ExpFunction.ConstantConvolution(arg) : (SharpAlg.Native.ExpFunction.MultiplyConvoultion(context, arg) != null ? SharpAlg.Native.ExpFunction.MultiplyConvoultion(context, arg) : SharpAlg.Native.ExpFunction.InverseFunctionConvolution(context, arg)));
         }
     }
 };

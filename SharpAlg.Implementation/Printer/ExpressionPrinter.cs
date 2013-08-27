@@ -162,11 +162,11 @@ namespace SharpAlg.Native.Printer {
             return parameter.ParameterName;
         }
         public string Function(FunctionExpr functionExpr) {
-            string customPrint = context.GetFunction(functionExpr.FunctionName)
-                .With(x => x as ISupportCustomPrinting)
-                .Return(x => x.GetPrintableExpression(context, functionExpr.Args).Visit(this), () => null);
-            if(customPrint != null)
-                return customPrint;
+            //string customPrint = context.GetFunction(functionExpr.FunctionName)
+            //    .With(x => x as ISupportCustomPrinting)
+            //    .Return(x => x.GetPrintableExpression(context, functionExpr.Args).Visit(this), () => null);
+            //if(customPrint != null)
+            //    return customPrint;
 
             if(IsFactorial(context, functionExpr))
                 return string.Format("{0}!", WrapFromFactorial(functionExpr.Args.First()));

@@ -91,11 +91,29 @@ namespace SharpAlg.Native {
         }
 
         public Expr Convolute(IContext context, IEnumerable<Expr> args) {
-            return args.First().If(x => x.ExprEquals(Expr.One)).Return(x => Expr.Zero, () => null);
+            var arg = args.First();
+            return ConstantConvolution(arg) ??
+                PowerConvolution(context, arg) ??
+                InverseFunctionConvolution(context, arg);
+        }
+
+        static Expr PowerConvolution(IContext context, Expr arg) {
+            return arg
+                .ConvertAs<PowerExpr>()
+                .Return(x => Expr.Multiply(x.Right, FunctionFactory.Ln(x.Left)), () => null);
+        }
+        static Expr InverseFunctionConvolution(IContext context, Expr arg) {
+            return arg
+                .ConvertAs<FunctionExpr>()
+                .If(x => context.GetFunction(x.FunctionName) is ExpFunction)
+                .Return(x => x.Args.First(), () => null);
+        }
+        static ConstantExpr ConstantConvolution(Expr arg) {
+            return arg.If(x => x.ExprEquals(Expr.One)).Return(x => Expr.Zero, () => null);
         }
     }
     [JsType(JsMode.Clr, Filename = SR.JS_Implementation)]
-    public class ExpFunction : SingleArgumentDifferentiableFunction, ISupportCustomPrinting {
+    public class ExpFunction : SingleArgumentDifferentiableFunction, ISupportConvolution {
         public ExpFunction()
             : base(FunctionFactory.ExpName) {
         }
@@ -105,15 +123,39 @@ namespace SharpAlg.Native {
         protected override Expr DiffCore(ExprBuilder builder, Expr arg) {
             return FunctionFactory.Exp(arg);
         }
-
-        //public Expr Convolute(IContext context, IEnumerable<Expr> args) {
-        //    return args.First().If(x => x.ExprEquals(Expr.One)).Return(x => Expr.Zero, () => null);
+        //public Expr GetPrintableExpression(IContext context, IEnumerable<Expr> args) {
+        //    Expr arg = args.First();
+        //    ParameterExpr expExpression = Expr.Parameter("e");
+        //    return arg.ExprEquals(Expr.One) ? (Expr)expExpression : Expr.Power(expExpression, arg);
         //}
 
-        public Expr GetPrintableExpression(IContext context, IEnumerable<Expr> args) {
-            Expr arg = args.First();
-            ParameterExpr expExpression = Expr.Parameter("e");
-            return arg.ExprEquals(Expr.One) ? (Expr)expExpression : Expr.Power(expExpression, arg);
+        public Expr Convolute(IContext context, IEnumerable<Expr> args) {
+            var arg = args.First();
+            return ConstantConvolution(arg) ??
+                MultiplyConvoultion(context, arg) ??
+                InverseFunctionConvolution(context, arg);
+        }
+        static Expr MultiplyConvoultion(IContext context, Expr arg) {
+            return arg
+                .ConvertAs<MultiplyExpr>()
+                .With(x => {
+                    FunctionExpr lnExpr = x.Args
+                        .Where(y => y is FunctionExpr)
+                        .Cast<FunctionExpr>()
+                        .FirstOrDefault(y => context.GetFunction(y.FunctionName) is LnFunction);
+                    if(lnExpr != null)
+                        return Expr.Power(lnExpr.Args.First(), Expr.Multiply(x.Args.Where(y => y != lnExpr)));
+                    return null;
+                });
+        }
+        static Expr InverseFunctionConvolution(IContext context, Expr arg) {
+            return arg
+                .ConvertAs<FunctionExpr>()
+                .If(x => context.GetFunction(x.FunctionName) is LnFunction)
+                .Return(x => x.Args.First(), () => null);
+        }
+        static ConstantExpr ConstantConvolution(Expr arg) {
+            return arg.If(x => x.ExprEquals(Expr.Zero)).Return(x => Expr.One, () => null);
         }
     }
 

@@ -520,7 +520,7 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(y * x)! + (x * y)!", null), "2 * (y * x)!");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("someFunc(x, y * x) + someFunc(x, x * y)", null), "2 * someFunc(x, y * x)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("someFunc(x, y * x)! + 2 * someFunc(x, x * y)!", null), "3 * someFunc(x, y * x)!");
-            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(x * x) + ln(x + x)", null), "ln(x ^ 2) + ln(2 * x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(x * x) + ln(x + x)", null), "2 * ln(x) + ln(2 * x)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(1)", null), "0");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("3!", null), "6");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("3.5!", null), "3.5!");
@@ -542,6 +542,7 @@ var SharpAlg$Tests$ExprTests =
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.AssertIsFloat(SharpAlg.Native.ExpressionExtensions.Parse("1.0 ^ (1/2)", null)), "1");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("4 ^ (1/2)", null), "4 ^ (1/2)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.AssertIsFloat(SharpAlg.Native.ExpressionExtensions.Parse("4.0 ^ (1/2)", null)), "2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.AssertIsFloat(SharpAlg.Native.ExpressionExtensions.Parse("1.0 - 1", null)), "0");
         },
         SubsitutionTest: function ()
         {
@@ -815,24 +816,41 @@ var SharpAlg$Tests$FunctionsTests =
             {
                 SharpAlg.Native.ExpressionExtensions.Diff(x, null);
             }), Typeof(SharpAlg.Native.InvalidArgumentCountException.ctor), null);
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("exp(0.0)", null)), "1");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("exp(0)", null)), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "1"), "1");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("exp(1)", null), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), "2.718281"), "e");
+            }), "2.718281"), "exp(1)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("exp(2)", null), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), "7.389056"), "e ^ 2");
+            }), "7.389056"), "exp(2)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("exp(-1)", null), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), "0.367879"), "1 / e");
+            }), "0.367879"), "exp(-1)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("exp(-2)", null), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), "0.135335"), "e ^ (-2)");
-            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(x)", null), "e ^ x"), null), "e ^ x");
-            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(x^2)", null), "e ^ (x ^ 2)"), null), "2 * x * e ^ (x ^ 2)");
+            }), "0.135335"), "exp(-2)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(x)", null), "exp(x)"), null), "exp(x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(x^2)", null), "exp(x ^ 2)"), null), "2 * x * exp(x ^ 2)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(x!)", null), "exp(x!)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(ln(x))", null), "x");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(exp(x))", null), "x");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(exp(x^2))", null), "x ^ 2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(x^2)", null), "2 * ln(x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("ln(x^x)", null), "x * ln(x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(2 * ln(x))", null), "x ^ 2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(2 * ln(x) ^ 2)", null), "exp(2 * ln(x) ^ 2)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(ln(x) * y * 2)", null), "x ^ (2 * y)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(z * ln(y) * ln(x) * 2)", null), "y ^ (2 * z * ln(x))");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(ln(x^2))", null), "x ^ 2");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("exp(ln(x^x))", null), "x ^ x");
         }
     }
 };
