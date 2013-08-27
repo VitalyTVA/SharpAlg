@@ -132,27 +132,22 @@ namespace SharpAlg.Native {
         public Expr Convolute(IContext context, IEnumerable<Expr> args) {
             var arg = args.First();
             return ConstantConvolution(arg) ??
-                MultiplyConvoultion(context, arg) ??
-                InverseFunctionConvolution(context, arg);
+                MultiplyConvoultion(context, arg);
         }
         static Expr MultiplyConvoultion(IContext context, Expr arg) {
             return arg
+                .With(x => MultiplyExpressionExtractor.ExtractMultiply(x))
                 .ConvertAs<MultiplyExpr>()
                 .With(x => {
                     FunctionExpr lnExpr = x.Args
                         .Where(y => y is FunctionExpr)
                         .Cast<FunctionExpr>()
                         .FirstOrDefault(y => context.GetFunction(y.FunctionName) is LnFunction);
-                    if(lnExpr != null)
-                        return Expr.Power(lnExpr.Args.First(), Expr.Multiply(x.Args.Where(y => y != lnExpr)));
+                    if(lnExpr != null) {
+                        return new ConvolutionExprBuilder(context).Power(lnExpr.Args.First(), Expr.Multiply(x.Args.Where(y => y != lnExpr)));
+                    }
                     return null;
                 });
-        }
-        static Expr InverseFunctionConvolution(IContext context, Expr arg) {
-            return arg
-                .ConvertAs<FunctionExpr>()
-                .If(x => context.GetFunction(x.FunctionName) is LnFunction)
-                .Return(x => x.Args.First(), () => null);
         }
         static ConstantExpr ConstantConvolution(Expr arg) {
             return arg.If(x => x.ExprEquals(Expr.Zero)).Return(x => Expr.One, () => null);
