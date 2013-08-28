@@ -70,12 +70,19 @@ namespace SharpAlg.Native.Builder {
             if(!string.IsNullOrEmpty(checkArgs))
                 throw new InvalidArgumentCountException(checkArgs);
 
+            return FunctionCore(func, functionName, args);
+        }
+
+        private Expr FunctionCore(Function func, string functionName, IEnumerable<Expr> args) {
             return func
                 .ConvertAs<ISupportConvolution>()
                 .With(x => x.Convolute(Context, args))
                 .Return(x => x, () => Expr.Function(functionName, args)); //TODO As extension
         }
         public override Expr Parameter(string parameterName) {
+            Function func = Context.GetFunction(parameterName);
+            if(func != null)
+                return FunctionCore(func, parameterName, new Expr[0]);
             return context.GetValue(parameterName) ?? Expr.Parameter(parameterName);
         }
         public override Expr Add(Expr left, Expr right) {

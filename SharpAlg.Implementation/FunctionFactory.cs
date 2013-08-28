@@ -10,6 +10,8 @@ namespace SharpAlg.Native {
         public const string FactorialName = "factorial";
         public const string LnName = "ln";
         public const string ExpName = "exp";
+        public const string PiName = "Pi";
+        public const string SinName = "sin";
         public static FunctionExpr Factorial(Expr argument) {
             return Expr.Function(FactorialName, argument);
         }

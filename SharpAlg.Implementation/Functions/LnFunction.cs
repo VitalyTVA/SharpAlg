@@ -14,7 +14,7 @@ namespace SharpAlg.Native {
             : base(FunctionFactory.LnName) {
         }
         protected override Number Evaluate(Number arg) {
-            return NumberFactory.Ln(arg);
+            return NumberFactory.GetFloat(arg, x => Math.Log(x));
         }
         protected override Expr DiffCore(ExprBuilder builder, Expr arg) {
             return builder.Inverse(arg);

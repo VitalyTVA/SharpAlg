@@ -80,6 +80,10 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Function = function (fu
     }));
     if (!System.String.IsNullOrEmpty(checkArgs))
         throw $CreateException(new SharpAlg.Native.InvalidArgumentCountException.ctor$$String(checkArgs), new Error());
+    return this.FunctionCore(func, functionName, args);
+};
+SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.FunctionCore = function (func, functionName, args)
+{
     return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.ISupportConvolution.ctor, func), $CreateAnonymousDelegate(this, function (x)
     {
         return x.Convolute(this.get_Context(), args);
@@ -93,6 +97,9 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Function = function (fu
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Parameter = function (parameterName)
 {
+    var func = this.get_Context().GetFunction(parameterName);
+    if (func != null)
+        return this.FunctionCore(func, parameterName, []);
     return (this.context.GetValue(parameterName) != null ? this.context.GetValue(parameterName) : SharpAlg.Native.Expr.Parameter(parameterName));
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Add = function (left, right)

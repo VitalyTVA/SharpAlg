@@ -22,5 +22,11 @@ namespace SharpAlg.Native {
 
         static Function exp;
         public static Function Exp { get { return exp ?? (exp = new ExpFunction()); } }
+
+        static Function pi;
+        public static Function Pi { get { return pi ?? (pi = new PiFunction()); } }
+
+        static Function sin;
+        public static Function Sin { get { return sin ?? (sin = new SinFunction()); } }
     }
 }

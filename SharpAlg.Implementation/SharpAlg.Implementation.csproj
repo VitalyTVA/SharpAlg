@@ -57,12 +57,15 @@
     <Compile Include="DiffFunction.cs" />
     <Compile Include="ExpressionComparer.cs" />
     <Compile Include="ExpressionEvaluator.cs" />
+    <Compile Include="Functions\ConstantFunction.cs" />
     <Compile Include="Functions\FactorialFunction.cs" />
     <Compile Include="Functions\ExpFunction.cs" />
     <Compile Include="FunctionFactory.cs" />
     <Compile Include="Functions\InvalidArgumentCountException.cs" />
     <Compile Include="Functions\LnFunction.cs" />
+    <Compile Include="Functions\SinFunction.cs" />
     <Compile Include="Functions\SingleArgumentDifferentiableFunction.cs" />
+    <Compile Include="Functions\PiFunction.cs" />
     <Compile Include="Functions\SingleArgumentFunction.cs" />
     <Compile Include="ImplementationExpressionExtensions.cs" />
     <Compile Include="MultiplyExpressionExtractor.cs" />

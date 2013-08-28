@@ -13,10 +13,18 @@ namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     [TestFixture]
     public class FunctionsTests {
-        //[Test]
-        //public void PiTest() {
-        //    "Pi".Parse().IsFloatEqual(x => x.Evaluate(), "3.14159");
-        //}
+        const string STR_PiIsAConstantAndCantBeUsedAsFunction = "Pi is a constant and can't be used as function\r\n";
+        [Test]
+        public void PiTest() {
+            "Pi".Parse().IsFloatEqual(x => x.Evaluate(), "3.14159");
+            "Pi()".GetParser().AssertSyntaxErrors(ParserTestHelper.GetNumberExpectedMessage(4) + STR_PiIsAConstantAndCantBeUsedAsFunction, 2); //TODO only one error
+            "Pi(1)".GetParser().AssertSingleSyntaxError(STR_PiIsAConstantAndCantBeUsedAsFunction);
+            "Pi".Parse().Diff().AssertSimpleStringRepresentation("0").AssertIsInteger();
+        }
+        [Test]
+        public void TrigonometryTest() {
+            "sin(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.84147");
+        }
         [Test]
         public void ExpTest() {
             Expr.Function("exp", new Expr[] { "1".Parse(), "2".Parse() }).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));

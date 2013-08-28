@@ -871,18 +871,16 @@ var SharpAlg$Native$NumberFactory =
             SharpAlg.Native.NumberFactory.One = null;
             SharpAlg.Native.NumberFactory.Two = null;
             SharpAlg.Native.NumberFactory.MinusOne = null;
+            SharpAlg.Native.NumberFactory.Pi = null;
             SharpAlg.Native.NumberFactory.Zero = SharpAlg.Native.Numbers.LongIntegerNumber.Zero;
             SharpAlg.Native.NumberFactory.One = SharpAlg.Native.Numbers.LongIntegerNumber.One;
             SharpAlg.Native.NumberFactory.Two = SharpAlg.Native.Numbers.LongIntegerNumber.Two;
             SharpAlg.Native.NumberFactory.MinusOne = SharpAlg.Native.Numbers.LongIntegerNumber.MinusOne;
+            SharpAlg.Native.NumberFactory.Pi = SharpAlg.Native.NumberFactory.FromDouble(3.14159265358979);
         },
-        Ln: function (n)
+        GetFloat: function (n, evaluator)
         {
-            return SharpAlg.Native.NumberFactory.FromDouble(System.Math.Log$$Double(SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.FloatNumber.ctor, n.ToFloat()).value));
-        },
-        Exp: function (n)
-        {
-            return SharpAlg.Native.NumberFactory.FromDouble(System.Math.Exp(SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.FloatNumber.ctor, n.ToFloat()).value));
+            return SharpAlg.Native.NumberFactory.FromDouble(evaluator(SharpAlg.Native.FunctionalExtensions.ConvertCast$1(SharpAlg.Native.Numbers.FloatNumber.ctor, n.ToFloat()).value));
         },
         FromDouble: function (value)
         {

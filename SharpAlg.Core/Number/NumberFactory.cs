@@ -14,18 +14,17 @@ namespace SharpAlg.Native {
         public static readonly Number One;
         public static readonly Number Two;
         public static readonly Number MinusOne;
+        public static readonly Number Pi;
         static NumberFactory() {
             Zero = LongIntegerNumber.Zero;
             One = LongIntegerNumber.One;
             Two = LongIntegerNumber.Two;
             MinusOne = LongIntegerNumber.MinusOne;
+            Pi = FromDouble(Math.PI);
         }
 
-        public static Number Ln(Number n) {
-            return FromDouble(Math.Log(n.ToFloat().ConvertCast<FloatNumber>().value));
-        }
-        public static Number Exp(Number n) {
-            return FromDouble(Math.Exp(n.ToFloat().ConvertCast<FloatNumber>().value));
+        public static Number GetFloat(Number n, Func<double, double> evaluator) {
+            return FromDouble(evaluator(n.ToFloat().ConvertCast<FloatNumber>().value));
         }
         static Number FromDouble(double value) {
             return new FloatNumber(value);

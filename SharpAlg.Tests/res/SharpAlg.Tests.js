@@ -802,6 +802,13 @@ var SharpAlg$Tests$FunctionsTests =
 {
     fullname: "SharpAlg.Tests.FunctionsTests",
     baseTypeName: "System.Object",
+    staticDefinition:
+    {
+        cctor: function ()
+        {
+            SharpAlg.Tests.FunctionsTests.STR_PiIsAConstantAndCantBeUsedAsFunction = "Pi is a constant and can\'t be used as function\r\n";
+        }
+    },
     assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
@@ -809,6 +816,23 @@ var SharpAlg$Tests$FunctionsTests =
         ctor: function ()
         {
             System.Object.ctor.call(this);
+        },
+        PiTest: function ()
+        {
+            SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("Pi", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "3.14159");
+            SharpAlg.Tests.ParserTestHelper.AssertSyntaxErrors(SharpAlg.Tests.ExprTestHelper.GetParser("Pi()"), SharpAlg.Tests.ParserTestHelper.GetNumberExpectedMessage(4) + "Pi is a constant and can\'t be used as function\r\n", 2);
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("Pi(1)"), "Pi is a constant and can\'t be used as function\r\n");
+            SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("Pi", null), null), "0"));
+        },
+        TrigonometryTest: function ()
+        {
+            SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("sin(1)", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "0.84147");
         },
         ExpTest: function ()
         {
@@ -1298,13 +1322,6 @@ var SharpAlg$Tests$ParserTests =
 {
     fullname: "SharpAlg.Tests.ParserTests",
     baseTypeName: "System.Object",
-    staticDefinition:
-    {
-        GetNumberExpectedMessage: function (column)
-        {
-            return SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, column, "invalid Terminal\r\n");
-        }
-    },
     assemblyName: "SharpAlg.Tests",
     Kind: "Class",
     definition:
@@ -1318,13 +1335,13 @@ var SharpAlg$Tests$ParserTests =
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("1"), 1, SharpAlg.Native.Expr.One, null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13"), 22, SharpAlg.Native.Expr.Add$$Expr$$Expr(SharpAlg.Tests.ExprTestHelper.AsConstant(9), SharpAlg.Tests.ExprTestHelper.AsConstant(13)), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("9 + 13 + 117"), 139, SharpAlg.Native.Expr.Add$$Expr$$Expr(SharpAlg.Native.Expr.Add$$Expr$$Expr(SharpAlg.Tests.ExprTestHelper.AsConstant(9), SharpAlg.Tests.ExprTestHelper.AsConstant(13)), SharpAlg.Tests.ExprTestHelper.AsConstant(117)), null);
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("+"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1));
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9+"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(3));
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9 + "), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(5));
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("+"), SharpAlg.Tests.ParserTestHelper.GetNumberExpectedMessage(1));
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9+"), SharpAlg.Tests.ParserTestHelper.GetNumberExpectedMessage(3));
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("9 + "), SharpAlg.Tests.ParserTestHelper.GetNumberExpectedMessage(5));
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("13 - 9"), 4, SharpAlg.Native.Expr.Subtract(SharpAlg.Tests.ExprTestHelper.AsConstant(13), SharpAlg.Tests.ExprTestHelper.AsConstant(9)), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 - 2"), 119, SharpAlg.Native.Expr.Subtract(SharpAlg.Native.Expr.Subtract(SharpAlg.Tests.ExprTestHelper.AsConstant(130), SharpAlg.Tests.ExprTestHelper.AsConstant(9)), SharpAlg.Tests.ExprTestHelper.AsConstant(2)), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("130 - 9 + 12 - 4"), 129, SharpAlg.Native.Expr.Subtract(SharpAlg.Native.Expr.Add$$Expr$$Expr(SharpAlg.Native.Expr.Subtract(SharpAlg.Tests.ExprTestHelper.AsConstant(130), SharpAlg.Tests.ExprTestHelper.AsConstant(9)), SharpAlg.Tests.ExprTestHelper.AsConstant(12)), SharpAlg.Tests.ExprTestHelper.AsConstant(4)), null);
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("13 -"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(5));
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("13 -"), SharpAlg.Tests.ParserTestHelper.GetNumberExpectedMessage(5));
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 * 3"), 6, SharpAlg.Native.Expr.Multiply$$Expr$$Expr(SharpAlg.Tests.ExprTestHelper.AsConstant(2), SharpAlg.Tests.ExprTestHelper.AsConstant(3)), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("6 / 2"), 3, SharpAlg.Native.Expr.Divide(SharpAlg.Tests.ExprTestHelper.AsConstant(6), SharpAlg.Tests.ExprTestHelper.AsConstant(2)), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 ^ 3"), 8, SharpAlg.Native.Expr.Power(SharpAlg.Tests.ExprTestHelper.AsConstant(2), SharpAlg.Tests.ExprTestHelper.AsConstant(3)), null);
@@ -1345,7 +1362,7 @@ var SharpAlg$Tests$ParserTests =
         {
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln(1)"), null , SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.Expr.One), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln(x ^ 2 + y * z)"), null , SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.ExpressionExtensions.Parse("x ^ 2 + y * z", null)), null);
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("ln()"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(4));
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("ln()"), SharpAlg.Tests.ParserTestHelper.GetNumberExpectedMessage(4));
         },
         FunctionMultiArgsTest: function ()
         {
@@ -1355,7 +1372,7 @@ var SharpAlg$Tests$ParserTests =
         {
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x!"), null , SharpAlg.Native.FunctionFactory.Factorial(SharpAlg.Native.Expr.Parameter("x")), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("x ^ y!"), null , SharpAlg.Native.Expr.Power(SharpAlg.Native.Expr.Parameter("x"), SharpAlg.Native.FunctionFactory.Factorial(SharpAlg.Native.Expr.Parameter("y"))), null);
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("!x"), SharpAlg.Tests.ParserTests.GetNumberExpectedMessage(1));
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("!x"), SharpAlg.Tests.ParserTestHelper.GetNumberExpectedMessage(1));
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("3!"), 6, SharpAlg.Native.FunctionFactory.Factorial(SharpAlg.Tests.ExprTestHelper.AsConstant(3)), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("2 ^ 3!"), 64, null, null);
         },
@@ -1408,10 +1425,14 @@ var SharpAlg$Tests$ParserTestHelper =
         },
         AssertSingleSyntaxError: function (parser, text)
         {
+            return SharpAlg.Tests.ParserTestHelper.AssertSyntaxErrors(parser, text, 1);
+        },
+        AssertSyntaxErrors: function (parser, text, errorCount)
+        {
             return SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, SharpAlg.Tests.FluentAssert.IsEqual$1$$TInput$$Func$2$$Object(SharpAlg.Native.Parser.Parser, parser, function (x)
             {
                 return x.errors.Count;
-            }, 1), function (x)
+            }, errorCount), function (x)
             {
                 return x.errors.get_Errors();
             }, text);
@@ -1423,6 +1444,10 @@ var SharpAlg$Tests$ParserTestHelper =
         ParseNoConvolutionCore: function (expression)
         {
             return SharpAlg.Native.ExpressionExtensions.ParseCore(expression, new SharpAlg.Native.Builder.TrivialExprBuilder(SharpAlg.Native.ContextFactory.Empty));
+        },
+        GetNumberExpectedMessage: function (column)
+        {
+            return SharpAlg.Native.Parser.ErrorsBase.GetErrorText(1, column, "invalid Terminal\r\n");
         }
     },
     assemblyName: "SharpAlg.Tests",

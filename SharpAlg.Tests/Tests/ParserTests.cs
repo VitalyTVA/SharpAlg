@@ -27,11 +27,11 @@ namespace SharpAlg.Tests {
             //Parse("x")
             //    .AssertSingleSyntaxError(GetNumberExpectedMessage(1));
             Parse("+")
-                .AssertSingleSyntaxError(GetNumberExpectedMessage(1));
+                .AssertSingleSyntaxError(ParserTestHelper.GetNumberExpectedMessage(1));
             Parse("9+")
-                .AssertSingleSyntaxError(GetNumberExpectedMessage(3));
+                .AssertSingleSyntaxError(ParserTestHelper.GetNumberExpectedMessage(3));
             Parse("9 + ")
-                .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
+                .AssertSingleSyntaxError(ParserTestHelper.GetNumberExpectedMessage(5));
 
             Parse("13 - 9")
                 .AssertValue(4, Expr.Subtract(ExprTestHelper.AsConstant(13), ExprTestHelper.AsConstant(9)));
@@ -40,7 +40,7 @@ namespace SharpAlg.Tests {
             Parse("130 - 9 + 12 - 4")
                 .AssertValue(129, Expr.Subtract(Expr.Add(Expr.Subtract(ExprTestHelper.AsConstant(130), ExprTestHelper.AsConstant(9)), ExprTestHelper.AsConstant(12)), ExprTestHelper.AsConstant(4)));
             Parse("13 -")
-                .AssertSingleSyntaxError(GetNumberExpectedMessage(5));
+                .AssertSingleSyntaxError(ParserTestHelper.GetNumberExpectedMessage(5));
 
             Parse("2 * 3")
                 .AssertValue(6, Expr.Multiply(ExprTestHelper.AsConstant(2), ExprTestHelper.AsConstant(3)));
@@ -81,7 +81,7 @@ namespace SharpAlg.Tests {
             Parse("ln(x ^ 2 + y * z)")
                 .AssertValue(null, Expr.Function("ln", "x ^ 2 + y * z".Parse()));
             Parse("ln()")
-                .AssertSingleSyntaxError(GetNumberExpectedMessage(4));
+                .AssertSingleSyntaxError(ParserTestHelper.GetNumberExpectedMessage(4));
         }
         [Test]
         public void FunctionMultiArgsTest() {
@@ -95,7 +95,7 @@ namespace SharpAlg.Tests {
             Parse("x ^ y!")
                 .AssertValue(null, Expr.Power(Expr.Parameter("x"), FunctionFactory.Factorial(Expr.Parameter("y"))));
             Parse("!x")
-                .AssertSingleSyntaxError(GetNumberExpectedMessage(1));
+                .AssertSingleSyntaxError(ParserTestHelper.GetNumberExpectedMessage(1));
             Parse("3!")
                 .AssertValue(6, FunctionFactory.Factorial(ExprTestHelper.AsConstant(3)));
             Parse("2 ^ 3!")
@@ -139,9 +139,6 @@ namespace SharpAlg.Tests {
         SharpAlg.Native.Parser.Parser Parse(string expression) {
             return ParserTestHelper.ParseNoConvolutionCore(expression);
         }
-        static string GetNumberExpectedMessage(int column) {
-            return ErrorsBase.GetErrorText(1, column, "invalid Terminal\r\n");
-        }
     }
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     public static class ParserTestHelper {
@@ -153,13 +150,19 @@ namespace SharpAlg.Tests {
                 .IsTrue(x => expectedExpr == null || x.Expr.ExprEquals(expectedExpr));
         }
         public static SharpAlg.Native.Parser.Parser AssertSingleSyntaxError(this SharpAlg.Native.Parser.Parser parser, string text) {
-            return parser.IsEqual(x => x.errors.Count, 1).IsEqual(x => x.errors.Errors, text);
+            return parser.AssertSyntaxErrors(text, 1);
+        }
+        public static SharpAlg.Native.Parser.Parser AssertSyntaxErrors(this SharpAlg.Native.Parser.Parser parser, string text, int errorCount) {
+            return parser.IsEqual(x => x.errors.Count, errorCount).IsEqual(x => x.errors.Errors, text);
         }
         public static Expr ParseNoConvolution(this string expression) {
             return ExpressionExtensions.GetExpression(ParseNoConvolutionCore(expression));
         }
         public static SharpAlg.Native.Parser.Parser ParseNoConvolutionCore(string expression) {
             return ExpressionExtensions.ParseCore(expression, new TrivialExprBuilder(ContextFactory.Empty));
+        }
+        public static string GetNumberExpectedMessage(int column) {
+            return ErrorsBase.GetErrorText(1, column, "invalid Terminal\r\n");
         }
     }
 }

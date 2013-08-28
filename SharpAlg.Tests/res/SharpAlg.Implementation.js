@@ -544,6 +544,8 @@ var SharpAlg$Native$FunctionFactory =
             SharpAlg.Native.FunctionFactory.FactorialName = "factorial";
             SharpAlg.Native.FunctionFactory.LnName = "ln";
             SharpAlg.Native.FunctionFactory.ExpName = "exp";
+            SharpAlg.Native.FunctionFactory.PiName = "Pi";
+            SharpAlg.Native.FunctionFactory.SinName = "sin";
         },
         Factorial: function (argument)
         {
