@@ -129,7 +129,7 @@ var SharpAlg$Native$ExpFunction =
         },
         Convolute: function (context, args)
         {
-            var arg = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
+            var arg = System.Linq.Enumerable.Single$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
             return (SharpAlg.Native.ExpFunction.ConstantConvolution(arg) != null ? SharpAlg.Native.ExpFunction.ConstantConvolution(arg) : SharpAlg.Native.ExpFunction.MultiplyConvoultion(context, arg));
         }
     }
@@ -216,7 +216,7 @@ var SharpAlg$Native$LnFunction =
         },
         Convolute: function (context, args)
         {
-            var arg = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
+            var arg = System.Linq.Enumerable.Single$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
             return (SharpAlg.Native.LnFunction.ConstantConvolution(arg) != null ? SharpAlg.Native.LnFunction.ConstantConvolution(arg) : (SharpAlg.Native.LnFunction.PowerConvolution(context, arg) != null ? SharpAlg.Native.LnFunction.PowerConvolution(context, arg) : SharpAlg.Native.LnFunction.InverseFunctionConvolution(context, arg)));
         }
     }
@@ -238,7 +238,7 @@ var SharpAlg$Native$SingleArgumentDifferentiableFunction =
         Diff: function (diffVisitor, args)
         {
             SharpAlg.Native.SingleArgumentFunction.CheckArgsCount$1(SharpAlg.Native.Expr.ctor, args);
-            var arg = System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
+            var arg = System.Linq.Enumerable.Single$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
             return diffVisitor.get_Builder().Multiply(arg.Visit$1(SharpAlg.Native.Expr.ctor, diffVisitor), this.DiffCore(diffVisitor.get_Builder(), arg));
         }
     }
@@ -279,7 +279,7 @@ var SharpAlg$Native$SingleArgumentFunction =
         EvaluateCore: function (args)
         {
             SharpAlg.Native.SingleArgumentFunction.CheckArgsCount$1(SharpAlg.Native.Number.ctor, args);
-            return this.Evaluate$$Number(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Number.ctor, args));
+            return this.Evaluate$$Number(System.Linq.Enumerable.Single$1$$IEnumerable$1(SharpAlg.Native.Number.ctor, args));
         },
         Check: function (args)
         {

@@ -23,7 +23,7 @@ namespace SharpAlg.Native {
             return Multi(left.Combine(right), type);
         }
         public static Expr Multi(IEnumerable<Expr> args, BinaryOperation type) {
-            return args.Count() > 1 ? (type == BinaryOperation.Add ? (MultiExpr)new AddExpr(args) : new MultiplyExpr(args)) : args.First();
+            return args.Count() > 1 ? (type == BinaryOperation.Add ? (MultiExpr)new AddExpr(args) : new MultiplyExpr(args)) : args.Single();
         }
         public static Expr Add(IEnumerable<Expr> args) {
             return Multi(args, BinaryOperation.Add);

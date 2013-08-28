@@ -21,7 +21,7 @@ namespace SharpAlg.Native {
         }
 
         public Expr Convolute(IContext context, IEnumerable<Expr> args) {
-            var arg = args.First();
+            var arg = args.Single();
             return ConstantConvolution(arg) ??
                 PowerConvolution(context, arg) ??
                 InverseFunctionConvolution(context, arg);

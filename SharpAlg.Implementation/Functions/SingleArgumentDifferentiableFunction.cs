@@ -15,7 +15,7 @@ namespace SharpAlg.Native {
         }
         public Expr Diff(IDiffExpressionVisitor diffVisitor, IEnumerable<Expr> args) {
             CheckArgsCount(args);
-            Expr arg = args.First();
+            Expr arg = args.Single();
             return diffVisitor.Builder.Multiply(arg.Visit(diffVisitor), DiffCore(diffVisitor.Builder, arg)); //TODO use builder
         }
         protected abstract Expr DiffCore(ExprBuilder builder, Expr arg);

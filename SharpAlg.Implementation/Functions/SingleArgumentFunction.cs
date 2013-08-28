@@ -25,7 +25,7 @@ namespace SharpAlg.Native {
         }
         Number EvaluateCore(IEnumerable<Number> args) {
             CheckArgsCount(args);
-            return Evaluate(args.First());
+            return Evaluate(args.Single());
         }
         protected abstract Number Evaluate(Number arg);
 

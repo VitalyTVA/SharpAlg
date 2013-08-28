@@ -53,7 +53,7 @@ var SharpAlg$Native$Expr =
         },
         Multi: function (args, type)
         {
-            return System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args) > 1 ? (type == 0 ? new SharpAlg.Native.AddExpr.ctor(args) : new SharpAlg.Native.MultiplyExpr.ctor(args)) : System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
+            return System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args) > 1 ? (type == 0 ? new SharpAlg.Native.AddExpr.ctor(args) : new SharpAlg.Native.MultiplyExpr.ctor(args)) : System.Linq.Enumerable.Single$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
         },
         Add$$IEnumerable$1$Expr: function (args)
         {
