@@ -13,6 +13,10 @@ namespace SharpAlg.Tests {
     [JsType(JsMode.Clr, Filename = SR.JSTestsName)]
     [TestFixture]
     public class FunctionsTests {
+        //[Test]
+        //public void PiTest() {
+        //    "Pi".Parse().IsFloatEqual(x => x.Evaluate(), "3.14159");
+        //}
         [Test]
         public void ExpTest() {
             Expr.Function("exp", new Expr[] { "1".Parse(), "2".Parse() }).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));

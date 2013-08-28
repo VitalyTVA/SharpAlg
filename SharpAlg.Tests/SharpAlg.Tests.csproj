@@ -75,11 +75,11 @@
     <Content Include="res\SharpAlg.Core.Number.js" />
     <Content Include="res\SharpAlg.Core.Utils.js" />
     <Content Include="res\SharpAlg.Implementation.Builder.js" />
+    <Content Include="res\SharpAlg.Implementation.Functions.js" />
     <Content Include="res\SharpAlg.Implementation.js" />
     <Content Include="res\SharpAlg.Implementation.Printer.js" />
     <Content Include="res\SharpAlg.Native.js" />
     <Content Include="res\SharpAlg.Parser.js" />
-    <Content Include="res\SharpAlg.Printer.js" />
     <Content Include="res\SharpAlg.Tests.js" />
     <Content Include="Web.config" />
   </ItemGroup>
