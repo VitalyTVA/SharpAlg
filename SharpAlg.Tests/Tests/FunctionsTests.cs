@@ -97,5 +97,42 @@ namespace SharpAlg.Tests {
                 .AssertSimpleStringRepresentation("x ^ x");
 
         }
+
+        [Test]
+        public void LnTest() {
+            "ln(1)".Parse()
+                .IsEqual(x => x.Evaluate(), 0.0.AsNumber())
+                .AssertIsInteger();
+            "ln(3)".Parse()
+                .IsFloatEqual(x => x.Evaluate(), "1.098612");
+
+            "ln(y * x) + ln(x * y)".Parse().AssertSimpleStringRepresentation("2 * ln(y * x)");
+            "ln(2.0)".Parse().IsFloatEqual(x => x.Print(), "0.693147");
+            "ln(x * x) + ln(x + x)".Parse().AssertSimpleStringRepresentation("2 * ln(x) + ln(2 * x)");
+            "ln(1.0)".Parse().AssertSimpleStringRepresentation("0").AssertIsFloat();
+            "ln(1)".Parse().AssertSimpleStringRepresentation("0").AssertIsInteger();
+
+            "ln(x)".Parse().Diff().AssertSimpleStringRepresentation("1 / x");
+            "ln(x ^ 2 + 1)".Parse().Diff().AssertSimpleStringRepresentation("2 * x / (x ^ 2 + 1)");
+            "ln(x ^ 3)".Parse().Diff().AssertSimpleStringRepresentation("3 / x");
+
+            "x * ln(2)".Parse().AssertSimpleStringRepresentation("x * ln(2)");
+            "ln(x + y) * ln(x * ln(x)) ^ 2".Parse().AssertSimpleStringRepresentation("ln(x + y) * ln(x * ln(x)) ^ 2");
+        }
+        [Test]
+        public void FactorialTest() {
+            "3!".Parse().AssertSimpleStringRepresentation("6").AssertIsInteger();
+            "3.5!".Parse().AssertSimpleStringRepresentation("3.5!");
+
+            "x! + factorial(y)".Parse().AssertSimpleStringRepresentation("x! + y!");
+            "x * y!".Parse().AssertSimpleStringRepresentation("x * y!");
+            "x ^ (y + z)!".Parse().AssertSimpleStringRepresentation("x ^ (y + z)!");
+            "(y ^ z)!".Parse().AssertSimpleStringRepresentation("(y ^ z)!");
+            "y! ^ z!".Parse().AssertSimpleStringRepresentation("y! ^ z!");
+
+            "(y * x)! + (x * y)!".Parse().AssertSimpleStringRepresentation("2 * (y * x)!");
+            "someFunc(x, y * x) + someFunc(x, x * y)".Parse().AssertSimpleStringRepresentation("2 * someFunc(x, y * x)");
+            "someFunc(x, y * x)! + 2 * someFunc(x, x * y)!".Parse().AssertSimpleStringRepresentation("3 * someFunc(x, y * x)!");
+        }
     }
 }

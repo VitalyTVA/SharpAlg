@@ -156,11 +156,6 @@ namespace SharpAlg.Tests {
                 .Register("x", "3".Parse());
             "CustomFunc(1, x + 2, 2)".Parse()
                 .IsEqual(x => x.Evaluate(context), 30.0.AsNumber());
-            "ln(1)".Parse()
-                .IsEqual(x => x.Evaluate(), 0.0.AsNumber())
-                .AssertIsInteger();
-            "ln(3)".Parse()
-                .IsFloatEqual(x => x.Evaluate(), "1.098612");
             Expr.Function("ln", new Expr[] { "1".Parse(), "2".Parse() }).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));
         }
         [Test]
@@ -229,13 +224,6 @@ namespace SharpAlg.Tests {
             Expr.Multiply(new Expr[] { ExprTestHelper.AsConstant(2), Expr.Parameter("x"), Expr.Power(Expr.Multiply(Expr.Parameter("y"), Expr.Parameter("z")), Expr.MinusOne) }).AssertSimpleStringRepresentation("2 * x / (y * z)");
             Expr.Power(Expr.Multiply(ExprTestHelper.AsConstant(3), Expr.Parameter("x")), Expr.MinusOne).AssertSimpleStringRepresentation("1 / (3 * x)");
 
-            "x * ln(2)".Parse().AssertSimpleStringRepresentation("x * ln(2)");
-            "ln(x + y) * ln(x * ln(x)) ^ 2".Parse().AssertSimpleStringRepresentation("ln(x + y) * ln(x * ln(x)) ^ 2");
-            "x! + factorial(y)".Parse().AssertSimpleStringRepresentation("x! + y!");
-            "x * y!".Parse().AssertSimpleStringRepresentation("x * y!");
-            "x ^ (y + z)!".Parse().AssertSimpleStringRepresentation("x ^ (y + z)!");
-            "(y ^ z)!".Parse().AssertSimpleStringRepresentation("(y ^ z)!");
-            "y! ^ z!".Parse().AssertSimpleStringRepresentation("y! ^ z!");
             "someFunc(x, x + y, x ^ y)".Parse().AssertSimpleStringRepresentation("someFunc(x, x + y, x ^ y)");
 
             "2*x/3*y".Parse().AssertSimpleStringRepresentation("2/3 * x * y");
@@ -351,18 +339,6 @@ namespace SharpAlg.Tests {
             "(x * y) ^ 2 * (x * y) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 4 * y ^ 4");
             "(x * y) ^ z".Parse().AssertSimpleStringRepresentation("(x * y) ^ z");
             "(x * y) ^ z * (y * x) ^ t".Parse().AssertSimpleStringRepresentation("(x * y) ^ (z + t)");
-
-            "ln(y * x) + ln(x * y)".Parse().AssertSimpleStringRepresentation("2 * ln(y * x)");
-            "ln(2.0)".Parse().IsFloatEqual(x => x.Print(), "0.693147");
-            "(y * x)! + (x * y)!".Parse().AssertSimpleStringRepresentation("2 * (y * x)!");
-            "someFunc(x, y * x) + someFunc(x, x * y)".Parse().AssertSimpleStringRepresentation("2 * someFunc(x, y * x)");
-            "someFunc(x, y * x)! + 2 * someFunc(x, x * y)!".Parse().AssertSimpleStringRepresentation("3 * someFunc(x, y * x)!");
-            "ln(x * x) + ln(x + x)".Parse().AssertSimpleStringRepresentation("2 * ln(x) + ln(2 * x)");
-
-            "ln(1.0)".Parse().AssertSimpleStringRepresentation("0").AssertIsFloat();
-            "ln(1)".Parse().AssertSimpleStringRepresentation("0").AssertIsInteger();
-            "3!".Parse().AssertSimpleStringRepresentation("6").AssertIsInteger();
-            "3.5!".Parse().AssertSimpleStringRepresentation("3.5!");
 
             "(2 / 3)^(2^6/2^(5 - 0))/(36/24)".Parse().AssertSimpleStringRepresentation("8/27");
             "(2 / 3 / x)^2".Parse().AssertSimpleStringRepresentation("4/9 * x ^ (-2)");
