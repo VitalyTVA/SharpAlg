@@ -48,7 +48,7 @@ var SharpAlg$Native$ContextFactory =
         },
         CreateDefault: function ()
         {
-            return new SharpAlg.Native.Context.ctor().Register$$Function(SharpAlg.Native.Functions.get_Factorial()).Register$$Function(SharpAlg.Native.Functions.get_Ln()).Register$$Function(SharpAlg.Native.Functions.get_Diff()).Register$$Function(SharpAlg.Native.Functions.get_Exp()).Register$$Function(SharpAlg.Native.Functions.get_Pi()).Register$$Function(SharpAlg.Native.Functions.get_Sin());
+            return new SharpAlg.Native.Context.ctor().Register$$Function(SharpAlg.Native.Functions.get_Factorial()).Register$$Function(SharpAlg.Native.Functions.get_Ln()).Register$$Function(SharpAlg.Native.Functions.get_Diff()).Register$$Function(SharpAlg.Native.Functions.get_Exp()).Register$$Function(SharpAlg.Native.Functions.get_Pi()).Register$$Function(SharpAlg.Native.Functions.get_Sin()).Register$$Function(SharpAlg.Native.Functions.get_Cos());
         },
         cctor: function ()
         {
@@ -132,6 +132,7 @@ var SharpAlg$Native$Functions =
             SharpAlg.Native.Functions.exp = null;
             SharpAlg.Native.Functions.pi = null;
             SharpAlg.Native.Functions.sin = null;
+            SharpAlg.Native.Functions.cos = null;
         },
         Factorial$$: "SharpAlg.Native.Function",
         get_Factorial: function ()
@@ -162,6 +163,11 @@ var SharpAlg$Native$Functions =
         get_Sin: function ()
         {
             return (SharpAlg.Native.Functions.sin != null ? SharpAlg.Native.Functions.sin : (SharpAlg.Native.Functions.sin = new SharpAlg.Native.SinFunction.ctor()));
+        },
+        Cos$$: "SharpAlg.Native.Function",
+        get_Cos: function ()
+        {
+            return (SharpAlg.Native.Functions.cos != null ? SharpAlg.Native.Functions.cos : (SharpAlg.Native.Functions.cos = new SharpAlg.Native.CosFunction.ctor()));
         }
     },
     assemblyName: "SharpAlg",

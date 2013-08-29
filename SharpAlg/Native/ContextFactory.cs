@@ -16,7 +16,9 @@ namespace SharpAlg.Native {
                 .Register(Functions.Diff)
                 .Register(Functions.Exp)
                 .Register(Functions.Pi)
-                .Register(Functions.Sin);
+                .Register(Functions.Sin)
+                .Register(Functions.Cos)
+                ;
         }
         public static readonly Context Empty;
         public static readonly Context Default;

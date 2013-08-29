@@ -28,5 +28,8 @@ namespace SharpAlg.Native {
 
         static Function sin;
         public static Function Sin { get { return sin ?? (sin = new SinFunction()); } }
+
+        static Function cos;
+        public static Function Cos { get { return cos ?? (cos = new CosFunction()); } }
     }
 }

@@ -793,6 +793,31 @@ var SharpAlg$Tests$FunctionsTests =
         {
             System.Object.ctor.call(this);
         },
+        TrigonometryTest: function ()
+        {
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("sin(1)", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "0.84147"), "sin(1)");
+            SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("sin(1.0)", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Print(x, null);
+            }), "0.84147");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("sin(x)", null), null), "cos(x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("sin(-x)", null), null), "-cos(-x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("sin(x ^ 2)", null), null), "2 * x * cos(x ^ 2)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("cos(1)", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
+            }), "0.54030"), "cos(1)");
+            SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("cos(1.0)", null), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ExpressionExtensions.Print(x, null);
+            }), "0.54030");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("cos(x)", null), null), "-sin(x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("cos(-x)", null), null), "sin(-x)");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("cos(x ^ 2)", null), null), "-2 * x * sin(x ^ 2)");
+        },
         PiTest: function ()
         {
             SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("Pi", null), $CreateAnonymousDelegate(this, function (x)
@@ -804,17 +829,6 @@ var SharpAlg$Tests$FunctionsTests =
             SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("Pi", null), null), "0"));
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("Pi", null), "Pi");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("Pi + 1.0", null), "Pi + 1");
-        },
-        TrigonometryTest: function ()
-        {
-            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("sin(1)", null), $CreateAnonymousDelegate(this, function (x)
-            {
-                return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), "0.84147"), "sin(1)");
-            SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("sin(1.0)", null), $CreateAnonymousDelegate(this, function (x)
-            {
-                return SharpAlg.Native.ExpressionExtensions.Print(x, null);
-            }), "0.84147");
         },
         ExpTest: function ()
         {

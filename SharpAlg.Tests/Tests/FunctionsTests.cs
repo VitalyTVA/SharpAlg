@@ -14,6 +14,24 @@ namespace SharpAlg.Tests {
     [TestFixture]
     public class FunctionsTests {
         const string STR_PiIsAConstantAndCantBeUsedAsFunction = "Pi is a constant and can't be used as function\r\n";
+
+        [Test]
+        public void TrigonometryTest() {
+            "sin(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.84147").AssertSimpleStringRepresentation("sin(1)");
+            "sin(1.0)".Parse().IsFloatEqual(x => x.Print(), "0.84147");
+            "sin(x)".Parse().Diff().AssertSimpleStringRepresentation("cos(x)");
+            "sin(-x)".Parse().Diff().AssertSimpleStringRepresentation("-cos(-x)");
+            "sin(x ^ 2)".Parse().Diff().AssertSimpleStringRepresentation("2 * x * cos(x ^ 2)");
+
+            "cos(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.54030").AssertSimpleStringRepresentation("cos(1)");
+            "cos(1.0)".Parse().IsFloatEqual(x => x.Print(), "0.54030");
+            "cos(x)".Parse().Diff().AssertSimpleStringRepresentation("-sin(x)");
+            "cos(-x)".Parse().Diff().AssertSimpleStringRepresentation("sin(-x)");
+            "cos(x ^ 2)".Parse().Diff().AssertSimpleStringRepresentation("-2 * x * sin(x ^ 2)");
+
+            //"cos(-x ^ 2)".Parse().Diff().AssertSimpleStringRepresentation("2 * x * sin(-x ^ 2)");
+        }
+
         [Test]
         public void PiTest() {
             "Pi".Parse().IsFloatEqual(x => x.Evaluate(), "3.14159");
@@ -23,14 +41,7 @@ namespace SharpAlg.Tests {
             "Pi".Parse().AssertSimpleStringRepresentation("Pi");
             "Pi + 1.0".Parse().AssertSimpleStringRepresentation("Pi + 1");
         }
-        [Test]
-        public void TrigonometryTest() {
-            "sin(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.84147").AssertSimpleStringRepresentation("sin(1)");
-            "sin(1.0)".Parse().IsFloatEqual(x => x.Print(), "0.84147");
 
-            //"cos(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.54030").AssertSimpleStringRepresentation("cos(1)");
-            //"sin(x)".Parse().Diff().AssertSimpleStringRepresentation("cos(x)");
-        }
         [Test]
         public void ExpTest() {
             Expr.Function("exp", new Expr[] { "1".Parse(), "2".Parse() }).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));
