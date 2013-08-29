@@ -21,8 +21,11 @@ SharpAlg 										(. Expr expr; .)
 = AdditiveExpression<out expr>					(. this.Expr = expr; .)
 .
 
-AdditiveExpression<out Expr expr>				(. bool minus; Expr rightExpr; .)			
-= MultiplicativeExpression<out expr>
+AdditiveExpression<out Expr expr>				(. bool leftMinus = false, minus; Expr rightExpr; .)			
+=	[
+	'-'											(. leftMinus = true; .)
+	]
+	MultiplicativeExpression<out expr>			(. expr = leftMinus ? builder.Minus(expr) : expr; .)
 	{
 	AdditiveOperation<out minus> 
 	MultiplicativeExpression<out rightExpr>		(. expr = builder.Add(expr, (minus ? builder.Minus(rightExpr) : rightExpr)); .)
@@ -72,7 +75,6 @@ Terminal<out Expr expr>							(. expr = null; .)
 	| floatNumber								(. expr = Expr.Constant(NumberFactory.FromString(t.val)); .)
 	| '('AdditiveExpression<out expr>')'
 	| FunctionCall<out expr>			
-	| '-' Terminal<out expr>					(. expr = builder.Minus(expr); .)
 	)
 .
 

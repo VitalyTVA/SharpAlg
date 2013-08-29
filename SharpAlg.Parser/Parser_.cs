@@ -101,8 +101,13 @@ public class Parser {
 	}
 
 	void AdditiveExpression(out Expr expr) {
-		bool minus; Expr rightExpr; 
+		bool leftMinus = false, minus; Expr rightExpr; 
+		if (la.kind == 4) {
+			Get();
+			leftMinus = true; 
+		}
 		MultiplicativeExpression(out expr);
+		expr = leftMinus ? builder.Minus(expr) : expr; 
 		while (la.kind == 4 || la.kind == 5) {
 			AdditiveOperation(out minus);
 			MultiplicativeExpression(out rightExpr);
@@ -122,9 +127,9 @@ public class Parser {
 
 	void AdditiveOperation(out bool minus) {
 		minus = false; 
-		if (la.kind == 4) {
+		if (la.kind == 5) {
 			Get();
-		} else if (la.kind == 5) {
+		} else if (la.kind == 4) {
 			Get();
 			minus = true; 
 		} else SynErr(14);
@@ -172,10 +177,6 @@ public class Parser {
 			Expect(11);
 		} else if (la.kind == 1) {
 			FunctionCall(out expr);
-		} else if (la.kind == 5) {
-			Get();
-			Terminal(out expr);
-			expr = builder.Minus(expr); 
 		} else SynErr(16);
 	}
 
@@ -230,7 +231,7 @@ public class Parser {
 //parser set patch begin
 	static readonly bool[][] set = {
 		new bool[] {T,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
-		new bool[] {x,T,T,T, x,T,x,x, x,x,T,x, x,x,x}
+		new bool[] {x,T,T,T, T,x,x,x, x,x,T,x, x,x,x}
 
 	};
 //parser set patch end
@@ -245,8 +246,8 @@ public class Errors : ErrorsBase {
 			case 1: s = "identifier expected"; break;
 			case 2: s = "number expected"; break;
 			case 3: s = "floatNumber expected"; break;
-			case 4: s = "\"+\" expected"; break;
-			case 5: s = "\"-\" expected"; break;
+			case 4: s = "\"-\" expected"; break;
+			case 5: s = "\"+\" expected"; break;
 			case 6: s = "\"*\" expected"; break;
 			case 7: s = "\"/\" expected"; break;
 			case 8: s = "\"^\" expected"; break;

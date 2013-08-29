@@ -57,13 +57,13 @@ namespace SharpAlg.Tests {
                 .AssertValue(-.234);
             Parse("-.234")
                 .AssertValue(-.234);
-        }
-        public void TODO() {
+
             Parse("-x * 2")
                 .AssertValue(null, Expr.Multiply(Expr.MinusOne, "x * 2".ParseNoConvolution()));
             Parse("-x ^ 2")
                 .AssertValue(null, Expr.Minus("x ^ 2".Parse()));
-           "-x ^ 2".Parse().AssertSimpleStringRepresentation("-x ^ 2");
+        }
+        public void TODO() {
            "(-x) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 2");
            "(-x) ^ 3".Parse().AssertSimpleStringRepresentation("-x ^ 3");
         }
@@ -142,7 +142,7 @@ namespace SharpAlg.Tests {
             Parse("-(x * 2)")
                 .AssertValue(-18, Expr.Minus(Expr.Multiply(Expr.Parameter("x"), ExprTestHelper.AsConstant(2))), context);
             Parse("--(x + 1)")
-                .AssertValue(10, null, context);
+                .AssertSingleSyntaxError(ParserTestHelper.GetNumberExpectedMessage(2));
             Parse("-(-(x + 1))")
                 .AssertValue(10, null, context);
         }

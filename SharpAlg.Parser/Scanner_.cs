@@ -41,8 +41,8 @@ public class Scanner {
 		for (int i = 97; i <= 122; ++i) start[i] = 1;
 		for (int i = 48; i <= 57; ++i) start[i] = 4;
 		start[46] = 2; 
-		start[43] = 5; 
-		start[45] = 6; 
+		start[45] = 5; 
+		start[43] = 6; 
 		start[42] = 7; 
 		start[47] = 8; 
 		start[94] = 9; 
