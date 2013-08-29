@@ -396,30 +396,24 @@ SharpAlg.Native.Parser.Parser.prototype.FunctionCall = function (expr)
         (function ()
         {
             args = {Value: args};
-            var $res = this.ArgumentListWithParens(args);
+            var $res = this.ArgumentList(args);
             args = args.Value;
             return $res;
         }).call(this);
     }
     expr.Value = args != null ? this.builder.Function(name, args) : this.builder.Parameter(name);
 };
-SharpAlg.Native.Parser.Parser.prototype.ArgumentListWithParens = function (args)
+SharpAlg.Native.Parser.Parser.prototype.ArgumentList = function (args)
 {
     args.Value = new SharpAlg.Native.Parser.ArgsList.ctor();
     this.Expect(10);
-    if (this.la.kind == 11)
+    while (this.StartOf(1))
     {
-        this.Get();
+        this.List(args.Value);
     }
-    else if (this.StartOf(1))
-    {
-        this.ArgumentList(args.Value);
-        this.Expect(11);
-    }
-    else
-        this.SynErr(17);
+    this.Expect(11);
 };
-SharpAlg.Native.Parser.Parser.prototype.ArgumentList = function (args)
+SharpAlg.Native.Parser.Parser.prototype.List = function (args)
 {
     var first;
     (function ()
@@ -433,7 +427,7 @@ SharpAlg.Native.Parser.Parser.prototype.ArgumentList = function (args)
     while (this.la.kind == 12)
     {
         this.Get();
-        this.ArgumentList(args);
+        this.List(args);
     }
 };
 SharpAlg.Native.Parser.Parser.prototype.Parse = function ()
@@ -510,9 +504,6 @@ SharpAlg.Native.Parser.Errors.prototype.GetErrorByCode = function (n)
             break;
         case 16:
             s = "invalid Terminal";
-            break;
-        case 17:
-            s = "invalid ArgumentListWithParens";
             break;
         default :
             s = "error " + n;

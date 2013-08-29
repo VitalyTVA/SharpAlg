@@ -184,29 +184,27 @@ public class Parser {
 		Expect(1);
 		name = t.val; 
 		while (la.kind == 10) {
-			ArgumentListWithParens(ref args);
+			ArgumentList(ref args);
 		}
 		expr = args != null ? (Expr)builder.Function(name, args) : builder.Parameter(name); 
 	}
 
-	void ArgumentListWithParens(ref ArgsList args) {
+	void ArgumentList(ref ArgsList args) {
 		args = new ArgsList(); 
 		Expect(10);
-		if (la.kind == 11) {
-			Get();
-		} else if (StartOf(1)) {
-			ArgumentList(args);
-			Expect(11);
-		} else SynErr(17);
+		while (StartOf(1)) {
+			List(args);
+		}
+		Expect(11);
 	}
 
-	void ArgumentList(ArgsList args) {
+	void List(ArgsList args) {
 		Expr first; 
 		AdditiveExpression(out first);
 		args.Add(first); 
 		while (la.kind == 12) {
 			Get();
-			ArgumentList(args);
+			List(args);
 		}
 	}
 
@@ -260,7 +258,6 @@ public class Errors : ErrorsBase {
 			case 14: s = "invalid AdditiveOperation"; break;
 			case 15: s = "invalid MultiplicativeOperation"; break;
 			case 16: s = "invalid Terminal"; break;
-			case 17: s = "invalid ArgumentListWithParens"; break;
 
             default: s = "error " + n; break;
         }
