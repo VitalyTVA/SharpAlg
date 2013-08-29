@@ -120,23 +120,9 @@ var SharpAlg$Native$ExpFunction =
                 }
                 return null;
             });
-        },
-        ConstantConvolution: function (arg)
-        {
-            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(arg, function (x)
-            {
-                return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Zero);
-            }), function (x)
-            {
-                return SharpAlg.Native.Expr.One;
-            }, function ()
-            {
-                return null;
-            });
         }
     },
     assemblyName: "SharpAlg.Implementation",
-    interfaceNames: ["SharpAlg.Native.ISupportConvolution"],
     Kind: "Class",
     definition:
     {
@@ -155,10 +141,22 @@ var SharpAlg$Native$ExpFunction =
         {
             return SharpAlg.Native.FunctionFactory.Exp(arg);
         },
-        Convolute: function (context, args)
+        SpecificConvolution: function (context, arg)
         {
-            var arg = System.Linq.Enumerable.Single$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
-            return (SharpAlg.Native.ExpFunction.ConstantConvolution(arg) != null ? SharpAlg.Native.ExpFunction.ConstantConvolution(arg) : SharpAlg.Native.ExpFunction.MultiplyConvoultion(context, arg));
+            return SharpAlg.Native.ExpFunction.MultiplyConvoultion(context, arg);
+        },
+        ConstantConvolution: function (arg)
+        {
+            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(arg, $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Zero);
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.Expr.One;
+            }), $CreateAnonymousDelegate(this, function ()
+            {
+                return null;
+            }));
         }
     }
 };
@@ -210,23 +208,9 @@ var SharpAlg$Native$LnFunction =
             {
                 return null;
             });
-        },
-        ConstantConvolution: function (arg)
-        {
-            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(arg, function (x)
-            {
-                return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.One);
-            }), function (x)
-            {
-                return SharpAlg.Native.Expr.Zero;
-            }, function ()
-            {
-                return null;
-            });
         }
     },
     assemblyName: "SharpAlg.Implementation",
-    interfaceNames: ["SharpAlg.Native.ISupportConvolution"],
     Kind: "Class",
     definition:
     {
@@ -245,10 +229,22 @@ var SharpAlg$Native$LnFunction =
         {
             return builder.Inverse(arg);
         },
-        Convolute: function (context, args)
+        SpecificConvolution: function (context, arg)
         {
-            var arg = System.Linq.Enumerable.Single$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
-            return (SharpAlg.Native.LnFunction.ConstantConvolution(arg) != null ? SharpAlg.Native.LnFunction.ConstantConvolution(arg) : (SharpAlg.Native.LnFunction.PowerConvolution(context, arg) != null ? SharpAlg.Native.LnFunction.PowerConvolution(context, arg) : SharpAlg.Native.LnFunction.InverseFunctionConvolution(context, arg)));
+            return (SharpAlg.Native.LnFunction.PowerConvolution(context, arg) != null ? SharpAlg.Native.LnFunction.PowerConvolution(context, arg) : SharpAlg.Native.LnFunction.InverseFunctionConvolution(context, arg));
+        },
+        ConstantConvolution: function (arg)
+        {
+            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(arg, $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.One);
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.Expr.Zero;
+            }), $CreateAnonymousDelegate(this, function ()
+            {
+                return null;
+            }));
         }
     }
 };
@@ -284,7 +280,7 @@ var SharpAlg$Native$SingleArgumentDifferentiableFunction =
     fullname: "SharpAlg.Native.SingleArgumentDifferentiableFunction",
     baseTypeName: "SharpAlg.Native.SingleArgumentFunction",
     assemblyName: "SharpAlg.Implementation",
-    interfaceNames: ["SharpAlg.Native.ISupportDiff"],
+    interfaceNames: ["SharpAlg.Native.ISupportDiff", "SharpAlg.Native.ISupportConvolution"],
     Kind: "Class",
     definition:
     {
@@ -297,6 +293,32 @@ var SharpAlg$Native$SingleArgumentDifferentiableFunction =
             SharpAlg.Native.SingleArgumentFunction.CheckArgsCount$1(SharpAlg.Native.Expr.ctor, args);
             var arg = System.Linq.Enumerable.Single$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
             return diffVisitor.get_Builder().Multiply(arg.Visit$1(SharpAlg.Native.Expr.ctor, diffVisitor), this.DiffCore(diffVisitor.get_Builder(), arg));
+        },
+        Convolute: function (context, args)
+        {
+            var arg = System.Linq.Enumerable.Single$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args);
+            return (this.EvalConvolution(arg) != null ? this.EvalConvolution(arg) : (this.ConstantConvolution(arg) != null ? this.ConstantConvolution(arg) : this.SpecificConvolution(context, arg)));
+        },
+        EvalConvolution: function (arg)
+        {
+            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.ConstantExpr.ctor, arg), $CreateAnonymousDelegate(this, function (x)
+            {
+                return x.get_Value().get_IsFloat();
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.Expr.Constant(this.Evaluate$$Number(x.get_Value()));
+            }), $CreateAnonymousDelegate(this, function ()
+            {
+                return null;
+            }));
+        },
+        ConstantConvolution: function (arg)
+        {
+            return null;
+        },
+        SpecificConvolution: function (context, arg)
+        {
+            return null;
         }
     }
 };

@@ -353,13 +353,15 @@ namespace SharpAlg.Tests {
             "(x * y) ^ z * (y * x) ^ t".Parse().AssertSimpleStringRepresentation("(x * y) ^ (z + t)");
 
             "ln(y * x) + ln(x * y)".Parse().AssertSimpleStringRepresentation("2 * ln(y * x)");
+            "ln(2.0)".Parse().IsFloatEqual(x => x.Print(), "0.693147");
             "(y * x)! + (x * y)!".Parse().AssertSimpleStringRepresentation("2 * (y * x)!");
             "someFunc(x, y * x) + someFunc(x, x * y)".Parse().AssertSimpleStringRepresentation("2 * someFunc(x, y * x)");
             "someFunc(x, y * x)! + 2 * someFunc(x, x * y)!".Parse().AssertSimpleStringRepresentation("3 * someFunc(x, y * x)!");
             "ln(x * x) + ln(x + x)".Parse().AssertSimpleStringRepresentation("2 * ln(x) + ln(2 * x)");
 
-            "ln(1)".Parse().AssertSimpleStringRepresentation("0");
-            "3!".Parse().AssertSimpleStringRepresentation("6");
+            "ln(1.0)".Parse().AssertSimpleStringRepresentation("0").AssertIsFloat();
+            "ln(1)".Parse().AssertSimpleStringRepresentation("0").AssertIsInteger();
+            "3!".Parse().AssertSimpleStringRepresentation("6").AssertIsInteger();
             "3.5!".Parse().AssertSimpleStringRepresentation("3.5!");
 
             "(2 / 3)^(2^6/2^(5 - 0))/(36/24)".Parse().AssertSimpleStringRepresentation("8/27");

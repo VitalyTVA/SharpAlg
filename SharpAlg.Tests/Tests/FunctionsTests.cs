@@ -20,10 +20,13 @@ namespace SharpAlg.Tests {
             "Pi()".GetParser().AssertSingleSyntaxError(STR_PiIsAConstantAndCantBeUsedAsFunction);
             "Pi(1)".GetParser().AssertSingleSyntaxError(STR_PiIsAConstantAndCantBeUsedAsFunction);
             "Pi".Parse().Diff().AssertSimpleStringRepresentation("0").AssertIsInteger();
+            "Pi".Parse().AssertSimpleStringRepresentation("Pi");
+            "Pi + 1.0".Parse().AssertSimpleStringRepresentation("Pi + 1");
         }
         [Test]
         public void TrigonometryTest() {
             "sin(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.84147").AssertSimpleStringRepresentation("sin(1)");
+            "sin(1.0)".Parse().IsFloatEqual(x => x.Print(), "0.84147");
             //"cos(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.54030").AssertSimpleStringRepresentation("cos(1)");
             //"sin(x)".Parse().Diff().AssertSimpleStringRepresentation("cos(x)");
         }
@@ -32,18 +35,20 @@ namespace SharpAlg.Tests {
             Expr.Function("exp", new Expr[] { "1".Parse(), "2".Parse() }).Fails(x => x.Diff(), typeof(InvalidArgumentCountException));
 
             "exp(0.0)".Parse()
-                .AssertIsInteger()
+                .AssertIsFloat()
                 .AssertSimpleStringRepresentation("1");
             "exp(0)".Parse()
                 .AssertIsInteger()
                 .IsFloatEqual(x => x.Evaluate(), "1")
                 .AssertSimpleStringRepresentation("1");
-            "exp(1)".Parse()
-                .IsFloatEqual(x => x.Evaluate(), "2.718281")
-                .AssertSimpleStringRepresentation("exp(1)");
+            "exp(1) + 1.0".Parse()
+                .IsFloatEqual(x => x.Evaluate(), "3.718281")
+                .AssertSimpleStringRepresentation("exp(1) + 1");
             "exp(2)".Parse()
                 .IsFloatEqual(x => x.Evaluate(), "7.389056")
                 .AssertSimpleStringRepresentation("exp(2)");
+            "exp(2.0)".Parse()
+                .IsFloatEqual(x => x.Print(), "7.389056");
             "exp(-1)".Parse()
                 .IsFloatEqual(x => x.Evaluate(), "0.367879")
                 .AssertSimpleStringRepresentation("exp(-1)");

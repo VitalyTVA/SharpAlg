@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Implementation_Functions)]
-    public class ExpFunction : SingleArgumentDifferentiableFunction, ISupportConvolution {
+    public class ExpFunction : SingleArgumentDifferentiableFunction {
         public ExpFunction()
             : base(FunctionFactory.ExpName) {
         }
@@ -18,11 +18,6 @@ namespace SharpAlg.Native {
         }
         protected override Expr DiffCore(ExprBuilder builder, Expr arg) {
             return FunctionFactory.Exp(arg);
-        }
-        public Expr Convolute(IContext context, IEnumerable<Expr> args) {
-            var arg = args.Single();
-            return ConstantConvolution(arg) ??
-                MultiplyConvoultion(context, arg);
         }
         static Expr MultiplyConvoultion(IContext context, Expr arg) {
             return arg
@@ -39,7 +34,10 @@ namespace SharpAlg.Native {
                     return null;
                 });
         }
-        static ConstantExpr ConstantConvolution(Expr arg) {
+        protected override Expr SpecificConvolution(IContext context, Expr arg) {
+            return MultiplyConvoultion(context, arg);
+        }
+        protected override ConstantExpr ConstantConvolution(Expr arg) {
             return arg.If(x => x.ExprEquals(Expr.Zero)).Return(x => Expr.One, () => null);
         }
     }

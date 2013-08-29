@@ -172,14 +172,16 @@ namespace SharpAlg.Native.Printer {
                 return string.Format("{0}!", WrapFromFactorial(functionExpr.Args.First()));
 
             var sb = new StringBuilder(functionExpr.FunctionName);
-            sb.Append("(");
-            functionExpr.Args.Accumulate(x => {
-                sb.Append(x.Visit(this));
-            }, x => {
-                sb.Append(", ");
-                sb.Append(x.Visit(this));
-            });
-            sb.Append(")");
+            if(!(context.GetFunction(functionExpr.FunctionName) is IConstantFunction)) {
+                sb.Append("(");
+                functionExpr.Args.Accumulate(x => {
+                    sb.Append(x.Visit(this));
+                }, x => {
+                    sb.Append(", ");
+                    sb.Append(x.Visit(this));
+                });
+                sb.Append(")");
+            }
             return sb.ToString();
         }
         static bool IsFactorial(IContext context, FunctionExpr functionExpr) {

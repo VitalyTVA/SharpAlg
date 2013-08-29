@@ -132,16 +132,19 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Function = function (functio
     if (SharpAlg.Native.Printer.ExpressionPrinter.IsFactorial(this.context, functionExpr))
         return System.String.Format$$String$$Object("{0}!", this.WrapFromFactorial(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args())));
     var sb = new System.Text.StringBuilder.ctor$$String(functionExpr.get_FunctionName());
-    sb.Append$$String("(");
-    SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
+    if (!(Is(this.context.GetFunction(functionExpr.get_FunctionName()), SharpAlg.Native.IConstantFunction.ctor)))
     {
-        sb.Append$$String(x.Visit$1(System.String.ctor, this));
-    }), $CreateAnonymousDelegate(this, function (x)
-    {
-        sb.Append$$String(", ");
-        sb.Append$$String(x.Visit$1(System.String.ctor, this));
-    }));
-    sb.Append$$String(")");
+        sb.Append$$String("(");
+        SharpAlg.Native.FunctionalExtensions.Accumulate$1(SharpAlg.Native.Expr.ctor, functionExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
+        {
+            sb.Append$$String(x.Visit$1(System.String.ctor, this));
+        }), $CreateAnonymousDelegate(this, function (x)
+        {
+            sb.Append$$String(", ");
+            sb.Append$$String(x.Visit$1(System.String.ctor, this));
+        }));
+        sb.Append$$String(")");
+    }
     return sb.toString();
 };
 SharpAlg.Native.Printer.ExpressionPrinter.IsFactorial = function (context, functionExpr)

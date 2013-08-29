@@ -9,7 +9,7 @@ using System.Runtime.Serialization;
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Implementation_Functions)]
-    public abstract class SingleArgumentDifferentiableFunction : SingleArgumentFunction, ISupportDiff {
+    public abstract class SingleArgumentDifferentiableFunction : SingleArgumentFunction, ISupportDiff, ISupportConvolution {
         protected SingleArgumentDifferentiableFunction(string name)
             : base(name) {
         }
@@ -19,5 +19,20 @@ namespace SharpAlg.Native {
             return diffVisitor.Builder.Multiply(arg.Visit(diffVisitor), DiffCore(diffVisitor.Builder, arg)); //TODO use builder
         }
         protected abstract Expr DiffCore(ExprBuilder builder, Expr arg);
+        public Expr Convolute(IContext context, IEnumerable<Expr> args) {
+            var arg = args.Single();
+            return EvalConvolution(arg) ??
+                ConstantConvolution(arg) ??
+                SpecificConvolution(context, arg);
+        }
+        ConstantExpr EvalConvolution(Expr arg) {
+            return arg.ConvertAs<ConstantExpr>().If(x => x.Value.IsFloat).Return(x => Expr.Constant(Evaluate(x.Value)), () => null);
+        }
+        protected virtual ConstantExpr ConstantConvolution(Expr arg) {
+            return null;
+        }
+        protected virtual Expr SpecificConvolution(IContext context, Expr arg) {
+            return null;
+        }
     }
 }
