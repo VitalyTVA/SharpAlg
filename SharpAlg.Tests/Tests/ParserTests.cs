@@ -58,6 +58,15 @@ namespace SharpAlg.Tests {
             Parse("-.234")
                 .AssertValue(-.234);
         }
+        public void TODO() {
+            Parse("-x * 2")
+                .AssertValue(null, Expr.Multiply(Expr.MinusOne, "x * 2".ParseNoConvolution()));
+            Parse("-x ^ 2")
+                .AssertValue(null, Expr.Minus("x ^ 2".Parse()));
+           "-x ^ 2".Parse().AssertSimpleStringRepresentation("-x ^ 2");
+           "(-x) ^ 2".Parse().AssertSimpleStringRepresentation("x ^ 2");
+           "(-x) ^ 3".Parse().AssertSimpleStringRepresentation("-x ^ 3");
+        }
         [Test]
         public void OperationsPriorityTest() {
             Parse("1 + 2 * 3")

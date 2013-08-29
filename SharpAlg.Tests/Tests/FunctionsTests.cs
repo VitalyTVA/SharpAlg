@@ -22,14 +22,14 @@ namespace SharpAlg.Tests {
             "sin(x)".Parse().Diff().AssertSimpleStringRepresentation("cos(x)");
             "sin(-x)".Parse().Diff().AssertSimpleStringRepresentation("-cos(-x)");
             "sin(x ^ 2)".Parse().Diff().AssertSimpleStringRepresentation("2 * x * cos(x ^ 2)");
+            "sin(-(x ^ 2))".Parse().Diff().AssertSimpleStringRepresentation("-2 * x * cos(-x ^ 2)");
 
             "cos(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.54030").AssertSimpleStringRepresentation("cos(1)");
             "cos(1.0)".Parse().IsFloatEqual(x => x.Print(), "0.54030");
             "cos(x)".Parse().Diff().AssertSimpleStringRepresentation("-sin(x)");
             "cos(-x)".Parse().Diff().AssertSimpleStringRepresentation("sin(-x)");
             "cos(x ^ 2)".Parse().Diff().AssertSimpleStringRepresentation("-2 * x * sin(x ^ 2)");
-
-            //"cos(-x ^ 2)".Parse().Diff().AssertSimpleStringRepresentation("2 * x * sin(-x ^ 2)");
+            "cos(-(x ^ 2))".Parse().Diff().AssertSimpleStringRepresentation("2 * x * sin(-x ^ 2)");
         }
 
         [Test]
@@ -127,6 +127,7 @@ namespace SharpAlg.Tests {
             "ln(x)".Parse().Diff().AssertSimpleStringRepresentation("1 / x");
             "ln(x ^ 2 + 1)".Parse().Diff().AssertSimpleStringRepresentation("2 * x / (x ^ 2 + 1)");
             "ln(x ^ 3)".Parse().Diff().AssertSimpleStringRepresentation("3 / x");
+            "ln(-x ^ 2)".Parse().Diff().AssertSimpleStringRepresentation("2 / x");
 
             "x * ln(2)".Parse().AssertSimpleStringRepresentation("x * ln(2)");
             "ln(x + y) * ln(x * ln(x)) ^ 2".Parse().AssertSimpleStringRepresentation("ln(x + y) * ln(x * ln(x)) ^ 2");
