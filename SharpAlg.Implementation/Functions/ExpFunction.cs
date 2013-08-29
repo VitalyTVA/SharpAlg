@@ -37,9 +37,10 @@ namespace SharpAlg.Native {
         protected override Expr SpecificConvolution(IContext context, Expr arg) {
             return MultiplyConvoultion(context, arg);
         }
-        protected override ConstantExpr ConstantConvolution(Expr arg) {
-            return arg.If(x => x.ExprEquals(Expr.Zero)).Return(x => Expr.One, () => null);
+        protected override Number ConvertConstant(Number n) {
+            return n == NumberFactory.Zero ? NumberFactory.One : null;
         }
+
     }
 
 }

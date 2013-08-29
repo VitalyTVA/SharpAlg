@@ -27,6 +27,7 @@ namespace SharpAlg.Tests {
         public void TrigonometryTest() {
             "sin(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.84147").AssertSimpleStringRepresentation("sin(1)");
             "sin(1.0)".Parse().IsFloatEqual(x => x.Print(), "0.84147");
+
             //"cos(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.54030").AssertSimpleStringRepresentation("cos(1)");
             //"sin(x)".Parse().Diff().AssertSimpleStringRepresentation("cos(x)");
         }

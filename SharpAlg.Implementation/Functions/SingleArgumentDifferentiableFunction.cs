@@ -28,7 +28,10 @@ namespace SharpAlg.Native {
         ConstantExpr EvalConvolution(Expr arg) {
             return arg.ConvertAs<ConstantExpr>().If(x => x.Value.IsFloat).Return(x => Expr.Constant(Evaluate(x.Value)), () => null);
         }
-        protected virtual ConstantExpr ConstantConvolution(Expr arg) {
+        ConstantExpr ConstantConvolution(Expr arg) {
+            return ConvolutionExprBuilder.GetConstValue(arg).With(x => ConvertConstant(x)).With(x => Expr.Constant(x));
+        }
+        protected virtual Number ConvertConstant(Number n) {
             return null;
         }
         protected virtual Expr SpecificConvolution(IContext context, Expr arg) {

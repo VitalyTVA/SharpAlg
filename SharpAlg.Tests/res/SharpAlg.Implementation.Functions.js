@@ -145,18 +145,9 @@ var SharpAlg$Native$ExpFunction =
         {
             return SharpAlg.Native.ExpFunction.MultiplyConvoultion(context, arg);
         },
-        ConstantConvolution: function (arg)
+        ConvertConstant: function (n)
         {
-            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(arg, $CreateAnonymousDelegate(this, function (x)
-            {
-                return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.Zero);
-            })), $CreateAnonymousDelegate(this, function (x)
-            {
-                return SharpAlg.Native.Expr.One;
-            }), $CreateAnonymousDelegate(this, function ()
-            {
-                return null;
-            }));
+            return SharpAlg.Native.Number.op_Equality(n, SharpAlg.Native.NumberFactory.Zero) ? SharpAlg.Native.NumberFactory.One : null;
         }
     }
 };
@@ -233,18 +224,9 @@ var SharpAlg$Native$LnFunction =
         {
             return (SharpAlg.Native.LnFunction.PowerConvolution(context, arg) != null ? SharpAlg.Native.LnFunction.PowerConvolution(context, arg) : SharpAlg.Native.LnFunction.InverseFunctionConvolution(context, arg));
         },
-        ConstantConvolution: function (arg)
+        ConvertConstant: function (n)
         {
-            return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.If(arg, $CreateAnonymousDelegate(this, function (x)
-            {
-                return SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(x, SharpAlg.Native.Expr.One);
-            })), $CreateAnonymousDelegate(this, function (x)
-            {
-                return SharpAlg.Native.Expr.Zero;
-            }), $CreateAnonymousDelegate(this, function ()
-            {
-                return null;
-            }));
+            return SharpAlg.Native.Number.op_Equality(n, SharpAlg.Native.NumberFactory.One) ? SharpAlg.Native.NumberFactory.Zero : null;
         }
     }
 };
@@ -313,6 +295,16 @@ var SharpAlg$Native$SingleArgumentDifferentiableFunction =
             }));
         },
         ConstantConvolution: function (arg)
+        {
+            return SharpAlg.Native.MayBe.With(SharpAlg.Native.MayBe.With(SharpAlg.Native.Builder.ConvolutionExprBuilder.GetConstValue(arg), $CreateAnonymousDelegate(this, function (x)
+            {
+                return this.ConvertConstant(x);
+            })), $CreateAnonymousDelegate(this, function (x)
+            {
+                return SharpAlg.Native.Expr.Constant(x);
+            }));
+        },
+        ConvertConstant: function (n)
         {
             return null;
         },

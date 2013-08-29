@@ -59,6 +59,11 @@ namespace SharpAlg.Native.Builder {
             }
         }
         #endregion
+
+        public static Number GetConstValue(Expr expr) {
+            return (expr as ConstantExpr).With(x => x.Value);
+        }
+
         readonly IContext context;
         public override IContext Context { get { return context; } }
         public ConvolutionExprBuilder(IContext context) { 
@@ -247,9 +252,6 @@ namespace SharpAlg.Native.Builder {
                 }
             }
             return null;
-        }
-        static Number GetConstValue(Expr expr) {
-            return (expr as ConstantExpr).With(x => x.Value);
         }
     }
 }

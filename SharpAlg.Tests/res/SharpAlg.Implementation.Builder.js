@@ -67,6 +67,13 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder = function (context)
     SharpAlg.Native.Builder.ExprBuilder.call(this);
     this.context = context;
 };
+SharpAlg.Native.Builder.ConvolutionExprBuilder.GetConstValue = function (expr)
+{
+    return SharpAlg.Native.MayBe.With((As(expr, SharpAlg.Native.ConstantExpr.ctor)), function (x)
+    {
+        return x.get_Value();
+    });
+};
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.get_Context = function ()
 {
     return this.context;
@@ -302,13 +309,6 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.MultiplyConvolution = f
         }
     }
     return null;
-};
-SharpAlg.Native.Builder.ConvolutionExprBuilder.GetConstValue = function (expr)
-{
-    return SharpAlg.Native.MayBe.With((As(expr, SharpAlg.Native.ConstantExpr.ctor)), function (x)
-    {
-        return x.get_Value();
-    });
 };
 $Inherit(SharpAlg.Native.Builder.ConvolutionExprBuilder, SharpAlg.Native.Builder.ExprBuilder);
 if (typeof(SharpAlg.Native.Builder.ConvolutionExprBuilder) == "undefined")
