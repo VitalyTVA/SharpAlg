@@ -81,7 +81,8 @@ namespace SharpAlg.Tests {
             Parse("ln(x ^ 2 + y * z)")
                 .AssertValue(null, Expr.Function("ln", "x ^ 2 + y * z".Parse()));
             Parse("ln()")
-                .AssertSingleSyntaxError(ParserTestHelper.GetNumberExpectedMessage(4));
+                .AssertValue(null, Expr.Function("ln", new Expr[0]));
+                //.AssertSingleSyntaxError(ParserTestHelper.GetNumberExpectedMessage(4));
         }
         [Test]
         public void FunctionMultiArgsTest() {

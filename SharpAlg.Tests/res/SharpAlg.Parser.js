@@ -163,7 +163,7 @@ SharpAlg.Native.Parser.Parser.maxT = 13;
 SharpAlg.Native.Parser.Parser.T = true;
 SharpAlg.Native.Parser.Parser.x = false;
 SharpAlg.Native.Parser.Parser.minErrDist = 2;
-SharpAlg.Native.Parser.Parser.set = [[true, false, false, false, false, false, false, false, false, false, false, false, false, false, false]];
+SharpAlg.Native.Parser.Parser.set = [[true, false, false, false, false, false, false, false, false, false, false, false, false, false, false], [false, true, true, true, false, true, false, false, false, false, true, false, false, false, false]];
 SharpAlg.Native.Parser.Parser.prototype.SynErr = function (n)
 {
     if (this.errDist >= 2)
@@ -388,16 +388,36 @@ SharpAlg.Native.Parser.Parser.prototype.Terminal = function (expr)
 SharpAlg.Native.Parser.Parser.prototype.FunctionCall = function (expr)
 {
     var name;
-    var args = new SharpAlg.Native.Parser.ArgsList.ctor();
+    var args = null;
     this.Expect(1);
     name = this.t.val;
     while (this.la.kind == 10)
     {
+        (function ()
+        {
+            args = {Value: args};
+            var $res = this.ArgumentListWithParens(args);
+            args = args.Value;
+            return $res;
+        }).call(this);
+    }
+    expr.Value = args != null ? this.builder.Function(name, args) : this.builder.Parameter(name);
+};
+SharpAlg.Native.Parser.Parser.prototype.ArgumentListWithParens = function (args)
+{
+    args.Value = new SharpAlg.Native.Parser.ArgsList.ctor();
+    this.Expect(10);
+    if (this.la.kind == 11)
+    {
         this.Get();
-        this.ArgumentList(args);
+    }
+    else if (this.StartOf(1))
+    {
+        this.ArgumentList(args.Value);
         this.Expect(11);
     }
-    expr.Value = args.get_Count() > 0 ? this.builder.Function(name, args) : this.builder.Parameter(name);
+    else
+        this.SynErr(17);
 };
 SharpAlg.Native.Parser.Parser.prototype.ArgumentList = function (args)
 {
@@ -490,6 +510,9 @@ SharpAlg.Native.Parser.Errors.prototype.GetErrorByCode = function (n)
             break;
         case 16:
             s = "invalid Terminal";
+            break;
+        case 17:
+            s = "invalid ArgumentListWithParens";
             break;
         default :
             s = "error " + n;

@@ -76,14 +76,23 @@ Terminal<out Expr expr>							(. expr = null; .)
 	)
 .
 
-FunctionCall<out Expr expr>						(. string name; ArgsList args = new ArgsList(); .)
+FunctionCall<out Expr expr>						(. string name; ArgsList args = null; .)
 = 
 	identifier									(. name = t.val; .)
-	{ '('ArgumentList<args>')' }											
-												(. expr = args.Count > 0 ? (Expr)builder.Function(name, args) : builder.Parameter(name); .)
+	{ ArgumentListWithParens<ref args> }											
+												(. expr = args != null ? (Expr)builder.Function(name, args) : builder.Parameter(name); .)
 .
 
-ArgumentList<ArgsList args>					(. Expr first; .)				
+ArgumentListWithParens<ref ArgsList args>		(. args = new ArgsList(); .)
+=	'('
+	(
+	')'
+	|
+	ArgumentList<args>')'
+	)
+.
+
+ArgumentList<ArgsList args>						(. Expr first; .)				
 = 
 	AdditiveExpression<out first>				(. args.Add(first); .)
 	{

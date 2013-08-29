@@ -355,6 +355,7 @@ var SharpAlg$Tests$ExprTests =
         },
         SemanticErrorsTest: function ()
         {
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("ln()"), "Error, (in ln) expecting 1 argument, got 0\r\n");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("ln(3, x)"), "Error, (in ln) expecting 1 argument, got 2\r\n");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("factorial(3, x, 1)"), "Error, (in factorial) expecting 1 argument, got 3\r\n");
         },
@@ -823,16 +824,16 @@ var SharpAlg$Tests$FunctionsTests =
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
             }), "3.14159");
-            SharpAlg.Tests.ParserTestHelper.AssertSyntaxErrors(SharpAlg.Tests.ExprTestHelper.GetParser("Pi()"), SharpAlg.Tests.ParserTestHelper.GetNumberExpectedMessage(4) + "Pi is a constant and can\'t be used as function\r\n", 2);
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("Pi()"), "Pi is a constant and can\'t be used as function\r\n");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("Pi(1)"), "Pi is a constant and can\'t be used as function\r\n");
             SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Diff(SharpAlg.Native.ExpressionExtensions.Parse("Pi", null), null), "0"));
         },
         TrigonometryTest: function ()
         {
-            SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("sin(1)", null), $CreateAnonymousDelegate(this, function (x)
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.IsFloatEqual$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.ExpressionExtensions.Parse("sin(1)", null), $CreateAnonymousDelegate(this, function (x)
             {
                 return SharpAlg.Native.ExpressionExtensions.Evaluate(x, null);
-            }), "0.84147");
+            }), "0.84147"), "sin(1)");
         },
         ExpTest: function ()
         {
@@ -1362,7 +1363,7 @@ var SharpAlg$Tests$ParserTests =
         {
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln(1)"), null , SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.Expr.One), null);
             SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln(x ^ 2 + y * z)"), null , SharpAlg.Native.Expr.Function$$String$$Expr("ln", SharpAlg.Native.ExpressionExtensions.Parse("x ^ 2 + y * z", null)), null);
-            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(this.Parse("ln()"), SharpAlg.Tests.ParserTestHelper.GetNumberExpectedMessage(4));
+            SharpAlg.Tests.ParserTestHelper.AssertValue(this.Parse("ln()"), null , SharpAlg.Native.Expr.Function$$String$$IEnumerable$1$Expr("ln", []), null);
         },
         FunctionMultiArgsTest: function ()
         {

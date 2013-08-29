@@ -17,13 +17,15 @@ namespace SharpAlg.Tests {
         [Test]
         public void PiTest() {
             "Pi".Parse().IsFloatEqual(x => x.Evaluate(), "3.14159");
-            "Pi()".GetParser().AssertSyntaxErrors(ParserTestHelper.GetNumberExpectedMessage(4) + STR_PiIsAConstantAndCantBeUsedAsFunction, 2); //TODO only one error
+            "Pi()".GetParser().AssertSingleSyntaxError(STR_PiIsAConstantAndCantBeUsedAsFunction);
             "Pi(1)".GetParser().AssertSingleSyntaxError(STR_PiIsAConstantAndCantBeUsedAsFunction);
             "Pi".Parse().Diff().AssertSimpleStringRepresentation("0").AssertIsInteger();
         }
         [Test]
         public void TrigonometryTest() {
-            "sin(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.84147");
+            "sin(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.84147").AssertSimpleStringRepresentation("sin(1)");
+            //"cos(1)".Parse().IsFloatEqual(x => x.Evaluate(), "0.54030").AssertSimpleStringRepresentation("cos(1)");
+            //"sin(x)".Parse().Diff().AssertSimpleStringRepresentation("cos(x)");
         }
         [Test]
         public void ExpTest() {

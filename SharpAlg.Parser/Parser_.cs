@@ -180,15 +180,24 @@ public class Parser {
 	}
 
 	void FunctionCall(out Expr expr) {
-		string name; ArgsList args = new ArgsList(); 
+		string name; ArgsList args = null; 
 		Expect(1);
 		name = t.val; 
 		while (la.kind == 10) {
+			ArgumentListWithParens(ref args);
+		}
+		expr = args != null ? (Expr)builder.Function(name, args) : builder.Parameter(name); 
+	}
+
+	void ArgumentListWithParens(ref ArgsList args) {
+		args = new ArgsList(); 
+		Expect(10);
+		if (la.kind == 11) {
 			Get();
+		} else if (StartOf(1)) {
 			ArgumentList(args);
 			Expect(11);
-		}
-		expr = args.Count > 0 ? (Expr)builder.Function(name, args) : builder.Parameter(name); 
+		} else SynErr(17);
 	}
 
 	void ArgumentList(ArgsList args) {
@@ -222,7 +231,8 @@ public class Parser {
 */
 //parser set patch begin
 	static readonly bool[][] set = {
-		new bool[] {T,x,x,x, x,x,x,x, x,x,x,x, x,x,x}
+		new bool[] {T,x,x,x, x,x,x,x, x,x,x,x, x,x,x},
+		new bool[] {x,T,T,T, x,T,x,x, x,x,T,x, x,x,x}
 
 	};
 //parser set patch end
@@ -250,6 +260,7 @@ public class Errors : ErrorsBase {
 			case 14: s = "invalid AdditiveOperation"; break;
 			case 15: s = "invalid MultiplicativeOperation"; break;
 			case 16: s = "invalid Terminal"; break;
+			case 17: s = "invalid ArgumentListWithParens"; break;
 
             default: s = "error " + n; break;
         }
