@@ -74,16 +74,18 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.get_Context = function 
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Function = function (functionName, args)
 {
     var func = this.context.GetFunction(functionName);
+    if (Is(func, SharpAlg.Native.IConstantFunction.ctor))
+        throw $CreateException(new SharpAlg.Native.InvalidArgumentCountException.ctor$$String(System.String.Format$$String$$Object("{0} is a constant and can\'t be used as function", functionName)), new Error());
+    return this.FunctionCore(func, functionName, args);
+};
+SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.FunctionCore = function (func, functionName, args)
+{
     var checkArgs = SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.ISupportCheckArgs.ctor, func), $CreateAnonymousDelegate(this, function (x)
     {
         return x.Check(args);
     }));
     if (!System.String.IsNullOrEmpty(checkArgs))
         throw $CreateException(new SharpAlg.Native.InvalidArgumentCountException.ctor$$String(checkArgs), new Error());
-    return this.FunctionCore(func, functionName, args);
-};
-SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.FunctionCore = function (func, functionName, args)
-{
     return SharpAlg.Native.MayBe.Return(SharpAlg.Native.MayBe.With(SharpAlg.Native.FunctionalExtensions.ConvertAs$1(SharpAlg.Native.ISupportConvolution.ctor, func), $CreateAnonymousDelegate(this, function (x)
     {
         return x.Convolute(this.get_Context(), args);
@@ -99,7 +101,7 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Parameter = function (p
 {
     var func = this.get_Context().GetFunction(parameterName);
     if (func != null)
-        return this.FunctionCore(func, parameterName, []);
+        return this.FunctionCore(func, parameterName, null);
     return (this.context.GetValue(parameterName) != null ? this.context.GetValue(parameterName) : SharpAlg.Native.Expr.Parameter(parameterName));
 };
 SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.Add = function (left, right)

@@ -33,7 +33,7 @@ var SharpAlg$Native$ConstantFunction =
     fullname: "SharpAlg.Native.ConstantFunction",
     baseTypeName: "SharpAlg.Native.Function",
     assemblyName: "SharpAlg.Implementation",
-    interfaceNames: ["SharpAlg.Native.ISupportCheckArgs", "SharpAlg.Native.ISupportDiff"],
+    interfaceNames: ["SharpAlg.Native.ISupportDiff", "SharpAlg.Native.IConstantFunction"],
     Kind: "Class",
     definition:
     {
@@ -44,10 +44,6 @@ var SharpAlg$Native$ConstantFunction =
         Evaluate: function (evaluator, args)
         {
             return this.get_Value();
-        },
-        Check: function (args)
-        {
-            return System.String.Format$$String$$Object("{0} is a constant and can\'t be used as function", this.get_Name());
         },
         Diff: function (diffVisitor, args)
         {
@@ -333,7 +329,7 @@ var SharpAlg$Native$SingleArgumentFunction =
     {
         IsValidArgsCount$1: function (T, args)
         {
-            return System.Linq.Enumerable.Count$1$$IEnumerable$1(T, args) == 1;
+            return args != null && System.Linq.Enumerable.Count$1$$IEnumerable$1(T, args) == 1;
         },
         CheckArgsCount$1: function (T, args)
         {
@@ -364,7 +360,7 @@ var SharpAlg$Native$SingleArgumentFunction =
         },
         Check: function (args)
         {
-            return SharpAlg.Native.SingleArgumentFunction.IsValidArgsCount$1(SharpAlg.Native.Expr.ctor, args) ? System.String.Empty : System.String.Format$$String$$Object$$Object("Error, (in {0}) expecting 1 argument, got {1}", this.get_Name(), System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args));
+            return SharpAlg.Native.SingleArgumentFunction.IsValidArgsCount$1(SharpAlg.Native.Expr.ctor, args) ? System.String.Empty : System.String.Format$$String$$Object$$Object("Error, (in {0}) expecting 1 argument, got {1}", this.get_Name(), (args != null ? System.Linq.Enumerable.Count$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, args) : 0));
         }
     }
 };

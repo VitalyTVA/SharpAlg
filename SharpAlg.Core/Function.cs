@@ -30,6 +30,9 @@ namespace SharpAlg.Native {
         string Check(IEnumerable<Expr> args);
     }
     [JsType(JsMode.Clr, Filename = SR.JS_Core)]
+    public interface IConstantFunction {
+    }
+    [JsType(JsMode.Clr, Filename = SR.JS_Core)]
     public interface ISupportConvolution {
         Expr Convolute(IContext context, IEnumerable<Expr> args);
     }

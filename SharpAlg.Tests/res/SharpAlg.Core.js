@@ -416,6 +416,8 @@ var SharpAlg$Native$ISupportDiff = {fullname: "SharpAlg.Native.ISupportDiff", ba
 JsTypes.push(SharpAlg$Native$ISupportDiff);
 var SharpAlg$Native$ISupportCheckArgs = {fullname: "SharpAlg.Native.ISupportCheckArgs", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$ISupportCheckArgs);
+var SharpAlg$Native$IConstantFunction = {fullname: "SharpAlg.Native.IConstantFunction", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
+JsTypes.push(SharpAlg$Native$IConstantFunction);
 var SharpAlg$Native$ISupportConvolution = {fullname: "SharpAlg.Native.ISupportConvolution", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};
 JsTypes.push(SharpAlg$Native$ISupportConvolution);
 var SharpAlg$Native$IContext = {fullname: "SharpAlg.Native.IContext", baseTypeName: "System.Object", assemblyName: "SharpAlg.Core", Kind: "Interface"};

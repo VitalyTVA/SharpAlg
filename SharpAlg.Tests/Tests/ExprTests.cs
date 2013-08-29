@@ -165,6 +165,7 @@ namespace SharpAlg.Tests {
         }
         [Test]
         public void SemanticErrorsTest() {
+            "ln".GetParser().AssertSingleSyntaxError("Error, (in ln) expecting 1 argument, got 0\r\n");
             "ln()".GetParser().AssertSingleSyntaxError("Error, (in ln) expecting 1 argument, got 0\r\n");
             "ln(3, x)".GetParser().AssertSingleSyntaxError("Error, (in ln) expecting 1 argument, got 2\r\n");
             "factorial(3, x, 1)".GetParser().AssertSingleSyntaxError("Error, (in factorial) expecting 1 argument, got 3\r\n");

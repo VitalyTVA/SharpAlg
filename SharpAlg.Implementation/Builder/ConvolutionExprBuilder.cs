@@ -66,14 +66,15 @@ namespace SharpAlg.Native.Builder {
         }
         public override Expr Function(string functionName, IEnumerable<Expr> args) {
             var func = context.GetFunction(functionName);
-            string checkArgs = func.ConvertAs<ISupportCheckArgs>().With(x => x.Check(args));
-            if(!string.IsNullOrEmpty(checkArgs))
-                throw new InvalidArgumentCountException(checkArgs);
-
+            if(func is IConstantFunction)
+                throw new InvalidArgumentCountException(string.Format("{0} is a constant and can't be used as function", functionName));
             return FunctionCore(func, functionName, args);
         }
 
         private Expr FunctionCore(Function func, string functionName, IEnumerable<Expr> args) {
+            string checkArgs = func.ConvertAs<ISupportCheckArgs>().With(x => x.Check(args));
+            if(!string.IsNullOrEmpty(checkArgs))
+                throw new InvalidArgumentCountException(checkArgs);
             return func
                 .ConvertAs<ISupportConvolution>()
                 .With(x => x.Convolute(Context, args))
@@ -82,7 +83,7 @@ namespace SharpAlg.Native.Builder {
         public override Expr Parameter(string parameterName) {
             Function func = Context.GetFunction(parameterName);
             if(func != null)
-                return FunctionCore(func, parameterName, new Expr[0]);
+                return FunctionCore(func, parameterName, null);
             return context.GetValue(parameterName) ?? Expr.Parameter(parameterName);
         }
         public override Expr Add(Expr left, Expr right) {

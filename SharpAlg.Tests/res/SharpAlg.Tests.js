@@ -355,6 +355,7 @@ var SharpAlg$Tests$ExprTests =
         },
         SemanticErrorsTest: function ()
         {
+            SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("ln"), "Error, (in ln) expecting 1 argument, got 0\r\n");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("ln()"), "Error, (in ln) expecting 1 argument, got 0\r\n");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("ln(3, x)"), "Error, (in ln) expecting 1 argument, got 2\r\n");
             SharpAlg.Tests.ParserTestHelper.AssertSingleSyntaxError(SharpAlg.Tests.ExprTestHelper.GetParser("factorial(3, x, 1)"), "Error, (in factorial) expecting 1 argument, got 3\r\n");

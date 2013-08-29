@@ -11,7 +11,7 @@ namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Implementation_Functions)]
     public abstract class SingleArgumentFunction : Function, ISupportCheckArgs {
         static bool IsValidArgsCount<T>(IEnumerable<T> args) {
-            return args.Count() == 1;
+            return args != null && args.Count() == 1;
         }
         public override Number Evaluate(IExpressionEvaluator evaluator, IEnumerable<Expr> args) {
             return EvaluateCore(args.Select(x => x.Visit(evaluator)));
@@ -30,7 +30,7 @@ namespace SharpAlg.Native {
         protected abstract Number Evaluate(Number arg);
 
         public string Check(IEnumerable<Expr> args) {
-            return IsValidArgsCount(args) ? string.Empty : string.Format("Error, (in {0}) expecting 1 argument, got {1}", Name, args.Count());
+            return IsValidArgsCount(args) ? string.Empty : string.Format("Error, (in {0}) expecting 1 argument, got {1}", Name, (args != null ? args.Count() : 0));
         }
     }
 }
