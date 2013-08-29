@@ -90,7 +90,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.prototype.Add = function (multi)
         sb.Append$$String(x.Visit$1(System.String.ctor, this));
     }), $CreateAnonymousDelegate(this, function (x)
     {
-        var info = x.Visit$1(SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo, SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor.AddInstance);
+        var info = SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor.ExtractAddUnaryInfo(x);
         sb.Append$$String(SharpAlg.Native.Printer.ExpressionPrinter.GetBinaryOperationSymbol(info.Operation));
         sb.Append$$String(this.WrapFromAdd(info.Expr));
     }));
@@ -290,7 +290,7 @@ SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor = function
 SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor.AddInstance = new SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor();
 SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor.ExtractAddUnaryInfo = function (expr)
 {
-    return expr.Visit$1(SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo, new SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor());
+    return expr.Visit$1(SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo, SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor.AddInstance);
 };
 SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor.prototype.get_Operation = function ()
 {
@@ -307,11 +307,8 @@ SharpAlg.Native.Printer.ExpressionPrinter.AddUnaryExpressionExtractor.prototype.
         return false;
     })))
     {
-        var exprConstant = SharpAlg.Native.Expr.Constant(SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.NumberFactory.Zero, SharpAlg.Native.MayBe.With(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), $CreateAnonymousDelegate(this, function (y)
-        {
-            return As(y, SharpAlg.Native.ConstantExpr.ctor);
-        })).get_Value()));
-        var expr = SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(System.Linq.Enumerable.First$1$$IEnumerable$1(SharpAlg.Native.Expr.ctor, multi.get_Args()), SharpAlg.Native.Expr.MinusOne) ? SharpAlg.Native.CoreExpressionExtensions.Tail$$MultiplyExpr(multi) : SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.FunctionalExtensions.AsEnumerable$1(SharpAlg.Native.Expr.ctor, exprConstant), SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, multi.get_Args())));
+        var exprConstant = SharpAlg.Native.Expr.Constant(SharpAlg.Native.Number.op_Subtraction(SharpAlg.Native.NumberFactory.Zero, headConstant.get_Value()));
+        var expr = SharpAlg.Native.ImplementationExpressionExtensions.ExprEquals(headConstant, SharpAlg.Native.Expr.MinusOne) ? SharpAlg.Native.CoreExpressionExtensions.Tail$$MultiplyExpr(multi) : SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(System.Linq.Enumerable.Concat$1(SharpAlg.Native.Expr.ctor, SharpAlg.Native.FunctionalExtensions.AsEnumerable$1(SharpAlg.Native.Expr.ctor, exprConstant), SharpAlg.Native.FunctionalExtensions.Tail$1(SharpAlg.Native.Expr.ctor, multi.get_Args())));
         return new SharpAlg.Native.Printer.ExpressionPrinter.UnaryExpressionInfo(expr, 1);
     }
     return SharpAlg.Native.DefaultExpressionVisitor.prototype.Multiply.call(this, multi);

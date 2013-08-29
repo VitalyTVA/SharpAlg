@@ -101,7 +101,7 @@ public class Parser {
 	}
 
 	void AdditiveExpression(out Expr expr) {
-		bool leftMinus = false, minus; Expr rightExpr; 
+		bool leftMinus = false, rightMinus; Expr rightExpr = null; 
 		if (la.kind == 4) {
 			Get();
 			leftMinus = true; 
@@ -109,9 +109,9 @@ public class Parser {
 		MultiplicativeExpression(out expr);
 		expr = leftMinus ? builder.Minus(expr) : expr; 
 		while (la.kind == 4 || la.kind == 5) {
-			AdditiveOperation(out minus);
+			AdditiveOperation(out rightMinus);
 			MultiplicativeExpression(out rightExpr);
-			expr = builder.Add(expr, (minus ? builder.Minus(rightExpr) : rightExpr)); 
+			expr = builder.Add(expr, (rightMinus ? builder.Minus(rightExpr) : rightExpr)); 
 		}
 	}
 

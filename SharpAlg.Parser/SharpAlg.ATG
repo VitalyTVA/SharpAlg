@@ -21,14 +21,14 @@ SharpAlg 										(. Expr expr; .)
 = AdditiveExpression<out expr>					(. this.Expr = expr; .)
 .
 
-AdditiveExpression<out Expr expr>				(. bool leftMinus = false, minus; Expr rightExpr; .)			
+AdditiveExpression<out Expr expr>				(. bool leftMinus = false, rightMinus; Expr rightExpr = null; .)			
 =	[
 	'-'											(. leftMinus = true; .)
 	]
 	MultiplicativeExpression<out expr>			(. expr = leftMinus ? builder.Minus(expr) : expr; .)
 	{
-	AdditiveOperation<out minus> 
-	MultiplicativeExpression<out rightExpr>		(. expr = builder.Add(expr, (minus ? builder.Minus(rightExpr) : rightExpr)); .)
+	AdditiveOperation<out rightMinus>
+	MultiplicativeExpression<out rightExpr>		(. expr = builder.Add(expr, (rightMinus ? builder.Minus(rightExpr) : rightExpr)); .)
 	}
 .
 

@@ -81,9 +81,9 @@ namespace SharpAlg.Native.Printer {
         }
         [JsType(JsMode.Prototype, Filename = SR.JS_Implementation_Printer)]
         class AddUnaryExpressionExtractor : UnaryExpressionExtractor {
-            public static readonly AddUnaryExpressionExtractor AddInstance = new AddUnaryExpressionExtractor();
+            static readonly AddUnaryExpressionExtractor AddInstance = new AddUnaryExpressionExtractor();
             public static UnaryExpressionInfo ExtractAddUnaryInfo(Expr expr) {
-                return expr.Visit(new AddUnaryExpressionExtractor());
+                return expr.Visit(AddInstance);
             }
             protected override BinaryOperation Operation { get { return BinaryOperation.Add; } }
             AddUnaryExpressionExtractor() {
@@ -91,8 +91,8 @@ namespace SharpAlg.Native.Printer {
             public override UnaryExpressionInfo Multiply(MultiplyExpr multi) {
                 ConstantExpr headConstant = multi.Args.First() as ConstantExpr;
                 if(headConstant.Return(x => x.Value < NumberFactory.Zero, () => false)) {
-                    ConstantExpr exprConstant = Expr.Constant(NumberFactory.Zero - multi.Args.First().With(y => y as ConstantExpr).Value);
-                    Expr expr = multi.Args.First().ExprEquals(Expr.MinusOne) ? 
+                    ConstantExpr exprConstant = Expr.Constant(NumberFactory.Zero - headConstant.Value);
+                    Expr expr = headConstant.ExprEquals(Expr.MinusOne) ? 
                         multi.Tail() :
                         Expr.Multiply(exprConstant.AsEnumerable<Expr>().Concat(multi.Args.Tail()));
                     return new UnaryExpressionInfo(expr, BinaryOperationEx.Subtract);
@@ -131,7 +131,7 @@ namespace SharpAlg.Native.Printer {
             multi.Args.Accumulate(x => {
                 sb.Append(x.Visit(this));
             }, x => {
-                UnaryExpressionInfo info = x.Visit(AddUnaryExpressionExtractor.AddInstance);
+                UnaryExpressionInfo info = AddUnaryExpressionExtractor.ExtractAddUnaryInfo(x);
                 sb.Append(GetBinaryOperationSymbol(info.Operation));
                 sb.Append(WrapFromAdd(info.Expr));
             });

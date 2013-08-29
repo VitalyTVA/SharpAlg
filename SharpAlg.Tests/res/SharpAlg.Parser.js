@@ -251,8 +251,8 @@ SharpAlg.Native.Parser.Parser.prototype.SharpAlg = function ()
 };
 SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
 {
-    var leftMinus = false, minus;
-    var rightExpr;
+    var leftMinus = false, rightMinus;
+    var rightExpr = null;
     if (this.la.kind == 4)
     {
         this.Get();
@@ -264,9 +264,9 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
     {
         (function ()
         {
-            minus = {Value: minus};
-            var $res = this.AdditiveOperation(minus);
-            minus = minus.Value;
+            rightMinus = {Value: rightMinus};
+            var $res = this.AdditiveOperation(rightMinus);
+            rightMinus = rightMinus.Value;
             return $res;
         }).call(this);
         (function ()
@@ -276,7 +276,7 @@ SharpAlg.Native.Parser.Parser.prototype.AdditiveExpression = function (expr)
             rightExpr = rightExpr.Value;
             return $res;
         }).call(this);
-        expr.Value = this.builder.Add(expr.Value, (minus ? this.builder.Minus(rightExpr) : rightExpr));
+        expr.Value = this.builder.Add(expr.Value, (rightMinus ? this.builder.Minus(rightExpr) : rightExpr));
     }
 };
 SharpAlg.Native.Parser.Parser.prototype.MultiplicativeExpression = function (expr)

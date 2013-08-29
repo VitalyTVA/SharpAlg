@@ -30,6 +30,13 @@ namespace SharpAlg.Tests {
             "cos(-x)".Parse().Diff().AssertSimpleStringRepresentation("sin(-x)");
             "cos(x ^ 2)".Parse().Diff().AssertSimpleStringRepresentation("-2 * x * sin(x ^ 2)");
             "cos(-x ^ 2)".Parse().Diff().AssertSimpleStringRepresentation("2 * x * sin(-x ^ 2)");
+
+            //"sin(-1)".Parse().Diff().AssertSimpleStringRepresentation("-sin(1)");
+            //"cos(-1)".Parse().Diff().AssertSimpleStringRepresentation("cos(1)");
+            //"sin(-x)".Parse().Diff().AssertSimpleStringRepresentation("-sin(x)");
+            //"cos(-x)".Parse().Diff().AssertSimpleStringRepresentation("cos(x)");
+            //"sin(-2 * x)".Parse().Diff().AssertSimpleStringRepresentation("-sin(2 * x)");
+            //"cos(-2 * x)".Parse().Diff().AssertSimpleStringRepresentation("cos(2 * x)");
         }
 
         [Test]
