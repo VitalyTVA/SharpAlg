@@ -886,6 +886,13 @@ var SharpAlg$Native$NumberFactory =
         {
             return new SharpAlg.Native.Numbers.FloatNumber.ctor(value);
         },
+        ToDouble: function (number)
+        {
+            return (Cast(SharpAlg.Native.NumberFactory.GetFloat(number, function (x)
+            {
+                return x;
+            }), SharpAlg.Native.Numbers.FloatNumber.ctor)).value;
+        },
         FromString: function (s)
         {
             return SharpAlg.Native.NumberFactory.FromDouble(SharpAlg.Native.PlatformHelper.Parse(s));

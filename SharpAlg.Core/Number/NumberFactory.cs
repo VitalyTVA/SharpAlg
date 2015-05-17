@@ -26,8 +26,11 @@ namespace SharpAlg.Native {
         public static Number GetFloat(Number n, Func<double, double> evaluator) {
             return FromDouble(evaluator(n.ToFloat().ConvertCast<FloatNumber>().value));
         }
-        static Number FromDouble(double value) {
+        public static Number FromDouble(double value) {
             return new FloatNumber(value);
+        }
+        public static double ToDouble(this Number number) {
+            return ((FloatNumber)GetFloat(number, x => x)).value;
         }
         public static Number FromString(string s) {
             return FromDouble(PlatformHelper.Parse(s));
