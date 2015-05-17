@@ -4,6 +4,16 @@ using System;
 using RealPoint = System.Windows.Point;
 
 namespace SharpAlg.Geo {
+    public class Pair {
+        public readonly Expr Item1, Item2;
+        public Pair(Expr item1, Expr item2) {
+            this.Item1 = item1;
+            this.Item2 = item2;
+        }
+        public override string ToString() {
+            return string.Format("[{0}, {1}])", Item1.Print(), Item2.Print());
+        }
+    }
     public class Point {
         public static Point FromName(char name) {
             if(!char.IsUpper(name))
@@ -35,6 +45,18 @@ namespace SharpAlg.Geo {
         }
         public override string ToString() {
             return string.Format("({0})*x + ({1})*y + ({2}) = 0", A.Print(), B.Print(), C.Print());
+        }
+    }
+
+    public class QuadraticEquation {
+        public readonly Expr A, B, C;
+        public QuadraticEquation(Expr a, Expr b, Expr c) {
+            this.A = a;
+            this.B = b;
+            this.C = c;
+        }
+        public override string ToString() {
+            return string.Format("({0})*x^2 + ({1})*x + ({2}) = 0", A.Print(), B.Print(), C.Print());
         }
     }
 
@@ -72,6 +94,20 @@ namespace SharpAlg.Geo {
             return new Point(Expr.Divide(x, divider), Expr.Divide(y, divider));
         }
     }
+    public static class QuadraticEquationHelper {
+        public static Pair Solve(this QuadraticEquation eq) {
+            var context = ContextFactory.CreateEmpty()
+                 .Register("A", eq.A)
+                 .Register("B", eq.B)
+                 .Register("C", eq.C);
+            var builder = ExprBuilderFactory.Create(context);
+            var d = "(B^2-4*A*C)^(1/2)".Parse(builder);
+            context.Register("D", d);
+            var x1 = "(-B+D)/(2*A)".Parse(builder);
+            var x2 = "(-B-D)/(2*A)".Parse(builder);
+            return new Pair(x1, x2);
+        }
+    }
     public static class ExprHelper {
         public static readonly Expr Half = "1/2".Parse();
         public static readonly Expr Two = "2".Parse();
@@ -85,16 +121,22 @@ namespace SharpAlg.Geo {
         //    return p.X is ParameterExpr && p.Y is ParameterExpr;
         //}
         public static Context RegisterPoint(this Context context, Point p, double x, double y) {
-            //if(!p.IsPrimitive())
-            //    throw new InvalidOperationException();
             return context
-                .Register(((ParameterExpr)p.X).ParameterName, Expr.Constant(NumberFactory.FromDouble(x)))
-                .Register(((ParameterExpr)p.Y).ParameterName, Expr.Constant(NumberFactory.FromDouble(y)));
+                .RegisterValue(p.X, x)
+                .RegisterValue(p.Y, y);
+        }
+        public static Context RegisterValue(this Context context, Expr parameter, double value) {
+            return context
+                .Register(((ParameterExpr)parameter).ParameterName, Expr.Constant(NumberFactory.FromDouble(value)));
+        }
+        public static Context RegisterValue(this Context context, string nane, double value) {
+            return context.RegisterValue(nane.Parse(), value);
         }
         public static RealPoint ToRealPoint(this Point p, Context context) {
-            var x = p.X.Evaluate(context).ToDouble();
-            var y = p.Y.Evaluate(context).ToDouble();
-            return new RealPoint(x, y);
+            return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));
+        }
+        public static double ToReal(this Expr expr, Context context) {
+            return expr.Evaluate(context).ToDouble();
         }
     }
 }
