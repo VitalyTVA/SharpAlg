@@ -26,6 +26,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Tests", "SharpAlg.
 		{01DEE02A-1F6C-46A9-B945-65E9DE87498E} = {01DEE02A-1F6C-46A9-B945-65E9DE87498E}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpAlg.Geo", "SharpAlg.Geo\SharpAlg.Geo.csproj", "{7627C5C9-68BE-4EAA-A5AD-AD63426DE1B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{58AEC48D-89AD-4C2F-B11D-BD26E297B830}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{58AEC48D-89AD-4C2F-B11D-BD26E297B830}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{58AEC48D-89AD-4C2F-B11D-BD26E297B830}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7627C5C9-68BE-4EAA-A5AD-AD63426DE1B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7627C5C9-68BE-4EAA-A5AD-AD63426DE1B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7627C5C9-68BE-4EAA-A5AD-AD63426DE1B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7627C5C9-68BE-4EAA-A5AD-AD63426DE1B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
