@@ -38,6 +38,15 @@ namespace SharpAlg.Geo.Tests {
                 .RegisterValue("C".Parse(), -6);
             Assert.AreEqual(3, roots.Item1.ToReal(context));
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
+
+            eq = new QuadraticEquation("X + 1".Parse(), "Y - 2".Parse(), "Z / 2".Parse());
+            roots = eq.Solve();
+            context = ContextFactory.CreateEmpty()
+                .RegisterValue("X".Parse(), 0)
+                .RegisterValue("Y".Parse(), 0)
+                .RegisterValue("Z".Parse(), -6);
+            Assert.AreEqual(3, roots.Item1.ToReal(context));
+            Assert.AreEqual(-1, roots.Item2.ToReal(context));
         }
     }
 }
