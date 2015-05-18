@@ -83,7 +83,27 @@ namespace SharpAlg.Geo {
             var y = "C1*A2-C2*A1".Parse(builder);
             return new Point(Expr.Divide(x, divider), Expr.Divide(y, divider));
         }
+        public static System.Tuple<Point,Point> Intersect(this Line l, Circle c) {
+            var context = ContextFactory.CreateEmpty()
+                .Register("A", l.A)
+                .Register("B", l.B)
+                .Register("C", l.C)
+                .Register("X", c.X)
+                .Register("Y", c.Y)
+                .Register("R", c.R);
+            //(B^2+A^2)*_Z^2+(2*X*A*B-2*Y*A^2+2*C*B)*_Z+2*X*A*C+X^2*A^2+C^2+Y^2*A^2-R^2*A^2
+            var builder = ExprBuilderFactory.Create(context);
+            var eqA = "B^2+A^2".Parse(builder);
+            var eqYB = "2*X*A*B-2*Y*A^2+2*C*B".Parse(builder);
+            var eqXB = "2*Y*A*B-2*X*B^2+2*C*A".Parse(builder);
+            var eqYC = "2*X*A*C+X^2*A^2+C^2+Y^2*A^2-R^2*A^2".Parse(builder);
+            var eqXC = "2*Y*B*C+X^2*B^2+C^2+X^2*B^2-R^2*B^2".Parse(builder);
+            var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
+            var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
+            return Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
+        }
     }
+
     public static class QuadraticEquationHelper {
         public static System.Tuple<Expr, Expr> Solve(this QuadraticEquation eq) {
             var context = ContextFactory.CreateEmpty()
