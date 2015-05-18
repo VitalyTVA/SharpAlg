@@ -10,6 +10,9 @@ namespace SharpAlg.Geo {
                 throw new InvalidOperationException();
             return new Point(Expr.Parameter(name + "x"), Expr.Parameter(name + "y"));
         }
+        public static Point FromValues(double x, double y) {
+            return new Point(x.AsConst(), y.AsConst());
+        }
         public readonly Expr X, Y;
         public Point(Expr x, Expr y) {
             this.X = x;
@@ -28,7 +31,7 @@ namespace SharpAlg.Geo {
             return new Line(a, b, c);
         }
         public readonly Expr A, B, C;
-        Line(Expr a, Expr b, Expr c) {
+        public Line(Expr a, Expr b, Expr c) {
             this.A = a;
             this.B = b;
             this.C = c;
@@ -59,13 +62,13 @@ namespace SharpAlg.Geo {
             return new Circle(p1.X, p1.Y, r);
         }
         public readonly Expr X, Y, R;
-        Circle(Expr x, Expr y, Expr r) {
+        public Circle(Expr x, Expr y, Expr r) {
             this.X = x;
             this.Y = y;
             this.R = r;
         }
         public override string ToString() {
-            return string.Format("(x - ({0}))^2 + (y - ({1}))^2  = ({2})^2)", X.Print(), X.Print(), R.Print());
+            return string.Format("(x - ({0}))^2 + (y - ({1}))^2  = ({2})^2)", X.Print(), Y.Print(), R.Print());
         }
     }
     public static class LinesIntersector {
@@ -97,7 +100,7 @@ namespace SharpAlg.Geo {
             var eqYB = "2*X*A*B-2*Y*A^2+2*C*B".Parse(builder);
             var eqXB = "2*Y*A*B-2*X*B^2+2*C*A".Parse(builder);
             var eqYC = "2*X*A*C+X^2*A^2+C^2+Y^2*A^2-R^2*A^2".Parse(builder);
-            var eqXC = "2*Y*B*C+X^2*B^2+C^2+X^2*B^2-R^2*B^2".Parse(builder);
+            var eqXC = "2*Y*B*C+Y^2*B^2+C^2+X^2*B^2-R^2*B^2".Parse(builder);
             var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
             var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
             return Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
@@ -147,6 +150,9 @@ namespace SharpAlg.Geo {
         }
         public static double ToReal(this Expr expr, Context context) {
             return expr.Evaluate(context).ToDouble();
+        }
+        public static Expr AsConst(this double value) {
+            return Expr.Constant(NumberFactory.FromDouble(value));
         }
     }
 }

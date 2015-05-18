@@ -36,7 +36,20 @@ namespace SharpAlg.Geo.Tests {
                 .RegisterPoint(C, 2, 3)
                 .RegisterPoint(D, 6, 6);
             Assert.AreEqual(new RealPoint(5, 7), X.Item1.ToRealPoint(context));
+            Assert.AreEqual(new RealPoint(-2, 6), X.Item2.ToRealPoint(context));
         }
+        //[Test]
+        //public void LineAndCircleIntersection2() {
+        //    var A = Point.FromValues(-9, 5);
+        //    var B = Point.FromValues(12, 8);
+        //    var C = Point.FromValues(2, 3);
+        //    var D = Point.FromValues(6, 6);
+        //    var l = Line.FromPoints(A, B).With(x => new Line(Expr.Constant(x.A.Evaluate()), Expr.Constant(x.B.Evaluate()), Expr.Constant(x.C.Evaluate())));
+        //    var c = Circle.FromPoints(C, D).With(x => new Circle(Expr.Constant(x.X.Evaluate()), Expr.Constant(x.Y.Evaluate()), Expr.Constant(x.R.Evaluate())));
+        //    var X = l.Intersect(c);
+        //    var context = ContextFactory.CreateEmpty();
+        //    Assert.AreEqual(new RealPoint(5, 7), X.Item1.ToRealPoint(context));
+        //}
         [Test]
         public void QuadraticEquation() {
             var eq = new QuadraticEquation("A".Parse(), "B".Parse(), "C".Parse());
