@@ -37,7 +37,30 @@ namespace SharpAlg.Geo.Tests {
                 .RegisterPoint(D, 6, 6);
             Assert.AreEqual(new RealPoint(5, 7), X.Item1.ToRealPoint(context));
             Assert.AreEqual(new RealPoint(-2, 6), X.Item2.ToRealPoint(context));
+
+            //int X1 = 0;
+            //int Y1 = 0;
+            //int X2 = 0;
+            //int Y2 = 0;
+            //int R1 = 0;
+            //int R2 = 0;
+            //int _Z = 0;
+            //var x = 1 / 2 * (-2 * Y2 * 
+            //    RootOf(
+            //        (4 * X2 ^ 2 + 4 * Y2 ^ 2) * _Z ^ 2 
+            //        + (-4 * Y2 ^ 3 - 4 * R1 ^ 2 * Y2 + 4 * Y2 * R2 ^ 2 - 4 * X2 ^ 2 * Y2) * _Z 
+            //        + X2 ^ 4 + R1 ^ 4 - 2 * Y2 ^ 2 * R2 ^ 2 + 2 * X2 ^ 2 * Y2 ^ 2 - 2 * X2 ^ 2 * R2 ^ 2 + Y2 ^ 4 + R2 ^ 4 + 2 * R1 ^ 2 * Y2 ^ 2 - 2 * R1 ^ 2 * R2 ^ 2 - 2 * R1 ^ 2 * X2 ^ 2
+            //    ) + R1 ^ 2 + X2 ^ 2 + Y2 ^ 2 - R2 ^ 2) / X2;
+
+            //var y = RootOf(
+            //        (4 * X2 ^ 2 + 4 * Y2 ^ 2) * _Z ^ 2 
+            //        + (-4 * Y2 ^ 3 - 4 * R1 ^ 2 * Y2 + 4 * Y2 * R2 ^ 2 - 4 * X2 ^ 2 * Y2) * _Z 
+            //        + X2 ^ 4 + R1 ^ 4 - 2 * Y2 ^ 2 * R2 ^ 2 + 2 * X2 ^ 2 * Y2 ^ 2 - 2 * X2 ^ 2 * R2 ^ 2 + Y2 ^ 4 + R2 ^ 4 + 2 * R1 ^ 2 * Y2 ^ 2 - 2 * R1 ^ 2 * R2 ^ 2 - 2 * R1 ^ 2 * X2 ^ 2
+            //    );
         }
+        //int RootOf(int x) {
+        //    return x;
+        //}
         //[Test]
         //public void LineAndCircleIntersection2() {
         //    var A = Point.FromValues(-9, 5);
