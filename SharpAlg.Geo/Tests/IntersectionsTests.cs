@@ -11,15 +11,31 @@ namespace SharpAlg.Geo.Tests {
             var B = Point.FromName('B');
             var C = Point.FromName('C');
             var D = Point.FromName('D');
-            var m = Line.FromPoins(A, B);
-            var n = Line.FromPoins(C, D);
+            var m = Line.FromPoints(A, B);
+            var n = Line.FromPoints(C, D);
+            var X = m.Intersect(n);
             var context = ContextFactory.CreateEmpty()
                 .RegisterPoint(A, 2, 1)
                 .RegisterPoint(B, 8, 4)
                 .RegisterPoint(C, 3, 5)
-                .RegisterPoint(D, 5, -1);
-            var X = m.Intersect(n);
+                .RegisterPoint(D, 5, -1); 
             Assert.AreEqual(new RealPoint(4, 2), X.ToRealPoint(context));
+        }
+        [Test]
+        public void LineAndCircleIntersection() {
+            var A = Point.FromName('A');
+            var B = Point.FromName('B');
+            var C = Point.FromName('C');
+            var D = Point.FromName('D');
+            var l = Line.FromPoints(A, B);
+            var c = Circle.FromPoints(C, D);
+            var X = l.Intersect(c);
+            var context = ContextFactory.CreateEmpty()
+                .RegisterPoint(A, -9, 5)
+                .RegisterPoint(B, 12, 8)
+                .RegisterPoint(C, 2, 3)
+                .RegisterPoint(D, 6, 6);
+            Assert.AreEqual(new RealPoint(5, 7), X.Item1.ToRealPoint(context));
         }
         [Test]
         public void QuadraticEquation() {

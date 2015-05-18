@@ -21,7 +21,7 @@ namespace SharpAlg.Geo {
     }
 
     public class Line {
-        public static Line FromPoins(Point p1, Point p2) {
+        public static Line FromPoints(Point p1, Point p2) {
             var a = Expr.Subtract(p1.Y, p2.Y);
             var b = Expr.Subtract(p2.X, p1.X);
             var c = Expr.Subtract(Expr.Multiply(p1.X, p2.Y), Expr.Multiply(p2.X, p1.Y));
@@ -51,7 +51,7 @@ namespace SharpAlg.Geo {
     }
 
     public class Circle {
-        public static Circle FromPoint(Point p1, Point p2) {
+        public static Circle FromPoints(Point p1, Point p2) {
             var r = Expr.Add(
                         Expr.Subtract(p1.X, p2.X).Square(),
                         Expr.Subtract(p1.Y, p2.Y).Square()
