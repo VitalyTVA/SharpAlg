@@ -4,16 +4,6 @@ using System;
 using RealPoint = System.Windows.Point;
 
 namespace SharpAlg.Geo {
-    public class Pair {
-        public readonly Expr Item1, Item2;
-        public Pair(Expr item1, Expr item2) {
-            this.Item1 = item1;
-            this.Item2 = item2;
-        }
-        public override string ToString() {
-            return string.Format("[{0}, {1}])", Item1.Print(), Item2.Print());
-        }
-    }
     public class Point {
         public static Point FromName(char name) {
             if(!char.IsUpper(name))
@@ -95,7 +85,7 @@ namespace SharpAlg.Geo {
         }
     }
     public static class QuadraticEquationHelper {
-        public static Pair Solve(this QuadraticEquation eq) {
+        public static System.Tuple<Expr, Expr> Solve(this QuadraticEquation eq) {
             var context = ContextFactory.CreateEmpty()
                  .Register("A", eq.A)
                  .Register("B", eq.B)
@@ -105,7 +95,7 @@ namespace SharpAlg.Geo {
             context.Register("D", d);
             var x1 = "(-B+D)/(2*A)".Parse(builder);
             var x2 = "(-B-D)/(2*A)".Parse(builder);
-            return new Pair(x1, x2);
+            return Tuple.Create(x1, x2);
         }
     }
     public static class ExprHelper {
