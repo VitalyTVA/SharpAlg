@@ -58,6 +58,24 @@ namespace SharpAlg.Geo.Tests {
             //        + X2 ^ 4 + R1 ^ 4 - 2 * Y2 ^ 2 * R2 ^ 2 + 2 * X2 ^ 2 * Y2 ^ 2 - 2 * X2 ^ 2 * R2 ^ 2 + Y2 ^ 4 + R2 ^ 4 + 2 * R1 ^ 2 * Y2 ^ 2 - 2 * R1 ^ 2 * R2 ^ 2 - 2 * R1 ^ 2 * X2 ^ 2
             //    );
         }
+        [Test]
+        public void CirclesIntersection() {
+            var A = Point.FromName('A');
+            var B = Point.FromName('B');
+            var C = Point.FromName('C');
+            var D = Point.FromName('D');
+            var c1 = Circle.FromPoints(A, B);
+            var c2 = Circle.FromPoints(C, D);
+            var X = c1.Intersect(c2);
+            var context = ContextFactory.CreateEmpty()
+                .RegisterPoint(A, 0, 0)
+                .RegisterPoint(B, 0, 5)
+                .RegisterPoint(C, 7, 7)
+                .RegisterPoint(D, 7, 2);
+            AssertHelper.ArePointsEqual(new RealPoint(4, 4), X.Item1.ToRealPoint(context));
+            AssertHelper.ArePointsEqual(new RealPoint(3, 3), X.Item2.ToRealPoint(context));
+
+        }
         //int RootOf(int x) {
         //    return x;
         //}
@@ -99,6 +117,13 @@ namespace SharpAlg.Geo.Tests {
                 .RegisterValue("Z".Parse(), -6);
             Assert.AreEqual(3, roots.Item1.ToReal(context));
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
+        }
+    }
+    public static class AssertHelper {
+        public const double Delta = 0.0000000001;
+        public static void ArePointsEqual(RealPoint p1, RealPoint p2, double delta = Delta) {
+            Assert.AreEqual(p1.X, p2.X, delta);
+            Assert.AreEqual(p1.Y, p2.Y, delta);        
         }
     }
 }

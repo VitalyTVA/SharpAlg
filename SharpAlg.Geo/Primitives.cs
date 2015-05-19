@@ -71,7 +71,7 @@ namespace SharpAlg.Geo {
             return string.Format("(x - ({0}))^2 + (y - ({1}))^2  = ({2})^2)", X.Print(), Y.Print(), R.Print());
         }
     }
-    public static class LinesIntersector {
+    public static class Intersector {
         public static Point Intersect(this Line l1, Line l2) {
             var context = ContextFactory.CreateEmpty()
                 .Register("A1", l1.A)
@@ -94,7 +94,6 @@ namespace SharpAlg.Geo {
                 .Register("X", c.X)
                 .Register("Y", c.Y)
                 .Register("R", c.R);
-            //(B^2+A^2)*_Z^2+(2*X*A*B-2*Y*A^2+2*C*B)*_Z+2*X*A*C+X^2*A^2+C^2+Y^2*A^2-R^2*A^2
             var builder = ExprBuilderFactory.Create(context);
             var eqA = "B^2+A^2".Parse(builder);
             var eqYB = "2*X*A*B-2*Y*A^2+2*C*B".Parse(builder);
@@ -104,6 +103,21 @@ namespace SharpAlg.Geo {
             var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
             var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
             return Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
+        }
+        public static System.Tuple<Point, Point> Intersect(this Circle c1, Circle c2) {
+            var context = ContextFactory.CreateEmpty()
+                .Register("R1", c1.R)
+                .Register("X0", c2.X)
+                .Register("Y0", c2.Y)
+                .Register("R2", c2.R);
+
+            var builder = ExprBuilderFactory.Create(context);
+            var eqA = "4*X0^2+4*Y0^2".Parse(builder);
+            var eqYB = "-4*Y0^3-4*R1^2*Y0+4*Y0*R2^2-4*X0^2*Y0".Parse(builder);
+            var eqYC = "X0^4+R1^4-2*Y0^2*R2^2+2*X0^2*Y0^2-2*X0^2*R2^2+Y0^4+R2^4+2*R1^2*Y0^2-2*R1^2*R2^2-2*R1^2*X0^2".Parse(builder);
+            //var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
+            var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
+            return Tuple.Create(new Point(yRoots.Item1, yRoots.Item1), new Point(yRoots.Item2, yRoots.Item2));
         }
     }
 
