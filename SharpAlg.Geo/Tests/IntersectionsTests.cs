@@ -91,6 +91,17 @@ namespace SharpAlg.Geo.Tests {
                 new RealPoint(3 + 1, 4 + 2)
             );
         }
+        [Test]
+        public void CirclesIntersection4() {
+            AssertCirclesIntersection(
+                new RealPoint(-1, 2),
+                new RealPoint(-1, -2),
+                new RealPoint(3, -1),
+                new RealPoint(3, 4),
+                new RealPoint(2.4796363335788034, -1.8928484447717376042),
+                new RealPoint(-1.9196363335788034, 3.9728484447717376042)
+            );
+        }
         void AssertCirclesIntersection(RealPoint a, RealPoint b, RealPoint c, RealPoint d, RealPoint x1, RealPoint x2) {
             var A = Point.FromName('A');
             var B = Point.FromName('B');
