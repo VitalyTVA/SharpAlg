@@ -114,10 +114,12 @@ namespace SharpAlg.Geo {
             var builder = ExprBuilderFactory.Create(context);
             var eqA = "4*X0^2+4*Y0^2".Parse(builder);
             var eqYB = "-4*Y0^3-4*R1^2*Y0+4*Y0*R2^2-4*X0^2*Y0".Parse(builder);
+            var eqXB = "-4*X0^3-4*R1^2*X0+4*X0*R2^2-4*Y0^2*X0".Parse(builder);
             var eqYC = "X0^4+R1^4-2*Y0^2*R2^2+2*X0^2*Y0^2-2*X0^2*R2^2+Y0^4+R2^4+2*R1^2*Y0^2-2*R1^2*R2^2-2*R1^2*X0^2".Parse(builder);
-            //var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
+            var eqXC = "Y0^4+R1^4-2*X0^2*R2^2+2*Y0^2*X0^2-2*Y0^2*R2^2+X0^4+R2^4+2*R1^2*X0^2-2*R1^2*R2^2-2*R1^2*Y0^2".Parse(builder);
+            var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
             var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
-            return Tuple.Create(new Point(yRoots.Item1, yRoots.Item1), new Point(yRoots.Item2, yRoots.Item2));
+            return Tuple.Create(new Point(xRoots.Item1, yRoots.Item2), new Point(xRoots.Item2, yRoots.Item1));
         }
     }
 

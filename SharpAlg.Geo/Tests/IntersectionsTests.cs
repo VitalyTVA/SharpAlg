@@ -72,8 +72,8 @@ namespace SharpAlg.Geo.Tests {
                 .RegisterPoint(B, 0, 5)
                 .RegisterPoint(C, 7, 7)
                 .RegisterPoint(D, 7, 2);
-            AssertHelper.ArePointsEqual(new RealPoint(4, 4), X.Item1.ToRealPoint(context));
-            AssertHelper.ArePointsEqual(new RealPoint(3, 3), X.Item2.ToRealPoint(context));
+            AssertHelper.ArePointsEqual(new RealPoint(4, 3), X.Item1.ToRealPoint(context));
+            AssertHelper.ArePointsEqual(new RealPoint(3, 4), X.Item2.ToRealPoint(context));
 
         }
         //int RootOf(int x) {
