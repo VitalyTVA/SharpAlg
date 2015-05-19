@@ -107,8 +107,8 @@ namespace SharpAlg.Geo {
         public static System.Tuple<Point, Point> Intersect(this Circle c1, Circle c2) {
             var context = ContextFactory.CreateEmpty()
                 .Register("R1", c1.R)
-                .Register("X0", c2.X)
-                .Register("Y0", c2.Y)
+                .Register("X0", Expr.Subtract(c2.X, c1.X))
+                .Register("Y0", Expr.Subtract(c2.Y, c1.Y))
                 .Register("R2", c2.R);
 
             var builder = ExprBuilderFactory.Create(context);
@@ -119,7 +119,10 @@ namespace SharpAlg.Geo {
             var eqXC = "Y0^4+R1^4-2*X0^2*R2^2+2*Y0^2*X0^2-2*Y0^2*R2^2+X0^4+R2^4+2*R1^2*X0^2-2*R1^2*R2^2-2*R1^2*Y0^2".Parse(builder);
             var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
             var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
-            return Tuple.Create(new Point(xRoots.Item1, yRoots.Item2), new Point(xRoots.Item2, yRoots.Item1));
+            return Tuple.Create(
+                new Point(Expr.Add(xRoots.Item1, c1.X), Expr.Add(yRoots.Item2, c1.Y)), 
+                new Point(Expr.Add(xRoots.Item2, c1.X), Expr.Add(yRoots.Item1, c1.Y))
+            );
         }
     }
 
