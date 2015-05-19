@@ -59,7 +59,28 @@ namespace SharpAlg.Geo.Tests {
             //    );
         }
         [Test]
-        public void CirclesIntersection() {
+        public void CirclesIntersection1() {
+            AssertCirclesIntersection(
+                new RealPoint(0, 0),
+                new RealPoint(0, 5),
+                new RealPoint(7, 7),
+                new RealPoint(7, 2),
+                new RealPoint(4, 3),
+                new RealPoint(3, 4)
+            );
+        }
+        [Test]
+        public void CirclesIntersection2() {
+            AssertCirclesIntersection(
+                new RealPoint(0, 0),
+                new RealPoint(0, 5),
+                new RealPoint(8, 0),
+                new RealPoint(3, 0),
+                new RealPoint(4, -3),
+                new RealPoint(4, 3)
+            );
+        }
+        void AssertCirclesIntersection(RealPoint a, RealPoint b, RealPoint c, RealPoint d, RealPoint x1, RealPoint x2) {
             var A = Point.FromName('A');
             var B = Point.FromName('B');
             var C = Point.FromName('C');
@@ -68,13 +89,12 @@ namespace SharpAlg.Geo.Tests {
             var c2 = Circle.FromPoints(C, D);
             var X = c1.Intersect(c2);
             var context = ContextFactory.CreateEmpty()
-                .RegisterPoint(A, 0, 0)
-                .RegisterPoint(B, 0, 5)
-                .RegisterPoint(C, 7, 7)
-                .RegisterPoint(D, 7, 2);
-            AssertHelper.ArePointsEqual(new RealPoint(4, 3), X.Item1.ToRealPoint(context));
-            AssertHelper.ArePointsEqual(new RealPoint(3, 4), X.Item2.ToRealPoint(context));
-
+                .RegisterPoint(A, a.X, a.Y)
+                .RegisterPoint(B, b.X, b.Y)
+                .RegisterPoint(C, c.X, c.Y)
+                .RegisterPoint(D, d.X, d.Y);
+            AssertHelper.ArePointsEqual(x1, X.Item1.ToRealPoint(context));
+            AssertHelper.ArePointsEqual(x2, X.Item2.ToRealPoint(context));
         }
         //int RootOf(int x) {
         //    return x;
