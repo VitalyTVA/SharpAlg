@@ -160,6 +160,19 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(3, roots.Item1.ToReal(context));
             Assert.AreEqual(-1, roots.Item2.ToReal(context));
         }
+        [Test]
+        public void Middle() {
+            var p1 = new Point(Expr.Zero, Expr.Zero);
+            var p2 = new Point(Expr.Zero, Expr.Parameter("a"));
+            var l1 = Line.FromPoints(p1, p2);
+
+            var c1 = Circle.FromPoints(p1, p2);
+            var c2 = Circle.FromPoints(p2, p1);
+            var intersections = c1.Intersect(c2);
+            var l2 = Line.FromPoints(intersections.Item1, intersections.Item2);
+
+            var res = l1.Intersect(l2);
+        }
     }
     public static class AssertHelper {
         public const double Delta = 0.0000000001;
