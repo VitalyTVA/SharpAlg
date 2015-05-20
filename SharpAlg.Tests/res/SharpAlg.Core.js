@@ -107,6 +107,10 @@ var SharpAlg$Native$Expr =
         ctor: function ()
         {
             System.Object.ctor.call(this);
+        },
+        PrintDebug: function ()
+        {
+            return "";
         }
     }
 };

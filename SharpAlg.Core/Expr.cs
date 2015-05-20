@@ -2,13 +2,14 @@
 using SharpKit.JavaScript;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
 
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JS_Core)]
-    //[DebuggerDisplay("Expr: {Print}")]
+    [DebuggerDisplay("Expr: {PrintDebug()}")]
     public abstract class Expr {
         public static readonly ConstantExpr Zero = new ConstantExpr(NumberFactory.Zero);
         public static readonly ConstantExpr One = new ConstantExpr(NumberFactory.One);
@@ -59,9 +60,14 @@ namespace SharpAlg.Native {
             return new FunctionExpr(functionName, arguments);
         }
         public abstract T Visit<T>(IExpressionVisitor<T> visitor);
-        //#if DEBUG
-        //        public string Print { get { return this.Print(); } }
-        //#endif
+#if DEBUG
+        [JsMethod(Code = "return \"\";")]
+        public string PrintDebug() {
+            var type = Type.GetType("SharpAlg.Native.ExpressionExtensions, SharpAlg, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null");
+            var method = type.GetMethod("Print", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+            return (string)method.Invoke(null, new object[] { this, null });
+        }
+#endif
     }
     [JsType(JsMode.Clr, Filename = SR.JS_Core)]
     public class ConstantExpr : Expr {
