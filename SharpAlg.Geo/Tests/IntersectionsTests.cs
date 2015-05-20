@@ -155,6 +155,7 @@ namespace SharpAlg.Geo.Tests {
         }
     }
     //Rewriter/Convolute tests
+    //Parse expressions only once
     //Convoulte test/refactoring (Functor)
     //{(x - (0))^2 + (y - (0))^2  = (1 * a)^2)}
     public static class AssertHelper {
