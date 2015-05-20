@@ -59,7 +59,7 @@ namespace SharpAlg.Geo {
             var r = Expr.Add(
                         Expr.Subtract(p1.X, p2.X).Square(),
                         Expr.Subtract(p1.Y, p2.Y).Square()
-                    ).Sqrt();
+                    );
             return new Circle(p1.X.Convolute(), p1.Y.Convolute(), r.Convolute());
         }
         public readonly Expr X, Y, R;
@@ -69,7 +69,7 @@ namespace SharpAlg.Geo {
             this.R = r;
         }
         public override string ToString() {
-            return string.Format("(x - ({0}))^2 + (y - ({1}))^2  = ({2})^2)", X.Print(), Y.Print(), R.Print());
+            return string.Format("(x - ({0}))^2 + (y - ({1}))^2 = {2})", X.Print(), Y.Print(), R.Print());
         }
     }
     public static class Intersector {
@@ -99,8 +99,8 @@ namespace SharpAlg.Geo {
             var eqA = "B^2+A^2".Parse(builder);
             var eqYB = "2*X*A*B-2*Y*A^2+2*C*B".Parse(builder);
             var eqXB = "2*Y*A*B-2*X*B^2+2*C*A".Parse(builder);
-            var eqYC = "2*X*A*C+X^2*A^2+C^2+Y^2*A^2-R^2*A^2".Parse(builder);
-            var eqXC = "2*Y*B*C+Y^2*B^2+C^2+X^2*B^2-R^2*B^2".Parse(builder);
+            var eqYC = "2*X*A*C+X^2*A^2+C^2+Y^2*A^2-R*A^2".Parse(builder);
+            var eqXC = "2*Y*B*C+Y^2*B^2+C^2+X^2*B^2-R*B^2".Parse(builder);
             var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
             var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
             return Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
@@ -114,10 +114,10 @@ namespace SharpAlg.Geo {
 
             var builder = ExprBuilderFactory.Create(context);
             var eqA = "4*X0^2+4*Y0^2".Parse(builder);
-            var eqYB = "-4*Y0^3-4*R1^2*Y0+4*Y0*R2^2-4*X0^2*Y0".Parse(builder);
-            var eqXB = "-4*X0^3-4*R1^2*X0+4*X0*R2^2-4*Y0^2*X0".Parse(builder);
-            var eqYC = "X0^4+R1^4-2*Y0^2*R2^2+2*X0^2*Y0^2-2*X0^2*R2^2+Y0^4+R2^4+2*R1^2*Y0^2-2*R1^2*R2^2-2*R1^2*X0^2".Parse(builder);
-            var eqXC = "Y0^4+R1^4-2*X0^2*R2^2+2*Y0^2*X0^2-2*Y0^2*R2^2+X0^4+R2^4+2*R1^2*X0^2-2*R1^2*R2^2-2*R1^2*Y0^2".Parse(builder);
+            var eqYB = "-4*Y0^3-4*R1*Y0+4*Y0*R2-4*X0^2*Y0".Parse(builder);
+            var eqXB = "-4*X0^3-4*R1*X0+4*X0*R2-4*Y0^2*X0".Parse(builder);
+            var eqYC = "X0^4+R1^2-2*Y0^2*R2+2*X0^2*Y0^2-2*X0^2*R2+Y0^4+R2^2+2*R1*Y0^2-2*R1*R2-2*R1*X0^2".Parse(builder);
+            var eqXC = "Y0^4+R1^2-2*X0^2*R2+2*Y0^2*X0^2-2*Y0^2*R2+X0^4+R2^2+2*R1*X0^2-2*R1*R2-2*R1*Y0^2".Parse(builder);
             var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
             var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
             return Tuple.Create(
