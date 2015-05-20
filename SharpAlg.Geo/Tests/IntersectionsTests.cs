@@ -174,8 +174,9 @@ namespace SharpAlg.Geo.Tests {
             var res = l1.Intersect(l2);
         }
     }
+    //Store squre of the radius in circle
     //Immutable context
-    //Rewriter tests
+    //Rewriter/Convolute tests
     //Convoulte test/refactoring (Functor)
     //{(x - (0))^2 + (y - (0))^2  = (1 * a)^2)}
     public static class AssertHelper {
