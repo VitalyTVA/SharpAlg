@@ -1,6 +1,7 @@
 ﻿using SharpAlg.Native;
 using SharpAlg.Native.Builder;
 using System;
+using System.Linq;
 using RealPoint = System.Windows.Point;
 
 namespace SharpAlg.Geo {
@@ -25,9 +26,9 @@ namespace SharpAlg.Geo {
 
     public class Line {
         public static Line FromPoints(Point p1, Point p2) {
-            var a = Expr.Subtract(p1.Y, p2.Y);
-            var b = Expr.Subtract(p2.X, p1.X);
-            var c = Expr.Subtract(Expr.Multiply(p1.X, p2.Y), Expr.Multiply(p2.X, p1.Y));
+            var a = Expr.Subtract(p1.Y, p2.Y).Convolute();
+            var b = Expr.Subtract(p2.X, p1.X).Convolute();
+            var c = Expr.Subtract(Expr.Multiply(p1.X, p2.Y), Expr.Multiply(p2.X, p1.Y)).Convolute();
             return new Line(a, b, c);
         }
         public readonly Expr A, B, C;
@@ -59,7 +60,7 @@ namespace SharpAlg.Geo {
                         Expr.Subtract(p1.X, p2.X).Square(),
                         Expr.Subtract(p1.Y, p2.Y).Square()
                     ).Sqrt();
-            return new Circle(p1.X, p1.Y, r);
+            return new Circle(p1.X.Convolute(), p1.Y.Convolute(), r.Convolute());
         }
         public readonly Expr X, Y, R;
         public Circle(Expr x, Expr y, Expr r) {
@@ -84,7 +85,7 @@ namespace SharpAlg.Geo {
             var divider = "A1*B2-A2*B1".Parse(builder);
             var x = "B1*C2-B2*C1".Parse(builder);
             var y = "C1*A2-C2*A1".Parse(builder);
-            return new Point(Expr.Divide(x, divider), Expr.Divide(y, divider));
+            return new Point(Expr.Divide(x, divider).Convolute(), Expr.Divide(y, divider).Convolute());
         }
         public static System.Tuple<Point,Point> Intersect(this Line l, Circle c) {
             var context = ContextFactory.CreateEmpty()
@@ -120,8 +121,8 @@ namespace SharpAlg.Geo {
             var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
             var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
             return Tuple.Create(
-                new Point(Expr.Add(xRoots.Item1, c1.X), Expr.Add(yRoots.Item2, c1.Y)), 
-                new Point(Expr.Add(xRoots.Item2, c1.X), Expr.Add(yRoots.Item1, c1.Y))
+                new Point(Expr.Add(xRoots.Item1, c1.X).Convolute(), Expr.Add(yRoots.Item2, c1.Y).Convolute()),
+                new Point(Expr.Add(xRoots.Item2, c1.X).Convolute(), Expr.Add(yRoots.Item1, c1.Y).Convolute())
             );
         }
     }
@@ -135,8 +136,8 @@ namespace SharpAlg.Geo {
             var builder = ExprBuilderFactory.Create(context);
             var d = "(B^2-4*A*C)^(1/2)".Parse(builder);
             context.Register("D", d);
-            var x1 = "(-B+D)/(2*A)".Parse(builder);
-            var x2 = "(-B-D)/(2*A)".Parse(builder);
+            var x1 = "(-B+D)/(2*A)".Parse(builder).Convolute();
+            var x2 = "(-B-D)/(2*A)".Parse(builder).Convolute();
             return Tuple.Create(x1, x2);
         }
     }
@@ -172,6 +173,39 @@ namespace SharpAlg.Geo {
         }
         public static Expr AsConst(this double value) {
             return Expr.Constant(NumberFactory.FromDouble(value));
+        }
+        public static Expr Convolute(this Expr expr) {
+            return expr; //expr.Visit(new ExprRewriter(new ConvolutionExprBuilder(ContextFactory.Empty)));
+        }
+    }
+    public class ExprRewriter : IExpressionVisitor<Expr> {
+        readonly ExprBuilder builder;
+        public ExprRewriter(ExprBuilder builder) {
+            this.builder = builder;
+        }
+        Expr IExpressionVisitor<Expr>.Constant(ConstantExpr constant) {
+            return constant;
+        }
+
+        Expr IExpressionVisitor<Expr>.Parameter(ParameterExpr parameter) {
+            return parameter;
+        }
+
+        Expr IExpressionVisitor<Expr>.Add(AddExpr multi) {
+            return multi.Args.Select(x => x.Visit(this)).Aggregate((x, y) => builder.Add(x, y));
+        }
+
+        Expr IExpressionVisitor<Expr>.Multiply(MultiplyExpr multi) {
+            return multi.Args.Select(x => x.Visit(this)).Aggregate((x, y) => builder.Multiply(x, y));
+        }
+
+        Expr IExpressionVisitor<Expr>.Power(PowerExpr power) {
+            return builder.Power(power.Left.Visit(this), power.Right.Visit(this));
+        }
+
+        Expr IExpressionVisitor<Expr>.Function(FunctionExpr functionExpr) {
+            throw new NotImplementedException();
+            //return builder.Function(functionExpr.FunctionName, functionExpr.Args);
         }
     }
 }
