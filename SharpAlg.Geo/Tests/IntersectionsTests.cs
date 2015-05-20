@@ -174,6 +174,10 @@ namespace SharpAlg.Geo.Tests {
             var res = l1.Intersect(l2);
         }
     }
+    //Immutable context
+    //Rewriter tests
+    //Convoulte test/refactoring (Functor)
+    //{(x - (0))^2 + (y - (0))^2  = (1 * a)^2)}
     public static class AssertHelper {
         public const double Delta = 0.0000000001;
         public static void ArePointsEqual(RealPoint p1, RealPoint p2, double delta = Delta) {
