@@ -10,7 +10,7 @@ using System.Runtime.Serialization;
 namespace SharpAlg.Native {
     [JsType(JsMode.Clr, Filename = SR.JSNativeName)]
     public static class ExpressionExtensions {
-        public static Number Evaluate(this Expr expr, Context context = null) {
+        public static Number Evaluate(this Expr expr, IContext context = null) {
             return expr.Visit(new ExpressionEvaluator(context ?? ContextFactory.Default));
         }
         public static Expr Diff(this Expr expr, string parameterName = null) {

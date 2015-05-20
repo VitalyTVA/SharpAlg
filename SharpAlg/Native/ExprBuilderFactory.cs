@@ -12,7 +12,7 @@ namespace SharpAlg.Native.Builder {
         public static ExprBuilder CreateEmpty() {
             return new ConvolutionExprBuilder(ContextFactory.Empty);
         }
-        public static ExprBuilder Create(Context context) {
+        public static ExprBuilder Create(IContext context) {
             return new ConvolutionExprBuilder(context);
         }
     }
