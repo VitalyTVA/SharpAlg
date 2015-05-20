@@ -174,7 +174,6 @@ namespace SharpAlg.Geo.Tests {
             var res = l1.Intersect(l2);
         }
     }
-    //Store squre of the radius in circle
     //Immutable context
     //Rewriter/Convolute tests
     //Convoulte test/refactoring (Functor)
