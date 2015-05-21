@@ -27,9 +27,9 @@ namespace SharpAlg.Geo {
 
     public class Line {
         public static Line FromPoints(Point p1, Point p2) {
-            var a = Expr.Subtract(p1.Y, p2.Y).Convolute();
-            var b = Expr.Subtract(p2.X, p1.X).Convolute();
-            var c = Expr.Subtract(Expr.Multiply(p1.X, p2.Y), Expr.Multiply(p2.X, p1.Y)).Convolute();
+            var a = Expr.Subtract(p1.Y, p2.Y);
+            var b = Expr.Subtract(p2.X, p1.X);
+            var c = Expr.Subtract(Expr.Multiply(p1.X, p2.Y), Expr.Multiply(p2.X, p1.Y));
             return new Line(a, b, c);
         }
         public readonly Expr A, B, C;
@@ -61,7 +61,7 @@ namespace SharpAlg.Geo {
                         Expr.Subtract(p1.X, p2.X).Square(),
                         Expr.Subtract(p1.Y, p2.Y).Square()
                     );
-            return new Circle(p1.X.Convolute(), p1.Y.Convolute(), r.Convolute());
+            return new Circle(p1.X, p1.Y, r);
         }
         public readonly Expr X, Y, R;
         public Circle(Expr x, Expr y, Expr r) {
@@ -117,12 +117,29 @@ namespace SharpAlg.Geo {
         }
     }
     public static class CirclesIntersector {
+        static readonly Func<Expr, Expr, System.Tuple<Point, Point>> GetIntersections;
+        static CirclesIntersector() {
+            var eqA = "4*X0^2+4*Y0^2".Parse();
+            var eqYB = "-4*Y0^3-4*R1*Y0+4*Y0*R2-4*X0^2*Y0".Parse();
+            var eqXB = "-4*X0^3-4*R1*X0+4*X0*R2-4*Y0^2*X0".Parse();
+            var eqYC = "X0^4+R1^2-2*Y0^2*R2+2*X0^2*Y0^2-2*X0^2*R2+Y0^4+R2^2+2*R1*Y0^2-2*R1*R2-2*R1*X0^2".Parse();
+            var eqXC = "Y0^4+R1^2-2*X0^2*R2+2*Y0^2*X0^2-2*Y0^2*R2+X0^4+R2^2+2*R1*X0^2-2*R1*R2-2*R1*Y0^2".Parse();
+            var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
+            var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
+            GetIntersections = (centerX, centerY) => Tuple.Create(
+                new Point(Expr.Add(xRoots.Item1, centerX), Expr.Add(yRoots.Item2, centerY)),
+                new Point(Expr.Add(xRoots.Item2, centerX), Expr.Add(yRoots.Item1, centerY))
+            );
+
+        }
         public static System.Tuple<Point, Point> Intersect(this Circle c1, Circle c2) {
             var context = ImmutableContext.Empty
                 .Register("R1", c1.R)
                 .Register("X0", Expr.Subtract(c2.X, c1.X))
                 .Register("Y0", Expr.Subtract(c2.Y, c1.Y))
                 .Register("R2", c2.R);
+
+            //return GetIntersections(c1.X, c1.Y).Substitute(context);
 
             var builder = ExprBuilderFactory.Create(context);
             var eqA = "4*X0^2+4*Y0^2".Parse(builder);
@@ -133,8 +150,8 @@ namespace SharpAlg.Geo {
             var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
             var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
             return Tuple.Create(
-                new Point(Expr.Add(xRoots.Item1, c1.X).Convolute(), Expr.Add(yRoots.Item2, c1.Y).Convolute()),
-                new Point(Expr.Add(xRoots.Item2, c1.X).Convolute(), Expr.Add(yRoots.Item1, c1.Y).Convolute())
+                new Point(Expr.Add(xRoots.Item1, c1.X), Expr.Add(yRoots.Item2, c1.Y)),
+                new Point(Expr.Add(xRoots.Item2, c1.X), Expr.Add(yRoots.Item1, c1.Y))
             );
         }
     }
@@ -149,8 +166,8 @@ namespace SharpAlg.Geo {
             var d = "(B^2-4*A*C)^(1/2)".Parse(builder);
             context = context.Register("D", d);
             builder = ExprBuilderFactory.Create(context);
-            var x1 = "(-B+D)/(2*A)".Parse(builder).Convolute();
-            var x2 = "(-B-D)/(2*A)".Parse(builder).Convolute();
+            var x1 = "(-B+D)/(2*A)".Parse(builder);
+            var x2 = "(-B-D)/(2*A)".Parse(builder);
             return Tuple.Create(x1, x2);
         }
     }
@@ -197,9 +214,9 @@ namespace SharpAlg.Geo {
         public static Expr AsConst(this double value) {
             return Expr.Constant(NumberFactory.FromDouble(value));
         }
-        public static Expr Convolute(this Expr expr) {
-            return expr; //expr.Visit(new ExprRewriter(new ConvolutionExprBuilder(ContextFactory.Empty)));
-        }
+        //public static Expr Convolute(this Expr expr) {
+        //    return expr; //expr.Visit(new ExprRewriter(new ConvolutionExprBuilder(ContextFactory.Empty)));
+        //}
         public static Expr Substitute(this Expr expr, IContext context) {
             return ExprSubstitutor.Substitute(expr, context);
         }
