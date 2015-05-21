@@ -164,6 +164,12 @@ namespace SharpAlg.Geo {
         public static Point FMap(this Point x, Func<Expr, Expr> f) {
             return new Point(f(x.X), f(x.Y));
         }
+        public static Line FMap(this Line x, Func<Expr, Expr> f) {
+            return new Line(f(x.A), f(x.B), f(x.C));
+        }
+        public static Circle FMap(this Circle x, Func<Expr, Expr> f) {
+            return new Circle(f(x.X), f(x.Y), f(x.R));
+        }
         public static System.Tuple<T, T> FMap<T>(this System.Tuple<T, T> x, Func<T, T> f) {
             return Tuple.Create(f(x.Item1), f(x.Item2));
         }
@@ -202,9 +208,9 @@ namespace SharpAlg.Geo {
         public static Expr AsConst(this double value) {
             return Expr.Constant(NumberFactory.FromDouble(value));
         }
-        //public static Expr Convolute(this Expr expr) {
-        //    return expr; //expr.Visit(new ExprRewriter(new ConvolutionExprBuilder(ContextFactory.Empty)));
-        //}
+        public static Expr Convolute(this Expr expr) {
+            return expr.Visit(new ExprRewriter(new ConvolutionExprBuilder(ContextFactory.Empty)));
+        }
         public static Point Offset(this Point p, Point offset) {
             return new Point(Expr.Add(p.X, offset.X), Expr.Add(p.Y, offset.Y));
         }
@@ -250,34 +256,34 @@ namespace SharpAlg.Geo {
             throw new NotImplementedException();
         }
     }
-    //public class ExprRewriter : IExpressionVisitor<Expr> {
-    //    readonly ExprBuilder builder;
-    //    public ExprRewriter(ExprBuilder builder) {
-    //        this.builder = builder;
-    //    }
-    //    Expr IExpressionVisitor<Expr>.Constant(ConstantExpr constant) {
-    //        return constant;
-    //    }
+    public class ExprRewriter : IExpressionVisitor<Expr> {
+        readonly ExprBuilder builder;
+        public ExprRewriter(ExprBuilder builder) {
+            this.builder = builder;
+        }
+        Expr IExpressionVisitor<Expr>.Constant(ConstantExpr constant) {
+            return constant;
+        }
 
-    //    Expr IExpressionVisitor<Expr>.Parameter(ParameterExpr parameter) {
-    //        return parameter;
-    //    }
+        Expr IExpressionVisitor<Expr>.Parameter(ParameterExpr parameter) {
+            return parameter;
+        }
 
-    //    Expr IExpressionVisitor<Expr>.Add(AddExpr multi) {
-    //        return multi.Args.Select(x => x.Visit(this)).Aggregate((x, y) => builder.Add(x, y));
-    //    }
+        Expr IExpressionVisitor<Expr>.Add(AddExpr multi) {
+            return multi.Args.Select(x => x.Visit(this)).Aggregate((x, y) => builder.Add(x, y));
+        }
 
-    //    Expr IExpressionVisitor<Expr>.Multiply(MultiplyExpr multi) {
-    //        return multi.Args.Select(x => x.Visit(this)).Aggregate((x, y) => builder.Multiply(x, y));
-    //    }
+        Expr IExpressionVisitor<Expr>.Multiply(MultiplyExpr multi) {
+            return multi.Args.Select(x => x.Visit(this)).Aggregate((x, y) => builder.Multiply(x, y));
+        }
 
-    //    Expr IExpressionVisitor<Expr>.Power(PowerExpr power) {
-    //        return builder.Power(power.Left.Visit(this), power.Right.Visit(this));
-    //    }
+        Expr IExpressionVisitor<Expr>.Power(PowerExpr power) {
+            return builder.Power(power.Left.Visit(this), power.Right.Visit(this));
+        }
 
-    //    Expr IExpressionVisitor<Expr>.Function(FunctionExpr functionExpr) {
-    //        throw new NotImplementedException();
-    //        //return builder.Function(functionExpr.FunctionName, functionExpr.Args);
-    //    }
-    //}
+        Expr IExpressionVisitor<Expr>.Function(FunctionExpr functionExpr) {
+            throw new NotImplementedException();
+            //return builder.Function(functionExpr.FunctionName, functionExpr.Args);
+        }
+    }
 }
