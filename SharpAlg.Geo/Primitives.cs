@@ -117,7 +117,7 @@ namespace SharpAlg.Geo {
         }
     }
     public static class CirclesIntersector {
-        static readonly Func<Expr, Expr, System.Tuple<Point, Point>> GetIntersections;
+        static readonly System.Tuple<Point, Point> Intersections;
         static CirclesIntersector() {
             var eqA = "4*X0^2+4*Y0^2".Parse();
             var eqYB = "-4*Y0^3-4*R1*Y0+4*Y0*R2-4*X0^2*Y0".Parse();
@@ -126,9 +126,9 @@ namespace SharpAlg.Geo {
             var eqXC = "Y0^4+R1^2-2*X0^2*R2+2*Y0^2*X0^2-2*Y0^2*R2+X0^4+R2^2+2*R1*X0^2-2*R1*R2-2*R1*Y0^2".Parse();
             var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
             var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
-            GetIntersections = (centerX, centerY) => Tuple.Create(
-                new Point(Expr.Add(xRoots.Item1, centerX), Expr.Add(yRoots.Item2, centerY)),
-                new Point(Expr.Add(xRoots.Item2, centerX), Expr.Add(yRoots.Item1, centerY))
+            Intersections = Tuple.Create(
+                new Point(xRoots.Item1, yRoots.Item2),
+                new Point(xRoots.Item2, yRoots.Item1)
             );
 
         }
@@ -139,19 +139,9 @@ namespace SharpAlg.Geo {
                 .Register("Y0", Expr.Subtract(c2.Y, c1.Y))
                 .Register("R2", c2.R);
 
-            //return GetIntersections(c1.X, c1.Y).Substitute(context);
-
-            var builder = ExprBuilderFactory.Create(context);
-            var eqA = "4*X0^2+4*Y0^2".Parse(builder);
-            var eqYB = "-4*Y0^3-4*R1*Y0+4*Y0*R2-4*X0^2*Y0".Parse(builder);
-            var eqXB = "-4*X0^3-4*R1*X0+4*X0*R2-4*Y0^2*X0".Parse(builder);
-            var eqYC = "X0^4+R1^2-2*Y0^2*R2+2*X0^2*Y0^2-2*X0^2*R2+Y0^4+R2^2+2*R1*Y0^2-2*R1*R2-2*R1*X0^2".Parse(builder);
-            var eqXC = "Y0^4+R1^2-2*X0^2*R2+2*Y0^2*X0^2-2*Y0^2*R2+X0^4+R2^2+2*R1*X0^2-2*R1*R2-2*R1*Y0^2".Parse(builder);
-            var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
-            var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
             return Tuple.Create(
-                new Point(Expr.Add(xRoots.Item1, c1.X), Expr.Add(yRoots.Item2, c1.Y)),
-                new Point(Expr.Add(xRoots.Item2, c1.X), Expr.Add(yRoots.Item1, c1.Y))
+                new Point(Expr.Add(Intersections.Item1.X.Substitute(context), c1.X), Expr.Add(Intersections.Item1.Y.Substitute(context), c1.Y)),
+                new Point(Expr.Add(Intersections.Item2.X.Substitute(context), c1.X), Expr.Add(Intersections.Item2.Y.Substitute(context), c1.Y))
             );
         }
     }
