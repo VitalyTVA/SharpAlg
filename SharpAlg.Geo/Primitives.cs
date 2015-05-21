@@ -113,7 +113,7 @@ namespace SharpAlg.Geo {
                 .Register("X", c.X)
                 .Register("Y", c.Y)
                 .Register("R", c.R);
-            return Intersections.FMap(x => x.Substitute(context));
+            return Intersections.Substitute(context);
         }
     }
     public static class CirclesIntersector {
@@ -204,6 +204,9 @@ namespace SharpAlg.Geo {
             return ExprSubstitutor.Substitute(expr, context);
         }
         public static Point Substitute(this Point p, IContext context) {
+            return p.FMap(x => x.Substitute(context));
+        }
+        public static System.Tuple<Point, Point> Substitute(this System.Tuple<Point, Point> p, IContext context) {
             return p.FMap(x => x.Substitute(context));
         }
     }
