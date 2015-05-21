@@ -74,9 +74,13 @@ namespace SharpAlg.Geo {
         }
     }
     public static class LinesIntersector {
-        const string divider = "(A1*B2-A2*B1)";
-        static readonly Expr x = ("(B1*C2-B2*C1)/" + divider).Parse(ExprBuilderFactory.CreateEmpty());
-        static readonly Expr y = ("(C1*A2-C2*A1)/" + divider).Parse(ExprBuilderFactory.CreateEmpty());
+        static readonly Point Intersection;
+        static LinesIntersector() {
+            const string divider = "(A1*B2-A2*B1)";
+            var x = ("(B1*C2-B2*C1)/" + divider).Parse(ExprBuilderFactory.CreateEmpty());
+            var y = ("(C1*A2-C2*A1)/" + divider).Parse(ExprBuilderFactory.CreateEmpty());
+            Intersection = new Point(x, y);
+        }
 
         public static Point Intersect(this Line l1, Line l2) {
             var context = ImmutableContext.Empty
@@ -86,10 +90,21 @@ namespace SharpAlg.Geo {
                 .Register("A2", l2.A)
                 .Register("B2", l2.B)
                 .Register("C2", l2.C);
-            return new Point(x.Substitute(context), y.Substitute(context));
+            return Intersection.Substitute(context);
         }
     }
     public static class LineCircleIntersector {
+        static readonly System.Tuple<Point, Point> Intersections;
+        static LineCircleIntersector() {
+            var eqA = "B^2+A^2".Parse();
+            var eqYB = "2*X*A*B-2*Y*A^2+2*C*B".Parse();
+            var eqXB = "2*Y*A*B-2*X*B^2+2*C*A".Parse();
+            var eqYC = "2*X*A*C+X^2*A^2+C^2+Y^2*A^2-R*A^2".Parse();
+            var eqXC = "2*Y*B*C+Y^2*B^2+C^2+X^2*B^2-R*B^2".Parse();
+            var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
+            var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
+            Intersections = Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
+        }
         public static System.Tuple<Point,Point> Intersect(this Line l, Circle c) {
             var context = ImmutableContext.Empty
                 .Register("A", l.A)
@@ -98,15 +113,10 @@ namespace SharpAlg.Geo {
                 .Register("X", c.X)
                 .Register("Y", c.Y)
                 .Register("R", c.R);
-            var builder = ExprBuilderFactory.Create(context);
-            var eqA = "B^2+A^2".Parse(builder);
-            var eqYB = "2*X*A*B-2*Y*A^2+2*C*B".Parse(builder);
-            var eqXB = "2*Y*A*B-2*X*B^2+2*C*A".Parse(builder);
-            var eqYC = "2*X*A*C+X^2*A^2+C^2+Y^2*A^2-R*A^2".Parse(builder);
-            var eqXC = "2*Y*B*C+Y^2*B^2+C^2+X^2*B^2-R*B^2".Parse(builder);
-            var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
-            var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
-            return Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
+            return Tuple.Create(
+                Intersections.Item1.Substitute(context),
+                Intersections.Item2.Substitute(context)
+            );
         }
     }
     public static class CirclesIntersector {
@@ -147,6 +157,13 @@ namespace SharpAlg.Geo {
             return Tuple.Create(x1, x2);
         }
     }
+
+    public static class Functor {
+        public static Point FMap(this Point p, Func<Expr, Expr> f) {
+            return new Point(f(p.X), f(p.Y));
+        }
+    }
+
     public static class ExprHelper {
         public static readonly Expr Half = "1/2".Parse();
         public static readonly Expr Two = "2".Parse();
@@ -185,6 +202,9 @@ namespace SharpAlg.Geo {
         }
         public static Expr Substitute(this Expr expr, IContext context) {
             return ExprSubstitutor.Substitute(expr, context);
+        }
+        public static Point Substitute(this Point p, IContext context) {
+            return p.FMap(x => x.Substitute(context));
         }
     }
     public class ExprSubstitutor : IExpressionVisitor<Expr> {
