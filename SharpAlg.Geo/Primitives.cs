@@ -73,7 +73,11 @@ namespace SharpAlg.Geo {
             return string.Format("(x - ({0}))^2 + (y - ({1}))^2 = {2})", X.Print(), Y.Print(), R.Print());
         }
     }
-    public static class Intersector {
+    public static class LinesIntersector {
+        const string divider = "(A1*B2-A2*B1)";
+        static readonly Expr x = ("(B1*C2-B2*C1)/" + divider).Parse(ExprBuilderFactory.CreateEmpty());
+        static readonly Expr y = ("(C1*A2-C2*A1)/" + divider).Parse(ExprBuilderFactory.CreateEmpty());
+
         public static Point Intersect(this Line l1, Line l2) {
             var context = ImmutableContext.Empty
                 .Register("A1", l1.A)
@@ -82,12 +86,10 @@ namespace SharpAlg.Geo {
                 .Register("A2", l2.A)
                 .Register("B2", l2.B)
                 .Register("C2", l2.C);
-            var builder = ExprBuilderFactory.Create(context);
-            var divider = "A1*B2-A2*B1".Parse(builder);
-            var x = "B1*C2-B2*C1".Parse(builder);
-            var y = "C1*A2-C2*A1".Parse(builder);
-            return new Point(Expr.Divide(x, divider).Convolute(), Expr.Divide(y, divider).Convolute());
+            return new Point(x.Substitute(context), y.Substitute(context));
         }
+    }
+    public static class LineCircleIntersector {
         public static System.Tuple<Point,Point> Intersect(this Line l, Circle c) {
             var context = ImmutableContext.Empty
                 .Register("A", l.A)
@@ -106,6 +108,8 @@ namespace SharpAlg.Geo {
             var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
             return Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
         }
+    }
+    public static class CirclesIntersector {
         public static System.Tuple<Point, Point> Intersect(this Circle c1, Circle c2) {
             var context = ImmutableContext.Empty
                 .Register("R1", c1.R)
@@ -178,6 +182,41 @@ namespace SharpAlg.Geo {
         }
         public static Expr Convolute(this Expr expr) {
             return expr; //expr.Visit(new ExprRewriter(new ConvolutionExprBuilder(ContextFactory.Empty)));
+        }
+        public static Expr Substitute(this Expr expr, IContext context) {
+            return ExprSubstitutor.Substitute(expr, context);
+        }
+    }
+    public class ExprSubstitutor : IExpressionVisitor<Expr> {
+        public static Expr Substitute(Expr expr, IContext context) {
+            return expr.Visit(new ExprSubstitutor(context));
+        }
+        readonly IContext context;
+        ExprSubstitutor(IContext context) {
+            this.context = context;
+        }
+        Expr IExpressionVisitor<Expr>.Constant(ConstantExpr constant) {
+            return constant;
+        }
+
+        Expr IExpressionVisitor<Expr>.Parameter(ParameterExpr parameter) {
+            return context.GetValue(parameter.ParameterName);
+        }
+
+        Expr IExpressionVisitor<Expr>.Add(AddExpr multi) {
+            return Expr.Add(multi.Args.Select(x => x.Visit(this)));
+        }
+
+        Expr IExpressionVisitor<Expr>.Multiply(MultiplyExpr multi) {
+            return Expr.Multiply(multi.Args.Select(x => x.Visit(this)));
+        }
+
+        Expr IExpressionVisitor<Expr>.Power(PowerExpr power) {
+            return Expr.Power(power.Left.Visit(this), power.Right.Visit(this));
+        }
+
+        Expr IExpressionVisitor<Expr>.Function(FunctionExpr functionExpr) {
+            throw new NotImplementedException();
         }
     }
     //public class ExprRewriter : IExpressionVisitor<Expr> {
