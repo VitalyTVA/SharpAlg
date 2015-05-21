@@ -113,10 +113,7 @@ namespace SharpAlg.Geo {
                 .Register("X", c.X)
                 .Register("Y", c.Y)
                 .Register("R", c.R);
-            return Tuple.Create(
-                Intersections.Item1.Substitute(context),
-                Intersections.Item2.Substitute(context)
-            );
+            return Intersections.FMap(x => x.Substitute(context));
         }
     }
     public static class CirclesIntersector {
@@ -159,8 +156,11 @@ namespace SharpAlg.Geo {
     }
 
     public static class Functor {
-        public static Point FMap(this Point p, Func<Expr, Expr> f) {
-            return new Point(f(p.X), f(p.Y));
+        public static Point FMap(this Point x, Func<Expr, Expr> f) {
+            return new Point(f(x.X), f(x.Y));
+        }
+        public static System.Tuple<T, T> FMap<T>(this System.Tuple<T, T> x, Func<T, T> f) {
+            return Tuple.Create(f(x.Item1), f(x.Item2));
         }
     }
 
