@@ -64,6 +64,7 @@ namespace SharpAlg.Geo {
             return new Circle(p1.X, p1.Y, r);
         }
         public readonly Expr X, Y, R;
+        public Point Center { get { return new Point(X, Y); } }
         public Circle(Expr x, Expr y, Expr r) {
             this.X = x;
             this.Y = y;
@@ -138,11 +139,7 @@ namespace SharpAlg.Geo {
                 .Register("X0", Expr.Subtract(c2.X, c1.X))
                 .Register("Y0", Expr.Subtract(c2.Y, c1.Y))
                 .Register("R2", c2.R);
-
-            return Tuple.Create(
-                new Point(Expr.Add(Intersections.Item1.X.Substitute(context), c1.X), Expr.Add(Intersections.Item1.Y.Substitute(context), c1.Y)),
-                new Point(Expr.Add(Intersections.Item2.X.Substitute(context), c1.X), Expr.Add(Intersections.Item2.Y.Substitute(context), c1.Y))
-            );
+            return Intersections.Substitute(context).FMap(x => x.Offset(c1.Center));
         }
     }
 
@@ -207,6 +204,9 @@ namespace SharpAlg.Geo {
         //public static Expr Convolute(this Expr expr) {
         //    return expr; //expr.Visit(new ExprRewriter(new ConvolutionExprBuilder(ContextFactory.Empty)));
         //}
+        public static Point Offset(this Point p, Point offset) {
+            return new Point(Expr.Add(p.X, offset.X), Expr.Add(p.Y, offset.Y));
+        }
         public static Expr Substitute(this Expr expr, IContext context) {
             return ExprSubstitutor.Substitute(expr, context);
         }
