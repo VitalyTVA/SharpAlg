@@ -144,18 +144,19 @@ namespace SharpAlg.Geo {
     }
 
     public static class QuadraticEquationHelper {
+        static readonly System.Tuple<Expr, Expr> Roots;
+        static QuadraticEquationHelper() {
+            var d = "(B^2-4*A*C)^(1/2)";
+            var x1 = string.Format("(-B+{0})/(2*A)", d).Parse();
+            var x2 = string.Format("(-B-{0})/(2*A)", d).Parse();
+            Roots = Tuple.Create(x1, x2);
+        }
         public static System.Tuple<Expr, Expr> Solve(this QuadraticEquation eq) {
             var context = ImmutableContext.Empty
                  .Register("A", eq.A)
                  .Register("B", eq.B)
                  .Register("C", eq.C);
-            var builder = ExprBuilderFactory.Create(context);
-            var d = "(B^2-4*A*C)^(1/2)".Parse(builder);
-            context = context.Register("D", d);
-            builder = ExprBuilderFactory.Create(context);
-            var x1 = "(-B+D)/(2*A)".Parse(builder);
-            var x2 = "(-B-D)/(2*A)".Parse(builder);
-            return Tuple.Create(x1, x2);
+            return Roots.FMap(x => x.Substitute(context));
         }
     }
 
