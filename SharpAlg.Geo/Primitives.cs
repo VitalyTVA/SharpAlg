@@ -107,9 +107,7 @@ namespace SharpAlg.Geo {
         public static System.Tuple<Point,Point> Intersect(this Line l, Circle c) {
             var context = ImmutableContext.Empty
                 .RegisterLine(l, "A", "B", "C")
-                .Register("X", c.X)
-                .Register("Y", c.Y)
-                .Register("R", c.R);
+                .RegisterCircle(c, "X", "Y", "R");
             return Intersections.Substitute(context);
         }
     }
@@ -130,11 +128,10 @@ namespace SharpAlg.Geo {
 
         }
         public static System.Tuple<Point, Point> Intersect(this Circle c1, Circle c2) {
+            var c = c2.Offset(c1.Center.Invert());
             var context = ImmutableContext.Empty
                 .Register("R1", c1.R)
-                .Register("X0", Expr.Subtract(c2.X, c1.X))
-                .Register("Y0", Expr.Subtract(c2.Y, c1.Y))
-                .Register("R2", c2.R);
+                .RegisterCircle(c, "X0", "Y0", "R2");
             return Intersections.Substitute(context).FMap(x => x.Offset(c1.Center));
         }
     }
@@ -221,6 +218,13 @@ namespace SharpAlg.Geo {
         }
         public static Point Offset(this Point p, Point offset) {
             return new Point(Expr.Add(p.X, offset.X), Expr.Add(p.Y, offset.Y));
+        }
+        public static Point Invert(this Point p) {
+            return new Point(Expr.Minus(p.X), Expr.Minus(p.Y));
+        }
+        public static Circle Offset(this Circle c, Point offset) {
+            var center = c.Center.Offset(offset);
+            return new Circle(center.X, center.Y, c.R);
         }
         public static Expr Substitute(this Expr expr, IContext context) {
             return ExprSubstitutor.Substitute(expr, context);
