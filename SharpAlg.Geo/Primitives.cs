@@ -30,7 +30,7 @@ namespace SharpAlg.Geo {
             var a = Expr.Subtract(p1.Y, p2.Y);
             var b = Expr.Subtract(p2.X, p1.X);
             var c = Expr.Subtract(Expr.Multiply(p1.X, p2.Y), Expr.Multiply(p2.X, p1.Y));
-            return new Line(a, b, c);
+            return new Line(a, b, c).FMap(x => x.Convolute());
         }
         public readonly Expr A, B, C;
         public Line(Expr a, Expr b, Expr c) {
@@ -39,7 +39,8 @@ namespace SharpAlg.Geo {
             this.C = c;
         }
         public override string ToString() {
-            return string.Format("({0})*x + ({1})*y + ({2}) = 0", A.Print(), B.Print(), C.Print());
+            var context = ImmutableContext.Empty.RegisterLine(this, "A", "B", "C");
+            return "A*x + B*y + C".Parse().Substitute(context).Print();
         }
     }
 
@@ -85,12 +86,8 @@ namespace SharpAlg.Geo {
 
         public static Point Intersect(this Line l1, Line l2) {
             var context = ImmutableContext.Empty
-                .Register("A1", l1.A)
-                .Register("B1", l1.B)
-                .Register("C1", l1.C)
-                .Register("A2", l2.A)
-                .Register("B2", l2.B)
-                .Register("C2", l2.C);
+                .RegisterLine(l1, "A1", "B1", "C1")
+                .RegisterLine(l2, "A2", "B2", "C2");
             return Intersection.Substitute(context);
         }
     }
@@ -199,6 +196,12 @@ namespace SharpAlg.Geo {
         public static ImmutableContext RegisterValue(this ImmutableContext context, string nane, double value) {
             return context.RegisterValue(nane.Parse(), value);
         }
+        public static ImmutableContext RegisterLine(this ImmutableContext context, Line l, string a, string b, string c) {
+            return context
+                .Register(a, l.A)
+                .Register(b, l.B)
+                .Register(c, l.C);
+        }
         public static RealPoint ToRealPoint(this Point p, ImmutableContext context) {
             return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));
         }
@@ -237,7 +240,7 @@ namespace SharpAlg.Geo {
         }
 
         Expr IExpressionVisitor<Expr>.Parameter(ParameterExpr parameter) {
-            return context.GetValue(parameter.ParameterName);
+            return context.GetValue(parameter.ParameterName) ?? parameter;
         }
 
         Expr IExpressionVisitor<Expr>.Add(AddExpr multi) {
