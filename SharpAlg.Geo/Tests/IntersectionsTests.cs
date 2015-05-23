@@ -151,10 +151,12 @@ namespace SharpAlg.Geo.Tests {
             var c2 = Circle.FromPoints(p2, p1);
             Assert.AreEqual("x ^ 2 + y ^ 2 - a ^ 2", c1.ToString());
             Assert.AreEqual("x ^ 2 + (y - a) ^ 2 - a ^ 2", c2.ToString());
+
             var intersections = c1.Intersect(c2);
             var l2 = Line.FromPoints(intersections.Item1, intersections.Item2);
 
             var res = l1.Intersect(l2);
+            Assert.AreEqual("(0, 1/2 * a)", res.ToString()); 
         }
     }
     //Rewriter/Convolute tests
