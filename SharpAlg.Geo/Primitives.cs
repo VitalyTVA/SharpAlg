@@ -61,7 +61,7 @@ namespace SharpAlg.Geo {
                         Expr.Subtract(p1.X, p2.X).Square(),
                         Expr.Subtract(p1.Y, p2.Y).Square()
                     );
-            return new Circle(p1.X, p1.Y, r).FMap(x => x.Convolute()); ;
+            return new Circle(p1.X, p1.Y, r).FMap(x => x.Convolute());
         }
         public readonly Expr X, Y, R;
         public Point Center { get { return new Point(X, Y); } }
@@ -87,7 +87,7 @@ namespace SharpAlg.Geo {
             var context = ImmutableContext.Empty
                 .RegisterLine(l1, "A1", "B1", "C1")
                 .RegisterLine(l2, "A2", "B2", "C2");
-            return Intersection.Substitute(context);
+            return Intersection.Substitute(context).FMap(x => x.Convolute());
         }
     }
     public static class LineCircleIntersector {
@@ -130,7 +130,10 @@ namespace SharpAlg.Geo {
             var context = ImmutableContext.Empty
                 .Register("R1", c1.R)
                 .RegisterCircle(c, "X0", "Y0", "R2");
-            return Intersections.Substitute(context).FMap(x => x.Offset(c1.Center));
+            return Intersections
+                .Substitute(context)
+                .FMap(x => x.Offset(c1.Center))
+                .FMap(tuple => tuple.FMap(x => x.Convolute()));
         }
     }
 
