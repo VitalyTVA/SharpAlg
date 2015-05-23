@@ -39,8 +39,7 @@ namespace SharpAlg.Geo {
             this.C = c;
         }
         public override string ToString() {
-            var context = ImmutableContext.Empty.RegisterLine(this, "A", "B", "C");
-            return "A*x + B*y + C".Transform(context);
+            return this.PrintObject((c, o) => c.RegisterLine(o, "A", "B", "C"),  "A*x + B*y + C");
         }
     }
 
@@ -72,8 +71,7 @@ namespace SharpAlg.Geo {
             this.R = r;
         }
         public override string ToString() {
-            var context = ImmutableContext.Empty.RegisterCircle(this, "X", "Y", "R");
-            return "(x - X)^2 + (y - Y)^2 - R".Transform(context);
+            return this.PrintObject((c, o) => c.RegisterCircle(o, "X", "Y", "R"), "(x - X)^2 + (y - Y)^2 - R");
         }
     }
     public static class LinesIntersector {
@@ -235,7 +233,11 @@ namespace SharpAlg.Geo {
         public static System.Tuple<Point, Point> Substitute(this System.Tuple<Point, Point> p, IContext context) {
             return p.FMap(x => x.Substitute(context));
         }
-        public static string Transform(this string expr, IContext context) { 
+        public static string PrintObject<T>(this T obj, Func<ImmutableContext, T, ImmutableContext> register, string expr) {
+            var context = register(ImmutableContext.Empty, obj);
+            return expr.Transform(context);
+        }
+        static string Transform(this string expr, IContext context) { 
             return expr.Parse().Substitute(context).Convolute().Print();
         }
     }
