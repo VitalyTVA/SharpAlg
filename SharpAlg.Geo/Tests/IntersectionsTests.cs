@@ -145,7 +145,7 @@ namespace SharpAlg.Geo.Tests {
             var p1 = new Point(Expr.Zero, Expr.Zero);
             var p2 = new Point(Expr.Zero, Expr.Parameter("a"));
             var l1 = Line.FromPoints(p1, p2);
-            Assert.AreEqual("(-a) * x + 0 * y + 0", l1.ToString());
+            Assert.AreEqual("-a * x", l1.ToString());
 
             var c1 = Circle.FromPoints(p1, p2);
             var c2 = Circle.FromPoints(p2, p1);

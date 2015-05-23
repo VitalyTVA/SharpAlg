@@ -40,7 +40,7 @@ namespace SharpAlg.Geo {
         }
         public override string ToString() {
             var context = ImmutableContext.Empty.RegisterLine(this, "A", "B", "C");
-            return "A*x + B*y + C".Parse().Substitute(context).Print();
+            return "A*x + B*y + C".Parse().Substitute(context).Convolute().Print();
         }
     }
 
