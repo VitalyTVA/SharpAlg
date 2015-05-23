@@ -105,9 +105,7 @@ namespace SharpAlg.Geo {
         }
         public static System.Tuple<Point,Point> Intersect(this Line l, Circle c) {
             var context = ImmutableContext.Empty
-                .Register("A", l.A)
-                .Register("B", l.B)
-                .Register("C", l.C)
+                .RegisterLine(l, "A", "B", "C")
                 .Register("X", c.X)
                 .Register("Y", c.Y)
                 .Register("R", c.R);
