@@ -62,7 +62,7 @@ namespace SharpAlg.Geo {
                         Expr.Subtract(p1.X, p2.X).Square(),
                         Expr.Subtract(p1.Y, p2.Y).Square()
                     );
-            return new Circle(p1.X, p1.Y, r);
+            return new Circle(p1.X, p1.Y, r).FMap(x => x.Convolute()); ;
         }
         public readonly Expr X, Y, R;
         public Point Center { get { return new Point(X, Y); } }
@@ -72,7 +72,8 @@ namespace SharpAlg.Geo {
             this.R = r;
         }
         public override string ToString() {
-            return string.Format("(x - ({0}))^2 + (y - ({1}))^2 = {2})", X.Print(), Y.Print(), R.Print());
+            var context = ImmutableContext.Empty.RegisterCircle(this, "X", "Y", "R");
+            return "(x - X)^2 + (y - Y)^2 - R".Parse().Substitute(context).Convolute().Print();
         }
     }
     public static class LinesIntersector {
@@ -199,6 +200,12 @@ namespace SharpAlg.Geo {
                 .Register(a, l.A)
                 .Register(b, l.B)
                 .Register(c, l.C);
+        }
+        public static ImmutableContext RegisterCircle(this ImmutableContext context, Circle c, string x, string y, string r) {
+            return context
+                .Register(x, c.X)
+                .Register(y, c.Y)
+                .Register(r, c.R);
         }
         public static RealPoint ToRealPoint(this Point p, ImmutableContext context) {
             return new RealPoint(p.X.ToReal(context), p.Y.ToReal(context));
