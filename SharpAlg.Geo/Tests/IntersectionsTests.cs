@@ -160,11 +160,32 @@ namespace SharpAlg.Geo.Tests {
             var l1_l2 = l1.Intersect(l2);
             Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString()); 
         }
+        [Test]
+        public void Middle2() {
+            var p1 = new Point(Expr.Parameter("b"), Expr.Zero);
+            var p2 = new Point(Expr.Zero, Expr.Parameter("a"));
+            var l1 = Line.FromPoints(p1, p2);
+            Assert.AreEqual("-a * x - b * y + b * a", l1.ToString());
+
+            var c1 = Circle.FromPoints(p1, p2);
+            var c2 = Circle.FromPoints(p2, p1);
+            Assert.AreEqual("(x - b) ^ 2 + y ^ 2 - b ^ 2 - a ^ 2", c1.ToString());
+            Assert.AreEqual("x ^ 2 + (y - a) ^ 2 - b ^ 2 - a ^ 2", c2.ToString());
+
+            var c1_c2 = c1.Intersect(c2);
+            //Assert.AreEqual("(1/8 * 48 ^ (1/2) * a, 1/2 * a)", c1_c2.Item1.ToString());
+            //Assert.AreEqual("(-1/8 * 48 ^ (1/2) * a, 1/2 * a)", c1_c2.Item2.ToString());
+            var l2 = Line.FromPoints(c1_c2.Item1, c1_c2.Item2);
+
+            var l1_l2 = l1.Intersect(l2);
+            //Assert.AreEqual("(0, 1/2 * a)", l1_l2.ToString());
+        }
     }
     //Rewriter/Convolute tests
     //Convoulte test/refactoring (Functor)
     //{(x - (0))^2 + (y - (0))^2  = (1 * a)^2)}
     //-1/8 * 48 ^ (1/2)
+    //Middle1/Middle2 duplicated code
     public static class AssertHelper {
         public const double Delta = 0.0000000001;
         public static void ArePointsEqual(RealPoint p1, RealPoint p2, double delta = Delta) {
