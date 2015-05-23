@@ -40,7 +40,7 @@ namespace SharpAlg.Geo {
         }
         public override string ToString() {
             var context = ImmutableContext.Empty.RegisterLine(this, "A", "B", "C");
-            return "A*x + B*y + C".Parse().Substitute(context).Convolute().Print();
+            return "A*x + B*y + C".Transform(context);
         }
     }
 
@@ -73,7 +73,7 @@ namespace SharpAlg.Geo {
         }
         public override string ToString() {
             var context = ImmutableContext.Empty.RegisterCircle(this, "X", "Y", "R");
-            return "(x - X)^2 + (y - Y)^2 - R".Parse().Substitute(context).Convolute().Print();
+            return "(x - X)^2 + (y - Y)^2 - R".Transform(context);
         }
     }
     public static class LinesIntersector {
@@ -230,6 +230,9 @@ namespace SharpAlg.Geo {
         }
         public static System.Tuple<Point, Point> Substitute(this System.Tuple<Point, Point> p, IContext context) {
             return p.FMap(x => x.Substitute(context));
+        }
+        public static string Transform(this string expr, IContext context) { 
+            return expr.Parse().Substitute(context).Convolute().Print();
         }
     }
     public class ExprSubstitutor : IExpressionVisitor<Expr> {
