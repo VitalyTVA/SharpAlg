@@ -23,20 +23,30 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test]
         public void LineAndCircleIntersection() {
+            AssertLineAndCircleIntersection(
+                new RealPoint(-9, 5),
+                new RealPoint(12, 8),
+                new RealPoint(2, 3),
+                new RealPoint(6, 6),
+                new RealPoint(5, 7),
+                new RealPoint(-2, 6)
+            );
+        }
+        void AssertLineAndCircleIntersection(RealPoint a, RealPoint b, RealPoint c, RealPoint d, RealPoint x1, RealPoint x2) {
             var A = Point.FromName('A');
             var B = Point.FromName('B');
             var C = Point.FromName('C');
             var D = Point.FromName('D');
-            var l = Line.FromPoints(A, B);
-            var c = Circle.FromPoints(C, D);
-            var X = l.Intersect(c);
+            var line = Line.FromPoints(A, B);
+            var circle = Circle.FromPoints(C, D);
+            var X = line.Intersect(circle);
             var context = ImmutableContext.Empty
-                .RegisterPoint(A, -9, 5)
-                .RegisterPoint(B, 12, 8)
-                .RegisterPoint(C, 2, 3)
-                .RegisterPoint(D, 6, 6);
-            Assert.AreEqual(new RealPoint(5, 7), X.Item1.ToRealPoint(context));
-            Assert.AreEqual(new RealPoint(-2, 6), X.Item2.ToRealPoint(context));
+                .RegisterPoint(A, a.X, a.Y)
+                .RegisterPoint(B, b.X, b.Y)
+                .RegisterPoint(C, c.X, c.Y)
+                .RegisterPoint(D, d.X, d.Y);
+            AssertHelper.ArePointsEqual(x1, X.Item1.ToRealPoint(context));
+            AssertHelper.ArePointsEqual(x2, X.Item2.ToRealPoint(context));
         }
         [Test]
         public void CirclesIntersection1() {
