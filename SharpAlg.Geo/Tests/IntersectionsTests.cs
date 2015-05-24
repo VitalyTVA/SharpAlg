@@ -186,6 +186,7 @@ namespace SharpAlg.Geo.Tests {
     //{(x - (0))^2 + (y - (0))^2  = (1 * a)^2)}
     //-1/8 * 48 ^ (1/2)
     //Middle1/Middle2 duplicated code
+    //Test GetMidpoint, TangentBetween
     public static class AssertHelper {
         public const double Delta = 0.0000000001;
         public static void ArePointsEqual(RealPoint p1, RealPoint p2, double delta = Delta) {

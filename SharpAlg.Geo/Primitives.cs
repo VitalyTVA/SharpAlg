@@ -74,20 +74,34 @@ namespace SharpAlg.Geo {
             return this.PrintObject((c, o) => c.RegisterCircle(o, "X", "Y", "R"), "(x - X)^2 + (y - Y)^2 - R");
         }
     }
-    public static class LinesIntersector {
+    public static class LinesOperations {
         static readonly Point Intersection;
-        static LinesIntersector() {
-            const string divider = "(A1*B2-A2*B1)";
-            var x = ("(B1*C2-B2*C1)/" + divider).Parse(ExprBuilderFactory.CreateEmpty());
-            var y = ("(C1*A2-C2*A1)/" + divider).Parse(ExprBuilderFactory.CreateEmpty());
-            Intersection = new Point(x, y);
+        static readonly Expr Tangent;
+        static LinesOperations() {
+            Intersection = GetIntersection();
+            Tangent = GetTangent();
         }
-
+        static Point GetIntersection() {
+            const string divider = "(A1*B2-A2*B1)";
+            var x = ("(B1*C2-B2*C1)/" + divider).Parse();
+            var y = ("(C1*A2-C2*A1)/" + divider).Parse();
+            return new Point(x, y);
+        }
         public static Point Intersect(this Line l1, Line l2) {
             var context = ImmutableContext.Empty
                 .RegisterLine(l1, "A1", "B1", "C1")
                 .RegisterLine(l2, "A2", "B2", "C2");
             return Intersection.Substitute(context).FMap(x => x.Convolute());
+        }
+
+        static Expr GetTangent() {
+            return "(A1*B2-A2*B1)/(A1*A2 + B1*B2)".Parse();
+        }
+        public static Expr TangentBetween(Line l1, Line l2) {
+            var context = ImmutableContext.Empty
+                .RegisterLine(l1, "A1", "B1", "C1")
+                .RegisterLine(l2, "A2", "B2", "C2");
+            return Tangent.Substitute(context).Convolute();
         }
     }
     public static class LineCircleIntersector {
@@ -178,6 +192,12 @@ namespace SharpAlg.Geo {
         public static Expr Square(this Expr e) {
             return Expr.Power(e, Two);
         }
+        public static Expr Multiply(this Expr e, Expr multiplier) {
+            return Expr.Multiply(e, multiplier);
+        }
+        public static Expr GetHalf(this Expr e) {
+            return e.Multiply(Half);
+        }
         //public static bool IsPrimitive(this Point p) {
         //    return p.X is ParameterExpr && p.Y is ParameterExpr;
         //}
@@ -222,6 +242,9 @@ namespace SharpAlg.Geo {
         }
         public static Point Invert(this Point p) {
             return new Point(Expr.Minus(p.X), Expr.Minus(p.Y));
+        }
+        public static Point Middle(Point p1, Point p2) {
+            return new Point(Expr.Add(p1.X, p2.X).GetHalf(), Expr.Add(p1.Y, p2.Y).GetHalf());
         }
         public static Circle Offset(this Circle c, Point offset) {
             var center = c.Center.Offset(offset);
