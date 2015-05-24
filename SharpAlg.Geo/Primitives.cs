@@ -120,7 +120,9 @@ namespace SharpAlg.Geo {
             var context = ImmutableContext.Empty
                 .RegisterLine(l, "A", "B", "C")
                 .RegisterCircle(c, "X", "Y", "R");
-            return Intersections.Substitute(context);
+            return Intersections
+                .Substitute(context)
+                .FMap(tuple => tuple.FMap(x => x.Convolute()));
         }
     }
     public static class CirclesIntersector {
@@ -194,6 +196,9 @@ namespace SharpAlg.Geo {
         }
         public static Expr Multiply(this Expr e, Expr multiplier) {
             return Expr.Multiply(e, multiplier);
+        }
+        public static Expr Power(this Expr e, Expr power) {
+            return Expr.Power(e, power);
         }
         public static Expr GetHalf(this Expr e) {
             return e.Multiply(Half);

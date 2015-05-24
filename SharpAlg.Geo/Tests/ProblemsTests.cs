@@ -19,6 +19,13 @@ namespace SharpAlg.Geo.Tests {
             var mappleCommand = string.Format("simplify({0});", res.Print());
             //Clipboard.SetText(mappleCommand);
         }
+        [Test, Explicit]
+        public void Perpendicular_Maple() {
+            //var res = GetPerpendocularZeroAssertion(Point.FromName('A'), Point.FromName('B'), Point.FromName('C'));
+            var res = GetPerpendocularZeroAssertion(new Point(Expr.Zero, Expr.Zero), new Point(Expr.MinusOne, Expr.Zero), new Point(3d.AsConst(), 4d.AsConst()));
+            var mappleCommand = string.Format("simplify({0});", res.Print());
+            //Clipboard.SetText(mappleCommand);
+        }
         Point GetMiddleOfLineSegmentZeroAssertion(Point p1, Point p2) {
             var l1 = Line.FromPoints(p1, p2);
 
@@ -45,6 +52,21 @@ namespace SharpAlg.Geo.Tests {
             var bisectrissa = Line.FromPoints(A, middle);
 
             return Expr.Add(LinesOperations.TangentBetween(l1, bisectrissa), LinesOperations.TangentBetween(l2, bisectrissa));
+        }
+        Expr GetPerpendocularZeroAssertion(Point A, Point B, Point C) {
+            var l1 = Line.FromPoints(A, B);
+
+            var c = Circle.FromPoints(C, A);
+
+            var D = l1.Intersect(c).Item1; //????
+            var l2 = Line.FromPoints(C, D);
+            var E = l2.Intersect(c).Item1; //????1
+
+            var l3 = Line.FromPoints(E, A);
+
+            var cotangent = LinesOperations.TangentBetween(l1, l3).Power(Expr.MinusOne);
+            return cotangent;
+
         }
     }
 }
