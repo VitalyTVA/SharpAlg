@@ -77,10 +77,12 @@ namespace SharpAlg.Geo {
     public static class LinesOperations {
         static readonly Point Intersection;
         static readonly Expr Tangent;
+        static readonly Expr Cotangent;
         static readonly Expr YExpr = "-(A*x+C)/B".Parse();
         static LinesOperations() {
             Intersection = GetIntersection();
             Tangent = GetTangent();
+            Cotangent = GetCotangent();
         }
         static Point GetIntersection() {
             const string divider = "(A1*B2-A2*B1)";
@@ -98,11 +100,20 @@ namespace SharpAlg.Geo {
         static Expr GetTangent() {
             return "(A1*B2-A2*B1)/(A1*A2 + B1*B2)".Parse();
         }
+        static Expr GetCotangent() {
+            return "(A1*A2 + B1*B2)/(A1*B2-A2*B1)".Parse();
+        }
         public static Expr TangentBetween(Line l1, Line l2) {
+            return GetTwoLinesExpression(l1, l2, Tangent);
+        }
+        public static Expr CotangentBetween(Line l1, Line l2) {
+            return GetTwoLinesExpression(l1, l2, Cotangent);
+        }
+        static Expr GetTwoLinesExpression(Line l1, Line l2, Expr expr) {
             var context = ImmutableContext.Empty
                 .RegisterLine(l1, "A1", "B1", "C1")
                 .RegisterLine(l2, "A2", "B2", "C2");
-            return Tangent.Substitute(context).Convolute();
+            return expr.Substitute(context).Convolute();
         }
 
         public static Expr GetY(Expr x) {

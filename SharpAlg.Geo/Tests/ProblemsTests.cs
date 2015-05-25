@@ -14,15 +14,15 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test, Explicit]
         public void AngleBisection_Maple() {
-            //var res = GetAngleBisectionZeroAssertion(Point.FromName('A'), Point.FromName('B'), Point.FromName('C'));
-            var res = GetAngleBisectionZeroAssertion(new Point(Expr.Zero, Expr.Zero), Point.FromName('B'), Point.FromName('C'));
+            var res = GetAngleBisectionZeroAssertion(Point.FromName('A'), Point.FromName('B'), Point.FromName('C'));
+            //var res = GetAngleBisectionZeroAssertion(new Point(Expr.Zero, Expr.Zero), Point.FromName('B'), Point.FromName('C'));
             var mappleCommand = string.Format("simplify({0});", res.Print());
             //Clipboard.SetText(mappleCommand);
         }
         [Test, Explicit]
         public void Perpendicular_Maple() {
-            //var res = GetPerpendocularZeroAssertion(Point.FromName('A'), Point.FromName('B'), Point.FromName('C'));
-            var res = GetPerpendocularZeroAssertion(new Point(Expr.Zero, Expr.Zero), new Point(Expr.MinusOne, Expr.Zero), new Point(3d.AsConst(), 4d.AsConst()));
+            var res = GetPerpendocularZeroAssertion(Point.FromName('A'), Point.FromName('B'), Point.FromName('C'));
+            //var res = GetPerpendocularZeroAssertion(new Point(Expr.Zero, Expr.Zero), new Point(Expr.MinusOne, Expr.Zero), new Point(3d.AsConst(), 4d.AsConst()));
             var mappleCommand = string.Format("simplify({0});", res.Print());
             //Clipboard.SetText(mappleCommand);
         }
@@ -60,11 +60,11 @@ namespace SharpAlg.Geo.Tests {
 
             var D = l1.Intersect(c).Item1; //????
             var l2 = Line.FromPoints(C, D);
-            var E = l2.Intersect(c).Item1; //????1
+            var E = l2.Intersect(c).Item2; //????1
 
             var l3 = Line.FromPoints(E, A);
 
-            var cotangent = LinesOperations.TangentBetween(l1, l3).Power(Expr.MinusOne);
+            var cotangent = LinesOperations.CotangentBetween(l1, l3);
             return cotangent;
 
         }
