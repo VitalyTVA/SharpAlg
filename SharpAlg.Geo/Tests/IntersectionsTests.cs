@@ -22,7 +22,7 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual(new RealPoint(4, 2), X.ToRealPoint(context));
         }
         [Test]
-        public void LineAndCircleIntersection() {
+        public void LineAndCircleIntersection1() {
             AssertLineAndCircleIntersection(
                 new RealPoint(-9, 5),
                 new RealPoint(12, 8),
@@ -30,6 +30,17 @@ namespace SharpAlg.Geo.Tests {
                 new RealPoint(6, 6),
                 new RealPoint(5, 7),
                 new RealPoint(-2, 6)
+            );
+        }
+        [Test]
+        public void LineAndCircleIntersection2() {
+            AssertLineAndCircleIntersection(
+                new RealPoint(3, 4),
+                new RealPoint(6, 0),
+                new RealPoint(3, 4),
+                new RealPoint(6, 0),
+                new RealPoint(6, 0),
+                new RealPoint(0, 8)
             );
         }
         void AssertLineAndCircleIntersection(RealPoint a, RealPoint b, RealPoint c, RealPoint d, RealPoint x1, RealPoint x2) {
@@ -45,6 +56,8 @@ namespace SharpAlg.Geo.Tests {
                 .RegisterPoint(B, b.X, b.Y)
                 .RegisterPoint(C, c.X, c.Y)
                 .RegisterPoint(D, d.X, d.Y);
+            var line_ = Line.FromPoints(A, B).FMap(x => x.Substitute(context));
+            var circle_ = Circle.FromPoints(C, D).FMap(x => x.Substitute(context));
             AssertHelper.ArePointsEqual(x1, X.Item1.ToRealPoint(context));
             AssertHelper.ArePointsEqual(x2, X.Item2.ToRealPoint(context));
         }

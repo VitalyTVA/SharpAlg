@@ -77,6 +77,7 @@ namespace SharpAlg.Geo {
     public static class LinesOperations {
         static readonly Point Intersection;
         static readonly Expr Tangent;
+        static readonly Expr YExpr = "-(A*x+C)/B".Parse();
         static LinesOperations() {
             Intersection = GetIntersection();
             Tangent = GetTangent();
@@ -103,20 +104,43 @@ namespace SharpAlg.Geo {
                 .RegisterLine(l2, "A2", "B2", "C2");
             return Tangent.Substitute(context).Convolute();
         }
+
+        public static Expr GetY(Expr x) {
+            return YExpr.Substitute(ImmutableContext.Empty.Register("x", x));
+        }
     }
+    //public static class LineCircleIntersector {
+    //    static readonly System.Tuple<Point, Point> Intersections;
+    //    static LineCircleIntersector() {
+    //        var eqA = "B^2+A^2".Parse();
+    //        var eqYB = "2*X*A*B-2*Y*A^2+2*C*B".Parse();
+    //        var eqXB = "2*Y*A*B-2*X*B^2+2*C*A".Parse();
+    //        var eqYC = "2*X*A*C+X^2*A^2+C^2+Y^2*A^2-R*A^2".Parse();
+    //        var eqXC = "2*Y*B*C+Y^2*B^2+C^2+X^2*B^2-R*B^2".Parse();
+    //        var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
+    //        var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
+    //        Intersections = Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
+    //    }
+    //    public static System.Tuple<Point,Point> Intersect(this Line l, Circle c) {
+    //        var context = ImmutableContext.Empty
+    //            .RegisterLine(l, "A", "B", "C")
+    //            .RegisterCircle(c, "X", "Y", "R");
+    //        return Intersections
+    //            .Substitute(context)
+    //            .FMap(tuple => tuple.FMap(x => x.Convolute()));
+    //    }
+    //}
     public static class LineCircleIntersector {
         static readonly System.Tuple<Point, Point> Intersections;
         static LineCircleIntersector() {
-            var eqA = "B^2+A^2".Parse();
-            var eqYB = "2*X*A*B-2*Y*A^2+2*C*B".Parse();
+            var eqXA = "B^2+A^2".Parse();
             var eqXB = "2*Y*A*B-2*X*B^2+2*C*A".Parse();
-            var eqYC = "2*X*A*C+X^2*A^2+C^2+Y^2*A^2-R*A^2".Parse();
             var eqXC = "2*Y*B*C+Y^2*B^2+C^2+X^2*B^2-R*B^2".Parse();
-            var xRoots = new QuadraticEquation(eqA, eqXB, eqXC).Solve();
-            var yRoots = new QuadraticEquation(eqA, eqYB, eqYC).Solve();
+            var xRoots = new QuadraticEquation(eqXA, eqXB, eqXC).Solve();
+            var yRoots = xRoots.FMap(x => LinesOperations.GetY(x));
             Intersections = Tuple.Create(new Point(xRoots.Item1, yRoots.Item1), new Point(xRoots.Item2, yRoots.Item2));
         }
-        public static System.Tuple<Point,Point> Intersect(this Line l, Circle c) {
+        public static System.Tuple<Point, Point> Intersect(this Line l, Circle c) {
             var context = ImmutableContext.Empty
                 .RegisterLine(l, "A", "B", "C")
                 .RegisterCircle(c, "X", "Y", "R");
