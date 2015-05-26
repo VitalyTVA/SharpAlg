@@ -78,27 +78,31 @@ namespace SharpAlg.Geo.Tests {
         #endregion
 
         #region perpendicular
+        [Test]
+        public void Perpendicular2_Calc() {
+            var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, 4d.AsConst()), new Circle(Expr.Zero, Expr.Zero, 25d.AsConst()));
+            Assert.IsTrue(res.ExprEquals(Expr.Zero));
+        }
         [Test, Explicit]
         public void Perpendicular2_Maple() {
-            var res = GetPerpendocularZeroAssertion2(Point.FromName('A'), Point.FromName('B'), Point.FromName('C'));
-            //var res = GetPerpendocularZeroAssertion(new Point(Expr.Zero, Expr.Zero), new Point(Expr.MinusOne, Expr.Zero), new Point(3d.AsConst(), 4d.AsConst()));
-            var mappleCommand = string.Format("simplify({0});", res.Print());
+            var res = GetPerpendocularZeroAssertion2(new Line(Expr.Parameter("k"), Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
+            //var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
+            var mappleCommand = string.Format(@"
+restart;
+assume(R>0);
+simplify({0});
+", res.Print());
             //Clipboard.SetText(mappleCommand);
         }
-        Expr GetPerpendocularZeroAssertion2(Point A, Point B, Point C) {
-            var l1 = Line.FromPoints(A, B);
+        Expr GetPerpendocularZeroAssertion2(Line l, Circle c) {
+            var A = l.Intersect(c).Item2;
+            var B = l.Intersect(c).Item1;
+            var l2 = Line.FromPoints(c.Center, B);
+            var C = l2.Intersect(c).Item2;
+            var l3 = Line.FromPoints(A, C);
 
-            var c = Circle.FromPoints(C, A);
-
-            var D = l1.Intersect(c).Item1; //????
-            var l2 = Line.FromPoints(C, D);
-            var E = l2.Intersect(c).Item2; //????1
-
-            var l3 = Line.FromPoints(E, A);
-
-            var cotangent = LinesOperations.CotangentBetween(l1, l3);
+            var cotangent = LinesOperations.CotangentBetween(l, l3);
             return cotangent;
-
         }
         #endregion
     }
