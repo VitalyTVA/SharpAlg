@@ -211,6 +211,7 @@ namespace SharpAlg.Geo.Tests {
     //Middle1/Middle2 duplicated code
     //Test GetMidpoint, TangentBetween, CotangentBetween
     //Test Convolute in LineCircleIntersector
+    //IFunctor
     public static class AssertHelper {
         public const double Delta = 0.0000000001;
         public static void ArePointsEqual(RealPoint p1, RealPoint p2, double delta = Delta) {
