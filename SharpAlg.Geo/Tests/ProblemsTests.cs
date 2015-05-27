@@ -13,8 +13,9 @@ namespace SharpAlg.Geo.Tests {
             var total = string.Concat(new[] {
                 MiddleOfLineSegment_Maple(),
                 AngleBisection_Maple(),
+                Perpendicular_Maple(),
                 Perpendicular2_Maple(),
-            }.Select(x => x + "\r\n\r\n\r\n"));
+            }.Select(x => "restart;" + x + "\r\n\r\n\r\n"));
         }
         #region middle
         string MiddleOfLineSegment_Maple() {
@@ -61,9 +62,13 @@ namespace SharpAlg.Geo.Tests {
 
         #region perpendicular
         string Perpendicular_Maple() {
-            var res = GetPerpendocularZeroAssertion(Point.FromName('A'), Point.FromName('B'), Point.FromName('C'));
-            //var res = GetPerpendocularZeroAssertion(new Point(Expr.Zero, Expr.Zero), new Point(Expr.MinusOne, Expr.Zero), new Point(3d.AsConst(), 4d.AsConst()));
-            return string.Format("simplify({0});", res.Print());
+            //var res = GetPerpendocularZeroAssertion(new Point(Expr.Zero, Expr.Zero), Point.FromName('B'), Point.FromName('C'));
+            var res = GetPerpendocularZeroAssertion(new Point(Expr.Zero, Expr.Zero), new Point(Expr.MinusOne, Expr.Zero), Point.FromName('C'));
+            return string.Format(@"
+assume(Cx>0);
+assume(Cy>0);
+simplify({0});
+", res.Print());
         }
         Expr GetPerpendocularZeroAssertion(Point A, Point B, Point C) {
             var l1 = Line.FromPoints(A, B);
@@ -92,7 +97,6 @@ namespace SharpAlg.Geo.Tests {
             //var res = GetPerpendocularZeroAssertion2(new Line(Expr.Parameter("k"), Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
             var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, Expr.Parameter("b")), new Circle(Expr.Parameter("X0"), Expr.Parameter("Y0"), Expr.Parameter("R")));
             return string.Format(@"
-restart;
 assume(R>0);
 simplify({0});
 ", res.Print());

@@ -206,6 +206,7 @@ namespace SharpAlg.Geo.Tests {
     }
     //Rewriter/Convolute tests
     //Convoulte test/refactoring (Functor)
+    //"(2 * x^2) ^ (1 / 2)".Parse().AssertSimpleStringRepresentation("2 ^ (1/2) * x");
     //(-1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)
     //-1/8 * 48 ^ (1/2)
     //Middle1/Middle2 duplicated code
