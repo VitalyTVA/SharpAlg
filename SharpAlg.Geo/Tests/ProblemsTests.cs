@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System.Linq;
 using SharpAlg.Native;
 using SharpAlg.Native.Builder;
 using System.Windows;
@@ -7,12 +8,18 @@ using RealPoint = System.Windows.Point;
 namespace SharpAlg.Geo.Tests {
     [TestFixture]
     public class ProblemsTests {
-        #region middle
         [Test, Explicit]
-        public void MiddleOfLineSegment_Maple() {
+        public void GetAllMapleCommand() {
+            var total = string.Concat(new[] {
+                MiddleOfLineSegment_Maple(),
+                AngleBisection_Maple(),
+                Perpendicular2_Maple(),
+            }.Select(x => x + "\r\n\r\n\r\n"));
+        }
+        #region middle
+        string MiddleOfLineSegment_Maple() {
             var res = GetMiddleOfLineSegmentZeroAssertion(Point.FromName('X'), Point.FromName('Y'));
-            var mappleCommand = string.Format("simplify({0}); simplify({1});", res.X.Print(), res.Y.Print());
-            //Clipboard.SetText(mappleCommand);
+            return string.Format("simplify({0}); simplify({1});", res.X.Print(), res.Y.Print());
         }
         Point GetMiddleOfLineSegmentZeroAssertion(Point p1, Point p2) {
             var l1 = Line.FromPoints(p1, p2);
@@ -32,11 +39,10 @@ namespace SharpAlg.Geo.Tests {
         #endregion
 
         #region angle bisector
-        [Test, Explicit]
-        public void AngleBisection_Maple() {
+        string AngleBisection_Maple() {
             var res = GetAngleBisectionZeroAssertion(Point.FromName('A'), Point.FromName('B'), Point.FromName('C'));
             //var res = GetAngleBisectionZeroAssertion(new Point(Expr.Zero, Expr.Zero), Point.FromName('B'), Point.FromName('C'));
-            var mappleCommand = string.Format("simplify({0});", res.Print());
+            return string.Format("simplify({0});", res.Print());
             //Clipboard.SetText(mappleCommand);
         }
         Expr GetAngleBisectionZeroAssertion(Point A, Point B, Point C) {
@@ -54,12 +60,10 @@ namespace SharpAlg.Geo.Tests {
         #endregion
 
         #region perpendicular
-        [Test, Explicit]
-        public void Perpendicular_Maple() {
+        string Perpendicular_Maple() {
             var res = GetPerpendocularZeroAssertion(Point.FromName('A'), Point.FromName('B'), Point.FromName('C'));
             //var res = GetPerpendocularZeroAssertion(new Point(Expr.Zero, Expr.Zero), new Point(Expr.MinusOne, Expr.Zero), new Point(3d.AsConst(), 4d.AsConst()));
-            var mappleCommand = string.Format("simplify({0});", res.Print());
-            //Clipboard.SetText(mappleCommand);
+            return string.Format("simplify({0});", res.Print());
         }
         Expr GetPerpendocularZeroAssertion(Point A, Point B, Point C) {
             var l1 = Line.FromPoints(A, B);
@@ -84,16 +88,14 @@ namespace SharpAlg.Geo.Tests {
             var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, 4d.AsConst()), new Circle(Expr.Zero, Expr.Zero, 25d.AsConst()));
             Assert.IsTrue(res.ExprEquals(Expr.Zero));
         }
-        [Test, Explicit]
-        public void Perpendicular2_Maple() {
+        string Perpendicular2_Maple() {
             //var res = GetPerpendocularZeroAssertion2(new Line(Expr.Parameter("k"), Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
-            var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
-            var mappleCommand = string.Format(@"
+            var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, Expr.Parameter("b")), new Circle(Expr.Parameter("X0"), Expr.Parameter("Y0"), Expr.Parameter("R")));
+            return string.Format(@"
 restart;
 assume(R>0);
 simplify({0});
 ", res.Print());
-            //Clipboard.SetText(mappleCommand);
         }
         Expr GetPerpendocularZeroAssertion2(Line l, Circle c) {
             var A = l.Intersect(c).Item2;
