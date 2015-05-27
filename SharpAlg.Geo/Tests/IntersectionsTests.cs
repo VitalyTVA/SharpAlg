@@ -176,8 +176,8 @@ namespace SharpAlg.Geo.Tests {
             Assert.AreEqual("x ^ 2 + (y - a) ^ 2 - a ^ 2", c2.ToString());
 
             var c1_c2 = c1.Intersect(c2);
-            Assert.AreEqual("(1/8 * 48 ^ (1/2) * a, 1/2 * a)", c1_c2.Item1.ToString());
-            Assert.AreEqual("(-1/8 * 48 ^ (1/2) * a, 1/2 * a)", c1_c2.Item2.ToString());
+            Assert.AreEqual("(1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)", c1_c2.Item1.ToString());
+            Assert.AreEqual("(-1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)", c1_c2.Item2.ToString());
             var l2 = Line.FromPoints(c1_c2.Item1, c1_c2.Item2);
 
             var l1_l2 = l1.Intersect(l2);
@@ -206,7 +206,7 @@ namespace SharpAlg.Geo.Tests {
     }
     //Rewriter/Convolute tests
     //Convoulte test/refactoring (Functor)
-    //{(x - (0))^2 + (y - (0))^2  = (1 * a)^2)}
+    //(-1/8 * (48 * a ^ 6) ^ (1/2) * a ^ (-2), 1/2 * a)
     //-1/8 * 48 ^ (1/2)
     //Middle1/Middle2 duplicated code
     //Test GetMidpoint, TangentBetween, CotangentBetween

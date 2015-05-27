@@ -265,7 +265,7 @@ SharpAlg.Native.Builder.ConvolutionExprBuilder.prototype.ExpressionPowerConvolut
     if (SharpAlg.Native.Number.op_Inequality(rightConst, null))
     {
         var leftMultiplyExpr = As(left, SharpAlg.Native.MultiplyExpr.ctor);
-        if (leftMultiplyExpr != null)
+        if (leftMultiplyExpr != null && rightConst.get_IsInteger())
         {
             return SharpAlg.Native.Expr.Multiply$$IEnumerable$1$Expr(System.Linq.Enumerable.Select$2$$IEnumerable$1$$Func$2(SharpAlg.Native.Expr.ctor, SharpAlg.Native.Expr.ctor, leftMultiplyExpr.get_Args(), $CreateAnonymousDelegate(this, function (x)
             {

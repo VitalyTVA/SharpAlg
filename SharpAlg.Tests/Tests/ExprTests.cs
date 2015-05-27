@@ -348,7 +348,8 @@ namespace SharpAlg.Tests {
             "2 ^ (1/2)".Parse().IsFloatEqual(x => x.Evaluate(), "1.414213").AssertSimpleStringRepresentation("2 ^ (1/2)");
             "(2 ^ (2/3)) ^ (3/4)".Parse().AssertSimpleStringRepresentation("2 ^ (1/2)");
             "(4 * x) ^ 2".Parse().AssertSimpleStringRepresentation("16 * x ^ 2");
-            "(2 * x^2) ^ (1 / 2)".Parse().AssertSimpleStringRepresentation("2 ^ (1/2) * x");
+            "((-1/4) *R)^(1/2)".Parse().AssertSimpleStringRepresentation("(-1/4 * R) ^ (1/2)");
+            //"(2 * x^2) ^ (1 / 2)".Parse().AssertSimpleStringRepresentation("2 ^ (1/2) * x");
             "1 ^ (1/2)".Parse().AssertIsInteger().AssertSimpleStringRepresentation("1");
             "1.0 ^ (1/2)".Parse().AssertIsFloat().AssertSimpleStringRepresentation("1");
             "4 ^ (1/2)".Parse().AssertSimpleStringRepresentation("4 ^ (1/2)");

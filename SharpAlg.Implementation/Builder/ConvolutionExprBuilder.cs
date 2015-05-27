@@ -220,7 +220,7 @@ namespace SharpAlg.Native.Builder {
             Number rightConst = GetConstValue(right);
             if(rightConst != null) {
                 var leftMultiplyExpr = left as MultiplyExpr;
-                if(leftMultiplyExpr != null) {
+                if(leftMultiplyExpr != null && rightConst.IsInteger) {
                     return Expr.Multiply(leftMultiplyExpr.Args.Select(x => Power(x, Expr.Constant(rightConst))));
                 }
                 var power = PowerExpressionExtractor.ExtractPower(left);

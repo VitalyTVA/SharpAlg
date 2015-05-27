@@ -513,7 +513,7 @@ var SharpAlg$Tests$ExprTests =
             }), "1.414213"), "2 ^ (1/2)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(2 ^ (2/3)) ^ (3/4)", null), "2 ^ (1/2)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(4 * x) ^ 2", null), "16 * x ^ 2");
-            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("(2 * x^2) ^ (1 / 2)", null), "2 ^ (1/2) * x");
+            SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("((-1/4) *R)^(1/2)", null), "(-1/4 * R) ^ (1/2)");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.AssertIsInteger(SharpAlg.Native.ExpressionExtensions.Parse("1 ^ (1/2)", null)), "1");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Tests.ExprTestHelper.AssertIsFloat(SharpAlg.Native.ExpressionExtensions.Parse("1.0 ^ (1/2)", null)), "1");
             SharpAlg.Tests.ExprTestHelper.AssertSimpleStringRepresentation(SharpAlg.Native.ExpressionExtensions.Parse("4 ^ (1/2)", null), "4 ^ (1/2)");

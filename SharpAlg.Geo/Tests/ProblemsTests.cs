@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using SharpAlg.Native;
+using SharpAlg.Native.Builder;
 using System.Windows;
 using RealPoint = System.Windows.Point;
 
@@ -85,8 +86,8 @@ namespace SharpAlg.Geo.Tests {
         }
         [Test, Explicit]
         public void Perpendicular2_Maple() {
-            var res = GetPerpendocularZeroAssertion2(new Line(Expr.Parameter("k"), Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
-            //var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
+            //var res = GetPerpendocularZeroAssertion2(new Line(Expr.Parameter("k"), Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
+            var res = GetPerpendocularZeroAssertion2(new Line(Expr.Zero, Expr.One, Expr.Parameter("b")), new Circle(Expr.Zero, Expr.Zero, Expr.Parameter("R")));
             var mappleCommand = string.Format(@"
 restart;
 assume(R>0);
